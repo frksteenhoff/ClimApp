@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ClimApp</string>
+    <!-- Category name for phrases [CHAR LIMIT=20] -->
+    <string name="sign_in">Sign In</string>
+    <!-- Category name for phrases [CHAR LIMIT=20] -->
+    <string name="sign_up">Sign Up</string>
+    <string name="dashboard">Dashboard</string>
+</resources>
