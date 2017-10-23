@@ -2,6 +2,8 @@
 
     package="com.example.android.climapp">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,23 +11,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <!-- Intent to start app -->
-                <action android:name="android.intent.action.MAIN" />
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
 
+        <!--<activity android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />-->
+
+        <activity android:name=".SignInActivity"
+            android:label="@string/sign_in">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignInActivity"
-            android:label="@string/sign_in"
-            android:parentActivityName=".MainActivity"/>
-        <activity android:name=".SignUpActivity"
-            android:label="@string/sign_up"
-            android:parentActivityName=".MainActivity" />
         <activity android:name=".DashboardActivity"
-            android:label="@string/dashboard"
-            android:parentActivityName=".MainActivity"/>
+            android:label="@string/dashboard" />
     </application>
 
 </manifest>

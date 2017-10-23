@@ -5,4 +5,5 @@
     <!-- Category name for phrases [CHAR LIMIT=20] -->
     <string name="sign_up">Sign Up</string>
     <string name="dashboard">Dashboard</string>
+    <string name="facebook_app_id">136565860303378</string>
 </resources>

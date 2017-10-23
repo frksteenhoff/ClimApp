@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
  * Created by frksteenhoff on 10-10-2017.
  */
 
-public class SignUpActivity extends AppCompatActivity {
+public class FacebookActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
