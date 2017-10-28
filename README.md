@@ -18,7 +18,7 @@ Overview of available datasets and frequencies.
 Tests for fetching data from DWD Open Data and Open Weather Map in Jupyter Notebooks.
 
 ## Requirements
-To run the scripts in Jupyter Notebooks you need to install Python 2.7.
+To run the scripts in Jupyter Notebooks require an installation of Python 2.7.
 
 For all Java code you need to install [Java](https://java.com/en/download/) and [Android Studio](https://developer.android.com/studio/install.html) including different SDKs/JDKs and JRE. 
 
