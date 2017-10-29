@@ -1,9 +1,35 @@
 <resources>
     <string name="app_name">ClimApp</string>
-    <!-- Category name for phrases [CHAR LIMIT=20] -->
+
+    <!-- Sign-in status messages -->
     <string name="sign_in">Sign In</string>
-    <!-- Category name for phrases [CHAR LIMIT=20] -->
-    <string name="sign_up">Sign Up</string>
-    <string name="dashboard">Dashboard</string>
+    <string name="signed_in_fmt">Signed in as: %s</string>
+    <string name="signed_in">Signed in</string>
+    <string name="signing_in">Signing in…</string>
+    <string name="signed_out">Signed out</string>
+    <string name="loading">Loading…</string>
+
+    <!-- Error messages -->
+    <string name="login_error">Error during login</string>
+
+    <!-- Facebook information -->
     <string name="facebook_app_id">136565860303378</string>
+    <string name="server_client_id">912535355882-9ud102rtm4qbsn265r2va8leqdef75p3.apps.googleusercontent.com</string>
+
+    <!-- Labels -->
+    <string name="dashboard">Dashboard</string>
+    <string name="settings">Settings</string>
+
+    <!-- General -->
+    <string name="Age">Age</string>
+    <string name="Height">Height</string>
+    <string name="Weight">Weight</string>
+    <string name="Gender">Gender</string>
+    <string name="FitnessLevel">Fitness Level</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

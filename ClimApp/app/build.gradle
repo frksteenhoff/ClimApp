@@ -1,9 +1,26 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
 apply plugin: 'com.google.gms.google-services'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+    google()
+}
+
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    buildToolsVersion '26.0.2'
+
     defaultConfig {
         applicationId "com.climapp.frksteenhoff"
         minSdkVersion 15
@@ -21,13 +38,23 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    //noinspection GradleCompatible
+    implementation 'com.android.support:design:25.4.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
     testCompile 'junit:junit:4.12'
-    // Adding Facebook and Google dependencies when using API for login
+    compile 'com.android.support:appcompat-v7:25.4.0'
+    // Adding Facebook, Twitter and Google dependencies when using API for login
     compile 'com.facebook.android:facebook-android-sdk:4.6.0'
     compile 'com.google.android.gms:play-services-auth:9.0.0'
+    compile('com.twitter.sdk.android:twitter-core:1.6.3@aar') {
+        transitive = true;
+    }
+    // Fabric's SDK for analytics
+    compile('com.crashlytics.sdk.android:answers:1.4.1@aar') {
+        transitive = true;
+    }
 }

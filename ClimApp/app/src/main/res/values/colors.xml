@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#228B22</color>
     <color name="colorPrimaryLight">#98FB98</color>
     <color name="colorAccent">#9400D3</color>
+
+    <color name="CheckColor">@color/tw__medium_gray</color>
 </resources>
