@@ -47,6 +47,7 @@ public class SignInActivity extends AppCompatActivity {
     private SignInButton mGoogleSignInButton;
     private LoginButton mFacebookSignInButton;
     private TwitterLoginButton mTwitterSignInButton;
+    private TwitterAuthConfig authConfig;
 
     private GoogleApiClient mGoogleApiClient;
     private CallbackManager mFacebookCallbackManager;
@@ -54,13 +55,13 @@ public class SignInActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Answers());
+        authConfig = new TwitterAuthConfig("lPcEPVTOHSdQgfy22rxYlvz04",
+                "Rd9yQ4B8dSffj025UJP8y3QQIbJvRO6eUv68jmgIhe1dUSdjNq");
+        Fabric.with(this, new Answers(), new TwitterCore(authConfig));
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         mFacebookCallbackManager = CallbackManager.Factory.create();
 
-        TwitterAuthConfig authConfig = new TwitterAuthConfig("lPcEPVTOHSdQgfy22rxYlvz04",
-                "Rd9yQ4B8dSffj025UJP8y3QQIbJvRO6eUv68jmgIhe1dUSdjNq");
 
         // Set the content of the activity to use the activity_main.xml layout file
         setContentView(R.layout.activity_login);

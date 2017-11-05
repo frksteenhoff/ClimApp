@@ -4,7 +4,6 @@ package com.example.android.climapp;
  * Created by frksteenhoff on 29-10-2017.
  */
 
-
 public class Word {
     /* Setting name*/
     private String mSetting;
