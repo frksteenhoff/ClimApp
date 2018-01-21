@@ -1,5 +1,6 @@
 package com.example.android.climapp;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -108,6 +109,8 @@ public class DashboardActivity extends AppCompatActivity
         if (id == R.id.nav_account) {
 
         } else if (id == R.id.nav_manage) {
+            Intent settings = new Intent(DashboardActivity.this, SettingsActivity.class);
+            startActivity(settings);
 
         } else if (id == R.id.nav_share) {
 

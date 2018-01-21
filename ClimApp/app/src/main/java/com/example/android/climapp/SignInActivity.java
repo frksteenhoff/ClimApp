@@ -184,8 +184,8 @@ public class SignInActivity extends AppCompatActivity {
                 handleSignInResult(null);
             }
         } else if(TwitterAuthConfig.DEFAULT_AUTH_REQUEST_CODE == requestCode) {
-        mTwitterSignInButton.onActivityResult(requestCode, resultCode, data);
-    } else {
+            mTwitterSignInButton.onActivityResult(requestCode, resultCode, data);
+        } else {
             mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }

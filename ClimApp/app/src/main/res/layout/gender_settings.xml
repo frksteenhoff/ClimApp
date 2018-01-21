@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Gender"
+                style="@style/SettingsTextStyle"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/FemaleChecked"
+                    android:buttonTint="@color/colorPrimaryDark"
+                    android:text="Female"
+                    style="@style/CheckBoxStyle"/>
+                <android.support.v7.widget.AppCompatCheckBox
+                    android:id="@+id/MaleChecked"
+                    android:text="Male"
+                    android:buttonTint="@color/colorPrimaryDark"
+                    style="@style/CheckBoxStyle"/>
+            </LinearLayout>
+            <TextView
+                android:layout_marginTop="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gender_description"
+                style="@style/SettingsTextStyleNoCaps"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

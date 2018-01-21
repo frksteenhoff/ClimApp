@@ -26,7 +26,6 @@
                 android:id="@+id/gender_settings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:text="@string/Gender"
                 android:layout_margin="16dp" />
             <TextView
@@ -34,6 +33,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/Weight"
+                android:layout_margin="16dp" />
+            <TextView
+                android:id="@+id/height_settings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Height"
                 android:layout_margin="16dp" />
             <TextView
                 android:id="@+id/fitness_settings"

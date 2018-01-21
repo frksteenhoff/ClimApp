@@ -56,6 +56,17 @@
         <item name="android:textColor">@color/tw__medium_gray</item>
     </style>
 
+    <!-- Settings description style no caps-->
+    <style name="SettingsTextStyleNoCaps">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/tw__medium_gray</item>
+    </style>
+
     <!-- CheckBox header styles -->
     <style name="CheckBoxStyle">
         <item name="android:textSize">16dp</item>

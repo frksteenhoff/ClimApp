@@ -73,5 +73,45 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.climapp.DashboardActivity" />
         </activity>
+        <activity
+            android:name=".SetAgeActivity"
+            android:label="@string/settings"
+            android:parentActivityName=".SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.climapp.SettingsActivity" />
+        </activity>
+        <activity
+            android:name=".SetGenderActivity"
+            android:label="@string/settings"
+            android:parentActivityName=".SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.climapp.SettingsActivity" />
+        </activity>
+        <activity
+            android:name=".SetHeightActivity"
+            android:label="@string/settings"
+            android:parentActivityName=".SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.climapp.SettingsActivity" />
+        </activity>
+        <activity
+            android:name=".SetWeightActivity"
+            android:label="@string/settings"
+            android:parentActivityName=".SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.climapp.SettingsActivity" />
+        </activity>
+        <activity
+            android:name=".SetFitnessLevelActivity"
+            android:label="@string/settings"
+            android:parentActivityName=".SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.climapp.SettingsActivity" />
+        </activity>
     </application>
 </manifest>
