@@ -20,7 +20,7 @@ Tests for fetching data from DWD Open Data and Open Weather Map in Jupyter Noteb
 ### Follow the app development
 Interactive screen visualization can be found as a preview here: [https://invis.io/W3EQCCGSN](https://invis.io/W3EQCCGSN)
 
-The app colors will be changed in order to fit logo color palette -- not all functionality is made available in preview yet.
+The colors have been changed in order to fit the color palette of the logo -- not all functionality is made available in preview yet.
 
 ## Requirements
 To run the scripts in Jupyter Notebooks require an installation of Python 2.7.
