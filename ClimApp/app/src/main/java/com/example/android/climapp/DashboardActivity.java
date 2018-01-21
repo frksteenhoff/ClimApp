@@ -52,7 +52,8 @@ public class DashboardActivity extends AppCompatActivity
         /* Location coordinates*/
         /* TODO - change with phone's location */
         Pair<Integer, Integer> Coordinates = new Pair<Integer, Integer>(35,139);
-        /* Conenct to weather API */
+
+        /* Connect to weather API openweathermap.com */
         APIConnection APIConn = new APIConnection("b1b15e88fa797225412429c1c50c122a1", Coordinates);
         Log.v("HESTE", "API access string:\n" + APIConn.getAPIContent());
         APIConn.execute();

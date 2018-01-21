@@ -30,7 +30,6 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
-
 import java.util.concurrent.Callable;
 
 import io.fabric.sdk.android.Fabric;
@@ -62,7 +61,6 @@ public class SignInActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         mFacebookCallbackManager = CallbackManager.Factory.create();
 
-
         // Set the content of the activity to use the activity_main.xml layout file
         setContentView(R.layout.activity_login);
 
@@ -77,11 +75,11 @@ public class SignInActivity extends AppCompatActivity {
 
         // Signing in with Facebook
         mFacebookSignInButton = (LoginButton) findViewById(R.id.facebook_sign_in_button);
+        mFacebookSignInButton.setReadPermissions("email", "user_location");
         mFacebookSignInButton.registerCallback(mFacebookCallbackManager,
                 new FacebookCallback<LoginResult>() {
                     @Override
                     public void onSuccess(final LoginResult loginResult) {
-                        //TODO: Use the Profile class to get information about the current user.
                         handleSignInResult(new Callable<Void>() {
                             @Override
                             public Void call() throws Exception {
@@ -89,15 +87,20 @@ public class SignInActivity extends AppCompatActivity {
                                 return null;
                             }
                         });
+                        Toast.makeText(getApplicationContext(), R.string.signed_in, Toast.LENGTH_SHORT).show();
+                        Intent dashboard = new Intent(SignInActivity.this, DashboardActivity.class);
+                        startActivity(dashboard);
                     }
 
                     @Override
                     public void onCancel() {
+                        Toast.makeText(getApplicationContext(), R.string.login_cancelled, Toast.LENGTH_SHORT).show();
                         handleSignInResult(null);
                     }
 
                     @Override
                     public void onError(FacebookException error) {
+                        Toast.makeText(getApplicationContext(), R.string.login_error, Toast.LENGTH_SHORT).show();
                         Log.d(SignInActivity.class.getCanonicalName(), error.getMessage());
                         handleSignInResult(null);
                     }
@@ -146,7 +149,6 @@ public class SignInActivity extends AppCompatActivity {
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -181,7 +183,9 @@ public class SignInActivity extends AppCompatActivity {
             } else {
                 handleSignInResult(null);
             }
-        } else {
+        } else if(TwitterAuthConfig.DEFAULT_AUTH_REQUEST_CODE == requestCode) {
+        mTwitterSignInButton.onActivityResult(requestCode, resultCode, data);
+    } else {
             mFacebookCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -192,7 +196,7 @@ public class SignInActivity extends AppCompatActivity {
             /* Login error */
             Toast.makeText(getApplicationContext(), R.string.login_error, Toast.LENGTH_SHORT).show();
         } else {
-            /* Login success */
+            /* Login success - open dashboard*/
             com.example.android.climapp.Application.getInstance().setLogoutCallable(logout);
             startActivity(new Intent(this, DashboardActivity.class));
         }

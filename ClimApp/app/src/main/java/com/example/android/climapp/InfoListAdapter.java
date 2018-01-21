@@ -15,12 +15,12 @@ import java.util.ArrayList;
  * Created by frksteenhoff on 29-10-2017.
  */
 
-public class WordAdapter extends ArrayAdapter<Word> {
+public class InfoListAdapter extends ArrayAdapter<InfoList> {
 
     private int mBackgroundColor;
 
-    public WordAdapter(Activity context, ArrayList<Word> words, int backgroundColor) {
-        super(context, 0, words);
+    public InfoListAdapter(Activity context, ArrayList<InfoList> items, int backgroundColor) {
+        super(context, 0, items);
         mBackgroundColor = backgroundColor;
     }
 
@@ -33,21 +33,21 @@ public class WordAdapter extends ArrayAdapter<Word> {
         }
 
         // Get the {@link AndroidFlavor} object located at this position in the list
-        Word currentWord = getItem(position);
+        InfoList currentItem = getItem(position);
 
         // Find the TextView in the list_view.xml layout with the ID version_name
         TextView settingTextView = (TextView) listItemView.findViewById(R.id.setting_view);
 
         // Get the version name from the current AndroidFlavor object and
         // set this text on the name TextView
-        settingTextView.setText(currentWord.getSetting());
+        settingTextView.setText(currentItem.getSetting());
 
         // Find the TextView in the list_item.xml layout with the ID version_number
         TextView settingValueTextView = (TextView) listItemView.findViewById(R.id.settingvalue_view);
 
         // Get the version number from the current AndroidFlavor object and
         // set this text on the number TextView
-        settingValueTextView.setText(currentWord.getSettingValue());
+        settingValueTextView.setText(currentItem.getSettingValue());
 
         // Return the whole list item layout (containing 2 TextViews and an ImageView)
         // so that it can be shown in the ListView
@@ -55,9 +55,9 @@ public class WordAdapter extends ArrayAdapter<Word> {
         ImageView thumbnailImageView = (ImageView) listItemView.findViewById(R.id.image_view);
 
         /* Check whether image is provided for word object */
-        if (currentWord.hasImage()) {
+        if (currentItem.hasImage()) {
             // set this image on the correct ImageView
-            thumbnailImageView.setImageResource(currentWord.getImage());
+            thumbnailImageView.setImageResource(currentItem.getImage());
         } else {
             thumbnailImageView.setVisibility(View.GONE);
         }

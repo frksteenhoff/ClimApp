@@ -15,6 +15,7 @@ public class SettingsActivity extends AppCompatActivity {
     public int Age;
     public int Height;
     public int Weight;
+    public int FitnessLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

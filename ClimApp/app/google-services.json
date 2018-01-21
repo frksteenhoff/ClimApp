@@ -42,6 +42,45 @@
           "status": 1
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912535355882:android:ee9a163939c9f882",
+        "android_client_info": {
+          "package_name": "com.example.android.climapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "912535355882-0k1teiffa4pp6312tqh18g0pkm0v429f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.android.climapp",
+            "certificate_hash": "870eb3604ef715ac6b69a47e08d8721cd63f240f"
+          }
+        },
+        {
+          "client_id": "912535355882-ddcug781tkls5302h4fqd8vpbpiv5pqi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNbY-T0bWJCVkvp66QCiXlERVrR0eAgJ0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
     }
   ],
   "configuration_version": "1"

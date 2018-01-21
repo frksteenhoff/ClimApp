@@ -2,9 +2,10 @@ package com.example.android.climapp;
 
 /**
  * Created by frksteenhoff on 29-10-2017.
+ * Represents user settings and their values as set by the user
  */
 
-public class Word {
+public class InfoList {
     /* Setting name*/
     private String mSetting;
 
@@ -16,13 +17,13 @@ public class Word {
     private static final int NO_IMAGE_PROVIDED = -1;
 
     /* New Word object ID */
-    public Word(String setting, String settingValue, int imageId) {
+    public InfoList(String setting, String settingValue, int imageId) {
         mSetting      = setting;
         mSettingValue = settingValue;
         mImageId      = imageId;
      }
 
-    public Word(String setting, String settingValue){
+    public InfoList(String setting, String settingValue){
         mSetting      = setting;
         mSettingValue = settingValue;
     }

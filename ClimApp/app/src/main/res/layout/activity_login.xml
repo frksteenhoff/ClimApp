@@ -28,11 +28,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:layout_margin="30dp"
-                android:drawableTop="@drawable/cloud" />
+                android:layout_margin="40dp"
+                android:drawableTop="@drawable/climapp_108dp" />
 
             <com.google.android.gms.common.SignInButton
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="70dp"
                 android:id="@+id/google_sign_in_button"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
