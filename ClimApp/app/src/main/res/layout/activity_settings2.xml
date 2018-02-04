@@ -12,9 +12,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Personal settings"
+                android:text="@string/Personal_Settings"
                 android:layout_margin="16dp"
-                android:textSize="12dp"
+                android:textSize="10dp"
                 android:textColor="@color/colorPrimaryDark"/>
             <TextView
                 android:id="@+id/age_settings"
@@ -46,8 +46,19 @@
                 android:layout_height="wrap_content"
                 android:text="@string/FitnessLevel"
                 android:layout_margin="16dp" />
-
-
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Preferences"
+                android:layout_margin="16dp"
+                android:textSize="10dp"
+                android:textColor="@color/colorPrimaryDark"/>
+            <TextView
+                android:id="@+id/notifications"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Notifications"
+                android:layout_margin="16dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

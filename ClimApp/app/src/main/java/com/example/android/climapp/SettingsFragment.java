@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 /**
  * Created by frksteenhoff on 10-10-2017.
+ * This code is not used right now, but will be used when the app moves from using activities to fragments.
  */
 
 public class SettingsFragment extends Fragment {

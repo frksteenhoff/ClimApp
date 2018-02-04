@@ -11,15 +11,12 @@
 
     <!-- Error messages -->
     <string name="login_error">Error during login</string>
-
-    <!-- Other login messages -->
     <string name="login_cancelled">Login cancelled. </string>
 
     <!-- Facebook information -->
     <string name="server_client_id">912535355882-9ud102rtm4qbsn265r2va8leqdef75p3.apps.googleusercontent.com</string>
     <string name="facebook_app_id">136565860303378</string>
     <string name="fb_login_protocol_scheme">fb136565860303378</string>
-
 
     <!-- Labels -->
     <string name="dashboard">Dashboard</string>
@@ -36,16 +33,28 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <string name="action_settings">Settings</string>
+    <!-- Settings related -->
+    <string name="action_settings">Settings</string> <!-- dashboard -->
+    <string name="Personal_Settings">Personal settings</string>
+    <string name="Notifications">Notifications</string>
+    <string name="Preferences">Preferences</string>
+
+    <!-- Settings reponses -->
+    <string name="age_updated">Age updated to: </string>
+    <string name="weight_updated">Weight updated to:</string>
+    <string name="height_updated">Height updated to:</string>
+    <string name="fitness_updated">Fitness level updated to: </string>
+
+    <!-- Settings - initial values -->
+    <string name="fitness_level">0.0</string>
+    <string name="user_height">150</string>
+    <string name="female_checked">false</string>
+    <string name="male_checked">false</string>
 
     <!-- Sentences -->
-
     <string name="select_age_picker_string">Please select your age by using the wheel or simply type it in.</string>
     <string name="select_height_picker_string">Please select your height by using the wheel or simply type it in.</string>
     <string name="select_weight_picker_string">Please select your weight by using the wheel or simply type it in.</string>
-    <string name="age_updated">Age updated to: </string>
-    <string name="weight_updated">Weight updated to: </string>
-    <string name="height_updated">Height updated to: </string>
     <string name="fitness_setting">Please enter your fitness level ..</string>
     <string name="fitness_description">Read more about setting your fitness level</string>
     <string name="gender_description">As this information solely is used to calculate your physical performance, we would like you to choose either male or female.</string>

@@ -1,18 +1,20 @@
 package com.example.android.climapp;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -28,31 +30,57 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 /**
- * Created by frksteenhoff on 29-10-2017.
+ * Created by frksteenhoff on 10-10-2017.
  */
 
-public class DashboardActivity extends AppCompatActivity
+import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.example.android.climapp.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
+
+public class DashboardFragment extends Fragment
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    TextView tempTextView, humidityTextView, pressureTextView, maleView;
+    public DashboardFragment() {
+        // Required empty public constructor
+    }
 
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
+    TextView tempTextView, humidityTextView, pressureTextView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.activity_dashboard, container, false);
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        // When using fragment add getView(). to find correct view by id
+        Toolbar toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
-        preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
-        editor = preferences.edit();
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) getView().findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                getActivity(), drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -60,37 +88,39 @@ public class DashboardActivity extends AppCompatActivity
         /* Location coordinates*/
         /* TODO - change with phone's location */
         Pair<Integer, Integer> Coordinates = new Pair<Integer, Integer>(35,139);
-
-        /* Connect to weather API openweathermap.com */
+        /* Conenct to weather API */
         APIConnection APIConn = new APIConnection("b1b15e88fa797225412429c1c50c122a1", Coordinates);
         Log.v("HESTE", "API access string:\n" + APIConn.getAPIContent());
         APIConn.execute();
 
         // Reference to views that should be updated
-        tempTextView     = (TextView) findViewById(R.id.temp_info);
-        humidityTextView = (TextView) findViewById(R.id.humidity_info);
-        pressureTextView = (TextView) findViewById(R.id.other_info);
+        tempTextView     = (TextView) getView().findViewById(R.id.temp_info);
+        humidityTextView = (TextView) getView().findViewById(R.id.humidity_info);
+        pressureTextView = (TextView) getView().findViewById(R.id.other_info);
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = (NavigationView) getView().findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        return rootView;
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+    public boolean onBackPressed() {
+        return true;
+    /*    DrawerLayout drawer = (DrawerLayout) getView().findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
-        }
+            return onBackPressedListener.OnBackPressed();
+        }*/
     }
-
+    /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.navigation, menu);
+        getActivity().getMenuInflater().inflate(R.menu.navigation, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -101,8 +131,7 @@ public class DashboardActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent settings = new Intent(DashboardActivity.this, SettingsActivity.class);
-            startActivity(settings);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -117,20 +146,17 @@ public class DashboardActivity extends AppCompatActivity
         if (id == R.id.nav_account) {
 
         } else if (id == R.id.nav_manage) {
-            Intent settings = new Intent(DashboardActivity.this, SettingsActivity.class);
-            startActivity(settings);
 
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = (DrawerLayout) getView().findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    // TODO: refactor such that APPIConnection is in it's own class
     public class APIConnection extends AsyncTask<String, String, String> {
 
         /* Key authorizing connection to API */
@@ -142,6 +168,7 @@ public class DashboardActivity extends AppCompatActivity
         private Pair<?,?> mPair;
         /* Calculated string based on input in constructor */
         private String mConnectionString;
+
         private String pageText;
 
         // JSON Node names
@@ -199,32 +226,36 @@ public class DashboardActivity extends AppCompatActivity
             return pageText;
         }
 
-        // When information has been fetched from weathermap, show data in dashboard
         protected void onPostExecute(String pageText) {
             try {
                 json = new JSONObject(pageText);
 
-                // Saving information from JSONObject in user preferences
+                // Getting needed information from JSONObject
                 // Humidity, pressure, temperature etc.
+                System.out.println(json.getJSONObject(TAG_MAIN));
                 humidity    = json.getJSONObject(TAG_MAIN).getInt(TAG_HUMIDITY);
                 pressure    = json.getJSONObject(TAG_MAIN).getInt(TAG_PRESSURE);
                 temperature = json.getJSONObject(TAG_MAIN).getInt(TAG_TEMPERATURE);
 
                 // Display data in UI
-                // Setting minimum length of string to be 15
-                tempTextView.setText(String.format("%1$15s", "Temperature: ") + temperature.toString() + " K");
-                humidityTextView.setText(String.format("%1$15s","Humidity:    ") + humidity.toString() + "%");
-                pressureTextView.setText(String.format("%1$15s","Pressure:    ") + pressure.toString() + " atm");
-
-                // Save all values to ser preferences
-                editor.putInt("Humidity", humidity);
-                editor.putInt("Pressure", pressure);
-                editor.putInt("Temperature", temperature);
-                editor.commit();
+                tempTextView.setText(String.format("%15s","Temperature: ") + temperature.toString() + " K");
+                humidityTextView.setText(String.format("%15s","Humidity:    ") + humidity.toString() + "%");
+                pressureTextView.setText(String.format("%15s","Pressure:    ") + pressure.toString() + " atm");
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
+    public interface OnBackPressedListener {
+
+        /**
+         * Callback, which is called if the Back Button is pressed.
+         * Fragments that extend MainFragment can/should override this Method.
+         *
+         * @return true if the App can be closed, false otherwise
+         */
+        boolean onBackPressed();
+    }
 }
+

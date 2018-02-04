@@ -1,5 +1,6 @@
 package com.example.android.climapp;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.RatingBar;
@@ -10,19 +11,28 @@ import android.widget.Toast;
  */
 
 public class SetFitnessLevelActivity extends AppCompatActivity {
-    public float FitnessLevel;
+
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fitness_level_settings);
 
+        preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
+        editor = preferences.edit();
+
+        // Rating bar, setting initial value
         RatingBar fitnessRating = (RatingBar) findViewById(R.id.FitnessRating);
+        fitnessRating.setRating(preferences.getFloat("Fitness", 0));
+
         fitnessRating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
-                FitnessLevel = v;
-                Toast.makeText(getApplicationContext(), "Fitness Level updated to" + FitnessLevel, Toast.LENGTH_SHORT).show();
+            public void onRatingChanged(RatingBar ratingBar, float newLevel, boolean b) {
+                editor.putFloat("Fitness", newLevel);
+                editor.commit();
+                Toast.makeText(getApplicationContext(), getString(R.string.fitness_updated) + " " + newLevel, Toast.LENGTH_SHORT).show();
             }
         });
     }
