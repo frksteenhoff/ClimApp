@@ -52,6 +52,28 @@
                     android:text="missing"
                     style="@style/DashboardTextStyle"/>
             </LinearLayout>
+            <Button
+                android:id="@+id/locationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Location"
+                android:onClick="getLocation"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                android:id="@+id/other"
+                android:text="missing"
+                android:layout_weight="1"
+                style="@style/DashboardTextStyle"/>
+            <TextView
+                android:id="@+id/other2"
+                android:text="missing"
+                android:layout_weight="1"
+                style="@style/DashboardTextStyle"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

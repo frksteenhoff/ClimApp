@@ -1,7 +1,12 @@
 package com.example.android.climapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -13,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -32,16 +38,23 @@ import java.util.stream.Collectors;
  */
 
 public class DashboardActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
 
     TextView tempTextView, humidityTextView, pressureTextView, maleView;
+
+    private final int REQUEST_RESOLVE_GOOGLE_CLIENT_ERROR = 1;
+    boolean mResolvingError;
+    private LocationManager locationManager;
+    private Location location;
+    private String provider;
+    Button mButton;
+    TextView tvother, tvother2;
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -50,14 +63,36 @@ public class DashboardActivity extends AppCompatActivity
         preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
         editor = preferences.edit();
 
+        // Attach navigation drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        /* Get current weather information */
-        /* Location coordinates*/
+        /* Location coordinates */
+        mButton = (Button) findViewById(R.id.locationButton);
+        tvother = (TextView) findViewById(R.id.other);
+        tvother2 = (TextView) findViewById(R.id.other2);
+
+        // Initialize locationManager
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+
+        // Check for permission to use location
+        try {
+            location = locationManager.getLastKnownLocation(provider);
+        } catch(SecurityException e) {
+            e.printStackTrace();
+        }
+
+        // Initialize the location
+        if (location != null) {
+            tvother.setText("Source = " + provider);
+            onLocationChanged(location);
+        }
+
         /* TODO - change with phone's location */
         Pair<Integer, Integer> Coordinates = new Pair<Integer, Integer>(35,139);
 
@@ -73,6 +108,23 @@ public class DashboardActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            locationManager.requestLocationUpdates(provider, 500, 1, this);
+        }
+        catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationManager.removeUpdates(this);
     }
 
     @Override
@@ -104,8 +156,28 @@ public class DashboardActivity extends AppCompatActivity
             Intent settings = new Intent(DashboardActivity.this, SettingsActivity.class);
             startActivity(settings);
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
+        tvother.setText(String.valueOf(lat) + " " + String.valueOf(lng));
+
+    }
+    @Override
+    public void onStatusChanged(String provider,
+                                int status, Bundle extras) {
+        tvother2.setText("Source = " + provider);
+    }
+    @Override
+    public void onProviderEnabled(String provider) {
+        tvother2.setText("Source = " + provider);
+    }
+    @Override
+    public void onProviderDisabled(String provider) {
+        tvother2.setText("Source = " + provider);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

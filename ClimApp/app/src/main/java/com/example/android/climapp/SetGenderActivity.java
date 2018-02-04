@@ -40,7 +40,7 @@ public class SetGenderActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     cb_f.setChecked(false);
-                    Toast.makeText(getApplicationContext(), R.string.m_check, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.male_checked, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -52,7 +52,7 @@ public class SetGenderActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     cb_m.setChecked(false);
-                    Toast.makeText(getApplicationContext(), R.string.f_check, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.female_checked, Toast.LENGTH_SHORT).show();
                 }
             }
         });

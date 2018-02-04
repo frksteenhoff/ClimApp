@@ -48,8 +48,8 @@
     <!-- Settings - initial values -->
     <string name="fitness_level">0.0</string>
     <string name="user_height">150</string>
-    <string name="female_checked">false</string>
-    <string name="male_checked">false</string>
+    <string name="female_checked">Female checked</string>
+    <string name="male_checked">Male checked</string>
 
     <!-- Sentences -->
     <string name="select_age_picker_string">Please select your age by using the wheel or simply type it in.</string>

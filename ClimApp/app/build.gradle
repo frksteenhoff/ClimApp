@@ -50,6 +50,7 @@ dependencies {
     // Adding Facebook, Twitter and Google dependencies when using API for login
     compile 'com.facebook.android:facebook-android-sdk:4.11.0'
     compile 'com.google.android.gms:play-services-auth:9.0.0'
+    compile 'com.google.android.gms:play-services-location:9.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile('com.twitter.sdk.android:twitter-core:1.6.3@aar') {
         transitive = true;
