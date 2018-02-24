@@ -13,7 +13,7 @@
     <string name="login_error">Error during login</string>
     <string name="login_cancelled">Login cancelled. </string>
 
-    <!-- Facebook information -->
+    <!-- Facebook information (no translation needed) -->
     <string name="server_client_id">912535355882-9ud102rtm4qbsn265r2va8leqdef75p3.apps.googleusercontent.com</string>
     <string name="facebook_app_id">136565860303378</string>
     <string name="fb_login_protocol_scheme">fb136565860303378</string>
@@ -33,11 +33,49 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
-    <!-- Settings related -->
+    <!-- OnBoarding sentences -->
+    <string name="welcome">Welcome!</string>
+    <string name="new_user">You seem to be a new user</string>
+    <string name="set_up">Let\'s get you started..</string>
+    <string name="get_to_know">Getting to know you..</string>
+    <string name="almost_done">Almost done..</string>
+    <!-- Sentences -->
+    <string name="set_age">Please provide your age</string>
+    <string name="set_gender">Please provide your gender</string>
+    <string name="set_height">Please provide your height</string>
+    <string name="set_weight">Please provide your weight</string>
+    <string name="set_fitness">Please provide your fitness level</string>
+    <string name="set_fitness_level">Set your fitness level by drawing the bar</string>
+    <!-- Button hints -->
+    <string name="Input_age">Input age (years)</string>
+    <string name="Input_gender">Input gender</string>
+    <string name="Input_height">Input height</string>
+    <string name="Input_weight">Input weight</string>
+    <string name="Input_fitness">Select fitness level</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="age_unit">Years</string>
+    <string name="height_unit_si">CM</string>
+    <string name="height_unit_uk">Feet</string>
+    <string name="height_unit_us">Inches</string>
+    <string name="weight_unit_si">Kg</string>
+    <string name="weight_unit_uk">Stones</string>
+    <string name="weight_unit_us">Pounds</string>
+    <string-array name="units_array">
+        <item>SI units (kg, cm)</item>
+        <item>US (pound, inch)</item>
+        <item>UK (stone, feet)</item>
+    </string-array>
+
+    <!-- Settings overall -->
     <string name="action_settings">Settings</string> <!-- dashboard -->
     <string name="Personal_Settings">Personal settings</string>
     <string name="Notifications">Notifications</string>
     <string name="Preferences">Preferences</string>
+    <string name="Other">Other</string>
+    <string name="Reset">Reset all preferences</string>
+    <string name="measuring_units">Measuring units</string>
+    <string name="units">Units</string>
 
     <!-- Settings reponses -->
     <string name="age_updated">Age updated to: </string>
@@ -57,6 +95,4 @@
     <string name="select_weight_picker_string">Please select your weight by using the wheel or simply type it in.</string>
     <string name="fitness_setting">Please enter your fitness level ..</string>
     <string name="fitness_description">Read more about setting your fitness level</string>
-    <string name="gender_description">As this information solely is used to calculate your physical performance, we would like you to choose either male or female.</string>
-
 </resources>

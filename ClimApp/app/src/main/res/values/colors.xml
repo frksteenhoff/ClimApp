@@ -5,5 +5,6 @@
     <color name="colorPrimaryLight">#91D7F6</color>
     <color name="colorAccent">#FBBA57</color>
 
-    <color name="CheckColor">@color/tw__medium_gray</color>
+    <color name="colorGrey">@color/tw__medium_gray</color>
+    <color name="colorLightGrey">@color/tw__light_gray</color>
 </resources>

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -12,8 +13,8 @@ import android.widget.Toast;
 
 public class SetHeightActivity extends AppCompatActivity {
 
-    SharedPreferences preferences;
-    SharedPreferences.Editor editor;
+    private static SharedPreferences preferences;
+    private static SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +23,10 @@ public class SetHeightActivity extends AppCompatActivity {
 
         preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
         editor = preferences.edit();
+
+        // Additional text stating input unit
+        TextView heightUnit = (TextView) findViewById(R.id.unit_text_height);
+        setCorrectPickerUnit(heightUnit);
 
         //Number picker for age
         NumberPicker np = (NumberPicker) findViewById(R.id.HeightPicker);
@@ -48,6 +53,28 @@ public class SetHeightActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), getString(R.string.height_updated) + " " + newVal, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /**
+     * Setting up the correct units to be displayed as input unit
+     * @param heightUnit the text to be displayed alongside the numberpicker
+     */
+    private void setCorrectPickerUnit(TextView heightUnit) {
+        int unit = preferences.getInt("Unit", 0);
+        switch (unit) {
+            case 0:
+                heightUnit.setText(R.string.height_unit_si);
+                break;
+            case 1:
+                heightUnit.setText(R.string.height_unit_uk);
+                break;
+            case 2:
+                heightUnit.setText(R.string.height_unit_us);
+                break;
+            default:
+                heightUnit.setText(R.string.height_unit_si);
+                break;
+        }
     }
 }
 

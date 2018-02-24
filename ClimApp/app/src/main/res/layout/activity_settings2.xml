@@ -13,21 +13,53 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/Personal_Settings"
-                android:layout_margin="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
                 android:textSize="10dp"
                 android:textColor="@color/colorPrimaryDark"/>
             <TextView
                 android:id="@+id/age_settings"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/Age"
                 android:layout_margin="16dp" />
-            <TextView
-                android:id="@+id/gender_settings"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/Gender"
-                android:layout_margin="16dp" />
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/gender_settings"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.4"
+                    android:layout_height="wrap_content"
+                    android:text="@string/Gender"
+                    android:layout_margin="16dp" />
+                <RadioGroup
+                    android:layout_width="0dp"
+                    android:layout_weight="0.6"
+                    android:id="@+id/gender_group"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="16dp">
+                    <RadioButton
+                        android:id="@+id/radio_male"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/male"
+                        android:gravity="center|right"
+                        android:checked="true"
+                        android:textColor="@color/tw__medium_gray">
+                    </RadioButton>
+                    <RadioButton
+                        android:id="@+id/radio_female"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/female"
+                        android:gravity="center|right"
+                        android:textColor="@color/tw__medium_gray"/>
+                </RadioGroup>
+            </LinearLayout>
             <TextView
                 android:id="@+id/weight_settings"
                 android:layout_width="match_parent"
@@ -46,11 +78,16 @@
                 android:layout_height="wrap_content"
                 android:text="@string/FitnessLevel"
                 android:layout_margin="16dp" />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGrey"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/Preferences"
-                android:layout_margin="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
                 android:textSize="10dp"
                 android:textColor="@color/colorPrimaryDark"/>
             <TextView
@@ -58,6 +95,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/Notifications"
+                android:layout_margin="16dp" />
+            <TextView
+                android:id="@+id/units"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/measuring_units"
+                android:layout_margin="16dp" />
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGrey"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Other"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:textSize="10dp"
+                android:textColor="@color/colorPrimaryDark"/>
+            <TextView
+                android:id="@+id/reset"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Reset"
                 android:layout_margin="16dp" />
         </LinearLayout>
     </ScrollView>

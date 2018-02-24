@@ -1,6 +1,8 @@
 package com.example.android.climapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Criteria;
@@ -9,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -63,6 +66,17 @@ public class DashboardActivity extends AppCompatActivity
         preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
         editor = preferences.edit();
 
+        // Check whether onboarding has been completed
+        if(!preferences.getBoolean("onboarding_complete", false)) {
+            // Start onboarding activity
+            Intent onBoarding = new Intent(this, OnBoardingActivity.class);
+            startActivity(onBoarding);
+
+            // Close main activity
+            finish();
+            return;
+        }
+
         // Attach navigation drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -75,13 +89,15 @@ public class DashboardActivity extends AppCompatActivity
         tvother = (TextView) findViewById(R.id.other);
         tvother2 = (TextView) findViewById(R.id.other2);
 
+        /* TODO - change with phone's location */
         // Initialize locationManager
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
-        provider = locationManager.getBestProvider(criteria, false);
+        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
 
-        // Check for permission to use location
+        /*// Check for permission to use location
         try {
+            provider = locationManager.getBestProvider(criteria, true);
             location = locationManager.getLastKnownLocation(provider);
         } catch(SecurityException e) {
             e.printStackTrace();
@@ -91,9 +107,8 @@ public class DashboardActivity extends AppCompatActivity
         if (location != null) {
             tvother.setText("Source = " + provider);
             onLocationChanged(location);
-        }
+        }*/
 
-        /* TODO - change with phone's location */
         Pair<Integer, Integer> Coordinates = new Pair<Integer, Integer>(35,139);
 
         /* Connect to weather API openweathermap.com */
@@ -102,14 +117,14 @@ public class DashboardActivity extends AppCompatActivity
         APIConn.execute();
 
         // Reference to views that should be updated
-        tempTextView     = (TextView) findViewById(R.id.temp_info);
-        humidityTextView = (TextView) findViewById(R.id.humidity_info);
-        pressureTextView = (TextView) findViewById(R.id.other_info);
+        tempTextView     = (TextView) findViewById(R.id.temp_value);
+        humidityTextView = (TextView) findViewById(R.id.humidity_value);
+        pressureTextView = (TextView) findViewById(R.id.other_value);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
-
+    /*
     @Override
     protected void onResume() {
         super.onResume();
@@ -126,7 +141,7 @@ public class DashboardActivity extends AppCompatActivity
         super.onPause();
         locationManager.removeUpdates(this);
     }
-
+    */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -164,11 +179,35 @@ public class DashboardActivity extends AppCompatActivity
         double lat = location.getLatitude();
         double lng = location.getLongitude();
         tvother.setText(String.valueOf(lat) + " " + String.valueOf(lng));
-
     }
+
+    private boolean isLocationEnabled() {
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    private void showAlert() {
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+        dialog.setTitle("Enable Location")
+                .setMessage("Your Locations Settings is set to 'Off'.\nPlease Enable Location to " +
+                        "use this app")
+                .setPositiveButton("Location Settings", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                        Intent myIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        startActivity(myIntent);
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                    }
+                });
+        dialog.show();
+    }
+
+
     @Override
-    public void onStatusChanged(String provider,
-                                int status, Bundle extras) {
+    public void onStatusChanged(String provider, int status, Bundle extras) {
         tvother2.setText("Source = " + provider);
     }
     @Override
@@ -202,7 +241,7 @@ public class DashboardActivity extends AppCompatActivity
         return true;
     }
 
-    // TODO: refactor such that APPIConnection is in it's own class
+    // TODO: refactor such that APIConnection is in it's own class
     public class APIConnection extends AsyncTask<String, String, String> {
 
         /* Key authorizing connection to API */
@@ -284,9 +323,9 @@ public class DashboardActivity extends AppCompatActivity
 
                 // Display data in UI
                 // Setting minimum length of string to be 15
-                tempTextView.setText(String.format("%1$15s", "Temperature: ") + temperature.toString() + " K");
-                humidityTextView.setText(String.format("%1$15s","Humidity:    ") + humidity.toString() + "%");
-                pressureTextView.setText(String.format("%1$15s","Pressure:    ") + pressure.toString() + " atm");
+                tempTextView.setText(temperature.toString() + " K");
+                humidityTextView.setText(humidity.toString() + "%");
+                pressureTextView.setText(pressure.toString() + " atm");
 
                 // Save all values to ser preferences
                 editor.putInt("Humidity", humidity);

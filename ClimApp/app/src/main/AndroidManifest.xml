@@ -67,6 +67,12 @@
                 android:value="com.example.android.climapp.DashboardActivity" />-->
         </activity>
         <activity
+            android:name=".OnBoardingActivity"
+            android:label="OnBoarding"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".DashboardActivity">
+        </activity>
+        <activity
             android:name=".SettingsActivity"
             android:label="@string/settings"
             android:parentActivityName=".DashboardActivity">
@@ -76,15 +82,7 @@
         </activity>
         <activity
             android:name=".SetAgeActivity"
-            android:label="@string/settings"
-            android:parentActivityName=".SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.climapp.SettingsActivity" />
-        </activity>
-        <activity
-            android:name=".SetGenderActivity"
-            android:label="@string/settings"
+            android:label="@string/Age"
             android:parentActivityName=".SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -92,7 +90,7 @@
         </activity>
         <activity
             android:name=".SetHeightActivity"
-            android:label="@string/settings"
+            android:label="@string/Height"
             android:parentActivityName=".SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -100,7 +98,7 @@
         </activity>
         <activity
             android:name=".SetWeightActivity"
-            android:label="@string/settings"
+            android:label="@string/Weight"
             android:parentActivityName=".SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -108,7 +106,15 @@
         </activity>
         <activity
             android:name=".SetFitnessLevelActivity"
-            android:label="@string/settings"
+            android:label="@string/fitness_level"
+            android:parentActivityName=".SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.climapp.SettingsActivity" />
+        </activity>
+        <activity
+            android:name=".SetUnitsActivity"
+            android:label="@string/units"
             android:parentActivityName=".SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

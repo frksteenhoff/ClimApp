@@ -40,7 +40,30 @@
         <item name="android:textColor">@color/tw__medium_gray</item>
         <item name="android:layout_weight">1</item>
     </style>
+    <style name="DashboardTextStyleInfo">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:layout_margin">16dp</item>
+        <item name="android:textColor">@color/tw__medium_gray</item>
+    </style>
 
+    <!-- OnBoarding hint text style-->
+    <style name="hintViewStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@drawable/border</item>
+    </style>
+    
+    <!-- OnBoarding top CardView text style -->
+    <style name="topCVTextStyle">
+    </style>
+    
+    <!-- OnBoarding bottom CardView text style -->
+    <style name="bottomCVTextStyle">
+    </style>
     <!-- Settings-2 style -->
     <style name="SettingsTextStyle2">
         <item name="android:layout_margin">16dp</item>
@@ -76,13 +99,11 @@
         <item name="android:layout_weight">1</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
     </style>
-
+    
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

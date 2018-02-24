@@ -23,13 +23,18 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/dummy"
+                android:src="@drawable/ic_alarm_black_24dp"
                 android:layout_margin="20dp"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Remember to drink water!"
-                android:textAlignment="center"/>
+                android:textAlignment="center"
+                android:layout_marginBottom="20dp"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGrey"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -39,26 +44,69 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-                <TextView
-                    android:id="@+id/temp_info"
-                    android:text="Temperature"
-                    style="@style/DashboardTextStyle"/>
-                <TextView
-                    android:id="@+id/humidity_info"
-                    android:text="Humdity"
-                    style="@style/DashboardTextStyle"/>
-                <TextView
-                    android:id="@+id/other_info"
-                    android:text="missing"
-                    style="@style/DashboardTextStyle"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_weight="0.4"
+                        android:id="@+id/temp_info"
+                        android:text="Temperature"
+                        style="@style/DashboardTextStyleInfo"/>
+                    <TextView
+                        android:id="@+id/temp_value"
+                        android:layout_weight="0.6"
+                        android:text="value"
+                        style="@style/DashboardTextStyleInfo"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_weight="0.4"
+                        android:id="@+id/humidity_info"
+                        android:text="Humdity"
+                        style="@style/DashboardTextStyleInfo"/>
+                    <TextView
+                        android:id="@+id/humidity_value"
+                        android:layout_weight="0.6"
+                        android:text="value"
+                        style="@style/DashboardTextStyleInfo"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_weight="0.4"
+                        android:id="@+id/other_info"
+                        android:text="missing"
+                        style="@style/DashboardTextStyleInfo"/>
+                    <TextView
+                        android:id="@+id/other_value"
+                        android:layout_weight="0.6"
+                        android:text="value"
+                        style="@style/DashboardTextStyleInfo"/>
+                </LinearLayout>
             </LinearLayout>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGrey"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Location"
+                android:layout_margin="16dp"/>
             <Button
                 android:id="@+id/locationButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Location"
-                android:onClick="getLocation"/>
+                android:onClick="getLocation"
+                android:layout_margin="20dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -67,11 +115,13 @@
                 android:id="@+id/other"
                 android:text="missing"
                 android:layout_weight="1"
+                    android:gravity="center"
                 style="@style/DashboardTextStyle"/>
             <TextView
                 android:id="@+id/other2"
                 android:text="missing"
                 android:layout_weight="1"
+                android:gravity="center"
                 style="@style/DashboardTextStyle"/>
             </LinearLayout>
         </LinearLayout>

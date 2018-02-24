@@ -12,18 +12,18 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/FitnessLevel"
-                style="@style/SettingsTextStyle"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:text="@string/fitness_setting"
                 style="@style/SettingsTextStyleNoCaps"/>
             <RatingBar
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.4"
+                android:numStars="5"
+                android:stepSize="0.1"
                 android:id="@+id/FitnessRating"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"/>
+                android:hint="@string/Input_fitness"
+                android:layout_margin="20dp"/>
             <TextView
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
