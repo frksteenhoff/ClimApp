@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- The dashboard contents -->
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -56,7 +57,7 @@
                     <TextView
                         android:id="@+id/temp_value"
                         android:layout_weight="0.6"
-                        android:text=""
+                        android:text="value"
                         style="@style/DashboardTextStyleInfo"/>
                 </LinearLayout>
                 <LinearLayout
@@ -71,7 +72,7 @@
                     <TextView
                         android:id="@+id/humidity_value"
                         android:layout_weight="0.6"
-                        android:text=""
+                        android:text="value"
                         style="@style/DashboardTextStyleInfo"/>
                 </LinearLayout>
                 <LinearLayout
@@ -81,12 +82,12 @@
                     <TextView
                         android:layout_weight="0.4"
                         android:id="@+id/other_info"
-                        android:text="Pressure"
+                        android:text="missing"
                         style="@style/DashboardTextStyleInfo"/>
                     <TextView
                         android:id="@+id/other_value"
                         android:layout_weight="0.6"
-                        android:text=""
+                        android:text="value"
                         style="@style/DashboardTextStyleInfo"/>
                 </LinearLayout>
             </LinearLayout>
@@ -99,6 +100,14 @@
                 android:layout_height="wrap_content"
                 android:text="Location"
                 android:layout_margin="16dp"/>
+            <Button
+                android:id="@+id/locationButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Location"
+                android:onClick="getLocation"
+                android:layout_margin="20dp"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -116,14 +125,6 @@
                     android:gravity="center"
                     style="@style/DashboardTextStyle"/>
             </LinearLayout>
-            <Button
-                android:id="@+id/locationButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Reload location"
-                android:onClick="getLocation"
-                android:layout_margin="20dp"/>
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

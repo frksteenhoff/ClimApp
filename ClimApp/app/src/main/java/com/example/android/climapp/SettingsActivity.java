@@ -93,7 +93,7 @@ public class SettingsActivity extends AppCompatActivity {
                  preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
                  preferences.edit().clear().commit();
                  // Setting onboarding to be true in order to prevent it from showing up again.
-                 preferences.edit().putBoolean("onboarding_complete", true).commit();
+                 //preferences.edit().putBoolean("onboarding_complete", true).commit();
                  Toast.makeText(getApplicationContext(), "All preferences cleared", Toast.LENGTH_SHORT).show();
              }
         });

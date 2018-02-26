@@ -18,7 +18,8 @@
         <item name="android:layout_marginLeft">24dp</item>
         <item name="android:layout_marginRight">24dp</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">0.15</item>
         <item name="android:layout_marginTop">14dp</item>
     </style>
 
@@ -52,7 +53,16 @@
     <style name="hintViewStyle">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_margin">20dp</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@drawable/border</item>
+    </style>
+    <style name="signUpViewStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginLeft">50dp</item>
+        <item name="android:layout_marginRight">50dp</item>
+        <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:background">@drawable/border</item>
     </style>

@@ -44,7 +44,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
-        </activity>
+        </activity>-->
         <activity
             android:name=".SignInActivity"
             android:label="@string/sign_in"
@@ -57,7 +57,7 @@
                     android:host="redirect"
                     android:scheme="sociallogin" />
             </intent-filter>
-        </activity>-->
+        </activity>
         <activity
             android:name=".DashboardActivity"
             android:label="@string/dashboard"

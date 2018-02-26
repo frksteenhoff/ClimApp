@@ -26,13 +26,19 @@
             <TextView
                 android:id="@+id/welcomeImage"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="0.4"
                 android:gravity="center_horizontal"
                 android:layout_margin="40dp"
                 android:drawableTop="@drawable/climapp_108dp" />
-
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome!"
+                android:layout_gravity="center"
+                android:textSize="20dp"/>
             <com.google.android.gms.common.SignInButton
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="20dp"
                 android:id="@+id/google_sign_in_button"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
@@ -46,10 +52,15 @@
             <com.facebook.login.widget.LoginButton
                 android:id="@+id/facebook_sign_in_button"
                 android:paddingTop="12dp"
-                android:paddingBottom="12dp"
                 android:layout_marginBottom="5dp"
-                style="@style/LoginButtonStyle"/>
-
+                style="@style/LoginButtonStyle" />
+            <Button
+                android:id="@+id/climapp_signup"
+                style="@style/LoginButtonStyle"
+                android:paddingBottom="12dp"
+                android:text="@string/sign_up"
+                android:backgroundTint="@color/colorPrimary"
+                android:textColor="@color/tw__solid_white"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
