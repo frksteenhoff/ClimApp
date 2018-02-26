@@ -3,6 +3,7 @@
 
     <!-- Sign-in status messages -->
     <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up </string>
     <string name="signed_in_fmt">Signed in as: %s</string>
     <string name="signed_in">Signed in</string>
     <string name="signing_in">Signing in…</string>
@@ -39,6 +40,11 @@
     <string name="set_up">Let\'s get you started..</string>
     <string name="get_to_know">Getting to know you..</string>
     <string name="almost_done">Almost done..</string>
+    <string name="user_first_name">First name</string>
+    <string name="user_last_name">Last name</string>
+    <string name="user_e_mail">E-mail address</string>
+    <string name="user_password">Password</string>
+
     <!-- Sentences -->
     <string name="set_age">Please provide your age</string>
     <string name="set_gender">Please provide your gender</string>
@@ -47,7 +53,7 @@
     <string name="set_fitness">Please provide your fitness level</string>
     <string name="set_fitness_level">Set your fitness level by drawing the bar</string>
     <!-- Button hints -->
-    <string name="Input_age">Input age (years)</string>
+    <string name="Input_age">Input date of birth (DDMMYY)</string>
     <string name="Input_gender">Input gender</string>
     <string name="Input_height">Input height</string>
     <string name="Input_weight">Input weight</string>
@@ -95,4 +101,7 @@
     <string name="select_weight_picker_string">Please select your weight by using the wheel or simply type it in.</string>
     <string name="fitness_setting">Please enter your fitness level ..</string>
     <string name="fitness_description">Read more about setting your fitness level</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

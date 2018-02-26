@@ -66,6 +66,7 @@ public class DashboardActivity extends AppCompatActivity
         preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
         editor = preferences.edit();
 
+        Log.v("HESTE", preferences.getBoolean("onboarding_complete", false) + "");
         // Check whether onboarding has been completed
         if(!preferences.getBoolean("onboarding_complete", false)) {
             // Start onboarding activity

@@ -42,7 +42,8 @@ public class OnBoardingActivity extends FragmentActivity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return new OnBoardingFragment1();
+                        //return new SignUpFragment();
+                        return new SignUpFragment();
                     case 1:
                         return new OnBoardingFragment2();
                     case 2:

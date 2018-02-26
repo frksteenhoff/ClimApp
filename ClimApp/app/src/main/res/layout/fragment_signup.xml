@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/climapp_logo"
+        android:layout_margin="40dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/set_up"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/colorPrimaryDark"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_first_name"
+        style="@style/signUpViewStyle"
+        android:hint="@string/user_first_name"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_last_name"
+        style="@style/signUpViewStyle"
+        android:hint="@string/user_last_name"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/user_e_mail"
+        style="@style/signUpViewStyle"
+        android:hint="@string/user_e_mail"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:id="@+id/user_password"
+        style="@style/signUpViewStyle"
+        android:hint="@string/user_password"/>
+</LinearLayout>
