@@ -8,8 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
@@ -30,11 +32,12 @@ public class OnBoardingActivity extends FragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_onboarding);
+        setContentView(R.layout.onboard_activity);
         pager = (ViewPager) findViewById(R.id.pager);
         indicator = (SmartTabLayout) findViewById(R.id.indicator);
         skip = (Button) findViewById(R.id.skip);
         next = (Button) findViewById(R.id.next);
+        preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
 
         // Returning the correct onboarding fragment
         FragmentStatePagerAdapter adapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
@@ -81,7 +84,15 @@ public class OnBoardingActivity extends FragmentActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (pager.getCurrentItem() == 5) {
+                if(pager.getCurrentItem() == 1) {
+                    EditText currentText = (EditText) findViewById(R.id.set_age);
+                    // Only add date of birth if correct length
+                    if(currentText.length() == 8) {
+                        preferences.edit().putString("Age", currentText.toString()).commit();
+                        Log.v("HESTE","Added age");
+                    }
+                    pager.setCurrentItem(pager.getCurrentItem() + 1);
+                } else if (pager.getCurrentItem() == 5) {
                     finishOnBoarding();
                 } else {
                     // Increment counter for the current on boarding screen
@@ -104,18 +115,18 @@ public class OnBoardingActivity extends FragmentActivity {
             }
         });
     }
-        private void finishOnBoarding() {
-            // Get the shared preferences
-            preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
+    private void finishOnBoarding() {
+        // Get the shared preferences
+        preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
 
-            // Set on_boarding complete to true
-            preferences.edit().putBoolean("onboarding_complete", true).commit();
+        // Set on_boarding complete to true
+        preferences.edit().putBoolean("onboarding_complete", true).commit();
 
-            // Launch main activity
-            Intent main = new Intent(this, DashboardActivity.class);
-            startActivity(main);
+        // Launch main activity
+        Intent main = new Intent(this, DashboardActivity.class);
+        startActivity(main);
 
-            // Close onboarding activity
-            finish();
+        // Close onboarding activity
+        finish();
     }
 }

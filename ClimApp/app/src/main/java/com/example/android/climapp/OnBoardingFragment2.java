@@ -13,9 +13,9 @@ import android.view.ViewGroup;
 
 public class OnBoardingFragment2 extends DialogFragment {
 
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.onboard2_age, container, false);
-        }
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.onboard2_age, container, false);
+    }
 }

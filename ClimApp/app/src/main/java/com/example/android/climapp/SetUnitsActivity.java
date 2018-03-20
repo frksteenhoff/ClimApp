@@ -17,7 +17,7 @@ public class SetUnitsActivity extends AppCompatActivity implements AdapterView.O
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.units_settings);
+        setContentView(R.layout.settings_units);
 
         preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
         Spinner spinner = (Spinner) findViewById(R.id.units_spinner);
@@ -26,25 +26,25 @@ public class SetUnitsActivity extends AppCompatActivity implements AdapterView.O
         spinner.setSelection(preferences.getInt("Unit", 0));
         spinner.setOnItemSelectedListener(this);
     }
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
-                if(position == 0) {
-                    // If SI units selected, show SI units in pickers
-                    preferences.edit().putInt("Unit", 0).commit();
+        if(position == 0) {
+            // If SI units selected, show SI units in pickers
+            preferences.edit().putInt("Unit", 0).commit();
 
-                } else if (position == 1) {
-                    // If US units selected, show US units in pickers
-                    preferences.edit().putInt("Unit", 1).commit();
-                } else {
-                    // If UK units selected, show UK units in pickers
-                    preferences.edit().putInt("Unit", 2).commit();
-                }
-            }
+        } else if (position == 1) {
+            // If US units selected, show US units in pickers
+            preferences.edit().putInt("Unit", 1).commit();
+        } else {
+            // If UK units selected, show UK units in pickers
+            preferences.edit().putInt("Unit", 2).commit();
+        }
+    }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                // TODO: add something?
-                // Right now not a problem, as SI units is chosen if nothing has been set.
-            }
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+        // TODO: add something?
+        // Right now not a problem, as SI units is chosen if nothing has been set.
+    }
 }

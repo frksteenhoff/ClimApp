@@ -1,4 +1,28 @@
 package legacy;
+/*
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
+import com.crashlytics.android.answers.Answers;
+import com.example.android.climapp.DashboardActivity;
+import com.example.android.climapp.R;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
+import java.util.concurrent.Callable;
+
+import io.fabric.sdk.android.Fabric;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,16 +35,16 @@ import android.widget.Toast;
 import com.crashlytics.android.answers.Answers;
 import com.example.android.climapp.DashboardActivity;
 import com.example.android.climapp.R;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.auth.api.Auth;
+//import com.facebook.CallbackManager;
+//import com.facebook.FacebookCallback;
+//import com.facebook.FacebookException;
+//import com.facebook.FacebookSdk;
+//import com.facebook.login.LoginManager;
+//import com.facebook.login.LoginResult;
+//import com.facebook.login.widget.LoginButton;
+//import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+//import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -40,7 +64,32 @@ import io.fabric.sdk.android.Fabric;
 /**
  * Created by frksteenhoff on 10-10-2017.
  *
- */
+
+
+import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
+
+import com.crashlytics.android.answers.Answers;
+import com.example.android.climapp.DashboardActivity;
+import com.example.android.climapp.R;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
+import java.util.concurrent.Callable;
+
+import io.fabric.sdk.android.Fabric;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -185,7 +234,7 @@ public class SignInActivity extends AppCompatActivity {
                                         public void onResult(Status status) {
                                             Log.d(SignInActivity.class.getCanonicalName(),
                                                     status.getStatusMessage());
-                                        /* TODO: handle logout failures */
+                                        // TODO: handle logout failures
                                         }
                                     }
                             );
@@ -207,12 +256,13 @@ public class SignInActivity extends AppCompatActivity {
     // Handling the result from trying to login w. Google or Facebook
     private void handleSignInResult(Callable<Void> logout) {
         if (logout == null) {
-            /* Login error */
+            // Login error
             Toast.makeText(getApplicationContext(), R.string.login_error, Toast.LENGTH_SHORT).show();
         } else {
-            /* Login success - open dashboard*/
+            // Login success - open dashboard
             com.example.android.climapp.Application.getInstance().setLogoutCallable(logout);
             startActivity(new Intent(this, DashboardActivity.class));
         }
     }
 }
+*/

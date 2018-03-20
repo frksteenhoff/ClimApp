@@ -34,6 +34,6 @@
             style="@style/hintViewStyle"
             android:id="@+id/set_height"
             android:hint="@string/Input_height"
-            android:inputType="number"/>
+            android:inputType="number"/> 
     </LinearLayout>
 </LinearLayout>

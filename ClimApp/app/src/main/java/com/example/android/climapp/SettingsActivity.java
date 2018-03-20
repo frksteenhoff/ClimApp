@@ -20,7 +20,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings2);
+        setContentView(R.layout.settings_activity2);
         preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
 
         RadioGroup genderChecked = (RadioGroup) findViewById(R.id.gender_group);

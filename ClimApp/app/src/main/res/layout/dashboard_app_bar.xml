@@ -19,6 +19,6 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_dashboard" />
+    <include layout="@layout/dashboard_content" />
 
 </android.support.design.widget.CoordinatorLayout>
