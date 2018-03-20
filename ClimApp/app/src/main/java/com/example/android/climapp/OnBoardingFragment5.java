@@ -16,6 +16,6 @@ public class OnBoardingFragment5 extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.onboarding_screen5, container, false);
+        return inflater.inflate(R.layout.onboard5_weight, container, false);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.android.climapp;
+package legacy;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
+import com.example.android.climapp.DashboardActivity;
+import com.example.android.climapp.R;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;

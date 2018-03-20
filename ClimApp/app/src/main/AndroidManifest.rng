@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="" xmlns:android="http://schemas.android.com/apk/res/android" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <start>
+        <element name="manifest">
+            <attribute name="package">
+                <data type="NCName"/>
+            </attribute>
+            <oneOrMore>
+                <element name="uses-permission">
+                    <attribute name="android:name">
+                        <data type="NCName"/>
+                    </attribute>
+                </element>
+            </oneOrMore>
+            <element name="application">
+                <attribute name="android:allowBackup">
+                    <data type="boolean"/>
+                </attribute>
+                <attribute name="android:icon"/>
+                <attribute name="android:label"/>
+                <attribute name="android:roundIcon"/>
+                <attribute name="android:supportsRtl">
+                    <data type="boolean"/>
+                </attribute>
+                <attribute name="android:theme"/>
+                <oneOrMore>
+                    <ref name="meta-data"/>
+                </oneOrMore>
+                <oneOrMore>
+                    <element name="activity">
+                        <attribute name="android:label"/>
+                        <attribute name="android:name">
+                            <data type="NMTOKEN"/>
+                        </attribute>
+                        <optional>
+                            <attribute name="android:parentActivityName">
+                                <data type="NMTOKEN"/>
+                            </attribute>
+                        </optional>
+                        <optional>
+                            <attribute name="android:theme"/>
+                        </optional>
+                        <optional>
+                            <choice>
+                                <ref name="meta-data"/>
+                                <element name="intent-filter">
+                                    <element name="action">
+                                        <attribute name="android:name">
+                                            <data type="NCName"/>
+                                        </attribute>
+                                    </element>
+                                    <oneOrMore>
+                                        <element name="category">
+                                            <attribute name="android:name">
+                                                <data type="NCName"/>
+                                            </attribute>
+                                        </element>
+                                    </oneOrMore>
+                                    <optional>
+                                        <element name="data">
+                                            <attribute name="android:host">
+                                                <data type="NCName"/>
+                                            </attribute>
+                                            <attribute name="android:scheme">
+                                                <data type="NCName"/>
+                                            </attribute>
+                                        </element>
+                                    </optional>
+                                </element>
+                            </choice>
+                        </optional>
+                    </element>
+                </oneOrMore>
+            </element>
+        </element>
+    </start>
+    <define name="meta-data">
+        <element name="meta-data">
+            <attribute name="android:name">
+                <data type="NCName"/>
+            </attribute>
+            <attribute name="android:value"/>
+        </element>
+    </define>
+</grammar>

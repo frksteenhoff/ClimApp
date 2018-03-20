@@ -16,12 +16,12 @@
         android:roundIcon="@mipmap/climapp_logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data
+        <!--<meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="c49fe7c711443151b7dc986906330aa232f15e44" />
+            android:value="c49fe7c711443151b7dc986906330aa232f15e44" />-->
         <activity
             android:name=".SplashActivity"
             android:label="@string/app_name"
@@ -45,7 +45,7 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>-->
-        <activity
+        <!--<activity
             android:name=".SignInActivity"
             android:label="@string/sign_in"
             android:theme="@style/AppTheme.NoActionBar">
@@ -57,7 +57,7 @@
                     android:host="redirect"
                     android:scheme="sociallogin" />
             </intent-filter>
-        </activity>
+        </activity>-->
         <activity
             android:name=".DashboardActivity"
             android:label="@string/dashboard"
@@ -71,6 +71,14 @@
             android:label="OnBoarding"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".DashboardActivity">
+        </activity>
+        <activity
+            android:name=".ClothingActivity"
+            android:label="@string/clothing"
+            android:parentActivityName=".DashboardActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.climapp.DashboardActivity" />
         </activity>
         <activity
             android:name=".SettingsActivity"

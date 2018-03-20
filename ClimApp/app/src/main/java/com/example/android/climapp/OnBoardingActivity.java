@@ -43,7 +43,7 @@ public class OnBoardingActivity extends FragmentActivity {
                 switch (position) {
                     case 0:
                         //return new SignUpFragment();
-                        return new SignUpFragment();
+                        return new OnBoardingFragment1();
                     case 1:
                         return new OnBoardingFragment2();
                     case 2:
@@ -52,6 +52,8 @@ public class OnBoardingActivity extends FragmentActivity {
                         return new OnBoardingFragment4();
                     case 4:
                         return new OnBoardingFragment5();
+                    case 5:
+                        return new OnBoardingFragment6();
                     default:
                         return null;
                 }
@@ -59,7 +61,7 @@ public class OnBoardingActivity extends FragmentActivity {
 
             @Override
             public int getCount() {
-                return 5;
+                return 6;
             }
         };
 
@@ -79,7 +81,7 @@ public class OnBoardingActivity extends FragmentActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (pager.getCurrentItem() == 4) {
+                if (pager.getCurrentItem() == 5) {
                     finishOnBoarding();
                 } else {
                     // Increment counter for the current on boarding screen
@@ -92,7 +94,7 @@ public class OnBoardingActivity extends FragmentActivity {
         indicator.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                if (position == 4) {
+                if (position == 5) {
                     skip.setVisibility(View.GONE);
                     next.setText("Done");
                 } else {

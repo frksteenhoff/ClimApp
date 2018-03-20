@@ -11,11 +11,11 @@ import android.view.ViewGroup;
  * Created by frksteenhoff on 19-02-2018.
  */
 
-public class SignUpFragment extends Fragment {
+public class OnBoardingFragment6 extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_signup, container, false);
+        return inflater.inflate(R.layout.onboard6_fitness, container, false);
     }
 }

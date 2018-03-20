@@ -19,9 +19,10 @@
     <string name="facebook_app_id">136565860303378</string>
     <string name="fb_login_protocol_scheme">fb136565860303378</string>
 
-    <!-- Labels -->
+    <!-- Main Screen Labels -->
     <string name="dashboard">Dashboard</string>
     <string name="settings">Settings</string>
+    <string name="clothing">Clothing</string>
 
     <!-- General titles -->
     <string name="Age">Age</string>
@@ -46,6 +47,7 @@
     <string name="user_password">Password</string>
 
     <!-- Sentences -->
+    <string name="set_unit">Please provide measurement units from drop-down</string>
     <string name="set_age">Please provide your age</string>
     <string name="set_gender">Please provide your gender</string>
     <string name="set_height">Please provide your height</string>
@@ -58,6 +60,7 @@
     <string name="Input_height">Input height</string>
     <string name="Input_weight">Input weight</string>
     <string name="Input_fitness">Select fitness level</string>
+    <string name="Input_unit">Select unit</string>
     <string name="female">Female</string>
     <string name="male">Male</string>
     <string name="age_unit">Years</string>

@@ -32,8 +32,8 @@
         android:orientation="vertical">
         <EditText
             style="@style/hintViewStyle"
-            android:id="@+id/set_age"
-            android:hint="@string/Input_height"
+            android:id="@+id/set_weight"
+            android:hint="@string/Input_weight"
             android:inputType="number"/>
     </LinearLayout>
 </LinearLayout>
