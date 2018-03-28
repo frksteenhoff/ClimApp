@@ -1,23 +1,22 @@
 package com.example.android.climapp;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 /**
  * Created by frksteenhoff on 26-02-2018.
  */
 
-public class PageAdapter extends FragmentPagerAdapter {
+public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
 
+    int mNumOfTabs;
     public static final int PAGE_NUM = 3;
     private String tabTitles[] = new String[] { "Settings", "Dashboard", "Clothing"};
-    private Context context;
 
-    public PageAdapter(FragmentManager fm, Context context) {
+    public FragmentPagerAdapter(FragmentManager fm, int PAGE_NUM) {
         super(fm);
-        this.context = context;
+        this.mNumOfTabs = PAGE_NUM;
     }
 
     @Override

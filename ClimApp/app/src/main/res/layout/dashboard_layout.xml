@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- The dashboard contents -->
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/dashboard_app_bar">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,10 +16,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Suggestions"
-                android:layout_margin="16dp"/>
+                style="@style/SmallDescriptiveTextStyle"
+                android:text="Suggestions" />
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -36,10 +34,8 @@
                 android:layout_height="1dp"
                 android:background="@color/colorLightGrey"/>
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Weather data"
-                android:layout_margin="16dp"/>
+                style="@style/SmallDescriptiveTextStyle"
+                android:text="Weather data"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,7 +52,7 @@
                     <TextView
                         android:id="@+id/temp_value"
                         android:layout_weight="0.6"
-                        android:text=""
+                        android:text="value"
                         style="@style/DashboardTextStyleInfo"/>
                 </LinearLayout>
                 <LinearLayout
@@ -71,7 +67,7 @@
                     <TextView
                         android:id="@+id/humidity_value"
                         android:layout_weight="0.6"
-                        android:text=""
+                        android:text="value"
                         style="@style/DashboardTextStyleInfo"/>
                 </LinearLayout>
                 <LinearLayout
@@ -81,12 +77,12 @@
                     <TextView
                         android:layout_weight="0.4"
                         android:id="@+id/other_info"
-                        android:text="Pressure"
+                        android:text="missing"
                         style="@style/DashboardTextStyleInfo"/>
                     <TextView
                         android:id="@+id/other_value"
                         android:layout_weight="0.6"
-                        android:text=""
+                        android:text="value"
                         style="@style/DashboardTextStyleInfo"/>
                 </LinearLayout>
             </LinearLayout>
@@ -95,35 +91,37 @@
                 android:layout_height="1dp"
                 android:background="@color/colorLightGrey"/>
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:text="Location"
-                android:layout_margin="16dp"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:id="@+id/other"
-                    android:text="missing"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    style="@style/DashboardTextStyle"/>
-                <TextView
-                    android:id="@+id/other2"
-                    android:text="missing"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    style="@style/DashboardTextStyle"/>
-            </LinearLayout>
+                style="@style/SmallDescriptiveTextStyle"/>
             <Button
                 android:id="@+id/locationButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Reload location"
-                android:onClick="getLocation"
-                android:layout_margin="20dp"/>
+                android:text="Location"
+                android:layout_margin="16dp"/>
+            <TextView
+                android:id="@+id/source_"
+                android:text="missing"
+                android:gravity="center"
+                style="@style/DashboardTextStyle"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/long_coord"
+                    android:text="missing"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    style="@style/DashboardTextStyle"/>
+                <TextView
+                    android:id="@+id/lat_coord"
+                    android:text="missing"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    style="@style/DashboardTextStyle"/>
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

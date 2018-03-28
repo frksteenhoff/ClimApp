@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 public class SetWeightActivity extends AppCompatActivity {
 
-    private static SharedPreferences preferences;
-    private static SharedPreferences.Editor editor;
+    private SharedPreferences preferences;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +45,7 @@ public class SetWeightActivity extends AppCompatActivity {
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                editor.putInt("Weight", newVal);
-                editor.commit();
+                editor.putInt("Weight", newVal).commit();
 
                 //Display the newly selected value from picker
                 Toast.makeText(getApplicationContext(), getString(R.string.weight_updated) + " " + newVal, Toast.LENGTH_SHORT).show();

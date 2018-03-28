@@ -43,7 +43,7 @@
             <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/gender_spinner"
+                android:id="@+id/set_gender"
                 android:layout_margin="16dp"
                 android:entries="@array/gender_array">
             </Spinner>

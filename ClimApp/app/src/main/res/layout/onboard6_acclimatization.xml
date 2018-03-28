@@ -22,21 +22,21 @@
         android:layout_width="wrap_content"
         android:layout_weight="0.5"
         android:orientation="vertical">
-    <SeekBar
-        android:layout_width="match_parent"
+    <Switch
+        android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:id="@+id/set_fitness"
-        android:hint="@string/Input_fitness"
-        android:layout_margin="20dp"/>
+        android:layout_weight="0.3"
+        android:id="@+id/set_acclimatization"
+        android:layout_margin="16dp"
+        android:layout_gravity="center_horizontal"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="0.6"
+        android:layout_weight="0.3"
         android:textSize="12dp"
         android:textColor="@color/colorGrey"
         android:textStyle="italic"
         android:layout_marginBottom="32dp"
-        android:text="@string/set_fitness_level" />
+        android:text="@string/set_acclimatization_level" />
     </LinearLayout>
 </LinearLayout>

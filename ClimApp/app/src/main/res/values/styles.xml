@@ -93,26 +93,39 @@
     <style name="SettingsTextStyleNoCaps">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">16dp</item>
-        <item name="android:layout_marginBottom">16dp</item>
-        <item name="android:layout_marginRight">16dp</item>
-        <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@color/tw__medium_gray</item>
-    </style>
-
-    <!-- CheckBox header styles -->
-    <style name="CheckBoxStyle">
-        <item name="android:textSize">16dp</item>
-        <item name="android:layout_marginLeft">16dp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:layout_margin">16dp</item>
     </style>
     
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+    </style>
+
+    <!-- SmallDescriptiveTextStyle-->
+    <style name="SmallDescriptiveTextStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:layout_margin">16sp</item>
+    </style>
+
+    <style name="UnitTextViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+
+    <!-- When all you do is wrapping content -->
+    <style name="WrapWrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="WMatchHWrap">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

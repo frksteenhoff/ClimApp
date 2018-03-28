@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/climapp_logo_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme.NoActionBar">
         <!--<meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -59,74 +59,45 @@
             </intent-filter>
         </activity>-->
         <activity
-            android:name=".DashboardActivity"
-            android:label="@string/dashboard"
+            android:name=".MainActivity"
+            android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <!--<meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.climapp.DashboardActivity" />-->
         </activity>
         <activity
             android:name=".OnBoardingActivity"
             android:label="OnBoarding"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".DashboardActivity">
-        </activity>
-        <activity
-            android:name=".ClothingActivity"
-            android:label="@string/clothing"
-            android:parentActivityName=".DashboardActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.climapp.DashboardActivity" />
-        </activity>
-        <activity
-            android:name=".SettingsActivity"
-            android:label="@string/settings"
-            android:parentActivityName=".DashboardActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.climapp.DashboardActivity" />
+            android:parentActivityName=".MainActivity">
         </activity>
         <activity
             android:name=".SetAgeActivity"
             android:label="@string/Age"
-            android:parentActivityName=".SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.climapp.SettingsActivity" />
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".MainActivity">
         </activity>
         <activity
             android:name=".SetHeightActivity"
             android:label="@string/Height"
-            android:parentActivityName=".SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.climapp.SettingsActivity" />
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".MainActivity">
         </activity>
         <activity
             android:name=".SetWeightActivity"
             android:label="@string/Weight"
-            android:parentActivityName=".SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.climapp.SettingsActivity" />
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".MainActivity">
         </activity>
         <activity
-            android:name=".SetFitnessLevelActivity"
-            android:label="@string/fitness_level"
-            android:parentActivityName=".SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.climapp.SettingsActivity" />
+            android:name=".SetAcclimatizationActivity"
+            android:label="@string/Acclimatization"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".MainActivity">
         </activity>
         <activity
-            android:name=".SetUnitsActivity"
-            android:label="@string/units"
-            android:parentActivityName=".SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.climapp.SettingsActivity" />
+            android:name=".SetNotificationActivity"
+            android:label="@string/Notifications"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".MainActivity">
         </activity>
     </application>
 </manifest>

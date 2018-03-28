@@ -1,22 +1,20 @@
 package com.example.android.climapp;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -35,22 +33,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 
-public class DashboardFragment extends Fragment
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class DashboardFragment extends Fragment implements LocationListener {
 
-    public DashboardFragment () {
+    public DashboardFragment() {
         // Required empty constructor
     }
 
     TextView tempTextView, humidityTextView, pressureTextView, maleView;
 
-    private final int REQUEST_RESOLVE_GOOGLE_CLIENT_ERROR = 1;
-    boolean mResolvingError;
     private LocationManager locationManager;
-    private Location location;
     private String provider;
     Button mButton;
-    TextView tvother, tvother2;
+    TextView txtLong, txtLat, txtSource;
 
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
@@ -59,10 +53,13 @@ public class DashboardFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.dashboard_fragment, container, false);
+        return inflater.inflate(R.layout.dashboard_layout, container, false);
+    }
 
-        Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        /*Toolbar toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);*/
 
         preferences = this.getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
         editor = preferences.edit();
@@ -85,29 +82,10 @@ public class DashboardFragment extends Fragment
         toggle.syncState();*/
 
         /* Location coordinates */
-        mButton = (Button) v.findViewById(R.id.locationButton);
-        tvother = (TextView) v.findViewById(R.id.other);
-        tvother2 = (TextView) v.findViewById(R.id.other2);
-
-        /* TODO - change with phone's location */
-        // Initialize locationManager
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
-
-        /*// Check for permission to use location
-        try {
-            provider = locationManager.getBestProvider(criteria, true);
-            location = locationManager.getLastKnownLocation(provider);
-        } catch(SecurityException e) {
-            e.printStackTrace();
-        }
-
-        // Initialize the location
-        if (location != null) {
-            tvother.setText("Source = " + provider);
-            onLocationChanged(location);
-        }*/
+        mButton = (Button) getActivity().findViewById(R.id.locationButton);
+        txtLong = (TextView) getActivity().findViewById(R.id.long_coord);
+        txtLat = (TextView) getActivity().findViewById(R.id.lat_coord);
+        txtSource = (TextView) getActivity().findViewById(R.id.source_);
 
         Pair<Integer, Integer> Coordinates = new Pair<Integer, Integer>(35, 139);
 
@@ -117,36 +95,74 @@ public class DashboardFragment extends Fragment
         APIConn.execute();
 
         // Reference to views that should be updated
-        tempTextView = (TextView) v.findViewById(R.id.temp_value);
-        humidityTextView = (TextView) v.findViewById(R.id.humidity_value);
-        pressureTextView = (TextView) v.findViewById(R.id.other_value);
+        tempTextView = (TextView) getActivity().findViewById(R.id.temp_value);
+        humidityTextView = (TextView) getActivity().findViewById(R.id.humidity_value);
+        pressureTextView = (TextView) getActivity().findViewById(R.id.other_value);
 /*
         NavigationView navigationView = (NavigationView) v.findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 */
-        return v;
+        // Initialize locationManager
+        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        Criteria criteria = new Criteria();
+        provider = locationManager.getBestProvider(criteria, false);
+
+        // Check for permission
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        Location location = locationManager.getLastKnownLocation(provider);
+
+        // Initialize the location
+        if (location != null) {
+            txtSource.setText("Source = " + provider);
+            onLocationChanged(location);
+        }
+
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    // Start updates when app starts/resumes
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_account) {
-
-        } else if (id == R.id.nav_manage) {
-            Intent settings = new Intent(getActivity(), SettingsActivity.class);
-            startActivity(settings);
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+    public void onResume() {
+        super.onResume();
+        if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
-        DrawerLayout drawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+        locationManager.requestLocationUpdates(provider, 500, 1, this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        locationManager.removeUpdates(this);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
+        txtLat.setText(String.valueOf(lat));
+        txtLong.setText(String.valueOf(lng));
+        txtSource.setText("Source = " + provider);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        txtSource.setText("Source = " + provider);
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        txtSource.setText("Source = " + provider);
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        txtSource.setText("Source = " + provider);
     }
 
     // TODO: refactor such that APIConnection is in it's own class

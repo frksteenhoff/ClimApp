@@ -30,10 +30,20 @@
         android:layout_height="wrap_content"
         android:layout_weight="0.3"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
         <EditText
             style="@style/hintViewStyle"
             android:id="@+id/set_weight"
             android:hint="@string/Input_weight"
             android:inputType="number"/>
+        <TextView
+            android:id="@+id/unit_text_weight"
+            android:text="Unit"
+            style="@style/UnitTextViewStyle"/>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

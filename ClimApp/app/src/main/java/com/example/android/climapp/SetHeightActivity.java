@@ -46,8 +46,7 @@ public class SetHeightActivity extends AppCompatActivity {
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                editor.putInt("Height", newVal);
-                editor.commit();
+                editor.putInt("Height", newVal).commit();
 
                 //Display the newly selected value from picker
                 Toast.makeText(getApplicationContext(), getString(R.string.height_updated) + " " + newVal, Toast.LENGTH_SHORT).show();

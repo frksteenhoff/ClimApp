@@ -18,7 +18,7 @@ import java.util.GregorianCalendar;
 
 public class SetAgeActivity extends AppCompatActivity {
 
-    SharedPreferences preferences;
+    static SharedPreferences preferences;
     SharedPreferences.Editor editor;
     NumberPicker np;
 
@@ -41,9 +41,10 @@ public class SetAgeActivity extends AppCompatActivity {
         np.setWrapSelectorWheel(true);
 
         // Get user age if already stated, otherwise 0
-        if(preferences.getString("Age", null) != null) {
-            System.out.println(preferences.getString("Age", null) );
-            int userAge = (int) getUserAgeFromInput(preferences);
+        if(preferences.getString("Age_onboarding", null) != null &&
+           preferences.getString("Age", null) == null ) {
+            String userInput = preferences.getString("Age_onboarding", null);
+            int userAge = (int) getUserAgeFromInput(userInput);
             np.setValue(userAge);
         } else {
             // Set initial value
@@ -62,8 +63,7 @@ public class SetAgeActivity extends AppCompatActivity {
         });
     }
 
-    public long getUserAgeFromInput(SharedPreferences preferences){
-        String userInput = preferences.getString("Age", null);
+    public long getUserAgeFromInput(String userInput){
         Log.v("HESTE", "in preferences");
         // Users date of birth from input
         Calendar userBirthDay = new GregorianCalendar(

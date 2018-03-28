@@ -29,7 +29,7 @@
     <string name="Height">Height</string>
     <string name="Weight">Weight</string>
     <string name="Gender">Gender</string>
-    <string name="FitnessLevel">Fitness Level</string>
+    <string name="Acclimatization">Acclimatization</string>
     <string name="title_activity_navigation">NavigationActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -52,14 +52,14 @@
     <string name="set_gender">Please provide your gender</string>
     <string name="set_height">Please provide your height</string>
     <string name="set_weight">Please provide your weight</string>
-    <string name="set_fitness">Please provide your fitness level</string>
-    <string name="set_fitness_level">Set your fitness level by drawing the bar</string>
+    <string name="set_acclimatization">Please provide information about your acclimatization to your work environment</string>
+    <string name="set_acclimatization_level">Set acclimatization as yes or no</string>
     <!-- Button hints -->
     <string name="Input_age">Input date of birth (DDMMYYYY)</string>
     <string name="Input_gender">Input gender</string>
     <string name="Input_height">Input height</string>
     <string name="Input_weight">Input weight</string>
-    <string name="Input_fitness">Select fitness level</string>
+    <string name="Input_acclimatization">Select acclimatization</string>
     <string name="Input_unit">Select unit</string>
     <string name="female">Female</string>
     <string name="male">Male</string>
@@ -84,6 +84,15 @@
         <item>Male</item>
     </string-array>
 
+    <!-- Notification frequency array -->
+    <string-array name="frequency_array">
+        <item>Workdays 6AM</item>
+        <item>Daily 6AM</item>
+        <item>Workdays 7AM</item>
+        <item>Daily 7AM</item>
+        <item>Custom..</item>
+    </string-array>
+
     <!-- Settings overall -->
     <string name="action_settings">Settings</string> <!-- dashboard -->
     <string name="Personal_Settings">Personal settings</string>
@@ -98,10 +107,11 @@
     <string name="age_updated">Age updated to: </string>
     <string name="weight_updated">Weight updated to:</string>
     <string name="height_updated">Height updated to:</string>
-    <string name="fitness_updated">Fitness level updated to: </string>
+    <string name="acclimatization_true">Acclimatizatized to work environment</string>
+    <string name="acclimatization_false">Not acclimatizatized to work environment</string>
 
     <!-- Settings - initial values -->
-    <string name="fitness_level">0.0</string>
+    <string name="acclimatization_default">0.0</string>
     <string name="user_height">150</string>
     <string name="female_checked">Female checked</string>
     <string name="male_checked">Male checked</string>
@@ -110,8 +120,11 @@
     <string name="select_age_picker_string">Please select your age by using the wheel or simply type it in.</string>
     <string name="select_height_picker_string">Please select your height by using the wheel or simply type it in.</string>
     <string name="select_weight_picker_string">Please select your weight by using the wheel or simply type it in.</string>
-    <string name="fitness_setting">Please enter your fitness level ..</string>
-    <string name="fitness_description">Read more about setting your fitness level</string>
+    <string name="acclimatization_setting">Please select whether you are acclimatized to your work environment..
+        If you have been woorking under the same conditions for more than a week, you are said to be acclimatized
+        to your workplace.
+    </string>
+    <string name="acclimatization_description">Read more about setting your acclimatization level</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

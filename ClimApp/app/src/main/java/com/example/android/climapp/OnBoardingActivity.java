@@ -17,6 +17,8 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 /**
  * Created by frksteenhoff on 19-02-2018.
+ * Handling onboarding process for new user
+ * Saving user preferences on device
  */
 
 public class OnBoardingActivity extends FragmentActivity {
@@ -26,7 +28,7 @@ public class OnBoardingActivity extends FragmentActivity {
     private Button skip;
     private Button next;
 
-    SharedPreferences preferences;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,20 +45,20 @@ public class OnBoardingActivity extends FragmentActivity {
         FragmentStatePagerAdapter adapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
+                Log.v("HESTE", "position:" + position);
                 switch (position) {
                     case 0:
-                        //return new SignUpFragment();
-                        return new OnBoardingFragment1();
+                        return new OnBoardingFragment_Units();
                     case 1:
-                        return new OnBoardingFragment2();
+                        return new OnBoardingFragment_Age();
                     case 2:
-                        return new OnBoardingFragment3();
+                        return new OnBoardingFragment_Gender();
                     case 3:
-                        return new OnBoardingFragment4();
+                        return new OnBoardingFragment_Height();
                     case 4:
-                        return new OnBoardingFragment5();
+                        return new OnBoardingFragment_Weight();
                     case 5:
-                        return new OnBoardingFragment6();
+                        return new OnBoardingFragment_Acclimatization();
                     default:
                         return null;
                 }
@@ -81,19 +83,38 @@ public class OnBoardingActivity extends FragmentActivity {
             }
         });
 
+        // Handle storage of user preference input during onboarding
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Units
+                // if pager.getCurrentItem() == 0
+                // Saving gender value done in OnBoardingFragment_Units
+
+                // Age
                 if(pager.getCurrentItem() == 1) {
-                    EditText currentText = (EditText) findViewById(R.id.set_age);
-                    // Only add date of birth if correct length
-                    if(currentText.length() == 8) {
-                        preferences.edit().putString("Age", currentText.toString()).commit();
-                        Log.v("HESTE","Added age");
-                    }
+                    saveDayOfBirth();
                     pager.setCurrentItem(pager.getCurrentItem() + 1);
+
+                    // Gender
+                    // if pager.getCurrentItem() == 2
+                    // Saving gender value done in OnBoardingFragment_Gender
+
+                    // Height
+                } else if(pager.getCurrentItem() == 3) {
+                    saveInformation("Height");
+                    pager.setCurrentItem(pager.getCurrentItem() + 1);
+
+                    // Weight
+                } else if(pager.getCurrentItem() == 4) {
+                    saveInformation("Weight");
+                    pager.setCurrentItem(pager.getCurrentItem() + 1);
+
+                    // Acclimatization (last input parameter)
                 } else if (pager.getCurrentItem() == 5) {
+                    // Saving acclimatization yes/no done in OnBoardingFragment_Acclimatization
                     finishOnBoarding();
+
                 } else {
                     // Increment counter for the current on boarding screen
                     pager.setCurrentItem(pager.getCurrentItem() + 1);
@@ -115,15 +136,47 @@ public class OnBoardingActivity extends FragmentActivity {
             }
         });
     }
-    private void finishOnBoarding() {
-        // Get the shared preferences
-        preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
 
+
+    /**
+     * Saving user preferences -- only if input format is correct
+     * Age: Correct means max lenght 8, all numbers
+     */
+    private void saveDayOfBirth() {
+        EditText currentText = (EditText) findViewById(R.id.set_age);
+        // Only add date of birth if correct format
+        if (currentText.length() == 8) {
+            preferences.edit().putString("Age_onboarding", currentText.getText().toString()).commit();
+        }
+    }
+
+    /**
+     * Save onboarding information on weight and height stored in EditText views.
+     * Only valid input if any numeric input given
+     */
+    private void saveInformation(String preferenceName) {
+        if (preferenceName == "Height") {
+            EditText inputHeight = (EditText) findViewById(R.id.set_height);
+
+            Log.v("HESTE", "HERE:" +inputHeight.getText().toString());
+            if (inputHeight.getText().toString().length() > 1){
+                preferences.edit().putInt(preferenceName, Integer.parseInt(inputHeight.getText().toString())).commit();
+            }
+        } else {
+            // Can only be weight
+            EditText inputWeight = (EditText) findViewById(R.id.set_weight);
+            if (inputWeight.getText().toString().length() > 1) {
+                preferences.edit().putInt(preferenceName, Integer.parseInt(inputWeight.getText().toString())).commit();
+            }
+        }
+    }
+
+    private void finishOnBoarding() {
         // Set on_boarding complete to true
         preferences.edit().putBoolean("onboarding_complete", true).commit();
 
         // Launch main activity
-        Intent main = new Intent(this, DashboardActivity.class);
+        Intent main = new Intent(this, MainActivity.class);
         startActivity(main);
 
         // Close onboarding activity
