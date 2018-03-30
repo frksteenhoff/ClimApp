@@ -90,6 +90,7 @@
         <item>Daily 6AM</item>
         <item>Workdays 7AM</item>
         <item>Daily 7AM</item>
+        <item>Off</item>
         <item>Custom..</item>
     </string-array>
 

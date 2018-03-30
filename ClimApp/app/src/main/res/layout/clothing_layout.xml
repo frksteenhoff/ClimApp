@@ -28,19 +28,19 @@
                 style="@style/WrapWrap"
                 android:orientation="horizontal">
                 <ToggleButton
-                    style="@style/WrapWrap"
+                    style="@style/TextOffStyle"
                     android:layout_margin="6dp"
                     android:background="@drawable/ic_hoodie_foreground" />
                 <ToggleButton
-                    style="@style/WrapWrap"
+                    style="@style/TextOffStyle"
                     android:layout_margin="6dp"
                     android:background="@drawable/ic_pants_foreground" />
                 <ToggleButton
-                    style="@style/WrapWrap"
+                    style="@style/TextOffStyle"
                     android:layout_margin="6dp"
                     android:background="@drawable/ic_tshirt_foreground" />
                 <ToggleButton
-                    style="@style/WrapWrap"
+                    style="@style/TextOffStyle"
                     android:layout_margin="6dp"
                     android:background="@drawable/ic_pants_foreground" />
             </LinearLayout>
@@ -57,18 +57,26 @@
                     android:orientation="horizontal">
                     <ToggleButton
                         style="@style/WMatchHWrap"
+                        android:textOn=" "
+                        android:textOff=" "
                         android:background="@drawable/ic_work_outer_foreground"
                         android:layout_margin="6dp"/>
                     <ToggleButton
                         style="@style/WMatchHWrap"
+                        android:textOn=" "
+                        android:textOff=" "
                         android:background="@drawable/ic_work_waffle_foreground"
                         android:layout_margin="6dp"/>
                     <ToggleButton
                         style="@style/WMatchHWrap"
+                        android:textOn=" "
+                        android:textOff=" "
                         android:background="@drawable/ic_work_pants_foreground"
                         android:layout_margin="6dp"/>
                     <ToggleButton
                         style="@style/WMatchHWrap"
+                        android:textOn=" "
+                        android:textOff=" "
                         android:background="@drawable/ic_pants_foreground"
                         android:layout_margin="6dp"/>
                 </LinearLayout>

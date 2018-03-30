@@ -90,6 +90,13 @@
         <item name="android:textSize">18dp</item>
     </style>
 
+    <!-- TextOffStyle-->
+    <style name="TextOffStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textOff">" "</item>
+        <item name="android:textOn">" "</item>
+    </style>
     <!-- Settings description style -->
     <style name="SettingsTextStyle">
         <item name="android:layout_width">match_parent</item>
