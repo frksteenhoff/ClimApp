@@ -4,10 +4,22 @@
 
     <LinearLayout
         style="@style/WMatchHWrap"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_margin="20dp">
         <TextView
+            android:layout_marginTop="8dp"
             style="@style/SmallDescriptiveTextStyle"
-
+            android:text="Field of work"/>
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/field_of_work_array"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
+        </Spinner>
+        <TextView
+            android:layout_marginTop="8dp"
+            style="@style/SmallDescriptiveTextStyle"
             android:text="Clothing"/>
         <HorizontalScrollView
             style="@style/WrapWrap"
@@ -18,22 +30,23 @@
                 <ToggleButton
                     style="@style/WrapWrap"
                     android:layout_margin="6dp"
-                    android:background="@drawable/climapp_108dp" />
+                    android:background="@drawable/ic_hoodie_foreground" />
                 <ToggleButton
                     style="@style/WrapWrap"
                     android:layout_margin="6dp"
-                    android:background="@drawable/climapp_108dp" />
+                    android:background="@drawable/ic_pants_foreground" />
                 <ToggleButton
                     style="@style/WrapWrap"
                     android:layout_margin="6dp"
-                    android:background="@drawable/climapp_108dp" />
+                    android:background="@drawable/ic_tshirt_foreground" />
                 <ToggleButton
                     style="@style/WrapWrap"
                     android:layout_margin="6dp"
-                    android:background="@drawable/climapp_108dp" />
+                    android:background="@drawable/ic_pants_foreground" />
             </LinearLayout>
         </HorizontalScrollView>
         <TextView
+            android:layout_marginTop="8dp"
             style="@style/SmallDescriptiveTextStyle"
             android:text="Outer wear"/>
             <HorizontalScrollView
@@ -44,28 +57,30 @@
                     android:orientation="horizontal">
                     <ToggleButton
                         style="@style/WMatchHWrap"
-                        android:background="@drawable/climapp_108dp"
+                        android:background="@drawable/ic_work_outer_foreground"
                         android:layout_margin="6dp"/>
                     <ToggleButton
                         style="@style/WMatchHWrap"
-                        android:background="@drawable/climapp_108dp"
+                        android:background="@drawable/ic_work_waffle_foreground"
                         android:layout_margin="6dp"/>
                     <ToggleButton
                         style="@style/WMatchHWrap"
-                        android:background="@drawable/climapp_108dp"
+                        android:background="@drawable/ic_work_pants_foreground"
                         android:layout_margin="6dp"/>
                     <ToggleButton
                         style="@style/WMatchHWrap"
-                        android:background="@drawable/climapp_108dp"
+                        android:background="@drawable/ic_pants_foreground"
                         android:layout_margin="6dp"/>
                 </LinearLayout>
             </HorizontalScrollView>
         <TextView
+            android:layout_marginTop="8dp"
             android:text="Work specific attire"
             style="@style/SmallDescriptiveTextStyle"/>
             <HorizontalScrollView
                 style="@style/WMatchHWrap"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
                 <LinearLayout
                     style="@style/WMatchHWrap"
                     android:orientation="horizontal">

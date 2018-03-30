@@ -17,71 +17,68 @@
             android:orientation="vertical">
             <android.support.v7.widget.CardView
                 style="@style/CardViewFeedStyle">
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="16dp">
-                    <TextView
-                        style="@style/SmallDescriptiveTextStyle"
-                        android:id="@+id/dash_header"
-                        android:text="Current" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Lund"
-                        android:textAllCaps="true"/>
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="16°"
-                        android:textSize="30dp" />
+                    android:layout_height="wrap_content">
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="vertical"
+                        android:id="@+id/weather_info"
+                        android:layout_margin="16dp">
                         <TextView
-                            android:id="@+id/temp_info"
-                            android:text="Temperature"
-                            style="@style/DashboardTextStyleInfo"/>
+                            style="@style/SmallDescriptiveTextStyle"
+                            android:id="@+id/dash_header"
+                            android:text="Current" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Lund"
+                            android:textAllCaps="true"/>
                         <TextView
                             android:id="@+id/temp_value"
-                            android:text="value"
-                            style="@style/DashboardTextStyleInfo"
-                            android:textAllCaps="false"
-                            android:textStyle="bold"/>
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="16°"
+                            android:textSize="30dp" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/humidity_info"
+                                android:text="Humdity"
+                                style="@style/DashboardTextStyleInfo"/>
+                            <TextView
+                                android:id="@+id/humidity_value"
+                                android:text="value"
+                                style="@style/DashboardTextStyleInfo"
+                                android:textAllCaps="false"
+                                android:textStyle="bold"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/other_info"
+                                android:text="Pressure"
+                                style="@style/DashboardTextStyleInfo"/>
+                            <TextView
+                                android:id="@+id/other_value"
+                                android:text="value"
+                                style="@style/DashboardTextStyleInfo"
+                                android:textAllCaps="false"
+                                android:textStyle="bold"/>
+                        </LinearLayout>>
                     </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:id="@+id/humidity_info"
-                            android:text="Humdity"
-                            style="@style/DashboardTextStyleInfo"/>
-                        <TextView
-                            android:id="@+id/humidity_value"
-                            android:text="value"
-                            style="@style/DashboardTextStyleInfo"
-                            android:textAllCaps="false"
-                            android:textStyle="bold"/>
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:id="@+id/other_info"
-                            android:text="missing"
-                            style="@style/DashboardTextStyleInfo"/>
-                        <TextView
-                            android:id="@+id/other_value"
-                            android:text="value"
-                            style="@style/DashboardTextStyleInfo"
-                            android:textAllCaps="false"
-                            android:textStyle="bold"/>
-                    </LinearLayout>
-                </LinearLayout>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_weather_rainy_foreground"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
                 style="@style/CardViewFeedStyle">
