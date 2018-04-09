@@ -87,7 +87,7 @@
     <!-- Settings-2 style -->
     <style name="SettingsTextStyle2">
         <item name="android:layout_margin">16dp</item>
-        <item name="android:textSize">18dp</item>
+        <item name="android:textSize">22sp</item>
     </style>
 
     <!-- TextOffStyle-->
@@ -97,12 +97,13 @@
         <item name="android:textOff">" "</item>
         <item name="android:textOn">" "</item>
     </style>
+
     <!-- Settings description style -->
     <style name="SettingsTextStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:layout_margin">16dp</item>
+        <item name="android:layout_margin">18dp</item>
         <item name="android:textColor">@color/tw__medium_gray</item>
     </style>
 
@@ -110,7 +111,9 @@
     <style name="SettingsTextStyleNoCaps">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">16dp</item>
+        <item name="android:layout_margin">20dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textSize">16sp</item>
     </style>
     
     <style name="AppTheme.NoActionBar">
