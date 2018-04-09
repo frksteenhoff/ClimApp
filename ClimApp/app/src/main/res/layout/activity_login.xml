@@ -34,9 +34,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Welcome!"
+                android:text="@string/welcome"
                 android:layout_gravity="center"
-                android:textSize="20dp"/>
+                android:textSize="20sp"/>
             <com.google.android.gms.common.SignInButton
                 android:layout_marginTop="20dp"
                 android:id="@+id/google_sign_in_button"

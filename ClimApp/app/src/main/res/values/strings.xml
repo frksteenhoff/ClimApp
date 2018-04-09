@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">ClimApp</string>
+    <string name="no_text"> </string>
 
     <!-- Sign-in status messages -->
     <string name="sign_in">Sign In</string>
@@ -45,6 +46,8 @@
     <string name="user_last_name">Last name</string>
     <string name="user_e_mail">E-mail address</string>
     <string name="user_password">Password</string>
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
 
     <!-- Dashboard: Activity Level -->
     <string name="activity_level">Activity level</string>
@@ -53,16 +56,41 @@
     <string name="activity_level_medium">Medium</string>
     <string name="activity_level_high">High</string>
 
+    <!-- Dashboard: hydration -->
+    <string name="hydration">Hydration</string>
+    <string name="hydration_text">What did you drink today?</string>
+
     <!-- Dashboard: Location  -->
     <string name="location_error_text">Could not get device location. Make sure location is enabled on the device</string>
     <string name="location">Location</string>
+    <string name="weather_current">Current</string>
     <string name="update_location">Update location</string>
     <string name="current_location">Current location</string>
     <string name="permission_denied">Permission to access location denied, nothing to show.</string>
 
-    <!-- Suggestions -->
+    <!-- Dashboard: weather information -->
+    <string name="humidity">Humidity</string>
+    <string name="pressure">Pressure</string>
+    <string name="temperature">Temperature</string>
+    <string name="wind_speed">Wind Speed</string>
+    <string name="degrees">16°</string>
+
+    <!-- Dashboard: Suggestions -->
     <string name="suggestions">Suggestions</string>
     <string name="suggestion_drink_water">Remember to drink water!</string>
+
+    <!-- Clothing -->
+    <string name="field_of_work">Field of work</string>
+    <string name="outer_wear">Outer wear</string>
+    <string name="work_specific_attire">Work specific attire</string>
+
+    <!-- Clothing - Field of work -->
+    <string-array name="field_of_work_array">
+        <item>Construction</item>
+        <item>Office work</item>
+        <item>Sales Assistant</item>
+        <item>Teaching</item>
+    </string-array>
 
     <!-- Settings - Button hints -->
     <string name="Input_age">Input date of birth (DDMMYYYY)</string>
@@ -74,7 +102,7 @@
     <string name="female">Female</string>
     <string name="male">Male</string>
 
-    <!-- Units -->
+    <!-- Settings - Units -->
     <string name="age_unit">Years</string>
     <string name="height_unit_si">Meters</string>
     <string name="height_unit_uk">Feet</string>
@@ -83,20 +111,20 @@
     <string name="weight_unit_uk">Stones</string>
     <string name="weight_unit_us">Pounds</string>
 
-    <!-- Unit array -->
+    <!-- Settings - Unit array -->
     <string-array name="units_array">
         <item>SI units (kg, m)</item>
         <item>US (pound, inch)</item>
         <item>UK (stone, feet)</item>
     </string-array>
 
-    <!-- Gender array -->
+    <!-- Settings - Gender array -->
     <string-array name="gender_array">
         <item>Female</item>
         <item>Male</item>
     </string-array>
 
-    <!-- Notification frequency array -->
+    <!-- Settings - Notification frequency array -->
     <string-array name="frequency_array">
         <item>Workdays 6AM</item>
         <item>Daily 6AM</item>
@@ -106,15 +134,7 @@
         <item>Custom..</item>
     </string-array>
 
-    <!-- Field of work -->
-    <string-array name="field_of_work_array">
-        <item>Construction</item>
-        <item>Office work</item>
-        <item>Sales Assistant</item>
-        <item>Teaching</item>
-    </string-array>
-
-    <!-- Settings overall -->
+    <!-- Settings - overall -->
     <string name="action_settings">Settings</string> <!-- dashboard -->
     <string name="Personal_Settings">Personal settings</string>
     <string name="Notifications">Notifications</string>
@@ -123,8 +143,11 @@
     <string name="Reset">Reset all preferences</string>
     <string name="measuring_units">Measuring units</string>
     <string name="units">Units</string>
+    <string name="unit">Unit</string>
+    <string name="choose_units">Choose units</string>
+    <string name="choose_gender">Choose gender</string>
 
-    <!-- Settings reponses -->
+    <!-- Settings - reponses -->
     <string name="age_updated">Age updated to: </string>
     <string name="weight_updated">Weight updated to:</string>
     <string name="height_updated">Height updated to:</string>
@@ -137,7 +160,7 @@
     <string name="female_checked">Female checked</string>
     <string name="male_checked">Male checked</string>
 
-    <!-- Settings sentences -->
+    <!-- Settings - sentences -->
     <string name="set_unit">Please provide measurement units from drop-down</string>
     <string name="set_age">Please provide your age</string>
     <string name="set_gender">Please provide your gender</string>
@@ -153,7 +176,4 @@
         to your workplace.
     </string>
     <string name="acclimatization_description">Read more about setting your acclimatization level</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -117,7 +117,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         // if onboarding steps still missing, start onboarding
         // Otherwise, check location permission and connect to openweathermap
         if(!onBoardingCompleted()) {
-
             startOnBoarding();
 
         } else {
@@ -273,12 +272,11 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                             txtLong.setText(latitude);
                             txtLat.setText(longitude);
 
+                            // Put coordinate data into correct data structure for weather API
                             Pair<String, String> Coordinates = new Pair<String, String>(latitude, longitude);
 
                             // Connect to weather API openweathermap.com using location coordinates
-                            APIConnection APIConn = new APIConnection("f22065144b2119439a589cbfb9d851d3", Coordinates);
-                            Log.v("HESTE", "API access string:\n" + APIConn.getAPIContent());
-                            APIConn.execute();
+                            getOpenWeatherMapData(Coordinates);
 
                         } else {
                             setLocationViewVisibility(false);
@@ -288,6 +286,16 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                         }
                     }
                 });
+    }
+
+    /**
+     * With device's location, fetch weather data from OpeanWeatherMap.com
+     * @param Coordinates
+     */
+    private void getOpenWeatherMapData(Pair<String, String> Coordinates) {
+        APIConnection APIConn = new APIConnection("f22065144b2119439a589cbfb9d851d3", Coordinates);
+        Log.v("HESTE", "API access string:\n" + APIConn.getAPIContent());
+        APIConn.execute();
     }
 
     /**

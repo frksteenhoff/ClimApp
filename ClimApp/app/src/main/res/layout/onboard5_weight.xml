@@ -42,7 +42,7 @@
             android:inputType="number"/>
         <TextView
             android:id="@+id/unit_text_weight"
-            android:text="Unit"
+            android:text="@string/unit"
             style="@style/UnitTextViewStyle"/>
         </LinearLayout>
     </LinearLayout>

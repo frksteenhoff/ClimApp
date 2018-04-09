@@ -44,7 +44,6 @@
                 android:layout_height="wrap_content"
                 android:text="@string/acclimatization_description"
                 style="@style/SettingsTextStyleNoCaps"/>
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

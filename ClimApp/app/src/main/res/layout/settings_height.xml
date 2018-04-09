@@ -28,7 +28,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/unit_text_height"
-                    android:layout_toRightOf="@id/HeightPicker"
+                    android:layout_toEndOf="@id/HeightPicker"
                     android:layout_centerVertical="true"
                     android:layout_margin="12dp"
                     android:text="@string/height_unit_si"
