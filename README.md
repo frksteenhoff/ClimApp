@@ -13,7 +13,8 @@ All images used in the ClimApp wiki
 
 * **OpenWeatherData**
 
-Overview of available datasets and frequencies.
+   * Overview of available datasets and frequencies.
+   * Check this website to get an overview of the data that can be delivered: [API information](http://openweathermap.org/price#weather)
 
 Tests for fetching data from DWD Open Data and Open Weather Map in Jupyter Notebooks.
 
