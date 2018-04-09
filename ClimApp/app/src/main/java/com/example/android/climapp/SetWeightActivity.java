@@ -15,7 +15,7 @@ public class SetWeightActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
     private SharedPreferences.Editor editor;
-
+    private NumberPicker np;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,19 +24,17 @@ public class SetWeightActivity extends AppCompatActivity {
         preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
         editor = preferences.edit();
 
+        int preferred_unit = preferences.getInt("Unit",0);
+
         // Set correct text indicating unit
         TextView weightUnit = (TextView) findViewById(R.id.unit_text_weight);
         setCorrectPickerUnit(weightUnit);
 
         //Number picker for age, set initial value
-        NumberPicker np = (NumberPicker) findViewById(R.id.WeightPicker);
-
-        //Populate NumberPicker values from String array values
-        //Set the minimum/maximum value of NumberPicker
-        np.setMinValue(0); //from array first value
-        np.setMaxValue(350); //to array last value
+        np = (NumberPicker) findViewById(R.id.WeightPicker);
 
         np.setValue(preferences.getInt("Weight", 0));
+        showCorrectWeightValues(preferred_unit);
 
         //Sets whether the selector wheel wraps when reaching the min/max value.
         np.setWrapSelectorWheel(true);
@@ -54,15 +52,36 @@ public class SetWeightActivity extends AppCompatActivity {
     }
 
     /**
+     * Populate NumberPicker values from String array values
+     * Set the minimum/maximum value of NumberPicker
+     * @param preferred_unit
+     * @return
+     */
+    private void showCorrectWeightValues(int preferred_unit) {
+        // If unit chosen is "UK" - use stones
+        if (preferred_unit == 1) {
+            np.setMinValue(85); //from array first value
+            np.setMaxValue(775); //to array last value
+
+            // If unit chosen is "US", use pounds
+        } else if (preferred_unit == 2) {
+            np.setMinValue(20); //from array first value
+            np.setMaxValue(175); //to array last value
+
+            // If unit is "SI" or anything else, use kilograms
+        } else {
+            np.setMinValue(40); //from array first value
+            np.setMaxValue(350); //to array last value
+        }
+    }
+
+    /**
      * Setting up the correct units to be displayed as input unit
      * @param unitText the text to be displayed alongside the numberpicker
      */
     private void setCorrectPickerUnit(TextView unitText) {
         int unit = preferences.getInt("Unit", 0);
         switch (unit) {
-            case 0:
-                unitText.setText(R.string.weight_unit_si);
-                break;
             case 1:
                 unitText.setText(R.string.weight_unit_uk);
                 break;

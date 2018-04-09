@@ -29,11 +29,13 @@
                         <TextView
                             style="@style/SmallDescriptiveTextStyle"
                             android:id="@+id/dash_header"
+                            android:layout_marginBottom="4dp"
                             android:text="Current" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Lund"
+                            android:id="@+id/current_city"
+                            android:text="@string/current_location"
                             android:textAllCaps="true"/>
                         <TextView
                             android:id="@+id/temp_value"
@@ -89,12 +91,13 @@
                     android:layout_margin="16dp">
                     <TextView
                         style="@style/SmallDescriptiveTextStyle"
-                        android:text="Activity level" />
+                        android:text="@string/activity_level" />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="How will your activity level be today?"
-                        android:layout_marginBottom="8dp"/>
+                        android:text="@string/activity_level_text"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -103,26 +106,28 @@
                         <ToggleButton
                             android:id="@+id/dash_toggle_low"
                             style="@style/DashboardToggleButtonStyle"
-                            android:textOn="Low"
-                            android:textOff="Low" />
+                            android:layout_marginRight="8dp"
+                            android:textOn="@string/activity_level_low"
+                            android:textOff="@string/activity_level_low" />
                         <ToggleButton
                             android:id="@+id/dash_toggle_medium"
                             style="@style/DashboardToggleButtonStyle"
-                            android:textOn="Medium"
-                            android:textOff="Medium"/>
+                            android:layout_marginRight="8dp"
+                            android:textOn="@string/activity_level_medium"
+                            android:textOff="@string/activity_level_medium"/>
                         <ToggleButton
                             android:id="@+id/dash_toggle_high"
                             style="@style/DashboardToggleButtonStyle"
-                            android:textOn="High"
-                            android:textOff="High"/>
+                            android:textOn="@string/activity_level_high"
+                            android:textOff="@string/activity_level_high"/>
                     </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
                 style="@style/CardViewFeedStyle">
                 <TextView
-                    android:layout_margin="16dp"
                     style="@style/SmallDescriptiveTextStyle"
+                    android:layout_margin="16dp"
                     android:text="What did you drink today?" />
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -132,18 +137,21 @@
                     <ToggleButton
                         style="@style/WrapWrap"
                         android:textOn=" "
+                        android:layout_marginTop="16dp"
                         android:textOff=" "
                         android:background="@drawable/ic_soda_foreground" />
                     <ToggleButton
                         style="@style/WrapWrap"
+                        android:layout_marginTop="16dp"
                         android:textOn=" "
                         android:textOff=" "
                         android:background="@drawable/ic_water_foreground" />
                     <ToggleButton
                         style="@style/WrapWrap"
+                        android:layout_marginTop="16dp"
                         android:textOn=" "
                         android:textOff=" "
-                        android:background="@drawable/ic_milkshake_foreground" />
+                         android:background="@drawable/ic_milkshake_foreground" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -155,7 +163,7 @@
                     android:layout_margin="16dp">
                     <TextView
                         style="@style/SmallDescriptiveTextStyle"
-                        android:text="Suggestions" />
+                        android:text="@string/suggestions" />
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -164,7 +172,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Remember to drink water!"
+                        android:text="@string/suggestion_drink_water"
                         android:textAlignment="center"
                         android:layout_marginBottom="20dp"/>
                 </LinearLayout>
@@ -177,36 +185,43 @@
                     android:orientation="vertical"
                     android:layout_margin="16dp">
                     <TextView
-                        android:text="Location"
+                        android:text="@string/location"
                         style="@style/SmallDescriptiveTextStyle"/>
-                    <Button
-                        android:id="@+id/locationButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="Location" />
                     <TextView
-                        android:id="@+id/source_"
-                        android:text="missing"
-                        android:gravity="center"
-                        style="@style/DashboardTextStyle"/>
+                        android:id="@+id/error_txt"
+                        android:text=""
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="16dp"
+                        style="@style/DashboardTextStyle"
+                        android:visibility="gone"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginTop="16dp">
                         <TextView
                             android:id="@+id/long_coord"
-                            android:text="missing"
+                            android:visibility="gone"
+                            android:text=""
                             android:layout_weight="1"
                             android:gravity="center"
                             style="@style/DashboardTextStyle"/>
                         <TextView
                             android:id="@+id/lat_coord"
-                            android:text="missing"
+                            android:visibility="gone"
+                            android:text=""
                             android:layout_weight="1"
                             android:gravity="center"
                             style="@style/DashboardTextStyle"/>
                     </LinearLayout>
+                    <Button
+                        android:id="@+id/locationButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:layout_gravity="center"
+                        android:text="@string/update_location" />
                 </LinearLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>

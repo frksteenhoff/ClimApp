@@ -134,6 +134,11 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                 // Reset all preferences
                 preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
                 preferences.edit().clear().commit();
+                acclimatizationSwitch.setChecked(false);
+                preferences.edit().putInt("gender", 0).commit();
+                preferences.edit().putInt("Unit", 0).commit();
+                preferences.edit().putInt("Notification", 0).commit();
+
                 // Setting onboarding to be true in order to prevent it from showing up again.
                 //preferences.edit().putBoolean("onboarding_complete", true).commit();
                 Toast.makeText(getActivity().getApplicationContext(), "All preferences cleared", Toast.LENGTH_SHORT).show();
@@ -176,8 +181,17 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                     // User wants notifications each day at 6AM
                     preferences.edit().putInt("Notification", 0).commit();
                 } else if (position == 1) {
-                    // User wants notifications each day at 7AM
+                    // User wants notifications each workday at 6AM
                     preferences.edit().putInt("Notification", 1).commit();
+                } else if (position == 2) {
+                    // User wants notifications each day at 7AM
+                    preferences.edit().putInt("Notification", 2).commit();
+                } else if (position == 3) {
+                    // User wants notifications each workday at 7AM
+                    preferences.edit().putInt("Notification", 3).commit();
+                } else if (position == 4) {
+                    // User wants no notifications
+                    preferences.edit().putInt("Notification", 4).commit();
                 } else {
                     // User wants to setup custom notifications
                     Intent notification_settings = new Intent(getActivity(), SetNotificationActivity.class);
