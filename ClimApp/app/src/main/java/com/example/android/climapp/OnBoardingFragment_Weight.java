@@ -29,7 +29,7 @@ public class OnBoardingFragment_Weight extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
-        weightUnit = (TextView) getActivity().findViewById(R.id.unit_text_weight);
+        weightUnit = getActivity().findViewById(R.id.unit_text_weight);
         setWeightUnit();
     }
 

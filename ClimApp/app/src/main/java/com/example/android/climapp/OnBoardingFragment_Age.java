@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 /**
  * Created by frksteenhoff on 19-02-2018.
+ * Inflating the onboarding fragment where the user sets his/her age.
  */
 
 public class OnBoardingFragment_Age extends DialogFragment {

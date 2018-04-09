@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 /**
  * Created by frksteenhoff on 21-01-2018.
+ * Setting correct units for height according to chosen unit
  */
 
 public class SetHeightActivity extends AppCompatActivity {
@@ -28,12 +29,12 @@ public class SetHeightActivity extends AppCompatActivity {
         String height_units[] = showCorrectHeightValues(preferred_unit);
 
         // Additional text stating input unit
-        final TextView heightUnit = (TextView) findViewById(R.id.unit_text_height);
+        final TextView heightUnit = findViewById(R.id.unit_text_height);
         setCorrectPickerUnit(heightUnit);
 
         //Number picker for height (feet, inches, meters) -- all should be converted to meters
         // before calculations are performed.
-        NumberPicker np = (NumberPicker) findViewById(R.id.HeightPicker);
+        NumberPicker np = findViewById(R.id.HeightPicker);
 
         //Populate NumberPicker values from String array values
         //Set the minimum/maximum value of NumberPicker
@@ -51,18 +52,20 @@ public class SetHeightActivity extends AppCompatActivity {
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                editor.putInt("Height", newVal).commit();
+                editor.putInt("Height", newVal).apply();
 
                 //Display the newly selected value from picker
-                Toast.makeText(getApplicationContext(), getString(R.string.height_updated) + " " + newVal + " " + heightUnit.getText().toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        getString(R.string.height_updated) + " " + newVal + " " +
+                                heightUnit.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     /**
      * Fetching correct units array for each of the different unit types
-     * @param preferred_unit
-     * @return
+     * @param preferred_unit the integer position associated with the chosen unit
+     * @return array of values to show the user when setting his/her height
      */
     private String[] showCorrectHeightValues(int preferred_unit) {
         String units[];

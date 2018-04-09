@@ -83,6 +83,7 @@
     <!-- OnBoarding bottom CardView text style -->
     <style name="bottomCVTextStyle">
     </style>
+
     <!-- Settings-2 style -->
     <style name="SettingsTextStyle2">
         <item name="android:layout_margin">16dp</item>

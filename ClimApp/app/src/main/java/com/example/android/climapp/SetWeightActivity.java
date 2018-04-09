@@ -9,31 +9,30 @@ import android.widget.Toast;
 
 /**
  * Created by frksteenhoff on 21-01-2018.
+ * Setting the user's weight
  */
 
 public class SetWeightActivity extends AppCompatActivity {
 
     private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
     private NumberPicker np;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_weight);
 
         preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
-        editor = preferences.edit();
-
-        int preferred_unit = preferences.getInt("Unit",0);
 
         // Set correct text indicating unit
-        TextView weightUnit = (TextView) findViewById(R.id.unit_text_weight);
+        TextView weightUnit = findViewById(R.id.unit_text_weight);
         setCorrectPickerUnit(weightUnit);
 
         //Number picker for age, set initial value
-        np = (NumberPicker) findViewById(R.id.WeightPicker);
-
+        np = findViewById(R.id.WeightPicker);
         np.setValue(preferences.getInt("Weight", 0));
+
+        int preferred_unit = preferences.getInt("Unit",0);
         showCorrectWeightValues(preferred_unit);
 
         //Sets whether the selector wheel wraps when reaching the min/max value.
@@ -43,7 +42,7 @@ public class SetWeightActivity extends AppCompatActivity {
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                editor.putInt("Weight", newVal).commit();
+                preferences.edit().putInt("Weight", newVal).apply();
 
                 //Display the newly selected value from picker
                 Toast.makeText(getApplicationContext(), getString(R.string.weight_updated) + " " + newVal, Toast.LENGTH_SHORT).show();
@@ -54,8 +53,8 @@ public class SetWeightActivity extends AppCompatActivity {
     /**
      * Populate NumberPicker values from String array values
      * Set the minimum/maximum value of NumberPicker
-     * @param preferred_unit
-     * @return
+     * @param preferred_unit the integer value representing the preferred unit in which to
+     *                       measure a person's weight, in kg, punds or stones
      */
     private void showCorrectWeightValues(int preferred_unit) {
         // If unit chosen is "UK" - use stones

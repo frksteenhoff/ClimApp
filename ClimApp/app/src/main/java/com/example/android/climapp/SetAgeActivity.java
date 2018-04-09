@@ -32,12 +32,13 @@ public class SetAgeActivity extends AppCompatActivity {
         editor = preferences.edit();
 
         //Number picker for age
-        np = (NumberPicker) findViewById(R.id.AgePicker);
+        np = findViewById(R.id.AgePicker);
 
         //Populate NumberPicker values from String array values
         //Set the minimum/maximum value of NumberPicker
         np.setMinValue(18); //from array first value
         np.setMaxValue(100); //to array last value
+
         //Sets whether the selector wheel wraps when reaching the min/max value.
         np.setWrapSelectorWheel(true);
 
@@ -60,7 +61,7 @@ public class SetAgeActivity extends AppCompatActivity {
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                editor.putString("Age", newVal + "").commit();
+                editor.putString("Age", newVal + "").apply();
 
                 //Display the newly selected value from picker
                 Toast.makeText(getApplicationContext(), getString(R.string.age_updated) + " " + newVal, Toast.LENGTH_SHORT).show();

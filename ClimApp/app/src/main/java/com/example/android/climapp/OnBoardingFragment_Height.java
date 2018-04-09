@@ -29,7 +29,7 @@ public class OnBoardingFragment_Height extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
-        heightUnit = (TextView) getActivity().findViewById(R.id.unit_text_height);
+        heightUnit = getActivity().findViewById(R.id.unit_text_height);
         setHeightUnit();
     }
 

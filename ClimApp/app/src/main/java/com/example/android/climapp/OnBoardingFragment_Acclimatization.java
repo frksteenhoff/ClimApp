@@ -30,19 +30,13 @@ public class OnBoardingFragment_Acclimatization extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
-        acclimatization = (Switch) getActivity().findViewById(R.id.set_acclimatization);
+        acclimatization = getActivity().findViewById(R.id.set_acclimatization);
 
         acclimatization.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // The toggle is enabled
-                    acclimatization.setChecked(isChecked);
-                    preferences.edit().putBoolean("Acclimatization", true).commit();
-                } else {
-                    // The toggle is disabled
-                    acclimatization.setChecked(isChecked);
-                    preferences.edit().putBoolean("Acclimatization", false).commit();
-                }
+                acclimatization.setChecked(isChecked);
+                preferences.edit().putBoolean("Acclimatization", true).apply();
+
             }
         });
     }

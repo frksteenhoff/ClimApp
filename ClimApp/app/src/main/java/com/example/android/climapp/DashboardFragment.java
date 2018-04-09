@@ -184,8 +184,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
      * The callback when user is promted to grant permission to access
      * device's location.
      * @param requestCode
-     * @param permissions
-     * @param grantResults
+     * @param permissions array of permissions
+     * @param grantResults result, whether permission is granted or not
      */
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
@@ -219,14 +219,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
      * @return true if access to device location is granted, false otherwise.
      */
     private boolean deviceHasLocationPermission() {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            return false;
-        } else {
-            // Permission is granted
-            return true;
-        }
+        return (ContextCompat.checkSelfPermission(getActivity(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED);
     }
 
     /**
@@ -290,7 +284,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * With device's location, fetch weather data from OpeanWeatherMap.com
-     * @param Coordinates
+     * @param Coordinates lat/lon pair of location coordinates fetched from device
      */
     private void getOpenWeatherMapData(Pair<String, String> Coordinates) {
         APIConnection APIConn = new APIConnection("f22065144b2119439a589cbfb9d851d3", Coordinates);
@@ -303,7 +297,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
      * permission has been granted by user or not.
      * If permission, show coordinates, no error message
      * If not permission, show error message, no coordinates.
-     * @param locationFound
+     * @param locationFound boolean value determining how the dashboard view should look
      */
     private void setLocationViewVisibility(boolean locationFound) {
 
@@ -357,7 +351,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * Based on code from AndroidHive, edited.
-     * @param location
+     * @param location updating location when user changes location
      */
     @Override
     public void onLocationChanged(Location location) {
@@ -453,7 +447,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         mGoogleApiClient.connect();
     }
 
-
     // TODO: refactor such that APIConnection is in it's own class
     public class APIConnection extends AsyncTask<String, String, String> {
 
@@ -480,14 +473,14 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         private Integer humidity, pressure, temperature;
         private String city_name;
 
-        public JSONObject json;
+        private JSONObject json;
 
         /* Only working for creating the needed connection string to
         *  openweathermap.org, others will be implemented later on.
         *  Example with input parameters:
         *  http://openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=b1b15e88fa797225412429c1c50c122a1
         */
-        public APIConnection(String APIKey, Pair<?, ?> Pair) {
+        private APIConnection(String APIKey, Pair<?, ?> Pair) {
             mAPIKey = APIKey;
             mCoordinatePair = Pair;
             /* Create connection string (URL) */

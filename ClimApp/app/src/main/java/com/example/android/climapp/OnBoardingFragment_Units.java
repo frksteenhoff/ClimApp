@@ -28,7 +28,7 @@ public class OnBoardingFragment_Units extends DialogFragment implements AdapterV
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
-        unitSpinner = (Spinner) getActivity().findViewById(R.id.set_units);
+        unitSpinner = getActivity().findViewById(R.id.set_units);
 
         unitSpinner.setOnItemSelectedListener(this);
     }
@@ -37,13 +37,13 @@ public class OnBoardingFragment_Units extends DialogFragment implements AdapterV
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
         if (position == 0) {
             // If SI units selected, show SI units in picker
-            preferences.edit().putInt("Unit", 0).commit();
+            preferences.edit().putInt("Unit", 0).apply();
         } else if (position == 1) {
             // If US units selected, show US units in picker
-            preferences.edit().putInt("Unit", 1).commit();
+            preferences.edit().putInt("Unit", 1).apply();
         } else {
             // If UK units selected, show UK units in picker
-            preferences.edit().putInt("Unit", 2).commit();
+            preferences.edit().putInt("Unit", 2).apply();
         }
     }
 
@@ -51,11 +51,11 @@ public class OnBoardingFragment_Units extends DialogFragment implements AdapterV
      * Setting default value for gender and unit
      * Default  gender: female
      * Default unit: System Internationale (m, kg, l)
-     * @param adapterView
+     * @param adapterView the adapter that invoked the method
      */
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        preferences.edit().putInt("Unit", 0).commit();
+        preferences.edit().putInt("Unit", 0).apply();
     }
 }
 

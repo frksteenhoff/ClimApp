@@ -13,6 +13,7 @@
         <Spinner
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/field_of_work_spinner"
             android:entries="@array/field_of_work_array"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">

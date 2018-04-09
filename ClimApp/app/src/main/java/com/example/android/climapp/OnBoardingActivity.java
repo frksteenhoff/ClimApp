@@ -24,7 +24,6 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 public class OnBoardingActivity extends FragmentActivity {
 
     private ViewPager pager;
-    private SmartTabLayout indicator;
     private Button skip;
     private Button next;
 
@@ -35,10 +34,10 @@ public class OnBoardingActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.onboard_activity);
-        pager = (ViewPager) findViewById(R.id.pager);
-        indicator = (SmartTabLayout) findViewById(R.id.indicator);
-        skip = (Button) findViewById(R.id.skip);
-        next = (Button) findViewById(R.id.next);
+        pager = findViewById(R.id.pager);
+        SmartTabLayout indicator = findViewById(R.id.indicator);
+        skip = findViewById(R.id.skip);
+        next = findViewById(R.id.next);
         preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
 
         // Returning the correct onboarding fragment
@@ -128,10 +127,10 @@ public class OnBoardingActivity extends FragmentActivity {
             public void onPageSelected(int position) {
                 if (position == 5) {
                     skip.setVisibility(View.GONE);
-                    next.setText("Done");
+                    next.setText(R.string.skip);
                 } else {
                     skip.setVisibility(View.VISIBLE);
-                    next.setText("Next");
+                    next.setText(R.string.next);
                 }
             }
         });
@@ -143,10 +142,10 @@ public class OnBoardingActivity extends FragmentActivity {
      * Age: Correct means max lenght 8, all numbers
      */
     private void saveDayOfBirth() {
-        EditText currentText = (EditText) findViewById(R.id.set_age);
+        EditText currentText = findViewById(R.id.set_age);
         // Only add date of birth if correct format
         if (currentText.length() == 8) {
-            preferences.edit().putString("Age_onboarding", currentText.getText().toString()).commit();
+            preferences.edit().putString("Age_onboarding", currentText.getText().toString()).apply();
         }
     }
 
@@ -155,25 +154,25 @@ public class OnBoardingActivity extends FragmentActivity {
      * Only valid input if any numeric input given
      */
     private void saveInformation(String preferenceName) {
-        if (preferenceName == "Height") {
-            EditText inputHeight = (EditText) findViewById(R.id.set_height);
+        if (preferenceName.equals("Height")) {
+            EditText inputHeight = findViewById(R.id.set_height);
 
             Log.v("HESTE", "HERE:" +inputHeight.getText().toString());
             if (inputHeight.getText().toString().length() > 1){
-                preferences.edit().putInt(preferenceName, Integer.parseInt(inputHeight.getText().toString())).commit();
+                preferences.edit().putInt(preferenceName, Integer.parseInt(inputHeight.getText().toString())).apply();
             }
         } else {
             // Can only be weight
-            EditText inputWeight = (EditText) findViewById(R.id.set_weight);
+            EditText inputWeight = findViewById(R.id.set_weight);
             if (inputWeight.getText().toString().length() > 1) {
-                preferences.edit().putInt(preferenceName, Integer.parseInt(inputWeight.getText().toString())).commit();
+                preferences.edit().putInt(preferenceName, Integer.parseInt(inputWeight.getText().toString())).apply();
             }
         }
     }
 
     private void finishOnBoarding() {
         // Set on_boarding complete to true
-        preferences.edit().putBoolean("onboarding_complete", true).commit();
+        preferences.edit().putBoolean("onboarding_complete", true).apply();
 
         // Launch main activity
         Intent main = new Intent(this, MainActivity.class);

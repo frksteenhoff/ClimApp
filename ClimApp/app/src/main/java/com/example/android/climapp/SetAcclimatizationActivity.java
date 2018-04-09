@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 /**
  * Created by frksteenhoff on 21-01-2018.
+ * Setting whether the user is acclimatized to work environment or not.
  */
 
 public class SetAcclimatizationActivity extends AppCompatActivity {
@@ -34,15 +35,11 @@ public class SetAcclimatizationActivity extends AppCompatActivity {
         // TECHNICAL DEBT - same code existing here and in SettingsFragment
         acclimatizationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                acclimatizationSwitch.setChecked(isChecked);
+                editor.putBoolean("Acclimatization", isChecked).apply();
                 if (isChecked) {
-                    // The toggle is enabled
-                    acclimatizationSwitch.setChecked(isChecked);
-                    editor.putBoolean("Acclimatization", true).commit();
                     Toast.makeText(getApplicationContext(), getString(R.string.acclimatization_true), Toast.LENGTH_SHORT).show();
                 } else {
-                    // The toggle is disabled
-                    acclimatizationSwitch.setChecked(isChecked);
-                    editor.putBoolean("Acclimatization", false).commit();
                     Toast.makeText(getApplicationContext(), getString(R.string.acclimatization_false), Toast.LENGTH_SHORT).show();
                 }
             }
