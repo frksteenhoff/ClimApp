@@ -9,6 +9,13 @@ import android.view.ViewGroup;
 
 /**
  * Created by frksteenhoff on 26-02-2018.
+ * Choosing work specific attire in order to more accurately calculate the user's clo-value
+ *
+ * All current assets are from www.flaticon.com
+ * Special credits to:
+ * - Freepik    - http://www.freepik.com/
+ * - Smashicons - http://www.smashicons.com/
+ * Made available under Creative Commons License BY 3.0
  */
 
 public class ClothingFragment extends Fragment {

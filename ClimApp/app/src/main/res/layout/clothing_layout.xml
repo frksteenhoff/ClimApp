@@ -88,25 +88,27 @@
             <HorizontalScrollView
                 style="@style/WMatchHWrap"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:id="@+id/construction_specific">
                 <LinearLayout
                     style="@style/WMatchHWrap"
                     android:orientation="horizontal">
                     <ToggleButton
                         style="@style/WMatchHWrap"
-                        android:background="@drawable/climapp_108dp"
+                        android:textOn="@string/no_text"
+                        android:textOff="@string/no_text"
+                        android:background="@drawable/ic_helmet_foreground"
                         android:layout_margin="6dp"/>
                     <ToggleButton
                         style="@style/WMatchHWrap"
-                        android:background="@drawable/climapp_108dp"
+                        android:textOn="@string/no_text"
+                        android:textOff="@string/no_text"
+                        android:background="@drawable/ic_helmet_foreground"
                         android:layout_margin="6dp"/>
                     <ToggleButton
                         style="@style/WMatchHWrap"
-                        android:background="@drawable/climapp_108dp"
-                        android:layout_margin="6dp"/>
-                    <ToggleButton
-                        style="@style/WMatchHWrap"
-                        android:background="@drawable/climapp_108dp"
+                        android:textOn="@string/no_text"
+                        android:textOff="@string/no_text"
+                        android:background="@drawable/ic_helmet_foreground"
                         android:layout_margin="6dp"/>
                 </LinearLayout>
             </HorizontalScrollView>

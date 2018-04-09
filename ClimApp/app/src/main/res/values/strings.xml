@@ -86,8 +86,8 @@
 
     <!-- Clothing - Field of work -->
     <string-array name="field_of_work_array">
+        <item>Office</item>
         <item>Construction</item>
-        <item>Office work</item>
         <item>Sales Assistant</item>
         <item>Teaching</item>
     </string-array>
