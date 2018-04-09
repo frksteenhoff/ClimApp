@@ -55,7 +55,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">0.3</item>
         <item name="android:textColor">@color/tw__solid_white</item>
-        <item name="android:background">@color/colorPrimaryLight</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <!-- OnBoarding hint text style-->

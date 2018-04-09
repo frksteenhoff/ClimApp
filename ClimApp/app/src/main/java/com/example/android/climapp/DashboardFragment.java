@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.AsyncTask;
@@ -17,8 +18,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -79,6 +82,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     // Views and buttons
     private Button mLocationButton;
+    private ToggleButton toggleHigh, toggleMedium, toggleLow;
     private TextView txtLong, txtLat, errorText;
     private TextView cityTextView, tempTextView, humidityTextView, pressureTextView;
 
@@ -102,16 +106,19 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         // Location view references, updated based on device's location
-        mLocationButton = (Button) getActivity().findViewById(R.id.locationButton);
-        txtLong = (TextView) getActivity().findViewById(R.id.long_coord);
-        txtLat = (TextView) getActivity().findViewById(R.id.lat_coord);
-        errorText = (TextView) getActivity().findViewById(R.id.error_txt);
+        mLocationButton = getActivity().findViewById(R.id.locationButton);
+        toggleLow = getActivity().findViewById(R.id.dash_toggle_low);
+        toggleMedium = getActivity().findViewById(R.id.dash_toggle_medium);
+        toggleHigh = getActivity().findViewById(R.id.dash_toggle_high);
+        txtLong = getActivity().findViewById(R.id.long_coord);
+        txtLat = getActivity().findViewById(R.id.lat_coord);
+        errorText = getActivity().findViewById(R.id.error_txt);
 
         // Reference to views that should be updated based on open weather map data
-        tempTextView = (TextView) getActivity().findViewById(R.id.temp_value);
-        humidityTextView = (TextView) getActivity().findViewById(R.id.humidity_value);
-        pressureTextView = (TextView) getActivity().findViewById(R.id.other_value);
-        cityTextView = (TextView) getActivity().findViewById(R.id.current_city);
+        tempTextView = getActivity().findViewById(R.id.temp_value);
+        humidityTextView = getActivity().findViewById(R.id.humidity_value);
+        pressureTextView = getActivity().findViewById(R.id.other_value);
+        cityTextView = getActivity().findViewById(R.id.current_city);
 
         // Check whether onboarding has been completed
         // if onboarding steps still missing, start onboarding
@@ -151,6 +158,44 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         navigationView.setNavigationItemSelectedListener(this);
         */
 
+        toggleLow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(toggleLow.isChecked()) {
+                    toggleMedium.setChecked(false);
+                    toggleHigh.setChecked(false);
+                    setOnCheckedColors(toggleLow);
+                } else {
+                    setUncheckedColors(toggleLow);
+                }
+            }
+        });
+
+        toggleMedium.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(toggleMedium.isChecked()) {
+                    toggleLow.setChecked(false);
+                    toggleHigh.setChecked(false);
+                    setOnCheckedColors(toggleMedium);
+                } else {
+                    setUncheckedColors(toggleMedium);
+                }
+            }
+        });
+
+        toggleHigh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(toggleHigh.isChecked()) {
+                    toggleLow.setChecked(false);
+                    toggleMedium.setChecked(false);
+                    setOnCheckedColors(toggleHigh);
+                } else {
+                    setUncheckedColors(toggleHigh);
+                }
+            }
+        });
         // Show location button click listener
         mLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,6 +203,17 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 displayLocation();
             }
         });
+    }
+
+    private void setUncheckedColors(ToggleButton toggleButtonId) {
+        toggleButtonId.setBackgroundColor(Color.WHITE);
+        toggleButtonId.setTextColor(Color.GRAY);
+
+    }
+
+    private void setOnCheckedColors(ToggleButton toggleButtonId) {
+        toggleButtonId.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        toggleButtonId.setTextColor(Color.WHITE);
     }
 
     private void startOnBoarding() {
@@ -537,7 +593,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 city_name = json.getString(TAG_CITY);
 
                 // Display data in UI
-                // Setting minimum length of string to be 15
                 tempTextView.setText(temperature.toString() + " °C");
                 humidityTextView.setText(humidity.toString() + "%");
                 pressureTextView.setText(pressure.toString() + " atm");
