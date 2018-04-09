@@ -71,32 +71,27 @@
         <activity
             android:name=".SetAgeActivity"
             android:label="@string/Age"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".MainActivity">
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".SetHeightActivity"
             android:label="@string/Height"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".MainActivity">
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".SetWeightActivity"
             android:label="@string/Weight"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".MainActivity">
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".SetAcclimatizationActivity"
             android:label="@string/Acclimatization"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".MainActivity">
+            android:theme="@style/AppTheme">
         </activity>
         <activity
             android:name=".SetNotificationActivity"
             android:label="@string/Notifications"
-            android:theme="@style/AppTheme"
-            android:parentActivityName=".MainActivity">
+            android:theme="@style/AppTheme">
         </activity>
     </application>
 </manifest>

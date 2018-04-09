@@ -21,6 +21,7 @@ public class SetAgeActivity extends AppCompatActivity {
     static SharedPreferences preferences;
     SharedPreferences.Editor editor;
     NumberPicker np;
+    int userAge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,18 +36,22 @@ public class SetAgeActivity extends AppCompatActivity {
 
         //Populate NumberPicker values from String array values
         //Set the minimum/maximum value of NumberPicker
-        np.setMinValue(0); //from array first value
+        np.setMinValue(18); //from array first value
         np.setMaxValue(100); //to array last value
         //Sets whether the selector wheel wraps when reaching the min/max value.
         np.setWrapSelectorWheel(true);
 
-        // Get user age if already stated, otherwise 0
+        // Get user age from birth date
         if(preferences.getString("Age_onboarding", null) != null &&
            preferences.getString("Age", null) == null ) {
             String userInput = preferences.getString("Age_onboarding", null);
-            int userAge = (int) getUserAgeFromInput(userInput);
+            userAge = (int) getUserAgeFromInput(userInput);
             np.setValue(userAge);
-        } else {
+            // Get user age from input
+        } else if(preferences.getString("Age", null) != null ) {
+            userAge = Integer.parseInt(preferences.getString("Age",null));
+            np.setValue(userAge);
+        } else{
             // Set initial value
             np.setValue(0);
         }
