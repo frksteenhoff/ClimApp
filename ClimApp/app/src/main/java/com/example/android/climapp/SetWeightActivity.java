@@ -3,6 +3,7 @@ package com.example.android.climapp;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,16 +25,20 @@ public class SetWeightActivity extends AppCompatActivity {
 
         preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
 
-        // Set correct text indicating unit
+        // Set correct text indicating unit on UI
         TextView weightUnit = findViewById(R.id.unit_text_weight);
         setCorrectPickerUnit(weightUnit);
 
         //Number picker for age, set initial value
         np = findViewById(R.id.WeightPicker);
-        np.setValue(preferences.getInt("Weight", 0));
 
+        // Set range of values to choose from
         int preferred_unit = preferences.getInt("Unit",0);
         showCorrectWeightValues(preferred_unit);
+
+        // Set value based on user input
+        np.setValue(preferences.getInt("Weight", 0));
+        Log.v("HESTE", preferences.getInt("Weight", 0)+" heer");
 
         //Sets whether the selector wheel wraps when reaching the min/max value.
         np.setWrapSelectorWheel(true);
@@ -43,6 +48,7 @@ public class SetWeightActivity extends AppCompatActivity {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 preferences.edit().putInt("Weight", newVal).apply();
+                Log.v("HESTE", newVal+"");
 
                 //Display the newly selected value from picker
                 Toast.makeText(getApplicationContext(), getString(R.string.weight_updated) + " " + newVal, Toast.LENGTH_SHORT).show();
@@ -67,7 +73,7 @@ public class SetWeightActivity extends AppCompatActivity {
             np.setMinValue(20); //from array first value
             np.setMaxValue(175); //to array last value
 
-            // If unit is "SI" or anything else, use kilograms
+            // Default or if unit is "SI", use kilograms
         } else {
             np.setMinValue(40); //from array first value
             np.setMaxValue(350); //to array last value
