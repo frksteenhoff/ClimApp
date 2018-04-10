@@ -15,7 +15,6 @@ import android.widget.Toast;
 public class SetHeightActivity extends AppCompatActivity {
 
     private static SharedPreferences preferences;
-    private static SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +22,9 @@ public class SetHeightActivity extends AppCompatActivity {
         setContentView(R.layout.settings_height);
 
         preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
-        editor = preferences.edit();
 
         int preferred_unit = preferences.getInt("Unit",0);
-        String height_units[] = showCorrectHeightValues(preferred_unit);
+        final String height_units[] = showCorrectHeightValues(preferred_unit);
 
         // Additional text stating input unit
         final TextView heightUnit = findViewById(R.id.unit_text_height);
@@ -43,7 +41,7 @@ public class SetHeightActivity extends AppCompatActivity {
         np.setDisplayedValues(height_units);
 
         // Setting default user height
-        np.setValue(preferences.getInt("Height",0));
+        np.setValue(preferences.getInt("Height_index",0));
 
         //Sets whether the selector wheel wraps when reaching the min/max value.
         np.setWrapSelectorWheel(true);
@@ -52,11 +50,13 @@ public class SetHeightActivity extends AppCompatActivity {
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                editor.putInt("Height", newVal).apply();
+                // Save index position of height value
+                preferences.edit().putInt("Height_index", newVal).apply();
+                preferences.edit().putString("Height_value", height_units[newVal]).apply();
 
                 //Display the newly selected value from picker
                 Toast.makeText(getApplicationContext(),
-                        getString(R.string.height_updated) + " " + newVal + " " +
+                        getString(R.string.height_updated) + " " + height_units[newVal] + " " +
                                 heightUnit.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         });

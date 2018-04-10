@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,7 +43,6 @@ public class OnBoardingActivity extends FragmentActivity {
         FragmentStatePagerAdapter adapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                Log.v("HESTE", "position:" + position);
                 switch (position) {
                     case 0:
                         return new OnBoardingFragment_Units();
@@ -136,7 +134,6 @@ public class OnBoardingActivity extends FragmentActivity {
         });
     }
 
-
     /**
      * Saving user preferences -- only if input format is correct
      * Age: Correct means max lenght 8, all numbers
@@ -152,14 +149,14 @@ public class OnBoardingActivity extends FragmentActivity {
     /**
      * Save onboarding information on weight and height stored in EditText views.
      * Only valid input if any numeric input given
+     * @param preferenceName name of preference for which to save data
      */
     private void saveInformation(String preferenceName) {
-        if (preferenceName.equals("Height")) {
+        if (preferenceName.equals("Height_value")) {
             EditText inputHeight = findViewById(R.id.set_height);
 
-            Log.v("HESTE", "HERE:" +inputHeight.getText().toString());
             if (inputHeight.getText().toString().length() > 1){
-                preferences.edit().putInt(preferenceName, Integer.parseInt(inputHeight.getText().toString())).apply();
+                preferences.edit().putString(preferenceName, inputHeight.getText().toString()).apply();
             }
         } else {
             // Can only be weight

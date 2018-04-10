@@ -114,7 +114,7 @@
     <!-- Settings - Unit array -->
     <string-array name="units_array">
         <item>SI units (kg, m)</item>
-        <item>US (pound, inch)</item>
+        <item>US (pound, feet)</item>
         <item>UK (stone, feet)</item>
     </string-array>
 
