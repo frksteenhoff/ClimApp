@@ -26,7 +26,7 @@ public class SetWeightActivity extends AppCompatActivity {
         preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
 
         // Set correct text indicating unit on UI
-        TextView weightUnit = findViewById(R.id.unit_text_weight);
+        final TextView weightUnit = findViewById(R.id.unit_text_weight);
         setCorrectPickerUnit(weightUnit);
 
         //Number picker for age, set initial value
@@ -38,7 +38,7 @@ public class SetWeightActivity extends AppCompatActivity {
 
         // Set value based on user input
         np.setValue(convertWeightToUnitFromKg(preferred_unit, preferences.getInt("Weight", 0)));
-        
+
         //Sets whether the selector wheel wraps when reaching the min/max value.
         np.setWrapSelectorWheel(true);
 
@@ -50,7 +50,8 @@ public class SetWeightActivity extends AppCompatActivity {
                 preferences.edit().putInt("Weight", convertedWeight).apply();
 
                 //Display the newly selected value from picker
-                Toast.makeText(getApplicationContext(), getString(R.string.weight_updated) + " " + newVal, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.weight_updated) + " " + newVal + " " +
+                        weightUnit.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
