@@ -55,6 +55,12 @@
     <string name="activity_level_low">Low</string>
     <string name="activity_level_medium">Medium</string>
     <string name="activity_level_high">High</string>
+    <string name="activity_level_very_high">High+</string>
+    <string name="activity_description">Description of the different activity levels shown on click.</string>
+    <string name="activity_low_text">Resting</string>
+    <string name="activity_medium_text">Sitting at a desk, light manual arm work, standing drilling, machining with low power tools..</string>
+    <string name="activity_high_text">Sustained arm and hand work, handling moderately heavy machinery, weeding, picking fruits..</string>
+    <string name="activity_very_high_text">Carrying heavy metal, hand mowing, digging, walking at a high speed..</string>
 
     <!-- Dashboard: hydration -->
     <string name="hydration">Hydration</string>

@@ -82,8 +82,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     // Views and buttons
     private Button mLocationButton;
-    private ToggleButton toggleHigh, toggleMedium, toggleLow;
-    private TextView txtLong, txtLat, errorText;
+    private ToggleButton toggleVeryHigh, toggleHigh, toggleMedium, toggleLow;
+    private TextView txtLong, txtLat, errorText, toggleDescription;
     private TextView cityTextView, tempTextView, humidityTextView, windSpeedTextView;
 
     private SharedPreferences preferences;
@@ -110,6 +110,9 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         toggleLow = getActivity().findViewById(R.id.dash_toggle_low);
         toggleMedium = getActivity().findViewById(R.id.dash_toggle_medium);
         toggleHigh = getActivity().findViewById(R.id.dash_toggle_high);
+        toggleVeryHigh = getActivity().findViewById(R.id.dash_toggle_very_high);
+        toggleDescription = getActivity().findViewById(R.id.activity_description_view);
+
         txtLong = getActivity().findViewById(R.id.long_coord);
         txtLat = getActivity().findViewById(R.id.lat_coord);
         errorText = getActivity().findViewById(R.id.error_txt);
@@ -162,10 +165,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(toggleLow.isChecked()) {
-                    toggleMedium.setChecked(false);
-                    toggleHigh.setChecked(false);
-                    setOnCheckedColors(toggleLow);
-                    preferences.edit().putString("activity_level", "low").apply();
+                    updateActivityLevelView(toggleLow, "low");
                 } else {
                     setUncheckedColors(toggleLow);
                 }
@@ -176,10 +176,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(toggleMedium.isChecked()) {
-                    toggleLow.setChecked(false);
-                    toggleHigh.setChecked(false);
-                    setOnCheckedColors(toggleMedium);
-                    preferences.edit().putString("activity_level", "medium").apply();
+                    updateActivityLevelView(toggleMedium, "medium");
                 } else {
                     setUncheckedColors(toggleMedium);
                 }
@@ -190,15 +187,24 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(toggleHigh.isChecked()) {
-                    toggleLow.setChecked(false);
-                    toggleMedium.setChecked(false);
-                    setOnCheckedColors(toggleHigh);
-                    preferences.edit().putString("activity_level", "high").apply();
+                    updateActivityLevelView(toggleHigh, "high");
                 } else {
                     setUncheckedColors(toggleHigh);
                 }
             }
         });
+
+        toggleVeryHigh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(toggleVeryHigh.isChecked()) {
+                    updateActivityLevelView(toggleVeryHigh, "very high");
+                } else {
+                    setUncheckedColors(toggleVeryHigh);
+                }
+            }
+        });
+
         // Show location button click listener
         mLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,6 +215,38 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
         // Set medium activity level as checked
         toggleMedium.setChecked(true);
+    }
+
+    private void updateActivityLevelView(ToggleButton currentButton, String preferenceText) {
+        if(currentButton == toggleLow) {
+            toggleMedium.setChecked(false);
+            toggleHigh.setChecked(false);
+            toggleVeryHigh.setChecked(false);
+            toggleDescription.setText(R.string.activity_low_text);
+
+        } else if (currentButton == toggleMedium) {
+            toggleLow.setChecked(false);
+            toggleHigh.setChecked(false);
+            toggleVeryHigh.setChecked(false);
+            toggleDescription.setText(R.string.activity_medium_text);
+
+        } else if (currentButton == toggleHigh) {
+            toggleLow.setChecked(false);
+            toggleMedium.setChecked(false);
+            toggleVeryHigh.setChecked(false);
+            toggleDescription.setText(R.string.activity_high_text);
+
+            // CurrentButton == toggleVeryHigh
+        } else {
+            toggleLow.setChecked(false);
+            toggleMedium.setChecked(false);
+            toggleHigh.setChecked(false);
+            toggleDescription.setText(R.string.activity_very_high_text);
+        }
+
+        // Set the rest of the parameters
+        setOnCheckedColors(currentButton);
+        preferences.edit().putString("activity_level", preferenceText).apply();
     }
 
     private void setUncheckedColors(ToggleButton toggleButtonId) {
