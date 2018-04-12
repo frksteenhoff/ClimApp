@@ -104,6 +104,13 @@
                         android:orientation="horizontal"
                         android:layout_gravity="center">
                         <ToggleButton
+                            android:id="@+id/dash_toggle_very_low"
+                            style="@style/DashboardToggleButtonStyle"
+                            android:layout_marginEnd="8dp"
+                            android:textOn="@string/activity_level_very_low"
+                            android:textOff="@string/activity_level_very_low"
+                            android:visibility="gone"/>
+                        <ToggleButton
                             android:id="@+id/dash_toggle_low"
                             style="@style/DashboardToggleButtonStyle"
                             android:layout_marginEnd="8dp"
@@ -127,7 +134,7 @@
                             style="@style/DashboardToggleButtonStyle"
                             android:textOn="@string/activity_level_very_high"
                             android:textOff="@string/activity_level_very_high"
-                            android:layout_marginBottom="16dp"/>
+                            android:layout_marginBottom="16dp" />
                     </LinearLayout>
                     <TextView
                         android:layout_width="match_parent"
