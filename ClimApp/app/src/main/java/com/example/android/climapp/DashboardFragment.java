@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,7 +86,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     private TextView cityTextView, tempTextView, humidityTextView, windSpeedTextView;
 
     private SharedPreferences preferences;
-    private SharedPreferences.Editor editor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -133,8 +131,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             // Check whether app har permission to access location
             // If access granted, display location.
             // Otherwise prompt user for location settings change
+            Log.v("HESTE", "DEVICE HAVE LOCATION ACCESS: " + deviceHasLocationPermission());
             if(deviceHasLocationPermission()) {
-
                 displayLocation();
 
                 // Check availability of play services -- only if location access is granted
@@ -143,7 +141,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                     buildGoogleApiClient();
                     createLocationRequest();
                 }
-
             } else {
                 promptUserForLocationSettingsChange();
             }
@@ -232,6 +229,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
      */
     private void setCheckedActivityLevel() {
         String activityLevel = preferences.getString("activity_level", null);
+        Log.v("HESTE", "ACTIVITY LEVEL: " + activityLevel);
         switch (activityLevel) {
             case "very low":
                 toggleVeryLow.setChecked(true);
@@ -342,8 +340,10 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
      * @return true if access to device location is granted, false otherwise.
      */
     private boolean deviceHasLocationPermission() {
-        return (ContextCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED);
+        return !(ActivityCompat.checkSelfPermission(getActivity(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(),
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED);
     }
 
     /**
@@ -351,11 +351,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
      * @return true if onboarding completed, false otherwise
      */
     private boolean onBoardingCompleted() {
-        if (!preferences.getBoolean("onboarding_complete", false)) {
-            return false;
-        } else {
-            return true;
-        }
+        return preferences.getBoolean("onboarding_complete", false);
     }
 
     /**
@@ -365,12 +361,9 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     private void displayLocation() {
 
         if (ActivityCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(getActivity(),
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            Log.v("HESTE", "Access not granted.");
         }
-
         mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
@@ -403,6 +396,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                         }
                     }
                 });
+
     }
 
     /**
@@ -441,6 +435,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
+        displayLocation();
     }
 
     /**
@@ -455,7 +450,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(),
                         android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            displayLocation();
         }
     }
 
@@ -664,17 +659,16 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 city_name = json.getString(TAG_CITY);
 
                 // Display data in UI
-                tempTextView.setText(temperature.toString() + " °C");
-                humidityTextView.setText(humidity.toString() + "%");
-                windSpeedTextView.setText(wind_speed + " m/s");
+                tempTextView.setText(String.format("%s °C", temperature.toString()));
+                humidityTextView.setText(String.format("%s %s", humidity.toString(), "%"));
+                windSpeedTextView.setText(String.format("%s m/s", wind_speed));
                 cityTextView.setText(city_name);
 
                 // Save all values to ser preferences
-                editor.putInt("Humidity", humidity);
-                editor.putInt("Pressure", pressure);
-                editor.putString("Wind_speed", String.valueOf(wind_speed));
-                editor.putInt("Temperature", temperature);
-                editor.commit();
+                preferences.edit().putInt("Humidity", humidity).apply();
+                preferences.edit().putInt("Pressure", pressure).apply();
+                preferences.edit().putString("Wind_speed", String.valueOf(wind_speed)).apply();
+                preferences.edit().putInt("Temperature", temperature).apply();
 
             } catch (JSONException e) {
                 e.printStackTrace();

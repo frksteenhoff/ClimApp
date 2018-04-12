@@ -85,7 +85,7 @@
 
     <!-- Dashboard: Suggestions -->
     <string name="suggestions">Suggestions</string>
-    <string name="suggestion_drink_water">Remember to drink water!</string>
+    <string name="suggestion_text">Based on your activity level, you should try to drink 200ml of water each hour. A total of 800ml today.</string>
 
     <!-- Clothing -->
     <string name="field_of_work">Field of work</string>
