@@ -1,14 +1,8 @@
 package com.example.android.climapp;
 
-import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Instrumentation test, which will execute on an Android device.
@@ -17,7 +11,7 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(AndroidJUnit4.class)
 public class TestDashboardActivity {
-
+/*
     // Telling JUnit that we are testing the dashboard activity
     // This launches the main activity directly.
     @Rule
@@ -31,5 +25,5 @@ public class TestDashboardActivity {
     @Test
     public void TestView() {
         assertEquals(true, true);
-    }
+    }*/
 }

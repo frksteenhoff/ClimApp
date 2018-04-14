@@ -22,6 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.android.climapp.wbgt.Solar;
+import com.example.android.climapp.wbgt.SolarRad;
+import com.example.android.climapp.wbgt.WBGT;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -41,6 +44,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 
@@ -82,10 +87,13 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     // Views and buttons
     private Button mLocationButton;
     private ToggleButton toggleVeryHigh, toggleHigh, toggleMedium, toggleLow, toggleVeryLow;
-    private TextView txtLong, txtLat, errorText, toggleDescription;
+    private TextView txtLong, txtLat, errorText, toggleDescription, wbgt_solar, wbgt_no_solar;
     private TextView cityTextView, tempTextView, humidityTextView, windSpeedTextView;
 
+    private String latitude, longitude;
     private SharedPreferences preferences;
+
+    private WBGT wbgt;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,6 +122,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         txtLong = getActivity().findViewById(R.id.long_coord);
         txtLat = getActivity().findViewById(R.id.lat_coord);
         errorText = getActivity().findViewById(R.id.error_txt);
+        wbgt_solar = getActivity().findViewById(R.id.solar);
+        wbgt_no_solar = getActivity().findViewById(R.id.no_solar);
 
         // Reference to views that should be updated based on open weather map data
         tempTextView = getActivity().findViewById(R.id.temp_value);
@@ -375,8 +385,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                             DecimalFormat df2 = new DecimalFormat(".##");
 
                             // Logic to get lat/lon from location object
-                            String latitude = df2.format(location.getLatitude());
-                            String longitude = df2.format(location.getLongitude());
+                            latitude = df2.format(location.getLatitude());
+                            longitude = df2.format(location.getLongitude());
 
                             // Update view components
                             txtLong.setText(latitude);
@@ -590,9 +600,9 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         private static final String TAG_SPEED = "speed";
         private static final String TAG_CITY = "name";
 
-        private Integer humidity, pressure, temperature;
+        private Integer pressure, temperature;
         private String city_name;
-        private double wind_speed;
+        private double wind_speed, humidity;
 
         private JSONObject json;
 
@@ -660,21 +670,48 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
                 // Display data in UI
                 tempTextView.setText(String.format("%s °C", temperature.toString()));
-                humidityTextView.setText(String.format("%s %s", humidity.toString(), "%"));
+                humidityTextView.setText(String.format("%s %s", humidity, "%"));
                 windSpeedTextView.setText(String.format("%s m/s", wind_speed));
                 cityTextView.setText(city_name);
 
-                // Save all values to ser preferences
-                preferences.edit().putInt("Humidity", humidity).apply();
-                preferences.edit().putInt("Pressure", pressure).apply();
-                preferences.edit().putString("Wind_speed", String.valueOf(wind_speed)).apply();
-                preferences.edit().putInt("Temperature", temperature).apply();
+                wbgt = calculateWBGT(wind_speed, humidity, pressure);
+                wbgt_no_solar.setText(String.format("TWBG No solar: %s", wbgt.getTwbgWithoutSolar()));
+                wbgt_solar.setText(String.format("TWBG Solar:       %s", wbgt.getTwbgWithSolar()));
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
+
+    private WBGT calculateWBGT(double wind_speed, double humidity, double pressure) {
+        Calendar calendar = Calendar.getInstance();
+        int utcOffset = (calendar.get(Calendar.ZONE_OFFSET) + calendar.get(Calendar.DST_OFFSET)) / (60 * 60000); // Total offset (geographical and daylight savings) from UTC in hours
+        int avg = 10;
+        double Tair = 25;
+        double zspeed = 2;
+        double dT = 0; //Vertical temp difference
+        int urban = 0;
+
+        calendar.setTime(new Date());
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR);
+        int min = calendar.get(Calendar.MINUTE);
+        calendar.set(year, month, day, hour, min);
+
+        Solar s = new Solar(Double.parseDouble(longitude), Double.parseDouble(latitude), calendar, utcOffset);
+        SolarRad sr = new SolarRad(s.zenith(), calendar.get(Calendar.DAY_OF_YEAR), 0, 1, false, false); //(solar zenith angle, day no, cloud fraction, cloud type, fog, precipitation)
+
+        // Making all calculations
+        WBGT wbgt = new WBGT(year, month, day, hour, min, utcOffset, avg,
+                Double.parseDouble(latitude),
+                Double.parseDouble(longitude),
+                sr.solarIrradiation(), pressure, Tair, humidity, wind_speed, zspeed, dT, urban);
+        return wbgt;
+    }
+
     public int convertKelvinToCelsius(int temperatureInKelvin) {
         return temperatureInKelvin - (int) 273.15;
     }

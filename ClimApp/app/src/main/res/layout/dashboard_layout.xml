@@ -242,17 +242,23 @@
                             android:id="@+id/long_coord"
                             android:visibility="gone"
                             android:text=""
-                            android:layout_weight="1"
                             android:gravity="center"
                             style="@style/DashboardTextStyle"/>
                         <TextView
                             android:id="@+id/lat_coord"
                             android:visibility="gone"
                             android:text=""
-                            android:layout_weight="1"
                             android:gravity="center"
                             style="@style/DashboardTextStyle"/>
                     </LinearLayout>
+                    <TextView
+                        android:id="@+id/solar"
+                        android:text=""
+                        style="@style/DashboardTextStyle"/>
+                    <TextView
+                        android:id="@+id/no_solar"
+                        android:text=""
+                        style="@style/DashboardTextStyle"/>
                     <Button
                         android:id="@+id/locationButton"
                         android:layout_width="wrap_content"

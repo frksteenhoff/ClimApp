@@ -40,6 +40,7 @@
         <item name="android:textColor">@color/tw__medium_gray</item>
         <item name="android:layout_weight">1</item>
     </style>
+
     <style name="DashboardTextStyleInfo">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">match_parent</item>
