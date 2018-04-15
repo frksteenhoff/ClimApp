@@ -3,36 +3,36 @@
 This is the codebase for the prototype and final app developed as a part of the ERA4CS ClimApp project. As the app is being developed the readme will be updated with necessary information.
 
 ## Folder structure
-* **ClimApp**
+**ClimApp**
+* Contains the Java code for the app
 
-Contains the Java code for the app
+**img**
+* All images used in the ClimApp wiki 
+* Images that shows the progression of the app UI
 
-* **img**
-
-All images used in the ClimApp wiki
-
-* **OpenWeatherData**
-
-   * Overview of available datasets and frequencies.
-   * Check this website to get an overview of the data that can be delivered: [API information](http://openweathermap.org/price#weather)
+**OpenWeatherData**
+ * Overview of available datasets and frequencies.
+ * Check this website to get an overview of the data that can be delivered: [API information](http://openweathermap.org/price#weather)
 
 Tests for fetching data from DWD Open Data and Open Weather Map in Jupyter Notebooks.
+
+**Conceputal drawings**
+* Overview of the architecture of the app (work in progress)
 
 ### Follow the app development
 Interactive screen visualization can be found as a preview here: [https://invis.io/W3EQCCGSN](https://invis.io/W3EQCCGSN)
 
 The colors have been changed in order to fit the color palette of the logo -- not all functionality is made available in preview yet.
 
-## Requirements
-To run the scripts in Jupyter Notebooks require an installation of Python 2.7.
+## Requirements and installation
+The scripts in Jupyter Notebooks require an installation of Python 2.7.
 
 For all Java code you need to install [Java](https://java.com/en/download/) and [Android Studio](https://developer.android.com/studio/install.html) including different SDKs/JDKs and JRE. 
+
+For the best simulation of the app, use USB Debugging on your device (Developer mode).
 
 # Documentation
 Documentation of the app can be found in the [ClimApp Wiki](https://github.com/frksteenhoff/ClimApp/wiki). 
 
-# Installation
-
-# Resources
 
 Copyright frksteenhoff
