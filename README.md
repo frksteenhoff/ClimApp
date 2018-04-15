@@ -2,6 +2,10 @@
 
 This is the codebase for the prototype and final app developed as a part of the ERA4CS ClimApp project. As the app is being developed the readme will be updated with necessary information.
 
+Follow the app development (with some delay) in this interactive screen visualization: [https://invis.io/W3EQCCGSN](https://invis.io/W3EQCCGSN)
+
+Note! Not all functionality is made available in the app, furthermore, the commits to the github prototype codebase will not be 1:1 with Invision App.
+
 ## Folder structure
 **ClimApp**
 * Contains the Java code for the app
@@ -19,11 +23,6 @@ Tests for fetching data from DWD Open Data and Open Weather Map in Jupyter Noteb
 **Conceputal drawings**
 * Overview of the architecture of the app (work in progress)
 
-### Follow the app development
-Interactive screen visualization can be found as a preview here: [https://invis.io/W3EQCCGSN](https://invis.io/W3EQCCGSN)
-
-The colors have been changed in order to fit the color palette of the logo -- not all functionality is made available in preview yet.
-
 ## Requirements and installation
 The scripts in Jupyter Notebooks require an installation of Python 2.7.
 
@@ -31,7 +30,7 @@ For all Java code you need to install [Java](https://java.com/en/download/) and 
 
 For the best simulation of the app, use USB Debugging on your device (Developer mode).
 
-# Documentation
+## Documentation
 Documentation of the app can be found in the [ClimApp Wiki](https://github.com/frksteenhoff/ClimApp/wiki). 
 
 
