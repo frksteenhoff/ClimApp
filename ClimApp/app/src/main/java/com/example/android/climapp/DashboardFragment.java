@@ -1,5 +1,8 @@
 package com.example.android.climapp;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,10 +11,13 @@ import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +54,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.stream.Collectors;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
+
 
 /**
  * Created by frksteenhoff
@@ -71,6 +79,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 0;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
+    private String CHANNEL_ID = "ClimApp";
 
     // Google client to interact with Google API
     private GoogleApiClient mGoogleApiClient;
@@ -78,6 +87,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     // Location API+
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
+    private NotificationManager notificationManager;
 
     // Location updates intervals in sec
     private static int UPDATE_INTERVAL = 10000; // 10 sec
@@ -92,6 +102,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     private String latitude, longitude;
     private SharedPreferences preferences;
+    private int notificationID = 1;
+    private boolean notificationSent;
 
     private WBGT wbgt;
 
@@ -109,6 +121,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
         preferences = this.getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        notificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
 
         // Location view references, updated based on device's location
         mLocationButton = getActivity().findViewById(R.id.locationButton);
@@ -131,6 +144,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         windSpeedTextView = getActivity().findViewById(R.id.wind_speed_value);
         cityTextView = getActivity().findViewById(R.id.current_city);
 
+
+        notificationSent = preferences.getBoolean("notification_sent", false);
         // Check whether onboarding has been completed
         // if onboarding steps still missing, start onboarding
         // Otherwise, check location permission and connect to openweathermap
@@ -660,7 +675,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             try {
                 json = new JSONObject(pageText);
 
-                // Saving information from JSONObject in user preferences
                 // Humidity, pressure, temperature etc.
                 humidity = json.getJSONObject(TAG_MAIN).getInt(TAG_HUMIDITY);
                 pressure = json.getJSONObject(TAG_MAIN).getInt(TAG_PRESSURE);
@@ -678,10 +692,53 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 wbgt_no_solar.setText(String.format("TWBG No solar: %s", wbgt.getTwbgWithoutSolar()));
                 wbgt_solar.setText(String.format("TWBG Solar:       %s", wbgt.getTwbgWithSolar()));
 
+                // Send notification if values are outside recommended range
+                if(wbgt.getTwbgWithoutSolar() > 21.0 && !notificationSent) {
+                    setNotificationChannel();
+                    createNotification(getString(R.string.app_name), getString(R.string.notificationDescription), notificationID);
+                    preferences.edit().putBoolean("notification_sent", true).apply();
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void setNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create the NotificationChannel, but only on API 26+ because
+            // the NotificationChannel class is new and not in the support library
+            CharSequence name = getString(R.string.channel_name);
+            String description = getString(R.string.channel_description);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    private void createNotification(String title, String description, int notificationID) {
+        // Intent to open application when user clicks notification
+        Intent open_intent = new Intent(getActivity(), MainActivity.class);
+        open_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, open_intent, 0);
+
+        // Notification content
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
+                .setSmallIcon(R.mipmap.climapp_logo)
+                .setContentTitle(title)
+                .setContentText(description)
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(description))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
+
+        // Send notification
+        notificationManager.notify(notificationID, mBuilder.build());
     }
 
     private WBGT calculateWBGT(double wind_speed, double humidity, double pressure) {
