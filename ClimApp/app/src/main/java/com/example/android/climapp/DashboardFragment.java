@@ -98,7 +98,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     private Button mLocationButton;
     private ToggleButton toggleVeryHigh, toggleHigh, toggleMedium, toggleLow, toggleVeryLow;
     private TextView txtLong, txtLat, errorText, toggleDescription, wbgt_solar, wbgt_no_solar;
-    private TextView cityTextView, tempTextView, humidityTextView, windSpeedTextView;
+    private TextView cityTextView, tempTextView, humidityTextView, windSpeedTextView, cloudinessTextView;
 
     private String latitude, longitude;
     private SharedPreferences preferences;
@@ -142,8 +142,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         tempTextView = getActivity().findViewById(R.id.temp_value);
         humidityTextView = getActivity().findViewById(R.id.humidity_value);
         windSpeedTextView = getActivity().findViewById(R.id.wind_speed_value);
+        cloudinessTextView = getActivity().findViewById(R.id.cloudiness_value);
         cityTextView = getActivity().findViewById(R.id.current_city);
-
 
         notificationSent = preferences.getBoolean("notification_sent", false);
         // Check whether onboarding has been completed
@@ -254,23 +254,28 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
      */
     private void setCheckedActivityLevel() {
         String activityLevel = preferences.getString("activity_level", null);
-        Log.v("HESTE", "ACTIVITY LEVEL: " + activityLevel);
-        switch (activityLevel) {
-            case "very low":
-                toggleVeryLow.setChecked(true);
-                break;
-            case "low":
-                toggleLow.setChecked(true);
-                break;
-            case "high":
-                toggleHigh.setChecked(true);
-                break;
-            case "very high":
-                toggleVeryHigh.setChecked(true);
-                break;
-            default:
-                toggleMedium.setChecked(true);
-                break;
+        if (activityLevel != null) {
+            Log.v("HESTE", "ACTIVITY LEVEL: " + activityLevel);
+            switch (activityLevel) {
+                case "very low":
+                    toggleVeryLow.setChecked(true);
+                    break;
+                case "low":
+                    toggleLow.setChecked(true);
+                    break;
+                case "high":
+                    toggleHigh.setChecked(true);
+                    break;
+                case "very high":
+                    toggleVeryHigh.setChecked(true);
+                    break;
+                default:
+                    toggleMedium.setChecked(true);
+                    break;
+            }
+        } else {
+            preferences.edit().putString("activity_lvel", "medium").apply();
+            toggleMedium.setChecked(true);
         }
     }
 
@@ -609,13 +614,15 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         // JSON Node names
         private static final String TAG_MAIN = "main";
         private static final String TAG_WIND = "wind";
+        private static final String TAG_CLOUDS = "clouds";
         private static final String TAG_TEMPERATURE = "temp";
         private static final String TAG_HUMIDITY = "humidity";
+        private static final String TAG_ALL = "all";
         private static final String TAG_PRESSURE = "pressure";
         private static final String TAG_SPEED = "speed";
         private static final String TAG_CITY = "name";
 
-        private Integer pressure, temperature;
+        private Integer pressure, temperature, cloudiness;
         private String city_name;
         private double wind_speed, humidity;
 
@@ -680,12 +687,14 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 pressure = json.getJSONObject(TAG_MAIN).getInt(TAG_PRESSURE);
                 temperature = convertKelvinToCelsius(json.getJSONObject(TAG_MAIN).getInt(TAG_TEMPERATURE));
                 wind_speed = json.getJSONObject(TAG_WIND).getDouble(TAG_SPEED);
+                cloudiness = json.getJSONObject(TAG_CLOUDS).getInt(TAG_ALL);
                 city_name = json.getString(TAG_CITY);
 
                 // Display data in UI
                 tempTextView.setText(String.format("%s °C", temperature.toString()));
                 humidityTextView.setText(String.format("%s %s", humidity, "%"));
                 windSpeedTextView.setText(String.format("%s m/s", wind_speed));
+                cloudinessTextView.setText(String.format("%s %s", cloudiness, "%"));
                 cityTextView.setText(city_name);
 
                 wbgt = calculateWBGT(wind_speed, humidity, pressure);
