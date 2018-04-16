@@ -12,7 +12,6 @@
             android:orientation="vertical">
             <TextView
                 android:text="@string/Personal_Settings"
-                android:layout_margin="16dp"
                 style="@style/SmallDescriptiveTextStyle"/>
             <TextView
                 android:id="@+id/age_settings"
@@ -70,7 +69,6 @@
                 android:background="@color/colorLightGrey"/>
             <TextView
                 android:text="@string/Preferences"
-                android:layout_margin="16dp"
                 style="@style/SmallDescriptiveTextStyle"/>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -119,7 +117,6 @@
                 android:background="@color/colorLightGrey"/>
             <TextView
                 android:text="@string/Other"
-                android:layout_margin="16dp"
                 style="@style/SmallDescriptiveTextStyle"/>
             <TextView
                 android:id="@+id/reset"

@@ -102,15 +102,23 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAllCaps">true</item>
-        <item name="android:layout_margin">18dp</item>
+        <item name="android:layout_margin">16dp</item>
         <item name="android:textColor">@color/tw__medium_gray</item>
+    </style>
+
+    <!-- SmallDescriptiveTextStyleNoMargin-->
+    <style name="SmallDescriptiveTextStyleNoMargin">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">10sp</item>
     </style>
 
     <!-- Settings description style no caps-->
     <style name="SettingsTextStyleNoCaps">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_margin">20dp</item>
+        <item name="android:layout_margin">16dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:textSize">16sp</item>
     </style>
@@ -126,6 +134,9 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:textSize">10sp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
     </style>
 
     <style name="UnitTextViewStyle">
