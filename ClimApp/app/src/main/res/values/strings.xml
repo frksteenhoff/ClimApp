@@ -31,8 +31,6 @@
 
     <!--Notification values -->
     <string name="notificationDescription">Here, we want to show the user the necessary information.</string>
-    <string name="dismiss">Dismiss</string>
-    <string name="more">More</string>
 
     <!-- Settings - General titles -->
     <string name="Age">Age</string>
@@ -93,13 +91,6 @@
     <string name="degrees">16°</string>
     <string name="cloudiness">Cloudiness</string>
     <string name="wbgt_model_temp">WBGT (temporary)</string>
-
-    <!-- Alerts-->
-    <string name="alert_header_text">Alert</string>
-    <string name="alert_text_title">Weather too hot!</string>
-    <string name="alert_text_description">What caused this</string>
-    <string name="alert_text_hydration">How to properly hydrate</string>
-    <string name="alert_text_clothing">What clothes to wear</string>
 
     <!-- Dashboard: Suggestions -->
     <string name="suggestions">Suggestions</string>
