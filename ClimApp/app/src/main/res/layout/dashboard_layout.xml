@@ -26,7 +26,7 @@
                         android:id="@+id/weather_info"
                         android:layout_margin="16dp">
                         <TextView
-                            style="@style/SmallDescriptiveTextStyle"
+                            style="@style/SmallDescriptiveTextStyleNoMargin"
                             android:id="@+id/dash_header"
                             android:layout_marginBottom="4dp"
                             android:text="@string/weather_current" />
@@ -92,10 +92,82 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:contentDescription="@string/no_text"
+                        android:src="@mipmap/ic_alert_foreground"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone"/>
+                    <ImageView
+                        android:id="@+id/weather_icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/no_text"
                         android:src="@drawable/ic_weather_rainy_foreground"
                         android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"/>
+                        android:layout_centerVertical="true"
+                        android:layout_margin="16dp"/>
                 </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                style="@style/CardViewFeedStyle"
+                android:visibility="gone">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="16dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+                        <ImageView
+                            android:id="@+id/alert_image"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@mipmap/ic_alert_foreground" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/alert_title_view"
+                            android:text="@string/alert_text_title"
+                            android:layout_marginStart="16dp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="8dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/alert_description_view"
+                            android:text="@string/alert_text_description"
+                            android:layout_marginBottom="4dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/alert_hydration_view"
+                            android:text="@string/alert_text_hydration"
+                            android:layout_marginBottom="4dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/alert_clothing_view"
+                            android:text="@string/alert_text_clothing"/>
+                    </LinearLayout>
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/colorLightGrey"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_gravity="end"
+                        android:textAllCaps="true"
+                        android:text="@string/dismiss"/>
+                </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
                 style="@style/CardViewFeedStyle">
@@ -105,7 +177,7 @@
                     android:orientation="vertical"
                     android:layout_margin="16dp">
                     <TextView
-                        style="@style/SmallDescriptiveTextStyle"
+                        style="@style/SmallDescriptiveTextStyleNoMargin"
                         android:text="@string/activity_level" />
                     <TextView
                         android:layout_width="match_parent"
@@ -168,7 +240,8 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="16dp"
                         android:layout_gravity="end"
-                        android:text="MORE"/>
+                        android:textAllCaps="true"
+                        android:text="@string/more"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -179,38 +252,38 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_margin="16dp">
-                <TextView
-                    style="@style/SmallDescriptiveTextStyle"
-                    android:text="@string/hydration" />
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/hydration_text"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginTop="8dp"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <ToggleButton
-                        style="@style/WrapWrap"
-                        android:textOn="@string/no_text"
-                        android:layout_marginTop="16dp"
-                        android:textOff="@string/no_text"
-                        android:background="@drawable/ic_soda_foreground" />
-                    <ToggleButton
-                        style="@style/WrapWrap"
-                        android:layout_marginTop="16dp"
-                        android:textOn="@string/no_text"
-                        android:textOff="@string/no_text"
-                        android:background="@drawable/ic_water_foreground" />
-                    <ToggleButton
-                        style="@style/WrapWrap"
-                        android:layout_marginTop="16dp"
-                        android:textOn="@string/no_text"
-                        android:textOff="@string/no_text"
-                        android:background="@drawable/ic_milkshake_foreground" />
-                </LinearLayout>
+                    <TextView
+                        style="@style/SmallDescriptiveTextStyleNoMargin"
+                        android:text="@string/hydration" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hydration_text"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <ToggleButton
+                            style="@style/WrapWrap"
+                            android:textOn="@string/no_text"
+                            android:layout_marginTop="16dp"
+                            android:textOff="@string/no_text"
+                            android:background="@drawable/ic_soda_foreground" />
+                        <ToggleButton
+                            style="@style/WrapWrap"
+                            android:layout_marginTop="16dp"
+                            android:textOn="@string/no_text"
+                            android:textOff="@string/no_text"
+                            android:background="@drawable/ic_water_foreground" />
+                        <ToggleButton
+                            style="@style/WrapWrap"
+                            android:layout_marginTop="16dp"
+                            android:textOn="@string/no_text"
+                            android:textOff="@string/no_text"
+                            android:background="@drawable/ic_milkshake_foreground" />
+                    </LinearLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -221,7 +294,7 @@
                     android:orientation="vertical"
                     android:layout_margin="16dp">
                     <TextView
-                        style="@style/SmallDescriptiveTextStyle"
+                        style="@style/SmallDescriptiveTextStyleNoMargin"
                         android:text="@string/suggestions" />
                     <TextView
                         android:layout_width="match_parent"
@@ -239,7 +312,7 @@
                     android:layout_margin="16dp">
                     <TextView
                         android:text="@string/wbgt_model_temp"
-                        style="@style/SmallDescriptiveTextStyle"
+                        style="@style/SmallDescriptiveTextStyleNoMargin"
                         android:layout_marginBottom="8dp"/>
                     <TextView
                         android:id="@+id/solar"
@@ -252,7 +325,7 @@
                         android:layout_marginBottom="16dp"/>
                     <TextView
                         android:text="@string/location"
-                        style="@style/SmallDescriptiveTextStyle"/>
+                        style="@style/SmallDescriptiveTextStyleNoMargin"/>
                     <TextView
                         android:id="@+id/error_txt"
                         android:text=""

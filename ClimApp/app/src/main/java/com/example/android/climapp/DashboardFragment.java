@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationListener;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -60,7 +59,10 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 /**
  * Created by frksteenhoff
  *
- * Some of the code snippets/methods related to fetching the device's location
+ * WBGT model calculations with weather input from combination of
+ * Open Weather Map and device's location.
+ *
+ * Some of the code snippets/methods related to getting the device's location
  * is based on the tutorial and code made by AndroidHive:
  * https://www.androidhive.info/2015/02/android-location-api-using-google-play-services/
  *
@@ -71,7 +73,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  * the related documentation.
  */
 public class DashboardFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        GoogleApiClient.OnConnectionFailedListener {
 
     public DashboardFragment() {
         // Required empty constructor
@@ -121,10 +123,9 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
         preferences = this.getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        notificationSent = preferences.getBoolean("notification_sent", false);
         notificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
 
-        // Location view references, updated based on device's location
-        mLocationButton = getActivity().findViewById(R.id.locationButton);
         toggleVeryLow = getActivity().findViewById(R.id.dash_toggle_very_low);
         toggleLow = getActivity().findViewById(R.id.dash_toggle_low);
         toggleMedium = getActivity().findViewById(R.id.dash_toggle_medium);
@@ -132,9 +133,12 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         toggleVeryHigh = getActivity().findViewById(R.id.dash_toggle_very_high);
         toggleDescription = getActivity().findViewById(R.id.activity_description_view);
 
+        // Location view references, updated based on device's location
+        mLocationButton = getActivity().findViewById(R.id.locationButton);
         txtLong = getActivity().findViewById(R.id.long_coord);
         txtLat = getActivity().findViewById(R.id.lat_coord);
         errorText = getActivity().findViewById(R.id.error_txt);
+
         wbgt_solar = getActivity().findViewById(R.id.solar);
         wbgt_no_solar = getActivity().findViewById(R.id.no_solar);
 
@@ -145,7 +149,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         cloudinessTextView = getActivity().findViewById(R.id.cloudiness_value);
         cityTextView = getActivity().findViewById(R.id.current_city);
 
-        notificationSent = preferences.getBoolean("notification_sent", false);
         // Check whether onboarding has been completed
         // if onboarding steps still missing, start onboarding
         // Otherwise, check location permission and connect to openweathermap
@@ -465,7 +468,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
-        displayLocation();
     }
 
     /**
@@ -501,13 +503,13 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
      * Based on code from AndroidHive, edited.
      * @param location updating location when user changes location
      */
-    @Override
+ /*   @Override
     public void onLocationChanged(Location location) {
         double lat = location.getLatitude();
         double lng = location.getLongitude();
         txtLong.setText(String.valueOf(lng));
         txtLat.setText(String.valueOf(lat));
-    }
+    }*/
 
     /**
      * Creating location request object
@@ -553,7 +555,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         return true;
     }
 
-    @Override
+/*    @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
 
     }
@@ -566,7 +568,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     @Override
     public void onProviderDisabled(String s) {
 
-    }
+    }*/
 
     /**
      * Google api callback methods
@@ -614,6 +616,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         // JSON Node names
         private static final String TAG_MAIN = "main";
         private static final String TAG_WIND = "wind";
+        private static final String TAG_WEATHER = "weather";
         private static final String TAG_CLOUDS = "clouds";
         private static final String TAG_TEMPERATURE = "temp";
         private static final String TAG_HUMIDITY = "humidity";
@@ -621,9 +624,10 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         private static final String TAG_PRESSURE = "pressure";
         private static final String TAG_SPEED = "speed";
         private static final String TAG_CITY = "name";
+        private static final String TAG_DESCRIPTION = "description";
 
         private Integer pressure, temperature, cloudiness;
-        private String city_name;
+        private String city_name, description;
         private double wind_speed, humidity;
 
         private JSONObject json;
@@ -689,13 +693,15 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 wind_speed = json.getJSONObject(TAG_WIND).getDouble(TAG_SPEED);
                 cloudiness = json.getJSONObject(TAG_CLOUDS).getInt(TAG_ALL);
                 city_name = json.getString(TAG_CITY);
+                description = json.getJSONArray(TAG_WEATHER).getJSONObject(0).getString(TAG_DESCRIPTION);
+                Log.v("HESTE", json.getJSONArray(TAG_WEATHER).getJSONObject(0).getString(TAG_DESCRIPTION));
 
                 // Display data in UI
                 tempTextView.setText(String.format("%s °C", temperature.toString()));
                 humidityTextView.setText(String.format("%s %s", humidity, "%"));
                 windSpeedTextView.setText(String.format("%s m/s", wind_speed));
                 cloudinessTextView.setText(String.format("%s %s", cloudiness, "%"));
-                cityTextView.setText(city_name);
+                cityTextView.setText(String.format("%s, %s", city_name, description));
 
                 wbgt = calculateWBGT(wind_speed, humidity, pressure);
                 wbgt_no_solar.setText(String.format("TWBG No solar: %s", wbgt.getTwbgWithoutSolar()));
@@ -770,7 +776,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         Solar s = new Solar(Double.parseDouble(longitude), Double.parseDouble(latitude), calendar, utcOffset);
         SolarRad sr = new SolarRad(s.zenith(), calendar.get(Calendar.DAY_OF_YEAR), 0, 1, false, false); //(solar zenith angle, day no, cloud fraction, cloud type, fog, precipitation)
 
-        // Making all calculations
+        // Making all wbgt calculations
         WBGT wbgt = new WBGT(year, month, day, hour, min, utcOffset, avg,
                 Double.parseDouble(latitude),
                 Double.parseDouble(longitude),
