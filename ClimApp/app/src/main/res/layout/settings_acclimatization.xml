@@ -20,7 +20,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="@string/Acclimatization"
-                    android:layout_margin="16dp" />
+                    android:layout_margin="16dp"
+                    android:textSize="16sp"/>
                 <Switch
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -37,13 +38,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="@string/acclimatization_setting"
+                android:text="@string/acclimatization_description"
                 style="@style/SettingsTextStyleNoCaps"/>
             <TextView
                 android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/acclimatization_description"
+                android:text="@string/acclimatization_description_more"
                 style="@style/SettingsTextStyleNoCaps"/>
         </LinearLayout>
     </ScrollView>

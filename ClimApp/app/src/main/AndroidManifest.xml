@@ -11,9 +11,9 @@
     <!-- Activities in application -->
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/climapp_logo"
+        android:icon="@mipmap/climapp_logo3"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/climapp_logo_round"
+        android:roundIcon="@mipmap/climapp_logo3_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
         <!--<meta-data

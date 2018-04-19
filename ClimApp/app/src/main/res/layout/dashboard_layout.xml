@@ -100,7 +100,8 @@
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
                 style="@style/CardViewFeedStyle"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:id="@+id/warning_view">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -154,6 +155,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:id="@+id/dismiss_warning"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="16dp"
                         android:layout_gravity="end"
@@ -187,8 +189,7 @@
                             style="@style/DashboardToggleButtonStyle"
                             android:layout_marginEnd="8dp"
                             android:textOn="@string/activity_level_very_low"
-                            android:textOff="@string/activity_level_very_low"
-                            android:visibility="gone"/>
+                            android:textOff="@string/activity_level_very_low" />
                         <ToggleButton
                             android:id="@+id/dash_toggle_low"
                             style="@style/DashboardToggleButtonStyle"

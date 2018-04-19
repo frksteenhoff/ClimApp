@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +90,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     // Google client to interact with Google API
     private GoogleApiClient mGoogleApiClient;
 
-    // Location API+
+    // Location API
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocationClient;
     private NotificationManager notificationManager;
@@ -101,16 +102,16 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     // Views and buttons
     private Button mLocationButton;
-    private ToggleButton toggleVeryHigh, toggleHigh, toggleMedium, toggleLow, toggleVeryLow;
-    private TextView txtLong, txtLat, errorText, toggleDescription, wbgt_solar, wbgt_no_solar;
-    private TextView cityTextView, tempTextView, humidityTextView, windSpeedTextView, cloudinessTextView;
+    private ToggleButton activityVeryHigh, activityHigh, activityMedium, activityLow, activityVeryLow;
+    private TextView txtLong, txtLat, locationErrorTxt, activityLevelDescription, wbgt_solar, wbgt_no_solar,
+            cityTextView, tempTextView, humidityTextView, windSpeedTextView, cloudinessTextView,
+            dismissWarningtextView;
+    private CardView warningCardView;
 
     private String latitude, longitude;
     private SharedPreferences preferences;
     private int notificationID = 1;
     private boolean notificationSent;
-
-    private WBGT wbgt;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -126,26 +127,32 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
         preferences = this.getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        // Notification view and logic components
         notificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
         notificationSent = preferences.getBoolean("notification_sent", false);
+        warningCardView = getActivity().findViewById(R.id.warning_view);
+        dismissWarningtextView = getActivity().findViewById(R.id.dismiss_warning);
 
-        toggleVeryLow = getActivity().findViewById(R.id.dash_toggle_very_low);
-        toggleLow = getActivity().findViewById(R.id.dash_toggle_low);
-        toggleMedium = getActivity().findViewById(R.id.dash_toggle_medium);
-        toggleHigh = getActivity().findViewById(R.id.dash_toggle_high);
-        toggleVeryHigh = getActivity().findViewById(R.id.dash_toggle_very_high);
-        toggleDescription = getActivity().findViewById(R.id.activity_description_view);
+        // Activity level buttons
+        activityVeryLow = getActivity().findViewById(R.id.dash_toggle_very_low);
+        activityLow = getActivity().findViewById(R.id.dash_toggle_low);
+        activityMedium = getActivity().findViewById(R.id.dash_toggle_medium);
+        activityHigh = getActivity().findViewById(R.id.dash_toggle_high);
+        activityVeryHigh = getActivity().findViewById(R.id.dash_toggle_very_high);
+        activityLevelDescription = getActivity().findViewById(R.id.activity_description_view);
 
         // Location view references, updated based on device's location
         mLocationButton = getActivity().findViewById(R.id.locationButton);
         txtLong = getActivity().findViewById(R.id.long_coord);
         txtLat = getActivity().findViewById(R.id.lat_coord);
 
-        errorText = getActivity().findViewById(R.id.error_txt);
+        // WBGT views
+        locationErrorTxt = getActivity().findViewById(R.id.error_txt);
         wbgt_solar = getActivity().findViewById(R.id.solar);
         wbgt_no_solar = getActivity().findViewById(R.id.no_solar);
 
-        // Reference to views that should be updated based on open weather map data
+        // Views updated based on data from Open Weather Map
         tempTextView = getActivity().findViewById(R.id.temp_value);
         humidityTextView = getActivity().findViewById(R.id.humidity_value);
         windSpeedTextView = getActivity().findViewById(R.id.wind_speed_value);
@@ -188,57 +195,66 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         NavigationView navigationView = (NavigationView) v.findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         */
-        toggleVeryLow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        /* Listeners within dashboard views */
+        dismissWarningtextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                warningCardView.setVisibility(View.GONE);
+            }
+        });
+
+        activityVeryLow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(toggleVeryLow.isChecked()) {
-                    updateActivityLevelView(toggleVeryLow, "very low", getString(R.string.activity_very_low_text));
+                if(activityVeryLow.isChecked()) {
+                    updateActivityLevelView(activityVeryLow, "very low", getString(R.string.activity_very_low_text));
                 } else {
-                    setUncheckedColors(toggleVeryLow);
+                    setUncheckedColors(activityVeryLow);
                 }
             }
         });
 
-        toggleLow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        activityLow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(toggleLow.isChecked()) {
-                    updateActivityLevelView(toggleLow, "low", getString(R.string.activity_low_text));
+                if(activityLow.isChecked()) {
+                    updateActivityLevelView(activityLow, "low", getString(R.string.activity_low_text));
                 } else {
-                    setUncheckedColors(toggleLow);
+                    setUncheckedColors(activityLow);
                 }
             }
         });
 
-        toggleMedium.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        activityMedium.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(toggleMedium.isChecked()) {
-                    updateActivityLevelView(toggleMedium, "medium", getString(R.string.activity_medium_text));
+                if(activityMedium.isChecked()) {
+                    updateActivityLevelView(activityMedium, "medium", getString(R.string.activity_medium_text));
                 } else {
-                    setUncheckedColors(toggleMedium);
+                    setUncheckedColors(activityMedium);
                 }
             }
         });
 
-        toggleHigh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        activityHigh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(toggleHigh.isChecked()) {
-                    updateActivityLevelView(toggleHigh, "high", getString(R.string.activity_high_text));
+                if(activityHigh.isChecked()) {
+                    updateActivityLevelView(activityHigh, "high", getString(R.string.activity_high_text));
                 } else {
-                    setUncheckedColors(toggleHigh);
+                    setUncheckedColors(activityHigh);
                 }
             }
         });
 
-        toggleVeryHigh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        activityVeryHigh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(toggleVeryHigh.isChecked()) {
-                    updateActivityLevelView(toggleVeryHigh, "very high", getString(R.string.activity_very_high_text));
+                if(activityVeryHigh.isChecked()) {
+                    updateActivityLevelView(activityVeryHigh, "very high", getString(R.string.activity_very_high_text));
                 } else {
-                    setUncheckedColors(toggleVeryHigh);
+                    setUncheckedColors(activityVeryHigh);
                 }
             }
         });
@@ -264,44 +280,45 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             Log.v("HESTE", "ACTIVITY LEVEL: " + activityLevel);
             switch (activityLevel) {
                 case "very low":
-                    toggleVeryLow.setChecked(true);
+                    activityVeryLow.setChecked(true);
                     break;
                 case "low":
-                    toggleLow.setChecked(true);
+                    activityLow.setChecked(true);
                     break;
                 case "high":
-                    toggleHigh.setChecked(true);
+                    activityHigh.setChecked(true);
                     break;
                 case "very high":
-                    toggleVeryHigh.setChecked(true);
+                    activityVeryHigh.setChecked(true);
                     break;
                 default:
-                    toggleMedium.setChecked(true);
+                    activityMedium.setChecked(true);
                     break;
             }
         } else {
             preferences.edit().putString("activity_lvel", "medium").apply();
-            toggleMedium.setChecked(true);
+            activityMedium.setChecked(true);
         }
     }
 
     /**
-     * Update views and description of activity level when clicking on the different activity level toggle buttons
-     * @param currentButton identifier of the button pressed
-     * @param preferenceText the string value to save to shared preferences based on button pressed
-     * @param activityDescription the description associated with the pressed button to be showed
+     * Update views and description of activity level when clicking on any of the activity level toggle buttons
+     * @param currentButton identifier of the pressed button
+     * @param preferenceText the string value identifying the activity level of the pressed button
+     *                       to save in shared preferences
+     * @param activityDescription the activity level description for the pressed button
      */
     private void updateActivityLevelView(ToggleButton currentButton, String preferenceText, String activityDescription) {
         // Set all views to false, afterwards: update only the one clicked to true
-        toggleVeryLow.setChecked(false);
-        toggleLow.setChecked(false);
-        toggleMedium.setChecked(false);
-        toggleHigh.setChecked(false);
-        toggleVeryHigh.setChecked(false);
+        activityVeryLow.setChecked(false);
+        activityLow.setChecked(false);
+        activityMedium.setChecked(false);
+        activityHigh.setChecked(false);
+        activityVeryHigh.setChecked(false);
         currentButton.setChecked(true);
 
         // Set the rest of the parameters
-        toggleDescription.setText(activityDescription);
+        activityLevelDescription.setText(activityDescription);
         setOnCheckedColors(currentButton);
         preferences.edit().putString("activity_level", preferenceText).apply();
     }
@@ -363,7 +380,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
                 } else {
                     // permission denied
-                    errorText.setText(R.string.permission_denied);
+                    locationErrorTxt.setText(R.string.permission_denied);
                 }
                 return;
             }
@@ -404,6 +421,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
+                        Log.v("HESTE", location+"");
                         if (location != null) {
                             setLocationViewVisibility(true);
 
@@ -418,21 +436,17 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                             txtLong.setText(latitude);
                             txtLat.setText(longitude);
 
-                            // Put coordinate data into correct data structure for weather API
-                            Pair<String, String> Coordinates = new Pair<String, String>(latitude, longitude);
-
                             // Connect to weather API openweathermap.com using location coordinates
-                            getOpenWeatherMapData(Coordinates);
+                            getOpenWeatherMapData(new Pair<String, String>(latitude, longitude));
 
                         } else {
                             setLocationViewVisibility(false);
 
                             // Show error message
-                            errorText.setText(R.string.location_error_text);
+                            locationErrorTxt.setText(R.string.location_error_text);
                         }
                     }
                 });
-
     }
 
     /**
@@ -453,13 +467,12 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
      * @param locationFound boolean value determining how the dashboard view should look
      */
     private void setLocationViewVisibility(boolean locationFound) {
-
         if(locationFound) {
-            errorText.setVisibility(View.GONE);
+            locationErrorTxt.setVisibility(View.GONE);
             txtLat.setVisibility(View.VISIBLE);
             txtLong.setVisibility(View.VISIBLE);
         } else {
-            errorText.setVisibility(View.VISIBLE);
+            locationErrorTxt.setVisibility(View.VISIBLE);
             txtLat.setVisibility(View.GONE);
             txtLong.setVisibility(View.GONE);
         }
@@ -585,19 +598,20 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * Based on code made by AndroidHive
-     * @param arg0
+     * @param bundle Bundle of data provided to clients by Google Play services, not used
      */
     @Override
-    public void onConnected(Bundle arg0) {
+    public void onConnected(Bundle bundle) {
         // Once connected with google api, get the location
         displayLocation();
     }
 
     /**
      * Based on code made by androidHive
+     * @param cause The reason for the disconnection. Defined by constants CAUSE_*
      */
     @Override
-    public void onConnectionSuspended(int arg0) {
+    public void onConnectionSuspended(int cause) {
         mGoogleApiClient.connect();
     }
 
@@ -635,6 +649,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         private double wind_speed, humidity;
 
         private JSONObject json;
+        private WBGT wbgt;
 
         /* Only working for creating the needed connection string to
         *  openweathermap.org, others will be implemented later on.
@@ -717,7 +732,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                     createNotification(getString(R.string.app_name), getString(R.string.notificationDescription), notificationID);
                     preferences.edit().putBoolean("notification_sent", true).apply();
                 }
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -746,7 +760,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
         // Notification content
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
-                .setSmallIcon(R.mipmap.climapp_logo)
+                .setSmallIcon(R.mipmap.climapp_logo3)
                 .setContentTitle(title)
                 .setContentText(description)
                 .setStyle(new NotificationCompat.BigTextStyle()

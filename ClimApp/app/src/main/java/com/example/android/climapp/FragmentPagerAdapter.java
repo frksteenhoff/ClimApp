@@ -6,12 +6,14 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 /**
  * Created by frksteenhoff on 26-02-2018.
+ * Handling logic for changing between the 3 main screens:
+ * Settings, Dashboard and Clothing
  */
 
 public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
 
-    int mNumOfTabs;
-    public static final int PAGE_NUM = 3;
+    private int mNumOfTabs;
+    private static final int PAGE_NUM = 3;
     private String tabTitles[] = new String[] { "Settings", "Dashboard", "Clothing"};
 
     public FragmentPagerAdapter(FragmentManager fm, int PAGE_NUM) {

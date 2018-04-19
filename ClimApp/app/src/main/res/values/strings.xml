@@ -193,13 +193,12 @@
     <string name="set_height">Please provide your height</string>
     <string name="set_weight">Please provide your weight</string>
     <string name="set_acclimatization">Please provide information about your acclimatization to your work environment</string>
-    <string name="set_acclimatization_level">Set acclimatization as yes or no</string>
     <string name="select_age_picker_string">Please select your age by using the wheel or simply type it in.</string>
     <string name="select_height_picker_string">Please select your height by using the wheel or simply type it in.</string>
     <string name="select_weight_picker_string">Please select your weight by using the wheel or simply type it in.</string>
-    <string name="acclimatization_setting">Please select whether you are acclimatized to your work environment.
+    <string name="acclimatization_description">Please select whether you are acclimatized to your work environment.
         If you have been working under the same conditions for more than a week, you are said to be acclimatized
         to your workplace.
     </string>
-    <string name="acclimatization_description">Read more about setting your acclimatization level</string>
+    <string name="acclimatization_description_more">Read more about setting your acclimatization level</string>
 </resources>

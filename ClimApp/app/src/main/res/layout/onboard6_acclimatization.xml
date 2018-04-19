@@ -5,19 +5,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:contentDescription="@string/no_text"
-        android:src="@mipmap/climapp_logo"
-        android:layout_margin="40dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/almost_done"
-        android:textSize="20sp"
-        android:layout_marginBottom="20dp"
-        android:textColor="@color/colorPrimaryDark"/>
+        <LinearLayout
+            android:layout_height="0dp"
+            android:layout_width="wrap_content"
+            android:layout_weight="0.7"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/no_text"
+            android:src="@mipmap/climapp_logo3"
+            android:layout_margin="40dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/almost_done"
+            android:textSize="20sp"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/colorPrimaryDark"/>
+        </LinearLayout>
     <LinearLayout
         android:layout_height="0dp"
         android:layout_width="wrap_content"
@@ -25,19 +32,15 @@
         android:orientation="vertical">
         <Switch
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
+            android:layout_height="wrap_content"
             android:id="@+id/set_acclimatization"
             android:layout_margin="16dp"
             android:layout_gravity="center_horizontal"/>
         <TextView
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="0.3"
+            android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:textColor="@color/colorGrey"
-            android:textStyle="italic"
-            android:layout_marginBottom="32dp"
-            android:text="@string/set_acclimatization_level" />
+            android:layout_margin="16dp"
+            android:text="@string/acclimatization_description" />
     </LinearLayout>
 </LinearLayout>
