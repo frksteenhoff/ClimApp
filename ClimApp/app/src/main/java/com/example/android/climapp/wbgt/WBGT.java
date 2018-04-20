@@ -41,7 +41,7 @@ import java.util.Calendar;
  * - made WBGT method return instead of printing
  */
 
-public class WBGT {
+public class    WBGT {
     /*
      * define mathematical constants
      */

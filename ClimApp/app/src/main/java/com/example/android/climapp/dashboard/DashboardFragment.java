@@ -62,11 +62,10 @@ import java.util.stream.Collectors;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 
-
 /**
  * Created by frksteenhoff
  * <p>
- * * WBGT model calculations with weather input from combination of
+ * WBGT model calculations with weather input from combination of
  * Open Weather Map and device's location.
  * <p>
  * WBGT model calculations with weather input from combination of
@@ -191,7 +190,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 promptUserForLocationSettingsChange();
             }
         }
-
         /*
         // Attach navigation drawer
         DrawerLayout drawer = (DrawerLayout) v.findViewById(R.id.drawer_layout);
@@ -267,7 +265,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             }
         });
 
-        // L    ocation button click listener
+        // Location button click listener
         mLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,14 +302,13 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                     break;
             }
         } else {
-            preferences.edit().putString("activity_lvel", "medium").apply();
+            preferences.edit().putString("activity_level", "medium").apply();
             activityMedium.setChecked(true);
         }
     }
 
     /**
      * Update views and description of activity level when clicking on any of the activity level toggle buttons
-     *
      * @param currentButton       identifier of the pressed button
      * @param preferenceText      the string value identifying the activity level of the pressed button
      *                            to save in shared preferences
@@ -335,7 +332,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     private void setUncheckedColors(ToggleButton toggleButtonId) {
         toggleButtonId.setBackgroundColor(Color.WHITE);
         toggleButtonId.setTextColor(Color.GRAY);
-
     }
 
     private void setOnCheckedColors(ToggleButton toggleButtonId) {
@@ -400,7 +396,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * Checks whether user has allowed the application to get device's location.
-     *
      * @return true if access to device location is granted, false otherwise.
      */
     private boolean deviceHasLocationPermission() {
@@ -412,7 +407,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * Check whether onboarding has been completed
-     *
      * @return true if onboarding completed, false otherwise
      */
     private boolean onBoardingCompleted() {
@@ -433,7 +427,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        Log.v("HESTE", location + "");
                         if (location != null) {
                             setLocationViewVisibility(true);
 
@@ -443,6 +436,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                             // Logic to get lat/lon from location object
                             latitude = df2.format(location.getLatitude());
                             longitude = df2.format(location.getLongitude());
+                            //double altitude = location.getAltitude();
 
                             // Update view components
                             txtLong.setText(latitude);
@@ -450,7 +444,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
                             // Connect to weather API openweathermap.com using location coordinates
                             getOpenWeatherMapData(new Pair<String, String>(latitude, longitude));
-
                         } else {
                             setLocationViewVisibility(false);
 
@@ -473,11 +466,9 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     }
 
     /**
-     * Set correct UI components according to whether location
-     * permission has been granted by user or not.
+     * Set correct UI components according to whether location permission has been granted.
      * If permission, show coordinates, no error message
      * If not permission, show error message, no coordinates.
-     *
      * @param locationFound boolean value determining how the dashboard view should look
      */
     private void setLocationViewVisibility(boolean locationFound) {
@@ -498,7 +489,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
-        displayLocation();
     }
 
     /**
@@ -613,7 +603,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * Based on code made by AndroidHive
-     *
      * @param bundle Bundle of data provided to clients by Google Play services, not used
      */
     @Override
@@ -624,7 +613,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * Based on code made by androidHive
-     *
      * @param cause The reason for the disconnection. Defined by constants CAUSE_*
      */
     @Override
@@ -720,7 +708,10 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             return pageText;
         }
 
-        // When information has been fetched from weathermap, show data in dashboard
+        /**
+         * When data has been retrieved from Open Weather Map API, extract and show in views
+         * @param pageText String to be converted to JSON Object
+         */
         protected void onPostExecute(String pageText) {
             // Get data from response JSON Object
             getJSONResponseContent(pageText);
