@@ -1,4 +1,4 @@
-package com.example.android.climapp;
+package com.example.android.climapp.utils;
 
 /**
  * Created by frksteenhoff on 05-11-2017.

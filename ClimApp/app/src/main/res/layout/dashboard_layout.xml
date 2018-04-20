@@ -89,8 +89,9 @@
                         </LinearLayout>
                     </LinearLayout>
                     <ImageView
-                        android:layout_width="wrap_content"
+                        android:layout_width="80dp"
                         android:layout_height="match_parent"
+                        android:id="@+id/weather_icon"
                         android:contentDescription="@string/no_text"
                         android:src="@drawable/ic_weather_rainy_foreground"
                         android:layout_alignParentEnd="true"

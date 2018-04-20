@@ -1,4 +1,4 @@
-package com.example.android.climapp;
+package com.example.android.climapp.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import com.example.android.climapp.R;
 
 /**
  * Created by frksteenhoff on 21-01-2018.

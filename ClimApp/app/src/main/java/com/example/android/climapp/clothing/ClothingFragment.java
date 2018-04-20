@@ -1,4 +1,4 @@
-package com.example.android.climapp;
+package com.example.android.climapp.clothing;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.HorizontalScrollView;
 import android.widget.Spinner;
+
+import com.example.android.climapp.R;
 
 /**
  * Created by frksteenhoff on 26-02-2018.

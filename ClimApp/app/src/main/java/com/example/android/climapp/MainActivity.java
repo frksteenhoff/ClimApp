@@ -6,6 +6,8 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.android.climapp.utils.FragmentPagerAdapter;
+
 /**
  * Created by frksteenhoff on 29-10-2017.
  * Setting correct tab layout upon opening the app

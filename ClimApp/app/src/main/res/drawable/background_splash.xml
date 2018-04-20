@@ -5,6 +5,6 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/climapp_logo3"/>
+            android:src="@drawable/logo_test" />
     </item>
 </layer-list>

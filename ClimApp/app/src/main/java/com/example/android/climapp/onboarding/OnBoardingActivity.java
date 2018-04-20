@@ -1,4 +1,4 @@
-package com.example.android.climapp;
+package com.example.android.climapp.onboarding;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.android.climapp.MainActivity;
+import com.example.android.climapp.R;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 /**

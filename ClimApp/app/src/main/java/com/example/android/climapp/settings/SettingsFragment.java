@@ -1,4 +1,4 @@
-package com.example.android.climapp;
+package com.example.android.climapp.settings;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,8 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.android.climapp.R;
 
 /**
  * Created by frksteenhoff on 10-10-2017.

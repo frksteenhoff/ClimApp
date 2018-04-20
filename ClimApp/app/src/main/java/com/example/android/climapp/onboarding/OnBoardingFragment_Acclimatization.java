@@ -1,4 +1,4 @@
-package com.example.android.climapp;
+package com.example.android.climapp.onboarding;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+
+import com.example.android.climapp.R;
 
 /**
  * Created by frksteenhoff on 19-02-2018.

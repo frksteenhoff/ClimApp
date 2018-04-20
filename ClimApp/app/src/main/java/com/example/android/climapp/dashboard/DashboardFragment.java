@@ -1,4 +1,4 @@
-package com.example.android.climapp;
+package com.example.android.climapp.dashboard;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -24,10 +24,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.example.android.climapp.MainActivity;
+import com.example.android.climapp.R;
+import com.example.android.climapp.onboarding.OnBoardingActivity;
+import com.example.android.climapp.utils.Pair;
 import com.example.android.climapp.wbgt.Solar;
 import com.example.android.climapp.wbgt.SolarRad;
 import com.example.android.climapp.wbgt.WBGT;
@@ -38,6 +43,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -59,20 +65,20 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * Created by frksteenhoff
- *
- *  * WBGT model calculations with weather input from combination of
+ * <p>
+ * * WBGT model calculations with weather input from combination of
  * Open Weather Map and device's location.
- *
+ * <p>
  * WBGT model calculations with weather input from combination of
  * Open Weather Map and device's location.
- *
+ * <p>
  * Some of the code snippets/methods related to getting the device's location
  * is based on the tutorial and code made by AndroidHive:
  * https://www.androidhive.info/2015/02/android-location-api-using-google-play-services/
- *
+ * <p>
  * The Android Developer tutorial at has also been used as reference:
  * https://developer.android.com/training/location/retrieve-current.html
- *
+ * <p>
  * The methods/techniques used from these sources have been credited accordingly with a comment in
  * the related documentation.
  */
@@ -102,6 +108,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     // Views and buttons
     private Button mLocationButton;
+    private ImageView weatherImage;
     private ToggleButton activityVeryHigh, activityHigh, activityMedium, activityLow, activityVeryLow;
     private TextView txtLong, txtLat, locationErrorTxt, activityLevelDescription, wbgt_solar, wbgt_no_solar,
             cityTextView, tempTextView, humidityTextView, windSpeedTextView, cloudinessTextView,
@@ -153,6 +160,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         wbgt_no_solar = getActivity().findViewById(R.id.no_solar);
 
         // Views updated based on data from Open Weather Map
+        weatherImage = getActivity().findViewById(R.id.weather_icon);
         tempTextView = getActivity().findViewById(R.id.temp_value);
         humidityTextView = getActivity().findViewById(R.id.humidity_value);
         windSpeedTextView = getActivity().findViewById(R.id.wind_speed_value);
@@ -162,7 +170,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         // Check whether onboarding has been completed
         // if onboarding steps still missing, start onboarding
         // Otherwise, check location permission and connect to openweathermap
-        if(!onBoardingCompleted()) {
+        if (!onBoardingCompleted()) {
             startOnBoarding();
 
         } else {
@@ -170,7 +178,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             // If access granted, display location.
             // Otherwise prompt user for location settings change
             Log.v("HESTE", "DEVICE HAVE LOCATION ACCESS: " + deviceHasLocationPermission());
-            if(deviceHasLocationPermission()) {
+            if (deviceHasLocationPermission()) {
                 displayLocation();
 
                 // Check availability of play services -- only if location access is granted
@@ -207,7 +215,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         activityVeryLow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(activityVeryLow.isChecked()) {
+                if (activityVeryLow.isChecked()) {
                     updateActivityLevelView(activityVeryLow, "very low", getString(R.string.activity_very_low_text));
                 } else {
                     setUncheckedColors(activityVeryLow);
@@ -218,7 +226,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         activityLow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(activityLow.isChecked()) {
+                if (activityLow.isChecked()) {
                     updateActivityLevelView(activityLow, "low", getString(R.string.activity_low_text));
                 } else {
                     setUncheckedColors(activityLow);
@@ -229,7 +237,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         activityMedium.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(activityMedium.isChecked()) {
+                if (activityMedium.isChecked()) {
                     updateActivityLevelView(activityMedium, "medium", getString(R.string.activity_medium_text));
                 } else {
                     setUncheckedColors(activityMedium);
@@ -240,7 +248,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         activityHigh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(activityHigh.isChecked()) {
+                if (activityHigh.isChecked()) {
                     updateActivityLevelView(activityHigh, "high", getString(R.string.activity_high_text));
                 } else {
                     setUncheckedColors(activityHigh);
@@ -251,7 +259,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         activityVeryHigh.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(activityVeryHigh.isChecked()) {
+                if (activityVeryHigh.isChecked()) {
                     updateActivityLevelView(activityVeryHigh, "very high", getString(R.string.activity_very_high_text));
                 } else {
                     setUncheckedColors(activityVeryHigh);
@@ -303,9 +311,10 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * Update views and description of activity level when clicking on any of the activity level toggle buttons
-     * @param currentButton identifier of the pressed button
-     * @param preferenceText the string value identifying the activity level of the pressed button
-     *                       to save in shared preferences
+     *
+     * @param currentButton       identifier of the pressed button
+     * @param preferenceText      the string value identifying the activity level of the pressed button
+     *                            to save in shared preferences
      * @param activityDescription the activity level description for the pressed button
      */
     private void updateActivityLevelView(ToggleButton currentButton, String preferenceText, String activityDescription) {
@@ -357,8 +366,9 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     /**
      * The callback when user is promted to grant permission to access
      * device's location.
+     *
      * @param requestCode
-     * @param permissions array of permissions
+     * @param permissions  array of permissions
      * @param grantResults result, whether permission is granted or not
      */
     @Override
@@ -390,6 +400,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * Checks whether user has allowed the application to get device's location.
+     *
      * @return true if access to device location is granted, false otherwise.
      */
     private boolean deviceHasLocationPermission() {
@@ -401,6 +412,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * Check whether onboarding has been completed
+     *
      * @return true if onboarding completed, false otherwise
      */
     private boolean onBoardingCompleted() {
@@ -410,7 +422,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     /**
      * Method to display the location in UI
      * Based on code from AndroidHive and Android Developer, heavily edited.
-     * */
+     */
     private void displayLocation() {
 
         if (ActivityCompat.checkSelfPermission(getActivity(),
@@ -421,7 +433,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
-                        Log.v("HESTE", location+"");
+                        Log.v("HESTE", location + "");
                         if (location != null) {
                             setLocationViewVisibility(true);
 
@@ -451,6 +463,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * With device's location, fetch weather data from OpeanWeatherMap.com
+     *
      * @param Coordinates lat/lon pair of location coordinates fetched from device
      */
     private void getOpenWeatherMapData(Pair<String, String> Coordinates) {
@@ -464,10 +477,11 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
      * permission has been granted by user or not.
      * If permission, show coordinates, no error message
      * If not permission, show error message, no coordinates.
+     *
      * @param locationFound boolean value determining how the dashboard view should look
      */
     private void setLocationViewVisibility(boolean locationFound) {
-        if(locationFound) {
+        if (locationFound) {
             locationErrorTxt.setVisibility(View.GONE);
             txtLat.setVisibility(View.VISIBLE);
             txtLong.setVisibility(View.VISIBLE);
@@ -531,7 +545,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     /**
      * Creating location request object
      * Code added as originally made by AndroidHive
-     * */
+     */
     protected void createLocationRequest() {
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL);
@@ -543,7 +557,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     /**
      * Creating google api client object
      * Code added as originally made by AndroidHive
-     * */
+     */
     protected synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addConnectionCallbacks(this)
@@ -554,7 +568,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     /**
      * Method to verify google play services on the device
      * Code added as originally made by AndroidHive
-     * */
+     */
     private boolean checkPlayServices() {
         int resultCode = GooglePlayServicesUtil
                 .isGooglePlayServicesAvailable(getActivity());
@@ -587,6 +601,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     }
 */
+
     /**
      * Google api callback methods
      * Based on code made by AndroidHive, edited.
@@ -598,6 +613,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * Based on code made by AndroidHive
+     *
      * @param bundle Bundle of data provided to clients by Google Play services, not used
      */
     @Override
@@ -608,6 +624,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * Based on code made by androidHive
+     *
      * @param cause The reason for the disconnection. Defined by constants CAUSE_*
      */
     @Override
@@ -631,21 +648,24 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         private String mConnectionString;
         private String pageText;
 
-        // JSON Node names
+        // JSON tags
+        private static final String TAG_CITY = "name";
         private static final String TAG_MAIN = "main";
         private static final String TAG_WIND = "wind";
         private static final String TAG_WEATHER = "weather";
         private static final String TAG_CLOUDS = "clouds";
-        private static final String TAG_TEMPERATURE = "temp";
-        private static final String TAG_HUMIDITY = "humidity";
+        // JSON elements
+        private static final String TEMPERATURE = "temp";
+        private static final String HUMIDITY = "humidity";
         private static final String TAG_ALL = "all";
-        private static final String TAG_PRESSURE = "pressure";
-        private static final String TAG_SPEED = "speed";
-        private static final String TAG_DESCRIPTION = "description";
-        private static final String TAG_CITY = "name";
+        private static final String PRESSURE = "pressure";
+        private static final String SPEED = "speed";
+        private static final String WEATHER_DESCRIPTION = "description";
+        private static final String WEATHER_ID = "id";
+        private static final String WEATHER_ICON = "icon";
 
-        private Integer pressure, temperature, cloudiness;
-        private String city_name, description;
+        private Integer pressure, temperature, cloudiness, weather_id;
+        private String city_name, description, icon;
         private double wind_speed, humidity;
 
         private JSONObject json;
@@ -702,107 +722,148 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
         // When information has been fetched from weathermap, show data in dashboard
         protected void onPostExecute(String pageText) {
-            try {
-                json = new JSONObject(pageText);
+            // Get data from response JSON Object
+            getJSONResponseContent(pageText);
 
-                // Humidity, pressure, temperature etc.
-                humidity = json.getJSONObject(TAG_MAIN).getInt(TAG_HUMIDITY);
-                pressure = json.getJSONObject(TAG_MAIN).getInt(TAG_PRESSURE);
-                temperature = convertKelvinToCelsius(json.getJSONObject(TAG_MAIN).getInt(TAG_TEMPERATURE));
-                wind_speed = json.getJSONObject(TAG_WIND).getDouble(TAG_SPEED);
+            // Display data in UI
+            setDashboardViewContentFromAPIResponse();
+
+            // Calculate WBGT model parameters
+            setDashboardWBGTModelParameters();
+        }
+
+        /**
+         * Calculate and set all WBGT model parameters
+         */
+        private void setDashboardWBGTModelParameters() {
+            wbgt = calculateWBGT(wind_speed, humidity, pressure);
+            wbgt_no_solar.setText(String.format("TWBG No solar: %s", wbgt.getTwbgWithoutSolar()));
+            wbgt_solar.setText(String.format("TWBG Solar:       %s", wbgt.getTwbgWithSolar()));
+
+            // Send notification if values are outside recommended range
+            if (wbgt.getTwbgWithoutSolar() > 21.0 && !notificationSent) {
+                setNotificationChannel();
+                createNotification(getString(R.string.app_name), getString(R.string.notificationDescription), notificationID);
+                preferences.edit().putBoolean("notification_sent", true).apply();
+            }
+        }
+
+        /**
+         * Setting all dashboard content based on Open Weather Map API responses
+         */
+        private void setDashboardViewContentFromAPIResponse() {
+            tempTextView.setText(String.format("%s °C", temperature.toString()));
+            humidityTextView.setText(String.format("%s %s", humidity, "%"));
+            windSpeedTextView.setText(String.format("%s m/s", wind_speed));
+            cloudinessTextView.setText(String.format("%s %s", cloudiness, "%"));
+            cityTextView.setText(String.format("%s, %s", city_name, description));
+
+            // Fetch weather icon using Open Weather Map API response
+            getOWMWeatherIcon();
+        }
+
+        private void getOWMWeatherIcon() {
+            String imgURL = String.format("http://openweathermap.org/img/w/%s.png", icon);
+            // Set image in view directly from URL with Picasso
+            Picasso.with(getActivity().getApplicationContext()).load(imgURL).fit().centerInside().into(weatherImage);
+
+        }
+
+        private void getJSONResponseContent(String text) {
+            try {
+                JSONObject json = new JSONObject(text);
+
+                // Values fetched from API response (JSONObject) humidity, pressure, temperature etc.
+                humidity = json.getJSONObject(TAG_MAIN).getInt(HUMIDITY);
+                pressure = json.getJSONObject(TAG_MAIN).getInt(PRESSURE);
+                temperature = convertKelvinToCelsius(json.getJSONObject(TAG_MAIN).getInt(TEMPERATURE));
+                wind_speed = json.getJSONObject(TAG_WIND).getDouble(SPEED);
                 cloudiness = json.getJSONObject(TAG_CLOUDS).getInt(TAG_ALL);
                 city_name = json.getString(TAG_CITY);
-                description = json.getJSONArray(TAG_WEATHER).getJSONObject(0).getString(TAG_DESCRIPTION);
-                Log.v("HESTE", json.getJSONArray(TAG_WEATHER).getJSONObject(0).getString(TAG_DESCRIPTION));
+                weather_id = json.getJSONArray(TAG_WEATHER).getJSONObject(0).getInt(WEATHER_ID);
+                description = json.getJSONArray(TAG_WEATHER).getJSONObject(0).getString(WEATHER_DESCRIPTION);
+                icon = json.getJSONArray(TAG_WEATHER).getJSONObject(0).getString(WEATHER_ICON);
 
-                // Display data in UI
-                tempTextView.setText(String.format("%s °C", temperature.toString()));
-                humidityTextView.setText(String.format("%s %s", humidity, "%"));
-                windSpeedTextView.setText(String.format("%s m/s", wind_speed));
-                cloudinessTextView.setText(String.format("%s %s", cloudiness, "%"));
-                cityTextView.setText(String.format("%s, %s", city_name, description));
-
-                wbgt = calculateWBGT(wind_speed, humidity, pressure);
-                wbgt_no_solar.setText(String.format("TWBG No solar: %s", wbgt.getTwbgWithoutSolar()));
-                wbgt_solar.setText(String.format("TWBG Solar:       %s", wbgt.getTwbgWithSolar()));
-
-                // Send notification if values are outside recommended range
-                if(wbgt.getTwbgWithoutSolar() > 21.0 && !notificationSent) {
-                    setNotificationChannel();
-                    createNotification(getString(R.string.app_name), getString(R.string.notificationDescription), notificationID);
-                    preferences.edit().putBoolean("notification_sent", true).apply();
-                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-    }
 
-    private void setNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create the NotificationChannel, but only on API 26+ because
-            // the NotificationChannel class is new and not in the support library
-            CharSequence name = getString(R.string.channel_name);
-            String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        private void setNotificationChannel() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // Create the NotificationChannel, but only on API 26+ because
+                // the NotificationChannel class is new and not in the support library
+                CharSequence name = getString(R.string.channel_name);
+                String description = getString(R.string.channel_description);
+                int importance = NotificationManager.IMPORTANCE_DEFAULT;
 
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            notificationManager.createNotificationChannel(channel);
+                NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+                channel.setDescription(description);
+                notificationManager.createNotificationChannel(channel);
+            }
         }
-    }
 
-    private void createNotification(String title, String description, int notificationID) {
-        // Intent to open application when user clicks notification
-        Intent open_intent = new Intent(getActivity(), MainActivity.class);
-        open_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, open_intent, 0);
+        private void createNotification(String title, String description, int notificationID) {
+            // Intent to open application when user clicks notification
+            Intent open_intent = new Intent(getActivity(), MainActivity.class);
+            open_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, open_intent, 0);
 
-        // Notification content
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
-                .setSmallIcon(R.mipmap.climapp_logo3)
-                .setContentTitle(title)
-                .setContentText(description)
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(description))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
+            // Notification content
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
+                    .setSmallIcon(R.mipmap.climapp_logo3)
+                    .setContentTitle(title)
+                    .setContentText(description)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(description))
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
 
-        // Send notification
-        notificationManager.notify(notificationID, mBuilder.build());
-    }
+            // Send notification
+            notificationManager.notify(notificationID, mBuilder.build());
+        }
 
-    private WBGT calculateWBGT(double wind_speed, double humidity, double pressure) {
-        Calendar calendar = Calendar.getInstance();
-        int utcOffset = (calendar.get(Calendar.ZONE_OFFSET) + calendar.get(Calendar.DST_OFFSET)) / (60 * 60000); // Total offset (geographical and daylight savings) from UTC in hours
-        int avg = 10;
-        double Tair = 25;
-        double zspeed = 2;
-        double dT = 0; //Vertical temp difference
-        int urban = 0;
+        /**
+         * Use calculations for the WBGT mode from JTOF together with basic device input:
+         * location, date and time and API response
+         *
+         * @param wind_speed Wind speed in m/s
+         * @param humidity   Humidity in percent
+         * @param pressure   pressure in ATM
+         * @return wbgt object
+         */
+        private WBGT calculateWBGT(double wind_speed, double humidity, double pressure) {
+            Calendar calendar = Calendar.getInstance();
+            int utcOffset = (calendar.get(Calendar.ZONE_OFFSET) + calendar.get(Calendar.DST_OFFSET)) / (60 * 60000); // Total offset (geographical and daylight savings) from UTC in hours
+            int avg = 10;
+            double Tair = 25;
+            double zspeed = 2;
+            double dT = 0; //Vertical temp difference
+            int urban = 0;
 
-        calendar.setTime(new Date());
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-        int hour = calendar.get(Calendar.HOUR);
-        int min = calendar.get(Calendar.MINUTE);
-        calendar.set(year, month, day, hour, min);
+            calendar.setTime(new Date());
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int hour = calendar.get(Calendar.HOUR);
+            int min = calendar.get(Calendar.MINUTE);
+            calendar.set(year, month, day, hour, min);
 
-        Solar s = new Solar(Double.parseDouble(longitude), Double.parseDouble(latitude), calendar, utcOffset);
-        SolarRad sr = new SolarRad(s.zenith(), calendar.get(Calendar.DAY_OF_YEAR), 0, 1, false, false); //(solar zenith angle, day no, cloud fraction, cloud type, fog, precipitation)
+            Solar s = new Solar(Double.parseDouble(longitude), Double.parseDouble(latitude), calendar, utcOffset);
+            SolarRad sr = new SolarRad(s.zenith(), calendar.get(Calendar.DAY_OF_YEAR), 0, 1, false, false); //(solar zenith angle, day no, cloud fraction, cloud type, fog, precipitation)
 
-        // Making all wbgt calculations
-        WBGT wbgt = new WBGT(year, month, day, hour, min, utcOffset, avg,
-                Double.parseDouble(latitude),
-                Double.parseDouble(longitude),
-                sr.solarIrradiation(), pressure, Tair, humidity, wind_speed, zspeed, dT, urban);
-        return wbgt;
-    }
+            // Making all wbgt calculations
+            WBGT wbgt = new WBGT(year, month, day, hour, min, utcOffset, avg,
+                    Double.parseDouble(latitude),
+                    Double.parseDouble(longitude),
+                    sr.solarIrradiation(), pressure, Tair, humidity, wind_speed, zspeed, dT, urban);
+            return wbgt;
+        }
 
-    public int convertKelvinToCelsius(int temperatureInKelvin) {
-        return temperatureInKelvin - (int) 273.15;
+        public int convertKelvinToCelsius(int temperatureInKelvin) {
+            return temperatureInKelvin - (int) 273.15;
+        }
     }
 }

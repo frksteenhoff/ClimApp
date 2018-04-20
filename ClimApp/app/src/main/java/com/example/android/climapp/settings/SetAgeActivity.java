@@ -1,4 +1,4 @@
-package com.example.android.climapp;
+package com.example.android.climapp.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.NumberPicker;
 import android.widget.Toast;
+
+import com.example.android.climapp.R;
 
 import java.util.Calendar;
 import java.util.Date;

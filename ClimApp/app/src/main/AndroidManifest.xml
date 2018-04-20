@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- Activities in application -->
     <application
@@ -64,37 +66,37 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".OnBoardingActivity"
+            android:name=".onboarding.OnBoardingActivity"
             android:label="OnBoarding"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
-            android:name=".SetAgeActivity"
+            android:name=".settings.SetAgeActivity"
             android:label="@string/Age"
             android:theme="@style/AppTheme"
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
-            android:name=".SetHeightActivity"
+            android:name=".settings.SetHeightActivity"
             android:label="@string/Height"
             android:theme="@style/AppTheme"
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
-            android:name=".SetWeightActivity"
+            android:name=".settings.SetWeightActivity"
             android:label="@string/Weight"
             android:theme="@style/AppTheme"
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
-            android:name=".SetAcclimatizationActivity"
+            android:name=".settings.SetAcclimatizationActivity"
             android:label="@string/Acclimatization"
             android:theme="@style/AppTheme"
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
-            android:name=".SetNotificationActivity"
+            android:name=".settings.SetNotificationActivity"
             android:label="@string/Notifications"
             android:theme="@style/AppTheme"
             android:parentActivityName=".MainActivity">

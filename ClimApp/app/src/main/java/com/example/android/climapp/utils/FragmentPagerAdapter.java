@@ -1,8 +1,12 @@
-package com.example.android.climapp;
+package com.example.android.climapp.utils;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+
+import com.example.android.climapp.clothing.ClothingFragment;
+import com.example.android.climapp.dashboard.DashboardFragment;
+import com.example.android.climapp.settings.SettingsFragment;
 
 /**
  * Created by frksteenhoff on 26-02-2018.
