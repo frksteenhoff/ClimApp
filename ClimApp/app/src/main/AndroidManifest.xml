@@ -101,5 +101,11 @@
             android:theme="@style/AppTheme"
             android:parentActivityName=".MainActivity">
         </activity>
+        <activity
+            android:name=".dashboard.ActivityLevelDescActivity"
+            android:label="@string/activity_level"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".MainActivity">
+        </activity>
     </application>
 </manifest>

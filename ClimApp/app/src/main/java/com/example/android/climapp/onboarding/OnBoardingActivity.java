@@ -127,7 +127,7 @@ public class OnBoardingActivity extends FragmentActivity {
             public void onPageSelected(int position) {
                 if (position == 5) {
                     skip.setVisibility(View.GONE);
-                    next.setText(R.string.skip);
+                    next.setText(R.string.done);
                 } else {
                     skip.setVisibility(View.VISIBLE);
                     next.setText(R.string.next);

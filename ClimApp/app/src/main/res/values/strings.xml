@@ -64,6 +64,7 @@
     <string name="user_password">Password</string>
     <string name="skip">Skip</string>
     <string name="next">Next</string>
+    <string name="done">Done</string>
 
     <!-- Dashboard: Activity Level -->
     <string name="activity_level">Activity level</string>
@@ -117,6 +118,10 @@
         <item>Sales Assistant</item>
         <item>Teaching</item>
     </string-array>
+
+    <!-- Clothing -->
+    <string name="clothing_customize_attire">Customize your attire</string>
+    <string name="clothing_customize_attire_description">By chosing exactly the items you wear to work, we can better match your needs during the day</string>
 
     <!-- Settings - Button hints -->
     <string name="Input_age">Input date of birth (DDMMYYYY)</string>

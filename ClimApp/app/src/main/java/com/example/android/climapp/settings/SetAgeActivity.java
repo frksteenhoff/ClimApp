@@ -3,7 +3,6 @@ package com.example.android.climapp.settings;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
@@ -50,7 +49,7 @@ public class SetAgeActivity extends AppCompatActivity {
             String userInput = preferences.getString("Age_onboarding", null);
             userAge = (int) getUserAgeFromInput(userInput);
             np.setValue(userAge);
-            // Get user age from input
+            // Get user age from spinner
         } else if(preferences.getString("Age", null) != null ) {
             userAge = Integer.parseInt(preferences.getString("Age",null));
             np.setValue(userAge);
@@ -72,7 +71,6 @@ public class SetAgeActivity extends AppCompatActivity {
     }
 
     public long getUserAgeFromInput(String userInput){
-        Log.v("HESTE", "in preferences");
         // Users date of birth from input
         Calendar userBirthDay = new GregorianCalendar(
                 Integer.parseInt(userInput.substring(4)),

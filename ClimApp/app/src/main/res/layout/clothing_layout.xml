@@ -7,8 +7,24 @@
         android:orientation="vertical"
         android:layout_margin="20dp">
         <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/clothing_customize_attire"
+            android:textSize="26sp"
+            android:layout_marginBottom="8dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/clothing_customize_attire_description"
+            android:textSize="12sp"
+            android:layout_marginBottom="16dp"/>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorLightGrey"/>
+        <TextView
             android:layout_marginTop="8dp"
-            style="@style/SmallDescriptiveTextStyle"
+            style="@style/SmallDescriptiveTextStyleNoMargin"
             android:text="@string/field_of_work"/>
         <Spinner
             android:layout_width="match_parent"
@@ -20,7 +36,7 @@
         </Spinner>
         <TextView
             android:layout_marginTop="8dp"
-            style="@style/SmallDescriptiveTextStyle"
+            style="@style/SmallDescriptiveTextStyleNoMargin"
             android:text="@string/clothing"/>
         <HorizontalScrollView
             style="@style/WrapWrap"
@@ -48,7 +64,7 @@
         </HorizontalScrollView>
         <TextView
             android:layout_marginTop="8dp"
-            style="@style/SmallDescriptiveTextStyle"
+            style="@style/SmallDescriptiveTextStyleNoMargin"
             android:text="@string/outer_wear"/>
             <HorizontalScrollView
                 style="@style/WrapWrap"
@@ -85,7 +101,8 @@
         <TextView
             android:layout_marginTop="8dp"
             android:text="@string/work_specific_attire"
-            style="@style/SmallDescriptiveTextStyle"/>
+            android:id="@+id/clothing_top"
+            style="@style/SmallDescriptiveTextStyleNoMargin"/>
             <HorizontalScrollView
                 style="@style/WMatchHWrap"
                 android:orientation="horizontal"

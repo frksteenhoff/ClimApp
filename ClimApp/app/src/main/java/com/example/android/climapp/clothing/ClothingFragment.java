@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.HorizontalScrollView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.android.climapp.R;
 
@@ -29,6 +30,7 @@ public class ClothingFragment extends Fragment implements AdapterView.OnItemSele
 
     Spinner fieldOfWorkSpinner;
     HorizontalScrollView workSpecificView;
+    TextView workSpecificText;
     private static SharedPreferences preferences;
 
     @Nullable
@@ -41,6 +43,7 @@ public class ClothingFragment extends Fragment implements AdapterView.OnItemSele
         preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
 
         fieldOfWorkSpinner = getActivity().findViewById(R.id.field_of_work_spinner);
+        workSpecificText = getActivity().findViewById(R.id.clothing_top);
         workSpecificView = getActivity().findViewById(R.id.construction_specific);
 
         // Set gender -- female as default
@@ -55,21 +58,25 @@ public class ClothingFragment extends Fragment implements AdapterView.OnItemSele
                 // If construction selected
                 preferences.edit().putInt("field_of_work", 1).apply();
                 workSpecificView.setVisibility(View.VISIBLE);
+                workSpecificText.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 // If construction selected
                 preferences.edit().putInt("field_of_work", 2).apply();
                 workSpecificView.setVisibility(View.GONE);
+                workSpecificText.setVisibility(View.GONE);
                 break;
             case 3:
                 // If construction selected
                 preferences.edit().putInt("field_of_work", 3).apply();
                 workSpecificView.setVisibility(View.GONE);
+                workSpecificText.setVisibility(View.GONE);
                 break;
             default:
                 // If office selected or default
                 preferences.edit().putInt("field_of_work", 0).apply();
                 workSpecificView.setVisibility(View.GONE);
+                workSpecificText.setVisibility(View.GONE);
         }
     }
 

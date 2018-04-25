@@ -39,7 +39,7 @@
                 style="@style/hintViewStyle"
                 android:id="@+id/set_height"
                 android:hint="@string/Input_height"
-                android:inputType="number"/>
+                android:inputType="numberDecimal"/>
                 <TextView
                     android:id="@+id/unit_text_height"
                     android:text="@string/unit"
