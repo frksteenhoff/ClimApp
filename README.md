@@ -17,8 +17,8 @@ Structure of the program files:
     app/src/main/java/com/example/android/climapp/              <-- Source code
                                                   clothing/     <-- clothing fragment  
                                                   dashboard/    <-- dashboard fragment
-                                                  onboarding/   <-- onboarding fragment controlling onboarding activites
-                                                  settings/     <-- settings fragment controlling settings activites
+                                                  onboarding/   <-- onboarding fragment + onboarding activites
+                                                  settings/     <-- settings fragment + settings activites
                                                   utils/        <-- helper classes
                                                   wbgt/         <-- wbgt classes
     gradle/wrapper/ 
