@@ -13,7 +13,8 @@ Structure of the program files:
 
 ``` 
    ./                                                           <-- Repository
-    .idea/                                                                                                                                   app/src/main/java/com/example/android/climapp/              <-- Source code
+    .idea/                                                                                                                             
+    app/src/main/java/com/example/android/climapp/              <-- Source code
                                                   clothing/     <-- clothing fragment  
                                                   dashboard/    <-- dashboard fragment
                                                   onboarding/   <-- onboarding fragment controlling onboarding activites
