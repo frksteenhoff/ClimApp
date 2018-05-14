@@ -83,12 +83,6 @@
     <style name="bottomCVTextStyle">
     </style>
 
-    <!-- Settings-2 style -->
-    <style name="SettingsTextStyle2">
-        <item name="android:layout_margin">16dp</item>
-        <item name="android:textSize">22sp</item>
-    </style>
-
     <!-- TextOffStyle-->
     <style name="TextOffStyle">
         <item name="android:layout_width">wrap_content</item>
@@ -97,13 +91,16 @@
         <item name="android:textOn">" "</item>
     </style>
 
-    <!-- Settings description style -->
-    <style name="SettingsTextStyle">
+    <!-- SmallDescriptiveTextStyle-->
+    <style name="SmallDescriptiveTextStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:layout_margin">16dp</item>
-        <item name="android:textColor">@color/tw__medium_gray</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
     </style>
 
     <!-- SmallDescriptiveTextStyleNoMargin-->
@@ -111,7 +108,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <!-- Settings description style no caps-->
@@ -119,24 +116,33 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">16dp</item>
-        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_centerVertical">true</item>
         <item name="android:textSize">16sp</item>
     </style>
-    
+
+    <!-- Settings description style no caps-->
+    <style name="SettingsTextStyleNoBottom">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Settings - value under each setting style -->
+    <style name="ValueUnderSettingStyle">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-    </style>
-
-    <!-- SmallDescriptiveTextStyle-->
-    <style name="SmallDescriptiveTextStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/colorPrimaryDark</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:layout_marginTop">16dp</item>
-        <item name="android:layout_marginStart">16dp</item>
-        <item name="android:layout_marginEnd">16dp</item>
     </style>
 
     <style name="UnitTextViewStyle">
@@ -165,7 +171,6 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textColor">@color/colorAccent</item>
         <item name="android:textStyle">bold</item>
-
     </style>
 
     <!-- When all you do is wrapping content -->
@@ -177,7 +182,4 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -12,11 +13,13 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,6 +36,7 @@ import com.example.android.climapp.MainActivity;
 import com.example.android.climapp.R;
 import com.example.android.climapp.onboarding.OnBoardingActivity;
 import com.example.android.climapp.utils.Pair;
+import com.example.android.climapp.wbgt.RecommendedAlertLimit;
 import com.example.android.climapp.wbgt.Solar;
 import com.example.android.climapp.wbgt.SolarRad;
 import com.example.android.climapp.wbgt.WBGT;
@@ -107,11 +111,11 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     // Views and buttons
     private Button mLocationButton;
-    private ImageView weatherImage;
+    private ImageView weatherImage, recommendationView, recommendationSmallView;
     private ToggleButton activityVeryHigh, activityHigh, activityMedium, activityLow, activityVeryLow;
     private TextView txtLong, txtLat, locationErrorTxt, activityLevelDescription, wbgt_solar, wbgt_no_solar,
             cityTextView, tempTextView, humidityTextView, windSpeedTextView, cloudinessTextView,
-            dismissWarningtextView;
+            dismissWarningtextView, activityMoreTextView;
     private CardView warningCardView;
 
     private String latitude, longitude;
@@ -147,6 +151,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         activityHigh = getActivity().findViewById(R.id.dash_toggle_high);
         activityVeryHigh = getActivity().findViewById(R.id.dash_toggle_very_high);
         activityLevelDescription = getActivity().findViewById(R.id.activity_description_view);
+        activityMoreTextView = getActivity().findViewById(R.id.activity_more);
 
         // Location view references, updated based on device's location
         mLocationButton = getActivity().findViewById(R.id.locationButton);
@@ -165,6 +170,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         windSpeedTextView = getActivity().findViewById(R.id.wind_speed_value);
         cloudinessTextView = getActivity().findViewById(R.id.cloudiness_value);
         cityTextView = getActivity().findViewById(R.id.current_city);
+        recommendationView = getActivity().findViewById(R.id.ral);
+        recommendationSmallView = getActivity().findViewById(R.id.ral_small);
 
         // Check whether onboarding has been completed
         // if onboarding steps still missing, start onboarding
@@ -264,6 +271,18 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 }
             }
         });
+        // Activity level "more" click listener
+        activityMoreTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Start activity to provide full description of activity level
+                Intent activityMore = new Intent(getActivity(), ActivityLevelDescActivity.class);
+                startActivity(activityMore);
+
+                // Close main activity
+                getActivity().finish();
+            }
+        });
 
         // Location button click listener
         mLocationButton.setOnClickListener(new View.OnClickListener() {
@@ -273,8 +292,45 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             }
         });
 
-        // Set activity level if checked
+        // Set activity level on start if checked
         setCheckedActivityLevel();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    /**
+     * When app is resumed, check that permission is given
+     * Based on code made by AndroidHive and Android Developer
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkPlayServices();
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(),
+                        android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            displayLocation();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+       /* if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }*/
     }
 
     /**
@@ -327,6 +383,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         activityLevelDescription.setText(activityDescription);
         setOnCheckedColors(currentButton);
         preferences.edit().putString("activity_level", preferenceText).apply();
+        // Update color indicator after activity level change
+        calculateRALInterval();
     }
 
     private void setUncheckedColors(ToggleButton toggleButtonId) {
@@ -448,7 +506,41 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                             setLocationViewVisibility(false);
 
                             // Show error message
-                            locationErrorTxt.setText(R.string.location_error_text);
+                            //locationErrorTxt.setText(R.string.location_error_text);
+                            AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+
+                            // Setting Dialog Title
+                            alertDialog.setTitle("GPS turned off");
+                            // Setting Dialog Message
+                            alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+
+                            // On pressing Settings button
+                            alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int which) {
+                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    getContext().startActivity(intent);
+                                }
+                            });
+
+                            // on pressing cancel button
+                            alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+
+                            // Showing Alert Message
+                            alertDialog.show();
+                            // Setting Dialog Message
+                            alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
+
+                            // On pressing Settings button
+                            alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,int which) {
+                                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    getContext().startActivity(intent);
+                                }
+                            });
                         }
                     }
                 });
@@ -481,43 +573,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             txtLat.setVisibility(View.GONE);
             txtLong.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
-    }
-
-    /**
-     * When app is resumed, check that permission is given
-     * Based on code made by AndroidHive and Android Developer
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        checkPlayServices();
-        if (ActivityCompat.checkSelfPermission(getActivity(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(),
-                        android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            displayLocation();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-       /* if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }*/
     }
 
     /**
@@ -720,30 +775,35 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             setDashboardViewContentFromAPIResponse();
 
             // Calculate WBGT model parameters
-            setDashboardWBGTModelParameters();
+            setAndSaveDashboardWBGTModelParameters();
+
+            // Check and set recommended alert limits
+            calculateRALInterval();
         }
 
         /**
-         * Calculate and set all WBGT model parameters
+         * Calculate and set all WBGT model parameters and recommended alert limits
          */
-        private void setDashboardWBGTModelParameters() {
+        private void setAndSaveDashboardWBGTModelParameters() {
             wbgt = calculateWBGT(wind_speed, humidity, pressure);
             wbgt_no_solar.setText(String.format("TWBG No solar: %s", wbgt.getTwbgWithoutSolar()));
             wbgt_solar.setText(String.format("TWBG Solar:       %s", wbgt.getTwbgWithSolar()));
+            preferences.edit().putFloat("WBGT", (float) wbgt.getTwbgWithoutSolar()).apply();
+            preferences.edit().putFloat("WBGT_solar", (float) wbgt.getTwbgWithSolar()).apply();
 
-            // Send notification if values are outside recommended range
+            /*// Send notification if values are outside recommended range
             if (wbgt.getTwbgWithoutSolar() > 21.0 && !notificationSent) {
                 setNotificationChannel();
                 createNotification(getString(R.string.app_name), getString(R.string.notificationDescription), notificationID);
                 preferences.edit().putBoolean("notification_sent", true).apply();
-            }
+            }*/
         }
 
         /**
          * Setting all dashboard content based on Open Weather Map API responses
          */
         private void setDashboardViewContentFromAPIResponse() {
-            tempTextView.setText(String.format("%s °C", temperature.toString()));
+            tempTextView.setText(String.format("%s°", temperature.toString()));
             humidityTextView.setText(String.format("%s %s", humidity, "%"));
             windSpeedTextView.setText(String.format("%s m/s", wind_speed));
             cloudinessTextView.setText(String.format("%s %s", cloudiness, "%"));
@@ -855,6 +915,41 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
         public int convertKelvinToCelsius(int temperatureInKelvin) {
             return temperatureInKelvin - (int) 273.15;
+        }
+    }
+
+    /**
+     * Calculate users recommendation and set color indicator
+     */
+    private void calculateRALInterval() {
+        RecommendedAlertLimit ral = new RecommendedAlertLimit(
+                preferences.getString("activity_level", null),
+                preferences.getBoolean("Acclimatization", false));
+
+        setRecommendationColor(preferences.getFloat("WBGT", 0), ral.calculateRALValue());
+    }
+
+    /**
+     * Set indicator (red/green/yellow) based on recommended alert limit on dashboard view
+     *
+     * green if  wbgt <= 0.8 * ral
+     * yellow if wbgt > 0.8 * ral and <= ral
+     * red if wbgt > ral
+     * @param twbgWithoutSolar WBGT value
+     * @param RALValue RAL value - reference limit
+     */
+    private void setRecommendationColor(double twbgWithoutSolar, double RALValue) {
+        if(Math.round(twbgWithoutSolar) <= Math.round(0.8 * RALValue)) {
+            recommendationView.setColorFilter(Color.parseColor("#00b200"));
+            recommendationSmallView.setColorFilter(Color.parseColor("#00b200"));
+        } else if(Math.round(twbgWithoutSolar) > Math.round(0.8 * RALValue) && twbgWithoutSolar <= RALValue) {
+            recommendationView.setColorFilter(Color.parseColor("#FBBA57"));
+            recommendationSmallView.setColorFilter(Color.parseColor("#FBBA57"));
+        } else {
+            recommendationView.setColorFilter(Color.parseColor("#e50000"));
+            recommendationSmallView.setColorFilter(Color.parseColor("#e50000"));
+            //Log.v("HESTE", "WBGT: "+ twbgWithoutSolar +"RAL: "+Math.round(RALValue) + " activityLevel: " + preferences.getString("activity_level", null) +
+            //        "RAL80: " + 0.8 * Math.round(RALValue));
         }
     }
 }

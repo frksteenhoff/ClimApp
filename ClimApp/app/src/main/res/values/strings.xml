@@ -171,12 +171,19 @@
     <string name="Notifications">Notifications</string>
     <string name="Preferences">Preferences</string>
     <string name="Other">Other</string>
+    <string name="About">About</string>
     <string name="Reset">Reset all preferences</string>
     <string name="measuring_units">Measuring units</string>
     <string name="units">Units</string>
     <string name="unit">Unit</string>
     <string name="choose_units">Choose units</string>
     <string name="choose_gender">Choose gender</string>
+    <string name="disclaimer">Disclaimer</string>
+    <string name="disclaimer_text">ERA4CS and its partners assume no responsibility or liability for any
+        errors or omissions in the content of this site. The information contained in this site
+        is provided on an “as is” basis with no guarantees of completeness, accuracy, usefulness
+        or timeliness.</string>
+    <string name="what_climapp">What is the ERA4CS ClimApp project?</string>
 
     <!-- Settings - reponses -->
     <string name="age_updated">Age updated to: </string>

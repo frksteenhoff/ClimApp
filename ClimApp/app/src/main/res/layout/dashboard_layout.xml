@@ -41,7 +41,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/degrees"
-                            android:textSize="40sp" />
+                            android:textSize="80sp" />
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -97,40 +97,38 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_margin="16dp"/>
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/ral"
+                        android:layout_margin="16dp"
+                        android:layout_alignParentEnd="true"
+                        android:src="@drawable/circle" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
                 style="@style/CardViewFeedStyle"
                 android:visibility="gone"
                 android:id="@+id/warning_view">
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_margin="16dp">
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
+                        android:id="@+id/warning_main"
                         android:layout_marginBottom="8dp">
-                        <ImageView
-                            android:id="@+id/alert_image"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@mipmap/ic_alert_foreground" />
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/alert_title_view"
                             android:text="@string/alert_text_title"
-                            android:layout_marginStart="16dp"
+                            android:textAllCaps="true"
+                            android:layout_marginBottom="16dp"
                             android:textStyle="bold" />
-                    </LinearLayout>
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginBottom="8dp">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -147,21 +145,101 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:id="@+id/alert_clothing_view"
-                            android:text="@string/alert_text_clothing"/>
+                            android:text="@string/alert_text_clothing"
+                            android:layout_marginBottom="8dp"/>
                     </LinearLayout>
+                    <ImageView
+                        android:id="@+id/alert_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_alert_foreground"
+                        android:layout_alignParentEnd="true"/>
                     <View
                         android:layout_width="fill_parent"
                         android:layout_height="1dp"
+                        android:id="@+id/cardLine"
+                        android:layout_alignBottom="@+id/warning_main"
                         android:background="@color/colorLightGrey"/>
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/ActionButtonStyle"
                         android:id="@+id/dismiss_warning"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_gravity="end"
-                        android:textAllCaps="true"
-                        android:text="@string/dismiss"/>
+                        android:layout_alignParentEnd="true"
+                        android:text="@string/dismiss"
+                        android:layout_below="@+id/cardLine"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                android:visibility="gone"
+                style="@style/CardViewFeedStyle">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="16dp">
+                    <TextView
+                        style="@style/SmallDescriptiveTextStyleNoMargin"
+                        android:text="@string/hydration" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hydration_text"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginTop="8dp"/>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <ToggleButton
+                            style="@style/WrapWrap"
+                            android:textOn="@string/no_text"
+                            android:layout_marginTop="16dp"
+                            android:textOff="@string/no_text"
+                            android:background="@drawable/ic_soda_foreground" />
+                        <ToggleButton
+                            style="@style/WrapWrap"
+                            android:layout_marginTop="16dp"
+                            android:textOn="@string/no_text"
+                            android:textOff="@string/no_text"
+                            android:background="@drawable/ic_water_foreground" />
+                        <ToggleButton
+                            style="@style/WrapWrap"
+                            android:layout_marginTop="16dp"
+                            android:textOn="@string/no_text"
+                            android:textOff="@string/no_text"
+                            android:background="@drawable/ic_milkshake_foreground" />
+                    </LinearLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                style="@style/CardViewFeedStyle">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="16dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/circle"
+                            android:id="@+id/ral_small"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:text="@string/suggestions"
+                            android:layout_gravity="center_vertical"/>
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/suggestion_text"
+                        android:layout_marginTop="8dp"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -229,72 +307,9 @@
                         android:layout_height="1dp"
                         android:background="@color/colorLightGrey"/>
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:layout_gravity="end"
-                        android:textAllCaps="true"
+                        style="@style/ActionButtonStyle"
+                        android:id="@+id/activity_more"
                         android:text="@string/more"/>
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-            <android.support.v7.widget.CardView
-                android:visibility="gone"
-                style="@style/CardViewFeedStyle">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="16dp">
-                    <TextView
-                        style="@style/SmallDescriptiveTextStyleNoMargin"
-                        android:text="@string/hydration" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/hydration_text"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"/>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <ToggleButton
-                            style="@style/WrapWrap"
-                            android:textOn="@string/no_text"
-                            android:layout_marginTop="16dp"
-                            android:textOff="@string/no_text"
-                            android:background="@drawable/ic_soda_foreground" />
-                        <ToggleButton
-                            style="@style/WrapWrap"
-                            android:layout_marginTop="16dp"
-                            android:textOn="@string/no_text"
-                            android:textOff="@string/no_text"
-                            android:background="@drawable/ic_water_foreground" />
-                        <ToggleButton
-                            style="@style/WrapWrap"
-                            android:layout_marginTop="16dp"
-                            android:textOn="@string/no_text"
-                            android:textOff="@string/no_text"
-                            android:background="@drawable/ic_milkshake_foreground" />
-                    </LinearLayout>
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-            <android.support.v7.widget.CardView
-                style="@style/CardViewFeedStyle">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="16dp">
-                    <TextView
-                        style="@style/SmallDescriptiveTextStyleNoMargin"
-                        android:text="@string/suggestions" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/suggestion_text"
-                        android:layout_marginTop="8dp"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView

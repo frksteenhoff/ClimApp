@@ -22,6 +22,7 @@ import com.example.android.climapp.R;
  * Created by frksteenhoff on 10-10-2017.
  * Controlling all settings actions:
  * Edit, save, reset etc.
+ * Set correct values under relevant titles
  */
 
 public class SettingsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -45,6 +46,22 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         preferences = getActivity().getSharedPreferences("ClimApp",Context.MODE_PRIVATE);
+
+        // Set settings information under settings title
+        TextView showAge = getActivity().findViewById(R.id.show_age);
+        if(preferences.getString("Age", null) != null) {
+            showAge.setText(preferences.getString("Age",null));
+        }
+        TextView showHeight = getActivity().findViewById(R.id.show_height);
+        if(preferences.getString("Height_value", null) != null) {
+            showHeight.setText(preferences.getString("Height_value", null));
+        }
+
+        TextView showWeight = getActivity().findViewById(R.id.show_weight);
+        if (preferences.getInt("Weight", 0) != 0) {
+            showWeight.setText(String.format("%s", preferences.getInt("Weight", 0)));
+        }
+
         Spinner unitSpinner = getActivity().findViewById(R.id.units_spinner);
         Spinner genderSpinner = getActivity().findViewById(R.id.gender_spinner);
         Spinner notificationSpinner = getActivity().findViewById(R.id.notification_spinner);
@@ -134,7 +151,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                 // Reset all preferences
                 preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
                 preferences.edit().clear().apply();
-                acclimatizationSwitch.setChecked(false);
+                preferences.edit().putBoolean("Acclimatization", false).apply();
                 preferences.edit().putInt("gender", 0).apply();
                 preferences.edit().putInt("Unit", 0).apply();
                 preferences.edit().putInt("Notification", 0).apply();
@@ -142,6 +159,15 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                 // Setting onboarding to be true in order to prevent it from showing up again.
                 //preferences.edit().putBoolean("onboarding_complete", true).apply();
                 Toast.makeText(getActivity().getApplicationContext(), "All preferences cleared", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        TextView aboutText = getActivity().findViewById(R.id.about);
+        aboutText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent about_desc = new Intent(getActivity(), AboutAppActivity.class);
+                startActivity(about_desc);
             }
         });
     }

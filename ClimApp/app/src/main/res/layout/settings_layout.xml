@@ -14,9 +14,13 @@
                 android:text="@string/Personal_Settings"
                 style="@style/SmallDescriptiveTextStyle"/>
             <TextView
+                style="@style/SettingsTextStyleNoBottom"
                 android:id="@+id/age_settings"
-                android:text="@string/Age"
-                style="@style/SettingsTextStyleNoCaps"/>
+                android:text="@string/Age" />
+            <TextView
+                style="@style/ValueUnderSettingStyle"
+                android:id="@+id/show_age"
+                android:text="@string/no_text" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -40,11 +44,19 @@
             <TextView
                 android:id="@+id/weight_settings"
                 android:text="@string/Weight"
-                style="@style/SettingsTextStyleNoCaps"/>
+                style="@style/SettingsTextStyleNoBottom"/>
+            <TextView
+                style="@style/ValueUnderSettingStyle"
+                android:id="@+id/show_weight"
+                android:text="@string/no_text" />
             <TextView
                 android:id="@+id/height_settings"
                 android:text="@string/Height"
-                style="@style/SettingsTextStyleNoCaps"/>
+                style="@style/SettingsTextStyleNoBottom"/>
+            <TextView
+                style="@style/ValueUnderSettingStyle"
+                android:id="@+id/show_height"
+                android:text="@string/no_text" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -121,6 +133,15 @@
                 android:id="@+id/reset"
                 android:text="@string/Reset"
                 style="@style/SettingsTextStyleNoCaps"/>
+            <TextView
+                android:id="@+id/about"
+                android:text="@string/About"
+                style="@style/SettingsTextStyleNoCaps"/>
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLightGrey"/>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

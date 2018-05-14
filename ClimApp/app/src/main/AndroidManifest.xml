@@ -90,6 +90,12 @@
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
+            android:name=".settings.AboutAppActivity"
+            android:label="@string/About"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".MainActivity">
+        </activity>
+        <activity
             android:name=".settings.SetAcclimatizationActivity"
             android:label="@string/Acclimatization"
             android:theme="@style/AppTheme"
