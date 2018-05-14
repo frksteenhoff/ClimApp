@@ -9,6 +9,21 @@ Note! Not all functionality is made available in the app, furthermore, the commi
 ## Folder structure
 **ClimApp**
 * Contains the Java code for the app
+Structure of the program files:
+
+``` 
+   ./                                                           <-- Repository
+    .idea/                                                                                                                             
+    app/src/main/java/com/example/android/climapp/              <-- Source code
+                                                  clothing/     <-- clothing fragment  
+                                                  dashboard/    <-- dashboard fragment
+                                                  onboarding/   <-- onboarding fragment + onboarding activites
+                                                  settings/     <-- settings fragment + settings activites
+                                                  utils/        <-- helper classes
+                                                  wbgt/         <-- wbgt classes
+    gradle/wrapper/ 
+ ```
+
 
 **img**
 * All images used in the ClimApp wiki 
