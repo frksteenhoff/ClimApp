@@ -50,6 +50,7 @@ public class SetWeightActivity extends AppCompatActivity {
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 int convertedWeight = convertWeightToKgBasedOnUnit(preferred_unit, newVal);
                 preferences.edit().putInt("Weight", convertedWeight).apply();
+                preferences.edit().putInt("Weight_value", newVal).apply();
 
                 //Display the newly selected value from picker
                 Toast.makeText(getApplicationContext(), getString(R.string.weight_updated) + " " + newVal + " " +
@@ -142,6 +143,19 @@ public class SetWeightActivity extends AppCompatActivity {
             default:
                 unitText.setText(R.string.weight_unit_si);
                 break;
+        }
+    }
+
+    /**
+     * Return user's weight from preferences
+     * @return String containing the user's weight
+     */
+    public String getWeightInPreferredUnit() {
+        String weight = preferences.getString("Weight_value", null);
+        if(weight != null) {
+            return weight;
+        } else {
+            return "";
         }
     }
 }

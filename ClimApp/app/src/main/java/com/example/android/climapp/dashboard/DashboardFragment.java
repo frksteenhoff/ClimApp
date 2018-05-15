@@ -907,7 +907,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
             // Precipitation and cloudfraction will now depend on data from Open Weather Map
             // cloud fraction is cloudiness in percent divided by 100 to get it as a fraction
-            Log.v("HESTE", "clouds:    " + cloudiness/100);
             Solar s = new Solar(Double.parseDouble(longitude), Double.parseDouble(latitude), calendar, utcOffset);
             SolarRad sr = new SolarRad(s.zenith(), calendar.get(Calendar.DAY_OF_YEAR),
                     cloudiness/100, 1, isItFoggy(weather_id),
@@ -981,8 +980,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         } else {
             recommendationView.setColorFilter(Color.parseColor("#e50000"));
             recommendationSmallView.setColorFilter(Color.parseColor("#e50000"));
-            //Log.v("HESTE", "WBGT: "+ twbgWithoutSolar +"RAL: "+Math.round(RALValue) + " activityLevel: " + preferences.getString("activity_level", null) +
-            //        "RAL80: " + 0.8 * Math.round(RALValue));
         }
+        //Log.v("HESTE", "WBGT: "+ twbgWithoutSolar +"RAL: "+Math.round(RALValue) + " activityLevel: " + preferences.getString("activity_level", null) +
+        //           "RAL80: " + 0.8 * Math.round(RALValue));
     }
 }

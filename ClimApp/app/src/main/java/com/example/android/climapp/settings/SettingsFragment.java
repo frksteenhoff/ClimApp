@@ -22,7 +22,7 @@ import com.example.android.climapp.R;
  * Created by frksteenhoff on 10-10-2017.
  * Controlling all settings actions:
  * Edit, save, reset etc.
- * Set correct values under relevant titles
+ * Set correct subtextvalues under relevant titles
  */
 
 public class SettingsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
@@ -34,6 +34,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     // Initializing user input values
     private static SharedPreferences preferences;
     private Switch acclimatizationSwitch;
+    private TextView showWeight, showHeight, showAge;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,19 +49,14 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         preferences = getActivity().getSharedPreferences("ClimApp",Context.MODE_PRIVATE);
 
         // Set settings information under settings title
-        TextView showAge = getActivity().findViewById(R.id.show_age);
-        if(preferences.getString("Age", null) != null) {
-            showAge.setText(preferences.getString("Age",null));
-        }
-        TextView showHeight = getActivity().findViewById(R.id.show_height);
-        if(preferences.getString("Height_value", null) != null) {
-            showHeight.setText(preferences.getString("Height_value", null));
-        }
+        showAge = getActivity().findViewById(R.id.show_age);
+        showPreferenceStringIfExists("Age", showAge);
 
-        TextView showWeight = getActivity().findViewById(R.id.show_weight);
-        if (preferences.getInt("Weight", 0) != 0) {
-            showWeight.setText(String.format("%s", preferences.getInt("Weight", 0)));
-        }
+        showHeight = getActivity().findViewById(R.id.show_height);
+        showPreferenceStringIfExists("Height_value", showHeight);
+
+        showWeight = getActivity().findViewById(R.id.show_weight);
+        showPreferenceIntIfExists("Weight_value", showWeight);
 
         Spinner unitSpinner = getActivity().findViewById(R.id.units_spinner);
         Spinner genderSpinner = getActivity().findViewById(R.id.gender_spinner);
@@ -149,16 +145,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             @Override
             public void onClick(View v) {
                 // Reset all preferences
-                preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
-                preferences.edit().clear().apply();
-                preferences.edit().putBoolean("Acclimatization", false).apply();
-                preferences.edit().putInt("gender", 0).apply();
-                preferences.edit().putInt("Unit", 0).apply();
-                preferences.edit().putInt("Notification", 0).apply();
-
-                // Setting onboarding to be true in order to prevent it from showing up again.
-                //preferences.edit().putBoolean("onboarding_complete", true).apply();
-                Toast.makeText(getActivity().getApplicationContext(), "All preferences cleared", Toast.LENGTH_SHORT).show();
+                resetPreferences();
             }
         });
 
@@ -172,63 +159,16 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         });
     }
 
-    /**
-     * Selecting correct spinner and saves its chosen value
-     * @param adapterView the adapter that invoked the method
-     * @param view not used
-     * @param position the position that has been chosen
-     * @param l not used
-     */
     @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-        switch(adapterView.getId()){
-            case R.id.gender_spinner:
-                if (position == 0) {
-                    // If female selected, show "female" in picker
-                    preferences.edit().putInt("gender", 0).apply();
-                } else {
-                    // If UK units selected, show UK units in pickers
-                    preferences.edit().putInt("gender", 1).apply();
-                }
-                break;
-            case R.id.units_spinner:
-                if (position == 0) {
-                    // If SI units selected, show SI units in picker
-                    preferences.edit().putInt("Unit", 0).apply();
-                } else if (position == 1) {
-                    // If US units selected, show US units in picker
-                    preferences.edit().putInt("Unit", 1).apply();
-                } else {
-                    // If UK units selected, show UK units in picker
-                    preferences.edit().putInt("Unit", 2).apply();
-                }
-            case R.id.notification_spinner:
-                if (position == 0) {
-                    // User wants notifications each day at 6AM
-                    preferences.edit().putInt("Notification", 0).apply();
-                } else if (position == 1) {
-                    // User wants notifications each workday at 6AM
-                    preferences.edit().putInt("Notification", 1).apply();
-                } else if (position == 2) {
-                    // User wants notifications each day at 7AM
-                    preferences.edit().putInt("Notification", 2).apply();
-                } else if (position == 3) {
-                    // User wants notifications each workday at 7AM
-                    preferences.edit().putInt("Notification", 3).apply();
-                } else if (position == 4) {
-                    // User wants no notifications
-                    preferences.edit().putInt("Notification", 4).apply();
-                } else {
-                    // User wants to setup custom notifications
-                    Intent notification_settings = new Intent(getActivity(), SetNotificationActivity.class);
-                    startActivity(notification_settings);
-                }
-        }
+    public void onResume() {
+        super.onResume();
+        // Fetch data on weight from SetWeightActivity
+        updateAllSettingsSubtexts();
     }
 
     /**
      * Setting default value for gender and unit
-     * Default  gender: female
+     * Default gender: female
      * Default unit: System Internationale (m, kg, l)
      * @param adapterView the adapter that invoked the method -- important when saving settings
      */
@@ -241,6 +181,75 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                 preferences.edit().putInt("Unit", 0).apply();
             case R.id.notification_spinner:
                 preferences.edit().putInt("Notification", 0).apply();
+        }
+    }
+
+    /**
+     * Selecting correct spinner and saves its chosen value
+     * @param adapterView the adapter that invoked the method
+     * @param view not used
+     * @param position the position that has been chosen
+     * @param l not used
+     */
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+        switch(adapterView.getId()){
+            case R.id.gender_spinner:
+                // 0 = female, 1 = male
+                preferences.edit().putInt("gender", position).apply();
+                break;
+            case R.id.units_spinner:
+                // 0 = SI, 1 = US, 2 = UK
+                preferences.edit().putInt("Unit", position).apply();
+                break;
+            case R.id.notification_spinner:
+                // Based on position, user wants notification at:
+                // 0 - each day at 6AM
+                // 1 - work days at 6AM
+                // 2 - each day at 7AM
+                // 3 - work days at 7AM
+                // 4 - no notifications
+                if (position == 0 || position == 1 || position == 2 || position == 3 ||position == 4) {
+                    // User wants notifications each day at 6AM
+                    preferences.edit().putInt("Notification", position).apply();
+                } else {
+                    // User wants to setup custom notifications
+                    Intent notification_settings = new Intent(getActivity(), SetNotificationActivity.class);
+                    startActivity(notification_settings);
+                }
+        }
+    }
+
+    private void resetPreferences() {
+        preferences.edit().clear().apply();
+        preferences.edit().putBoolean("Acclimatization", false).apply();
+        preferences.edit().putInt("gender", 0).apply();
+        preferences.edit().putInt("Unit", 0).apply();
+        preferences.edit().putInt("Notification", 0).apply();
+
+        // Setting onboarding to be true in order to prevent it from showing up again.
+        //preferences.edit().putBoolean("onboarding_complete", true).apply();
+        Toast.makeText(getActivity().getApplicationContext(), "All preferences cleared", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * When settings have been updated, make sure to rerun all subtext values
+     */
+    private void updateAllSettingsSubtexts() {
+        showPreferenceStringIfExists("Age", showAge);
+        showPreferenceStringIfExists("Height_value", showHeight);
+        showPreferenceIntIfExists("Weight_value", showWeight);
+    }
+
+    private void showPreferenceStringIfExists(String preferenceName, TextView view) {
+        if(preferences.getString(preferenceName, null) != null) {
+            view.setText(preferences.getString(preferenceName, null));
+        }
+    }
+
+    private void showPreferenceIntIfExists(String preferenceName, TextView view) {
+        if(preferences.getInt(preferenceName, 0) != 0) {
+            view.setText(String.format("%s", preferences.getInt(preferenceName, 0)));
         }
     }
 }
