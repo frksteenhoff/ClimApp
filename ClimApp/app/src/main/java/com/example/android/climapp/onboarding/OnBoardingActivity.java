@@ -101,7 +101,7 @@ public class OnBoardingActivity extends FragmentActivity {
 
                     // Height
                 } else if(pager.getCurrentItem() == 3) {
-                    saveInformation("Height");
+                    saveInformation("Height_value");
                     pager.setCurrentItem(pager.getCurrentItem() + 1);
 
                     // Weight
