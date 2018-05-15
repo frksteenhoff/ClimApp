@@ -75,11 +75,12 @@
     <string name="activity_level_high">High</string>
     <string name="activity_level_very_high">High+</string>
     <string name="activity_description">Description of the different activity levels shown on click.</string>
-    <string name="activity_low_text">Resting</string>
-    <string name="activity_very_low_text">...</string>
-    <string name="activity_medium_text">Sitting at a desk, light manual arm work, standing drilling, machining with low power tools..</string>
-    <string name="activity_high_text">Sustained arm and hand work, handling moderately heavy machinery, weeding, picking fruits..</string>
-    <string name="activity_very_high_text">Carrying heavy metal, hand mowing, digging, walking at a high speed..</string>
+    <!-- Descriptions of activity level as described in "Classification of levels of metabolic rate ISO 8996" -->
+    <string name="activity_low_text">Resting, sitting at ease</string>
+    <string name="activity_very_low_text">Light manual work (writing, typing, drawing, book-keeping) light manual arm work, standing drilling..</string>
+    <string name="activity_medium_text">Sustained arm and hand work, handling moderately heavy machinery, weeding, picking fruits..</string>
+    <string name="activity_high_text">Intense arm and trunk work, carrying heavy material, shovelling, sawing, hand moving, concrete block laying..</string>
+    <string name="activity_very_high_text">Very intense activity at fast maximum pace, working with axe, climbing stairs, running on level surface ..</string>
 
     <!-- Dashboard: hydration -->
     <string name="hydration">Hydration</string>
@@ -104,7 +105,7 @@
 
     <!-- Dashboard: Suggestions -->
     <string name="suggestions">Suggestions</string>
-    <string name="suggestion_text">Based on your activity level, you should try to drink 200ml of water each hour. A total of 800ml during your working hours.</string>
+    <string name="suggestion_text">Try to drink 200ml of water each hour. A total of 800ml during your working hours.</string>
 
     <!-- Clothing -->
     <string name="field_of_work">Field of work</string>
