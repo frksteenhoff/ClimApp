@@ -60,6 +60,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -887,7 +888,9 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
          */
         private WBGT calculateWBGT(double wind_speed, double humidity, double pressure) {
             Calendar calendar = Calendar.getInstance();
-            int utcOffset = (calendar.get(Calendar.ZONE_OFFSET) + calendar.get(Calendar.DST_OFFSET)) / (60 * 60000); // Total offset (geographical and daylight savings) from UTC in hours
+            // Total offset (geographical and daylight savings) from UTC in hours
+            int utcOffset = (calendar.get(Calendar.ZONE_OFFSET) +
+                             calendar.get(Calendar.DST_OFFSET)) / (60 * 60000);
             int avg = 10;
             double Tair = 25;
             double zspeed = 2;
@@ -902,8 +905,14 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             int min = calendar.get(Calendar.MINUTE);
             calendar.set(year, month, day, hour, min);
 
+            // Precipitation and cloudfraction will now depend on data from Open Weather Map
+            // cloud fraction is cloudiness in percent divided by 100 to get it as a fraction
+            Log.v("HESTE", "clouds:    " + cloudiness/100);
             Solar s = new Solar(Double.parseDouble(longitude), Double.parseDouble(latitude), calendar, utcOffset);
-            SolarRad sr = new SolarRad(s.zenith(), calendar.get(Calendar.DAY_OF_YEAR), 0, 1, false, false); //(solar zenith angle, day no, cloud fraction, cloud type, fog, precipitation)
+            SolarRad sr = new SolarRad(s.zenith(), calendar.get(Calendar.DAY_OF_YEAR),
+                    cloudiness/100, 1, isItFoggy(weather_id),
+                    isItRaining(weather_id)); //(solar zenith angle, day no, cloud fraction,
+                                              // cloud type, fog, precipitation)
 
             // Making all wbgt calculations
             WBGT wbgt = new WBGT(year, month, day, hour, min, utcOffset, avg,
@@ -911,6 +920,30 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                     Double.parseDouble(longitude),
                     sr.solarIrradiation(), pressure, Tair, humidity, wind_speed, zspeed, dT, urban);
             return wbgt;
+        }
+
+        /**
+         * If weather ID is either "mist" or "fog" the weather is categorized as foggy.
+         * @param weather_id ID fetched from Open Weather Map
+         * @return boolean value indicating weather it is foggy
+         */
+        private boolean isItFoggy(Integer weather_id) {
+            return (weather_id == 701 || weather_id == 741);
+        }
+
+        /**
+         * Check whether it is raining based on OWM weather ID
+         * @param weather_id weather ID from Open Weather Map
+         *                   all ids here:
+         *                   https://openweathermap.org/weather-conditions
+         * @return true if raining, otherwise false
+         */
+        private boolean isItRaining(int weather_id) {
+            int rainIds[] = {200, 201, 202, 230, 231, 232,
+                             300, 301, 302, 310, 311, 312, 313, 314, 321,
+                             500, 501, 502, 503, 504, 511, 520, 521, 522, 531,
+                             615, 616};
+            return Arrays.asList(rainIds).contains(weather_id);
         }
 
         public int convertKelvinToCelsius(int temperatureInKelvin) {

@@ -1,7 +1,7 @@
 package com.example.android.climapp.wbgt;
 
 /**
- * Created by frksteenhoff on 14-04-2018.
+ * Added by frksteenhoff on 14-04-2018.
  */
 import java.util.Calendar;
 
