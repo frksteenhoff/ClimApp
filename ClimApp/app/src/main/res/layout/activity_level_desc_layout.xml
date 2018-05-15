@@ -14,7 +14,7 @@
                 android:text="@string/activity_level_very_low"
                 style="@style/SmallDescriptiveTextStyle"/>
             <TextView
-                android:text="@string/activity_description"
+                android:text="@string/activity_very_low_text"
                 style="@style/SettingsTextStyleNoCaps"/>
             <View
                 android:layout_width="fill_parent"
@@ -24,7 +24,7 @@
                 android:text="@string/activity_level_low"
                 style="@style/SmallDescriptiveTextStyle"/>
             <TextView
-                android:text="@string/activity_description"
+                android:text="@string/activity_low_text"
                 style="@style/SettingsTextStyleNoCaps"/>
             <View
                 android:layout_width="fill_parent"
@@ -34,7 +34,7 @@
                 android:text="@string/activity_level_medium"
                 style="@style/SmallDescriptiveTextStyle"/>
             <TextView
-                android:text="@string/activity_description"
+                android:text="@string/activity_medium_text"
                 style="@style/SettingsTextStyleNoCaps"/>
             <View
                 android:layout_width="fill_parent"
@@ -44,7 +44,7 @@
                 android:text="@string/activity_level_high"
                 style="@style/SmallDescriptiveTextStyle"/>
             <TextView
-                android:text="@string/activity_description"
+                android:text="@string/activity_very_high_text"
                 style="@style/SettingsTextStyleNoCaps"/>
             <View
                 android:layout_width="fill_parent"
@@ -54,7 +54,7 @@
                 android:text="@string/activity_level_very_high"
                 style="@style/SmallDescriptiveTextStyle"/>
             <TextView
-                android:text="@string/activity_description"
+                android:text="@string/activity_high_text"
                 style="@style/SettingsTextStyleNoCaps"/>
             <View
                 android:layout_width="fill_parent"

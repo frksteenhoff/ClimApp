@@ -964,9 +964,10 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     /**
      * Set indicator (red/green/yellow) based on recommended alert limit on dashboard view
      *
-     * green if  wbgt <= 0.8 * ral
-     * yellow if wbgt > 0.8 * ral and <= ral
-     * red if wbgt > ral
+     * green    if  wbgt <= 0.8 * ral
+     * yellow   if wbgt > 0.8 * ral and <= ral
+     * red      if wbgt > ral and wbgt <= ral * 1.2
+     * dark red if wbgt > ral * 1.2
      * @param twbgWithoutSolar WBGT value
      * @param RALValue RAL value - reference limit
      */
@@ -974,12 +975,15 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         if(Math.round(twbgWithoutSolar) <= Math.round(0.8 * RALValue)) {
             recommendationView.setColorFilter(Color.parseColor("#00b200"));
             recommendationSmallView.setColorFilter(Color.parseColor("#00b200"));
-        } else if(Math.round(twbgWithoutSolar) > Math.round(0.8 * RALValue) && twbgWithoutSolar <= RALValue) {
+        } else if(Math.round(twbgWithoutSolar) > Math.round(0.8 * RALValue) && Math.round(twbgWithoutSolar) <= RALValue) {
             recommendationView.setColorFilter(Color.parseColor("#FBBA57"));
             recommendationSmallView.setColorFilter(Color.parseColor("#FBBA57"));
-        } else {
+        } else if (Math.round(twbgWithoutSolar) > RALValue && Math.round(twbgWithoutSolar) <= RALValue * 1.2 ){
             recommendationView.setColorFilter(Color.parseColor("#e50000"));
             recommendationSmallView.setColorFilter(Color.parseColor("#e50000"));
+        } else {
+            recommendationView.setColorFilter(Color.parseColor("#b20000"));
+            recommendationSmallView.setColorFilter(Color.parseColor("#b20000"));
         }
         //Log.v("HESTE", "WBGT: "+ twbgWithoutSolar +"RAL: "+Math.round(RALValue) + " activityLevel: " + preferences.getString("activity_level", null) +
         //           "RAL80: " + 0.8 * Math.round(RALValue));
