@@ -80,7 +80,7 @@
     <string name="activity_very_low_text">Light manual work (writing, typing, drawing, book-keeping) light manual arm work, standing drilling..</string>
     <string name="activity_medium_text">Sustained arm and hand work, handling moderately heavy machinery, weeding, picking fruits..</string>
     <string name="activity_high_text">Intense arm and trunk work, carrying heavy material, shovelling, sawing, hand moving, concrete block laying..</string>
-    <string name="activity_very_high_text">Very intense activity at fast maximum pace, working with axe, climbing stairs, running on level surface ..</string>
+    <string name="activity_very_high_text">Very intense activity at fast maximum pace, working with an ax, climbing stairs, running on level surface ..</string>
 
     <!-- Dashboard: hydration -->
     <string name="hydration">Hydration</string>
