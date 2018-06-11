@@ -71,10 +71,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
  * Created by frksteenhoff
  * <p>
  * WBGT model calculations with weather input from combination of
- * Open Weather Map and device's location.
- * <p>
- * WBGT model calculations with weather input from combination of
- * Open Weather Map and device's location.
+ * Open Weather Map and device's location. Implemented by JTOF, integrated in app by HESTE
  * <p>
  * Some of the code snippets/methods related to getting the device's location
  * is based on the tutorial and code made by AndroidHive:
@@ -277,11 +274,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void onClick(View v) {
                 // Start activity to provide full description of activity level
-                Intent activityMore = new Intent(getActivity(), ActivityLevelDescActivity.class);
+                Intent activityMore = new Intent(getActivity(), ActivityLevelListActivity.class);
                 startActivity(activityMore);
-
-                // Close main activity
-                getActivity().finish();
             }
         });
 
@@ -549,7 +543,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     /**
      * With device's location, fetch weather data from OpeanWeatherMap.com
-     *
      * @param Coordinates lat/lon pair of location coordinates fetched from device
      */
     private void getOpenWeatherMapData(Pair<String, String> Coordinates) {
@@ -905,7 +898,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             int min = calendar.get(Calendar.MINUTE);
             calendar.set(year, month, day, hour, min);
 
-            // Precipitation and cloudfraction will now depend on data from Open Weather Map
+            // Precipitation and cloudfraction now depend on data from Open Weather Map
             // cloud fraction is cloudiness in percent divided by 100 to get it as a fraction
             Solar s = new Solar(Double.parseDouble(longitude), Double.parseDouble(latitude), calendar, utcOffset);
             SolarRad sr = new SolarRad(s.zenith(), calendar.get(Calendar.DAY_OF_YEAR),
@@ -964,10 +957,12 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     /**
      * Set indicator (red/green/yellow) based on recommended alert limit on dashboard view
      *
-     * green    if  wbgt <= 0.8 * ral
-     * yellow   if wbgt > 0.8 * ral and <= ral
-     * red      if wbgt > ral and wbgt <= ral * 1.2
-     * dark red if wbgt > ral * 1.2
+     * green    if wbgt <= 0.8 * ral
+     * yellow   if wbgt >  0.8 * ral and
+     *             wbgt <= ral
+     * red      if wbgt >  ral and
+     *             wbgt <= ral * 1.2
+     * dark red if wbgt >  ral * 1.2
      * @param twbgWithoutSolar WBGT value
      * @param RALValue RAL value - reference limit
      */

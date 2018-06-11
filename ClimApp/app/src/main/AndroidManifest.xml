@@ -108,7 +108,7 @@
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
-            android:name=".dashboard.ActivityLevelDescActivity"
+            android:name=".dashboard.ActivityLevelListActivity"
             android:label="@string/activity_level"
             android:theme="@style/AppTheme"
             android:parentActivityName=".MainActivity">

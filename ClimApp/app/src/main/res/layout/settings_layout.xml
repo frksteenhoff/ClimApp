@@ -21,6 +21,22 @@
                 style="@style/ValueUnderSettingStyle"
                 android:id="@+id/show_age"
                 android:text="@string/no_text" />
+            <TextView
+                android:id="@+id/weight_settings"
+                android:text="@string/Weight"
+                style="@style/SettingsTextStyleNoBottom"/>
+            <TextView
+                style="@style/ValueUnderSettingStyle"
+                android:id="@+id/show_weight"
+                android:text="@string/no_text" />
+            <TextView
+                android:id="@+id/height_settings"
+                android:text="@string/Height"
+                style="@style/SettingsTextStyleNoBottom"/>
+            <TextView
+                style="@style/ValueUnderSettingStyle"
+                android:id="@+id/show_height"
+                android:text="@string/no_text" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -41,22 +57,6 @@
                     android:entries="@array/gender_array">
                 </Spinner>
             </LinearLayout>
-            <TextView
-                android:id="@+id/weight_settings"
-                android:text="@string/Weight"
-                style="@style/SettingsTextStyleNoBottom"/>
-            <TextView
-                style="@style/ValueUnderSettingStyle"
-                android:id="@+id/show_weight"
-                android:text="@string/no_text" />
-            <TextView
-                android:id="@+id/height_settings"
-                android:text="@string/Height"
-                style="@style/SettingsTextStyleNoBottom"/>
-            <TextView
-                style="@style/ValueUnderSettingStyle"
-                android:id="@+id/show_height"
-                android:text="@string/no_text" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
