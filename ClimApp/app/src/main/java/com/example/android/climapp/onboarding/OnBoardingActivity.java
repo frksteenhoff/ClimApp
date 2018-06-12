@@ -29,7 +29,6 @@ public class OnBoardingActivity extends FragmentActivity {
     private Button skip;
     private Button next;
     private User user = User.getInstance();
-
     private SharedPreferences preferences;
 
     @Override
@@ -64,7 +63,6 @@ public class OnBoardingActivity extends FragmentActivity {
                         return null;
                 }
             }
-
             @Override
             public int getCount() {
                 return 6;

@@ -221,11 +221,17 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private void resetPreferences() {
+        // Clear preferences
         preferences.edit().clear().apply();
         preferences.edit().putBoolean("Acclimatization", false).apply();
         preferences.edit().putInt("gender", 0).apply();
         preferences.edit().putInt("Unit", 0).apply();
         preferences.edit().putInt("Notification", 0).apply();
+
+        // Clear infromation from view
+        showAge.setText("");
+        showHeight.setText("");
+        showWeight.setText("");
 
         // Setting onboarding to be true in order to prevent it from showing up again.
         //preferences.edit().putBoolean("onboarding_complete", true).apply();
