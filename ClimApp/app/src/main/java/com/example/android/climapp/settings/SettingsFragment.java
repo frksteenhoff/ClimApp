@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.climapp.R;
+import com.example.android.climapp.utils.User;
 
 /**
  * Created by frksteenhoff on 10-10-2017.
@@ -27,14 +28,15 @@ import com.example.android.climapp.R;
 
 public class SettingsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    public SettingsFragment() {
-        // Required empty public constructor
-    }
-
     // Initializing user input values
     private static SharedPreferences preferences;
     private Switch acclimatizationSwitch;
     private TextView showWeight, showHeight, showAge;
+    private User user = User.getInstance();
+
+    public SettingsFragment() {
+        // Required empty public constructor
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -121,7 +123,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                 acclimatizationSwitch.setChecked(isChecked);
                 preferences.edit().putBoolean("Acclimatization", isChecked).apply();
 
-                // Show Taost based on whether user switches from acclimatized or not acclimatized.
+                // Show Toast based on whether user switches from acclimatized or not acclimatized.
                 if (isChecked) {
                     Toast.makeText(getActivity().getApplicationContext(), getString(R.string.acclimatization_true), Toast.LENGTH_SHORT).show();
                 } else {
@@ -186,6 +188,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
     /**
      * Selecting correct spinner and saves its chosen value
+     * Updating view with converted value where needed
      * @param adapterView the adapter that invoked the method
      * @param view not used
      * @param position the position that has been chosen
@@ -201,6 +204,16 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             case R.id.units_spinner:
                 // 0 = SI, 1 = US, 2 = UK
                 preferences.edit().putInt("Unit", position).apply();
+                String[] values = user.showCorrectHeightValues(position);
+                showHeight.setText(values[preferences.getInt("Height_index", 0)]);
+                int weight;
+                if(position == 0) {
+                    weight = user.convertWeightToKgFromUnit(preferences.getInt("Unit", 0), preferences.getInt("Weight", 0));
+                    showWeight.setText(weight+"");
+                } else {
+                    weight = user.convertWeightToUnitFromKg(preferences.getInt("Unit", 0), preferences.getInt("Weight", 0));
+                    showWeight.setText(weight+"");
+                }
                 break;
             case R.id.notification_spinner:
                 // Based on position, user wants notification at:

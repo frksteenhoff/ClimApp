@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.climapp.R;
+import com.example.android.climapp.utils.User;
 
 /**
  * Created by frksteenhoff on 21-01-2018.
@@ -19,6 +20,7 @@ public class SetWeightActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private NumberPicker np;
     private int preferred_unit;
+    private User user = User.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,7 @@ public class SetWeightActivity extends AppCompatActivity {
         showCorrectWeightValues(preferred_unit);
 
         // Set value based on user input
-        np.setValue(convertWeightToUnitFromKg(preferred_unit, preferences.getInt("Weight", 0)));
+        np.setValue(user.convertWeightToUnitFromKg(preferred_unit, preferences.getInt("Weight", 0)));
 
         //Sets whether the selector wheel wraps when reaching the min/max value.
         np.setWrapSelectorWheel(true);
@@ -48,7 +50,7 @@ public class SetWeightActivity extends AppCompatActivity {
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                int convertedWeight = convertWeightToKgBasedOnUnit(preferred_unit, newVal);
+                int convertedWeight = user.convertWeightToKgFromUnit(preferred_unit, newVal);
                 preferences.edit().putInt("Weight", convertedWeight).apply();
                 preferences.edit().putInt("Weight_value", newVal).apply();
 
@@ -57,50 +59,6 @@ public class SetWeightActivity extends AppCompatActivity {
                         weightUnit.getText().toString(), Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    /**
-     * Converting weight from unit kilograms, pounds or stones to kilograms
-     * @param preferred_unit integer representation of unit
-     * @param weight weight in unit represented by preferred_unit
-     * @return integer value of unit mass after conversion
-     */
-    private int convertWeightToKgBasedOnUnit(int preferred_unit, int weight) {
-        double calculatedWeight;
-        switch (preferred_unit) {
-            case 1:
-                calculatedWeight = weight / 0.45359237;
-                break;
-            case 2:
-                calculatedWeight = weight * 6.35029318;
-                break;
-            default:
-                calculatedWeight = weight;
-                break;
-        }
-        return (int) Math.round(calculatedWeight);
-    }
-
-    /**
-     * Converting weight from kilgrams to pounds or stones (if kg do nothing)
-     * @param preferred_unit integer representation of chosen unit
-     * @param weight weight in kilos to convert to unit represented by preferred_unit
-     * @return integer value of unit mass after conversion
-     */
-    public int convertWeightToUnitFromKg(int preferred_unit, int weight){
-        double calculatedWeight;
-        switch (preferred_unit) {
-            case 1:
-                calculatedWeight = weight * 0.45359237;
-                break;
-            case 2:
-                calculatedWeight = weight * 0.157473044;
-                break;
-            default:
-                calculatedWeight = weight;
-                break;
-        }
-        return (int) Math.round(calculatedWeight);
     }
 
     /**
