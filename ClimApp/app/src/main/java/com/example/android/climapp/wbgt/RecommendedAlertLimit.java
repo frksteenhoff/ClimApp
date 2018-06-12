@@ -42,10 +42,22 @@ public class RecommendedAlertLimit {
         put(520, 20);
     }};
 
+    protected RecommendedAlertLimit() {
+        // Exists only to defeat instantiation.
+    }
+
     public RecommendedAlertLimit(String activityLevel, Boolean acclimatization){
         this.activityLevel = activityLevel;
         this.acclimatization = acclimatization;
       }
+
+    public void setActivityLevel(String activityLevel) {
+        this.activityLevel = activityLevel;
+    }
+
+    public void setAcclimatization(boolean acclimatization) {
+        this.acclimatization = acclimatization;
+    }
 
     /**
      * Getting the metabolic rate based on the users
@@ -84,6 +96,29 @@ public class RecommendedAlertLimit {
      */
     public double calculateRALValue(){
         return 59.9 - 14.1*Math.log10(metabolicRateClass());
+    }
+
+    /**
+     * Set indicator (red/green/yellow) based on recommended alert limit on dashboard view
+     * green    if wbgt <= 0.8 * ral
+     * yellow   if wbgt >  0.8 * ral and
+     *             wbgt <= ral
+     * red      if wbgt >  ral and
+     *             wbgt <= ral * 1.2
+     * dark red if wbgt >  ral * 1.2
+     * @param WBGTWithoutSolar WBGT value
+     * @param RALValue RAL value - reference limit
+     */
+    public String getRecommendationColor(double WBGTWithoutSolar, double RALValue) {
+        if(Math.round(WBGTWithoutSolar) <= Math.round(0.8 * RALValue)) {
+            return "#00b200"; // Green
+        } else if(Math.round(WBGTWithoutSolar) > Math.round(0.8 * RALValue) && Math.round(WBGTWithoutSolar) <= RALValue) {
+            return "#FBBA57"; // Orange
+        } else if (Math.round(WBGTWithoutSolar) > RALValue && Math.round(WBGTWithoutSolar) <= RALValue * 1.2 ){
+            return "#e50000"; // Red
+        } else {
+            return "#b20000"; // Dark red
+        }
     }
 }
 

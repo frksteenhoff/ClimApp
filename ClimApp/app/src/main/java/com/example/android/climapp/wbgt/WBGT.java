@@ -5,9 +5,9 @@ import java.util.Calendar;
 /* ============================================================================
  * Purpose: to calculate the outdoor wet bulb-globe temperature, which is
  * the weighted sum of the air temperature (dry bulb), the globe temperature,
- * and the natural wet bulb temperature: Twbg = 0.1 * Tair + 0.7 * Tnwb + 0.2 * Tg.
+ * and the natural wet bulb temperature: WBGT = 0.1 * Tair + 0.7 * Tnwb + 0.2 * Tg.
  * The program predicts Tnwb and Tg using meteorological input data then combines
- * the results to produce Twbg.
+ * the results to produce WBGT.
  *
  * Modified 2-Nov-2009: calc_wbgt returns -1 if either subroutines Tg or Tnwb return -9999,
  * which signals a failure to converge, probably due to a bad input value; otherwise, calc_wbgt
@@ -114,9 +114,9 @@ public class WBGT {
             Tg,      /* globe temperature, degC */
             Tnwb,    /* natural wet bulb temperature, degC */
             Tpsy,    /* psychrometric wet bulb temperature, degC */
-            Twbg,    /* wet bulb globe temperature, degC */
-            Twbg_w_solar,    /* HSTE: wet bulb globe temperature, degC with solar */
-            Twbg_wo_solar,    /* HSTE: wet bulb globe temperature, degC without solar */
+            WBGT,    /* wet bulb globe temperature, degC */
+            WBGT_w_solar,    /* HSTE: wet bulb globe temperature, degC with solar */
+            WBGT_wo_solar,    /* HSTE: wet bulb globe temperature, degC without solar */
             altitude,/* Solar altitude angle, deg */
             cza,     /* cosine of solar zenith angle */
             fdir,    /* fraction of solar irradiance due to direct beam */
@@ -208,46 +208,46 @@ public class WBGT {
         Tpsy = calculateWetBulbTemp(tk, rh, pres, est_speed, solar, fdir, cza, 0);
         print("Tpsy", Tpsy, false);
 
-        Twbg = (solar > 0) ? (0.1 * Tair + 0.2 * Tg150 + 0.7 * Tnwb) : (Twbg = 0.3 * Tg150 + 0.7 * Tnwb);
+        WBGT = (solar > 0) ? (0.1 * Tair + 0.2 * Tg150 + 0.7 * Tnwb) : (WBGT = 0.3 * Tg150 + 0.7 * Tnwb);
 
         print("Tair", Tair, false);
-        Twbg_w_solar = Math.round(10*(0.1 * Tair + 0.2 * Tg150 + 0.7 * Tnwb))/10.0;
-        Twbg_wo_solar = Math.round(10*(0.3 * Tg150 + 0.7 * Tnwb))/10.0;
+        WBGT_w_solar = Math.round(10*(0.1 * Tair + 0.2 * Tg150 + 0.7 * Tnwb))/10.0;
+        WBGT_wo_solar = Math.round(10*(0.3 * Tg150 + 0.7 * Tnwb))/10.0;
     }
 
     /**
      * Get TWBG without solar
      * @return TWBG value without solar
      */
-    public double getTwbgWithoutSolar() {
-        return Twbg_wo_solar;
+    public double getWBGTWithoutSolar() {
+        return WBGT_wo_solar;
     }
 
     /**
      * Get TWBG with solar
      * @return TWBG value with solar
      */
-    public double getTwbgWithSolar() {
-        return Twbg_w_solar;
+    public double getWBGTWithSolar() {
+        return WBGT_w_solar;
     }
 
     /*
-     * Metode getTwbg() tilføjet i java fordi kontruktør ikke returnerer argumenter.
-     * Checker først om alle beregninger gået godt og returnerer så Twbg, som enten er -9999 eller en værdi
+     * Metode getWBGT() tilføjet i java fordi kontruktør ikke returnerer argumenter.
+     * Checker først om alle beregninger gået godt og returnerer så WBGT, som enten er -9999 eller en værdi
      */
-    public double getTwbg() {
-        checkTwbg();
-        return Twbg;
+    public double getWBGT() {
+        checkWBGT();
+        return WBGT;
     }
 
     /*
-     * Metode checkTwbg() tilføjet i java fordi kontruktør ikke returnerer argumenter.
+     * Metode checkWBGT() tilføjet i java fordi kontruktør ikke returnerer argumenter.
      * Checker om alle beregninger gået godt (0) eller noget er gået galt (1)
      */
-    private int checkTwbg() {
+    private int checkWBGT() {
 
         if ( Tg == -9999 || Tnwb == -9999 ) {
-            Twbg = -9999;
+            WBGT = -9999;
             return -1;
         } else
             return 0;

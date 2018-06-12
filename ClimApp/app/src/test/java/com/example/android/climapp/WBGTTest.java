@@ -54,8 +54,8 @@ public class WBGTTest {
 
         // Making all calculations
         WBGT wbgt = new WBGT(year, month, day, hour, min, utcOffset, avg, latitude, longitude, sr.solarIrradiation(), pres, Tair, relhum, speed, zspeed, dT, urban);
-        assertEquals(26.7, wbgt.getTwbgWithoutSolar());
-        assertEquals(25.0, wbgt.getTwbgWithSolar());
+        assertEquals(26.7, wbgt.getWBGTWithoutSolar());
+        assertEquals(25.0, wbgt.getWBGTWithSolar());
     }
 
     @Test
@@ -71,8 +71,8 @@ public class WBGTTest {
 
         // Making all calculations
         WBGT wbgt = new WBGT(year, month, day, hour, min, utcOffset, avg, latitude, longitude, sr.solarIrradiation(), pres, Tair, relhum, speed, zspeed, dT, urban);
-        assertEquals(25.9, wbgt.getTwbgWithoutSolar());
-        assertEquals(24.4, wbgt.getTwbgWithSolar());
+        assertEquals(25.9, wbgt.getWBGTWithoutSolar());
+        assertEquals(24.4, wbgt.getWBGTWithSolar());
     }
 
 
@@ -89,8 +89,8 @@ public class WBGTTest {
 
         // Making all calculations
         WBGT wbgt = new WBGT(year, month, day, hour, min, utcOffset, avg, latitude, longitude, sr.solarIrradiation(), pres, Tair, relhum, speed, zspeed, dT, urban);
-        assertEquals(26.6, wbgt.getTwbgWithoutSolar());
-        assertEquals(25.0, wbgt.getTwbgWithSolar());
+        assertEquals(26.6, wbgt.getWBGTWithoutSolar());
+        assertEquals(25.0, wbgt.getWBGTWithSolar());
     }
 
     @Test
