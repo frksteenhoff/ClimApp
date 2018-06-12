@@ -12,15 +12,19 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import com.example.android.climapp.R;
+import com.example.android.climapp.utils.User;
 
 /**
  * Created by frksteenhoff on 19-02-2018.
+ * Handling the user setting preferred unit
  */
 
 public class OnBoardingFragment_Units extends DialogFragment implements AdapterView.OnItemSelectedListener {
 
     private SharedPreferences preferences;
     private Spinner unitSpinner;
+    private User user = new User();
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -37,21 +41,16 @@ public class OnBoardingFragment_Units extends DialogFragment implements AdapterV
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-        if (position == 0) {
-            // If SI units selected, show SI units in picker
-            preferences.edit().putInt("Unit", 0).apply();
-        } else if (position == 1) {
-            // If US units selected, show US units in picker
-            preferences.edit().putInt("Unit", 1).apply();
-        } else {
-            // If UK units selected, show UK units in picker
-            preferences.edit().putInt("Unit", 2).apply();
-        }
+        // Based on position
+        // 0 - SI unit
+        // 1 - US metric system
+        // 2 - UK metric system
+        preferences.edit().putInt("Unit", position).apply();
+        user.setUnit(position);
     }
 
     /**
      * Setting default value for gender and unit
-     * Default  gender: female
      * Default unit: System Internationale (m, kg, l)
      * @param adapterView the adapter that invoked the method
      */

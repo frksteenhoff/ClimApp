@@ -216,6 +216,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             }
         });
         // Activity level "more" click listener
+        // Based on classification of metabolic rate froom ISO 8996.
         activityMoreTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,7 +225,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 startActivity(activityMore);
             }
         });
-
         // Location button click listener
         mLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override

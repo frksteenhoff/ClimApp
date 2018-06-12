@@ -14,6 +14,7 @@ import android.widget.EditText;
 
 import com.example.android.climapp.MainActivity;
 import com.example.android.climapp.R;
+import com.example.android.climapp.utils.User;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 /**
@@ -27,6 +28,7 @@ public class OnBoardingActivity extends FragmentActivity {
     private ViewPager pager;
     private Button skip;
     private Button next;
+    private User user = User.getInstance();
 
     private SharedPreferences preferences;
 
@@ -92,7 +94,10 @@ public class OnBoardingActivity extends FragmentActivity {
 
                 // Age
                 if(pager.getCurrentItem() == 1) {
-                    saveDayOfBirth();
+                    EditText currentText = findViewById(R.id.set_age);
+                    if(user.isWellFormedInputDate(currentText.getText().toString())) {
+                        saveDayOfBirth();
+                    }
                     pager.setCurrentItem(pager.getCurrentItem() + 1);
 
                     // Gender
@@ -142,10 +147,7 @@ public class OnBoardingActivity extends FragmentActivity {
      */
     private void saveDayOfBirth() {
         EditText currentText = findViewById(R.id.set_age);
-        // Only add date of birth if correct format
-        if (currentText.length() == 8) {
-            preferences.edit().putString("Age_onboarding", currentText.getText().toString()).apply();
-        }
+        preferences.edit().putString("Age_onboarding", currentText.getText().toString()).apply();
     }
 
     /**

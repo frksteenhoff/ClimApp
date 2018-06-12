@@ -21,8 +21,6 @@ import com.example.android.climapp.R;
 public class OnBoardingFragment_Gender extends Fragment implements AdapterView.OnItemSelectedListener {
 
     private SharedPreferences preferences;
-    private Spinner genderSpinner;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -32,7 +30,7 @@ public class OnBoardingFragment_Gender extends Fragment implements AdapterView.O
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
-        genderSpinner = getActivity().findViewById(R.id.set_gender);
+        Spinner genderSpinner = getActivity().findViewById(R.id.set_gender);
 
         // Set gender -- female as default
         genderSpinner.setSelection(preferences.getInt("gender", 0));

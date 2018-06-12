@@ -81,7 +81,6 @@
     <string name="activity_medium_text">Sustained arm and hand work, handling moderately heavy machinery, weeding, picking fruits. Pushing or pulling cart or wheelbarrow. Walking at a speed of 2.5 to 5.5 km/h. Can carry on a conversation but it requires more effort.</string>
     <string name="activity_high_text">Intense arm and trunk work, carrying heavy material, shovelling, sawing, hand moving, concrete block laying. Walking fast at speed of 5.5 to 7 km/h Conversation requires maximum effort.</string>
     <string name="activity_very_high_text">Very intense activity at fast maximum pace, working with an ax, climbing stairs, running on level surface. Walking at a speed greater than 7 km/hDiffcult to speak.</string>
-    <string name="iso_metrate">Based on classification of metabolic rate froom ISO 8996.</string>
 
     <!-- Dashboard: hydration -->
     <string name="hydration">Hydration</string>
@@ -134,6 +133,8 @@
     <string name="Input_unit">Select unit</string>
     <string name="female">Female</string>
     <string name="male">Male</string>
+    <string name="submit">Submit</string>
+    <string name="wrong_age">Incorrect input format. Should be DDMMYYYY, try again.</string>
 
     <!-- Settings - Units -->
     <string name="age_unit">Years</string>
