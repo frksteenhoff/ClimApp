@@ -38,7 +38,7 @@ public class SetWeightActivity extends AppCompatActivity {
 
         // Set range of values to choose from
         preferred_unit = preferences.getInt("Unit",0);
-        showCorrectWeightValues(preferred_unit);
+        showCorrectPickerWeightValues(preferred_unit);
 
         // Set value based on user input
         np.setValue(user.convertWeightToUnitFromKg(preferred_unit, preferences.getInt("Weight", 0)));
@@ -50,9 +50,8 @@ public class SetWeightActivity extends AppCompatActivity {
         np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                int convertedWeight = user.convertWeightToKgFromUnit(preferred_unit, newVal);
-                preferences.edit().putInt("Weight", convertedWeight).apply();
-                preferences.edit().putInt("Weight_value", newVal).apply();
+                // Always saving weight in SI unit kilograms
+                preferences.edit().putInt("Weight", user.convertWeightToKgFromUnit(preferred_unit, newVal)).apply();
 
                 //Display the newly selected value from picker
                 Toast.makeText(getApplicationContext(), getString(R.string.weight_updated) + " " + newVal + " " +
@@ -67,7 +66,7 @@ public class SetWeightActivity extends AppCompatActivity {
      * @param preferred_unit the integer value representing the preferred unit in which to
      *                       measure a person's weight, in kg, punds or stones
      */
-    private void showCorrectWeightValues(int preferred_unit) {
+    private void showCorrectPickerWeightValues(int preferred_unit) {
         // If unit chosen is "US" - use pounds
         if (preferred_unit == 1) {
             np.setMinValue(20); //from array first value
@@ -101,19 +100,6 @@ public class SetWeightActivity extends AppCompatActivity {
             default:
                 unitText.setText(R.string.weight_unit_si);
                 break;
-        }
-    }
-
-    /**
-     * Return user's weight from preferences
-     * @return String containing the user's weight
-     */
-    public String getWeightInPreferredUnit() {
-        String weight = preferences.getString("Weight_value", null);
-        if(weight != null) {
-            return weight;
-        } else {
-            return "";
         }
     }
 }

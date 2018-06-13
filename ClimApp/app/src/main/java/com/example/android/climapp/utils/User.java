@@ -16,11 +16,9 @@ public final class User {
 
     private String mDateOfBirth, mHeight;
     private int mWeight, mUnit;
-    private boolean mGender;
 
     public User() {
         this.mDateOfBirth = "13051988"; // 30 as default
-        this.mGender = true;    // True = Female, False = Male
         this.mHeight = "1.70";  // 1.70m as default
         this.mWeight = 90;      // 90kg as default
         this.mUnit = 0;         // 0 SI, 1 US, 2 UK
@@ -81,7 +79,7 @@ public final class User {
         String units[];
         // If unit chosen is "SI" -- use meters
         if (preferred_unit == 0) {
-            units = new String[] {"1.20", "1.21", "1.22", "1.23", "1.24", "1.25", "1.26", "1.27", "1.28", "1.29",
+            units = new String[] {  "1.22", "1.23", "1.24", "1.25", "1.26", "1.27", "1.28", "1.29",
                     "1.30", "1.31", "1.32", "1.33", "1.34", "1.35", "1.36", "1.37", "1.38", "1.39",
                     "1.40", "1.41", "1.42", "1.43", "1.44", "1.45", "1.46", "1.47", "1.48", "1.49",
                     "1.50", "1.51", "1.52", "1.53", "1.54", "1.55", "1.56", "1.57", "1.58", "1.59",
@@ -92,15 +90,21 @@ public final class User {
                     "2.00", "2.01", "2.02", "2.03", "2.04", "2.05", "2.06", "2.07", "2.08", "2.09",
                     "2.10", "2.11", "2.12", "2.13", "2.14", "2.15", "2.16", "2.17", "2.18", "2.19",
                     "2.20", "2.21", "2.22", "2.23", "2.24", "2.25", "2.26", "2.27", "2.28", "2.29",
-                    "2.30", "2.31", "2.32", "2.33", "2.34", "2.35", "2.36", "2.37", "2.38", "2.39",
-                    "2.40"};
+                    "2.30"};
             // If unit chosen is "US" or "UK" -- use feet/inches
         } else {
-            units = new String[]{"3.11", "3.12",
-                    "4.0", "4.1", "4.2", "4.3", "4.4", "4.5", "4.6", "4.7", "4.8", "4.9", "4.10", "4.11", "4.12",
-                    "5.0", "5.1", "5.2", "5.3", "5.4", "5.5", "5.6", "5.7", "5.8", "5.9", "5.10", "5.11", "5.12",
-                    "6.0", "6.1", "6.2", "6.3", "6.4", "6.5", "6.6", "6.7", "6.8", "6.9", "6.10", "6.11", "6.12",
-                    "7.0", "7.1", "7.2", "7.3", "7.4", "7.5", "7.6", "7.7", "7.8", "7.9", "7.10", "7.11", "7.12",};
+            units = new String[]{   "4.0",  "4.0", "4.1", "4.1", "4.2",  "4.2",  "4.2",  "4.3",
+                    "4.3",  "4.4",  "4.4",  "4.4", "4.5", "4.5", "4.6",  "4.6",  "4.6",  "4.7",
+                    "4.7",  "4.8",  "4.8",  "4.8", "4.9", "4.9", "4.10", "4.10", "4.10", "4.11",
+                    "4.11", "4.11", "5.0",  "5.0", "5.1", "5.1", "5.1",  "5.2",  "5.2",  "5.3",
+                    "5.3",  "5.3",  "5.4",  "5.4", "5.5", "5.5", "5.5",  "5.6",  "5.6",  "5.7",
+                    "5.7",  "5.7",  "5.8",  "5.8", "5.9", "5.9", "5.9",  "5.10", "5.10", "5.11",
+                    "5.11", "5.11", "6.0",  "6.0", "6.0", "6.1", "6.1",  "6.2",  "6.2",  "6.2",
+                    "6.3",  "6.3",  "6.4",  "6.4", "6.4", "6.5", "6.5",  "6.6",  "6.6",  "6.6",
+                    "6.7",  "6.7",  "6.7",  "6.8", "6.8", "6.9", "6.9",  "6.9",  "6.10", "6.10",
+                    "6.11", "6.11", "6.11", "7.0", "7.0", "7.1", "7.1",  "7.1",  "7.2",  "7.2",
+                    "7.3",  "7.3",  "7.3",  "7.4", "7.4", "7.5", "7.5",  "7.5",  "7.6",  "7.6",
+                    "7.7",};
         }
         return units;
     }
@@ -115,7 +119,7 @@ public final class User {
         double calculatedWeight;
         switch (preferred_unit) {
             case 1:
-                calculatedWeight = weight / 0.45359237;
+                calculatedWeight = weight * 0.45359237;
                 break;
             case 2:
                 calculatedWeight = weight * 6.35029318;
@@ -137,7 +141,7 @@ public final class User {
         double calculatedWeight;
         switch (preferred_unit) {
             case 1:
-                calculatedWeight = weight * 0.45359237;
+                calculatedWeight = weight * 2.20462262;
                 break;
             case 2:
                 calculatedWeight = weight * 0.157473044;
@@ -162,10 +166,6 @@ public final class User {
     public void setWeight(int weight){ mWeight = weight; }
 
     public int getWeight(){return mWeight; }
-
-    public void setGender(Boolean gender){ mGender = gender; }
-
-    public Boolean getGender(){ return mGender; }
 
     public void setUnit(int unit){ mUnit = unit; }
 

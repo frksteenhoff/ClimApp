@@ -161,10 +161,12 @@ public class OnBoardingActivity extends FragmentActivity {
                 preferences.edit().putString(preferenceName, inputHeight.getText().toString()).apply();
             }
         } else {
-            // Can only be weight
+            // Can only be weight, save as SI unit
             EditText inputWeight = findViewById(R.id.set_weight);
             if (inputWeight.getText().toString().length() > 1) {
-                preferences.edit().putInt(preferenceName, Integer.parseInt(inputWeight.getText().toString())).apply();
+                int unit = preferences.getInt("Unit", 0);
+                int weight = Integer.parseInt(inputWeight.getText().toString());
+                preferences.edit().putInt(preferenceName, user.convertWeightToKgFromUnit(unit, weight)).apply();
             }
         }
     }

@@ -139,8 +139,8 @@
     <!-- Settings - Units -->
     <string name="age_unit">Years</string>
     <string name="height_unit_si">Meters</string>
-    <string name="height_unit_uk">Feet</string>
-    <string name="height_unit_us">Feet</string>
+    <string name="height_unit_uk">Feet/inches</string>
+    <string name="height_unit_us">Feet/inches</string>
     <string name="weight_unit_si">Kg</string>
     <string name="weight_unit_uk">Stones</string>
     <string name="weight_unit_us">Pounds</string>
@@ -148,8 +148,8 @@
     <!-- Settings - Unit array -->
     <string-array name="units_array">
         <item>SI units (kg, m)</item>
-        <item>US (pound, feet)</item>
-        <item>UK (stone, feet)</item>
+        <item>US (pound, feet/inches)</item>
+        <item>UK (stone, feet/inches)</item>
     </string-array>
 
     <!-- Settings - Gender array -->
@@ -176,6 +176,7 @@
     <string name="Other">Other</string>
     <string name="About">About</string>
     <string name="Reset">Reset all preferences</string>
+    <string name="prefs_cleared">All preferences cleared</string>
     <string name="measuring_units">Measuring units</string>
     <string name="units">Units</string>
     <string name="unit">Unit</string>

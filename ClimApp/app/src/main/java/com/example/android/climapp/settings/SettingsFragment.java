@@ -58,7 +58,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         showPreferenceStringIfExists("Height_value", showHeight);
 
         showWeight = getActivity().findViewById(R.id.show_weight);
-        showPreferenceIntIfExists("Weight_value", showWeight);
+        showWeightIfExists(showWeight);
 
         Spinner unitSpinner = getActivity().findViewById(R.id.units_spinner);
         Spinner genderSpinner = getActivity().findViewById(R.id.gender_spinner);
@@ -80,7 +80,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         // Setting default user acclimatization
         acclimatizationSwitch.setChecked(preferences.getBoolean("Acclimatization",false));
 
-        // setting up listeners for each of the settings to open an intent
+        // Setting up listeners for each of the settings to open an intent
         TextView ageSettings = getActivity().findViewById(R.id.age_settings);
         ageSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +132,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
-        // TODO: change into notification activity.
         TextView notificationSettings = getActivity().findViewById(R.id.notifications);
         notificationSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,15 +204,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                 // 0 = SI, 1 = US, 2 = UK
                 preferences.edit().putInt("Unit", position).apply();
                 String[] values = user.showCorrectHeightValues(position);
-                showHeight.setText(values[preferences.getInt("Height_index", 0)]);
-                int weight;
-                if(position == 0) {
-                    weight = user.convertWeightToKgFromUnit(preferences.getInt("Unit", 0), preferences.getInt("Weight", 0));
-                    showWeight.setText(weight+"");
-                } else {
-                    weight = user.convertWeightToUnitFromKg(preferences.getInt("Unit", 0), preferences.getInt("Weight", 0));
-                    showWeight.setText(weight+"");
-                }
+                recalculateHeightWeight(values, position);
                 break;
             case R.id.notification_spinner:
                 // Based on position, user wants notification at:
@@ -233,6 +224,25 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
+    /**
+     * Recalculate the height and weight values to fit the new unit of measurement
+     * @param values   The list of possible height values
+     * @param position the chosen unit as integer
+     */
+    private void recalculateHeightWeight(String[] values, int position) {
+        showHeight.setText(values[preferences.getInt("Height_index", 0)]);
+        int weight = 0;
+        // SI units
+        if(position == 0) {
+            weight = preferences.getInt("Weight", 0);
+            showWeight.setText(weight+"");
+        // UK or US metric system both in feet and inches
+        } else {
+            weight = user.convertWeightToUnitFromKg(position, preferences.getInt("Weight", 0));
+            showWeight.setText(weight+"");
+        }
+    }
+
     private void resetPreferences() {
         // Clear preferences
         preferences.edit().clear().apply();
@@ -248,7 +258,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
         // Setting onboarding to be true in order to prevent it from showing up again.
         //preferences.edit().putBoolean("onboarding_complete", true).apply();
-        Toast.makeText(getActivity().getApplicationContext(), "All preferences cleared", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity().getApplicationContext(), R.string.prefs_cleared, Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -257,7 +267,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     private void updateAllSettingsSubtexts() {
         showPreferenceStringIfExists("Age", showAge);
         showPreferenceStringIfExists("Height_value", showHeight);
-        showPreferenceIntIfExists("Weight_value", showWeight);
+        showWeightIfExists(showWeight);
     }
 
     private void showPreferenceStringIfExists(String preferenceName, TextView view) {
@@ -266,10 +276,11 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
-    private void showPreferenceIntIfExists(String preferenceName, TextView view) {
-        if(preferences.getInt(preferenceName, 0) != 0) {
-            view.setText(String.format("%s", preferences.getInt(preferenceName, 0)));
+    private void showWeightIfExists(TextView view) {
+        if(preferences.getInt("Weight", 0) != 0) {
+            int preferred_unit = preferences.getInt("Unit", 0);
+            int weight = preferences.getInt("Weight", 0);
+            view.setText(String.format("%s", user.convertWeightToUnitFromKg(preferred_unit, weight)));
         }
     }
 }
-

@@ -39,12 +39,13 @@ public class OnBoardingFragment_Units extends DialogFragment implements AdapterV
         unitSpinner.setOnItemSelectedListener(this);
     }
 
+    /* Save the chosen unit based on position
+     // 0 - SI unit
+     // 1 - US metric system
+     // 2 - UK metric system
+    */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-        // Based on position
-        // 0 - SI unit
-        // 1 - US metric system
-        // 2 - UK metric system
         preferences.edit().putInt("Unit", position).apply();
         user.setUnit(position);
     }
