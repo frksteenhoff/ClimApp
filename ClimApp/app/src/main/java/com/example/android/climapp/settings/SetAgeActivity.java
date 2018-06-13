@@ -33,7 +33,7 @@ public class SetAgeActivity extends AppCompatActivity {
 
         userInputTextView = findViewById(R.id.user_input_age);
         userCalcAgeTextView = findViewById(R.id.userAge);
-        userCalcAgeTextView.setText(user.getAge() + "");
+        userCalcAgeTextView.setText(preferences.getString("Age",null));
         Button submitAge = findViewById(R.id.submit_age);
 
         // Get user age from birth date

@@ -95,6 +95,7 @@ public class OnBoardingActivity extends FragmentActivity {
                     EditText currentText = findViewById(R.id.set_age);
                     if(user.isWellFormedInputDate(currentText.getText().toString())) {
                         saveDayOfBirth();
+                        user.setDateOfBirth(currentText.getText().toString());
                     }
                     pager.setCurrentItem(pager.getCurrentItem() + 1);
 
