@@ -37,16 +37,24 @@
     <string name="activity_level_very_high">High+</string>
     <string name="activity_description">Description of the different activity levels shown on click.</string>
     <!-- Descriptions of activity level as described in "Classification of levels of metabolic rate ISO 8996" -->
-    <string name="activity_very_low_text">Resting, sitting at ease. Breathing not challenged.</string>
-    <string name="activity_low_text">Light manual work (writing, typing, drawing, book-keeping) light manual arm work,
-        standing drilling. Casual walking on level surface. Easy to breathe and carry on a conversation. </string>
-    <string name="activity_medium_text">Sustained arm and hand work, handling moderately heavy machinery, weeding, picking fruits.
-        Pushing or pulling cart or wheelbarrow. Walking at a speed of 2.5 to 5.5 km/h. Can carry on a conversation but it requires
+    <string name="activity_very_low_text_short">Resting, sitting at ease.\nBreathing not challenged.</string>
+    <string name="activity_low_text_short">Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation. </string>
+    <string name="activity_medium_text_short">Sustained arm and hand work:\nhandling moderately heavy machinery, weeding, picking fruits.</string>
+    <string name="activity_high_text_short">Intense arm and trunk work:\ncarrying heavy material, shovelling, sawing, hand moving,
+        concrete block laying.</string>
+    <string name="activity_very_high_text_short">Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs,
+        running on level surface.</string>
+
+    <string name="activity_very_low_text">Resting, sitting at ease.\nBreathing not challenged.</string>
+    <string name="activity_low_text">Light manual work:\nwriting, typing, drawing, book-keeping.\nLight manual arm work,
+        standing drilling.\nCasual walking on level surface.\nEasy to breathe and carry on a conversation. </string>
+    <string name="activity_medium_text">Sustained arm and hand work:\nhandling moderately heavy machinery, weeding, picking fruits.
+        \nPushing or pulling cart or wheelbarrow.\nWalking at a speed of 2.5 to 5.5 km/h.\nCan carry on a conversation but it requires
         more effort.</string>
-    <string name="activity_high_text">Intense arm and trunk work, carrying heavy material, shovelling, sawing, hand moving,
-        concrete block laying. Walking fast at speed of 5.5 to 7 km/h. Conversation requires maximum effort.</string>
-    <string name="activity_very_high_text">Very intense activity at fast maximum pace, working with an ax, climbing stairs,
-        running on level surface. Walking at a speed greater than 7 km/h. Diffcult to speak.</string>
+    <string name="activity_high_text">Intense arm and trunk work:\ncarrying heavy material, shovelling, sawing, hand moving,
+        concrete block laying.\nWalking fast at speed of 5.5 to 7 km/h.\nConversation requires maximum effort.</string>
+    <string name="activity_very_high_text">Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs,
+        running on level surface.\nWalking at a speed greater than 7 km/h.\nDiffcult to speak.</string>
 
     <!-- Dashboard: recommendation text -->
     <string name="heatStressLevel">Your expected heat-stress level</string>

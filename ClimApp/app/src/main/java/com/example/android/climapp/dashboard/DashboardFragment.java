@@ -155,7 +155,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (activityVeryLow.isChecked()) {
-                    updateActivityLevelAndRecommendationView(activityVeryLow, "very low", getString(R.string.activity_very_low_text));
+                    updateActivityLevelAndRecommendationView(activityVeryLow, "very low", getString(R.string.activity_very_low_text_short));
                 } else {
                     setUncheckedColors(activityVeryLow);
                 }
@@ -166,7 +166,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (activityLow.isChecked()) {
-                    updateActivityLevelAndRecommendationView(activityLow, "low", getString(R.string.activity_low_text));
+                    updateActivityLevelAndRecommendationView(activityLow, "low", getString(R.string.activity_low_text_short));
                 } else {
                     setUncheckedColors(activityLow);
                 }
@@ -177,7 +177,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (activityMedium.isChecked()) {
-                    updateActivityLevelAndRecommendationView(activityMedium, "medium", getString(R.string.activity_medium_text));
+                    updateActivityLevelAndRecommendationView(activityMedium, "medium", getString(R.string.activity_medium_text_short));
                 } else {
                     setUncheckedColors(activityMedium);
                 }
@@ -188,7 +188,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (activityHigh.isChecked()) {
-                    updateActivityLevelAndRecommendationView(activityHigh, "high", getString(R.string.activity_high_text));
+                    updateActivityLevelAndRecommendationView(activityHigh, "high", getString(R.string.activity_high_text_short));
                 } else {
                     setUncheckedColors(activityHigh);
                 }
@@ -199,7 +199,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (activityVeryHigh.isChecked()) {
-                    updateActivityLevelAndRecommendationView(activityVeryHigh, "very high", getString(R.string.activity_very_high_text));
+                    updateActivityLevelAndRecommendationView(activityVeryHigh, "very high", getString(R.string.activity_very_high_text_short));
                 } else {
                     setUncheckedColors(activityVeryHigh);
                 }
@@ -347,8 +347,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 heatStressTextView.setText(R.string.suggestion_yellow);
                 break;
             case "#e50000":
-                heatStressTopView.setText(R.string.suggestion_red_top);
-                heatStressTextView.setText(R.string.suggestion_red);
+                heatStressTopView.setText(R.string.suggestion_dark_red_top);
+                heatStressTextView.setText(R.string.suggestion_dark_red);
                 break;
             default:
                 heatStressTopView.setText(R.string.suggestion_dark_red_top);
