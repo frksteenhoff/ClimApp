@@ -13,7 +13,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +28,7 @@ import com.example.android.climapp.R;
 import com.example.android.climapp.onboarding.OnBoardingActivity;
 import com.example.android.climapp.utils.APIConnection;
 import com.example.android.climapp.utils.Pair;
-import com.example.android.climapp.wbgt.RecommendedAlertLimit;
+import com.example.android.climapp.wbgt.RecommendedAlertLimitISO7243;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -80,12 +79,11 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     private ImageView recommendationView, recommendationSmallView;
     private ToggleButton activityVeryHigh, activityHigh, activityMedium, activityLow, activityVeryLow;
     private TextView txtLong, txtLat, locationErrorTxt, activityLevelDescription,
-            dismissWarningtextView, activityMoreTextView;
-    private CardView warningCardView;
+            activityMoreTextView, heatStressTopView, heatStressTextView;
 
     private String latitude, longitude;
     private SharedPreferences preferences;
-    private RecommendedAlertLimit ral;
+    private RecommendedAlertLimitISO7243 ral;
     //private int notificationID = 1;
     //private boolean notificationSent;
 
@@ -105,8 +103,6 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         // Notification view and logic components
         //notificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
         //notificationSent = preferences.getBoolean("notification_sent", false);
-        warningCardView = getActivity().findViewById(R.id.warning_view);
-        dismissWarningtextView = getActivity().findViewById(R.id.dismiss_warning);
 
         // Activity level buttons
         activityVeryLow = getActivity().findViewById(R.id.dash_toggle_very_low);
@@ -127,6 +123,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
         recommendationView = getActivity().findViewById(R.id.ral);
         recommendationSmallView = getActivity().findViewById(R.id.ral_small);
+        heatStressTopView = getActivity().findViewById(R.id.suggestion_top);
+        heatStressTextView = getActivity().findViewById(R.id.suggestion_text);
 
         // Check whether onboarding has been completed
         // if onboarding steps still missing, start onboarding
@@ -153,19 +151,11 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             }
         }
 
-        /* Listeners within dashboard views */
-        dismissWarningtextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                warningCardView.setVisibility(View.GONE);
-            }
-        });
-
         activityVeryLow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (activityVeryLow.isChecked()) {
-                    updateActivityLevelView(activityVeryLow, "very low", getString(R.string.activity_very_low_text));
+                    updateActivityLevelAndRecommendationView(activityVeryLow, "very low", getString(R.string.activity_very_low_text));
                 } else {
                     setUncheckedColors(activityVeryLow);
                 }
@@ -176,7 +166,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (activityLow.isChecked()) {
-                    updateActivityLevelView(activityLow, "low", getString(R.string.activity_low_text));
+                    updateActivityLevelAndRecommendationView(activityLow, "low", getString(R.string.activity_low_text));
                 } else {
                     setUncheckedColors(activityLow);
                 }
@@ -187,7 +177,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (activityMedium.isChecked()) {
-                    updateActivityLevelView(activityMedium, "medium", getString(R.string.activity_medium_text));
+                    updateActivityLevelAndRecommendationView(activityMedium, "medium", getString(R.string.activity_medium_text));
                 } else {
                     setUncheckedColors(activityMedium);
                 }
@@ -198,7 +188,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (activityHigh.isChecked()) {
-                    updateActivityLevelView(activityHigh, "high", getString(R.string.activity_high_text));
+                    updateActivityLevelAndRecommendationView(activityHigh, "high", getString(R.string.activity_high_text));
                 } else {
                     setUncheckedColors(activityHigh);
                 }
@@ -209,7 +199,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (activityVeryHigh.isChecked()) {
-                    updateActivityLevelView(activityVeryHigh, "very high", getString(R.string.activity_very_high_text));
+                    updateActivityLevelAndRecommendationView(activityVeryHigh, "very high", getString(R.string.activity_very_high_text));
                 } else {
                     setUncheckedColors(activityVeryHigh);
                 }
@@ -312,7 +302,7 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
      *                            to save in shared preferences
      * @param activityDescription the activity level description for the pressed button
      */
-    private void updateActivityLevelView(ToggleButton currentButton, String preferenceText, String activityDescription) {
+    private void updateActivityLevelAndRecommendationView(ToggleButton currentButton, String preferenceText, String activityDescription) {
         // Set all views to false, afterwards: update only the one clicked to true
         activityVeryLow.setChecked(false);
         activityLow.setChecked(false);
@@ -327,13 +317,44 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         preferences.edit().putString("activity_level", preferenceText).apply();
 
         // Update color indicator after activity level change
-        ral = new RecommendedAlertLimit(preferences.getString("activity_level", null),
-                preferences.getBoolean("Acclimatization", false));
+        ral = new RecommendedAlertLimitISO7243(preferences.getString("activity_level", null),
+                                                preferences.getString("Height_value",null),
+                                                preferences.getInt("Weight", 0));
         String color = ral.getRecommendationColor(preferences.getFloat("WBGT", 0), ral.calculateRALValue());
+        Log.v("HESTE", "RAL: " + ral.calculateRALValue() + " WBGT: "+ preferences.getFloat(" WBGT ", 0) + " col:" + color);
 
+        setRecommendationColorAndText(color);
+    }
+
+    /**
+     * Set color indicating heat-stress level
+     * Set description for coping strategy based on heat-stress level
+     * @param color the hex value for the color code
+     */
+    public void setRecommendationColorAndText(String color) {
         // Set color in view based on RAL interval
         recommendationView.setColorFilter(Color.parseColor(color));
         recommendationSmallView.setColorFilter(Color.parseColor(color));
+
+        // Update text view with correction comping strategies
+        switch (color) {
+            case "#00b200":
+                heatStressTopView.setText(R.string.suggestion_green_top);
+                heatStressTextView.setText(R.string.suggestion_green);
+                break;
+            case "#FBBA57":
+                heatStressTopView.setText(R.string.suggestion_yellow_top);
+                heatStressTextView.setText(R.string.suggestion_yellow);
+                break;
+            case "#e50000":
+                heatStressTopView.setText(R.string.suggestion_red_top);
+                heatStressTextView.setText(R.string.suggestion_red);
+                break;
+            default:
+                heatStressTopView.setText(R.string.suggestion_dark_red_top);
+                heatStressTextView.setText(R.string.suggestion_dark_red);
+                break;
+        }
     }
 
     private void setUncheckedColors(ToggleButton toggleButtonId) {

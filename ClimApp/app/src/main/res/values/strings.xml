@@ -2,24 +2,6 @@
     <string name="app_name">ClimApp</string>
     <string name="no_text"> </string>
 
-    <!-- Sign-in status messages -->
-    <string name="sign_in">Sign In</string>
-    <string name="sign_up">Sign Up </string>
-    <string name="signed_in_fmt">Signed in as: %s</string>
-    <string name="signed_in">Signed in</string>
-    <string name="signing_in">Signing in…</string>
-    <string name="signed_out">Signed out</string>
-    <string name="loading">Loading…</string>
-
-    <!-- Error messages -->
-    <string name="login_error">Error during login</string>
-    <string name="login_cancelled">Login cancelled. </string>
-
-    <!-- Facebook information (no translation needed) -->
-    <string name="server_client_id">912535355882-9ud102rtm4qbsn265r2va8leqdef75p3.apps.googleusercontent.com</string>
-    <string name="facebook_app_id">136565860303378</string>
-    <string name="fb_login_protocol_scheme">fb136565860303378</string>
-
     <!-- Main Screen Labels -->
     <string name="dashboard">Dashboard</string>
     <string name="settings">Settings</string>
@@ -28,29 +10,8 @@
     <!-- Channel information - do not need translation -->
     <string name="channel_name">"ClimApp"</string>
     <string name="channel_description">"WBGT value check"</string>
-
-    <!--Notification values -->
-    <string name="notificationDescription">Here, we want to show the user the necessary information.</string>
-    <string name="dismiss">Dismiss</string>
-    <string name="more">More</string>
-
-    <!-- Settings - General titles -->
-    <string name="Age">Age</string>
-    <string name="Height">Height</string>
-    <string name="Weight">Weight</string>
-    <string name="Gender">Gender</string>
-    <string name="Acclimatization">Acclimatization</string>
-    <string name="title_activity_navigation">NavigationActivity</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <!-- Alerts-->
-    <string name="alert_header_text">Alert</string>
-    <string name="alert_text_title">Weather too hot!</string>
-    <string name="alert_text_description">What caused this</string>
-    <string name="alert_text_hydration">How to properly hydrate</string>
-    <string name="alert_text_clothing">What clothes to wear</string>
 
     <!-- OnBoarding sentences -->
     <string name="welcome">Welcome!</string>
@@ -77,14 +38,32 @@
     <string name="activity_description">Description of the different activity levels shown on click.</string>
     <!-- Descriptions of activity level as described in "Classification of levels of metabolic rate ISO 8996" -->
     <string name="activity_very_low_text">Resting, sitting at ease. Breathing not challenged.</string>
-    <string name="activity_low_text">Light manual work (writing, typing, drawing, book-keeping) light manual arm work, standing drilling. Casual walking on level surface. Easy to breathe and carry on a conversation. </string>
-    <string name="activity_medium_text">Sustained arm and hand work, handling moderately heavy machinery, weeding, picking fruits. Pushing or pulling cart or wheelbarrow. Walking at a speed of 2.5 to 5.5 km/h. Can carry on a conversation but it requires more effort.</string>
-    <string name="activity_high_text">Intense arm and trunk work, carrying heavy material, shovelling, sawing, hand moving, concrete block laying. Walking fast at speed of 5.5 to 7 km/h Conversation requires maximum effort.</string>
-    <string name="activity_very_high_text">Very intense activity at fast maximum pace, working with an ax, climbing stairs, running on level surface. Walking at a speed greater than 7 km/hDiffcult to speak.</string>
+    <string name="activity_low_text">Light manual work (writing, typing, drawing, book-keeping) light manual arm work,
+        standing drilling. Casual walking on level surface. Easy to breathe and carry on a conversation. </string>
+    <string name="activity_medium_text">Sustained arm and hand work, handling moderately heavy machinery, weeding, picking fruits.
+        Pushing or pulling cart or wheelbarrow. Walking at a speed of 2.5 to 5.5 km/h. Can carry on a conversation but it requires
+        more effort.</string>
+    <string name="activity_high_text">Intense arm and trunk work, carrying heavy material, shovelling, sawing, hand moving,
+        concrete block laying. Walking fast at speed of 5.5 to 7 km/h. Conversation requires maximum effort.</string>
+    <string name="activity_very_high_text">Very intense activity at fast maximum pace, working with an ax, climbing stairs,
+        running on level surface. Walking at a speed greater than 7 km/h. Diffcult to speak.</string>
 
-    <!-- Dashboard: hydration -->
-    <string name="hydration">Hydration</string>
-    <string name="hydration_text">What did you drink today?</string>
+    <!-- Dashboard: recommendation text -->
+    <string name="heatStressLevel">Your expected heat-stress level</string>
+    <string name="suggestion_text">Description of actions.</string>
+
+    <string name="suggestion_green_top">No high heat expected.</string>
+    <string name="suggestion_green">Maintain normal working and hydration procedures.</string>
+    <string name="suggestion_yellow_top">Moderate heat-stress is expected</string>
+    <string name="suggestion_yellow">Pay extra attention to frequent drinking.</string>
+    <string name="suggestion_red_top">High heat-stress is expected!</string>
+    <string name="suggestion_red">Your water needs will be high.\nDrink frequently and remember to rehydrate after
+        work/exercise.\nIf possible adjust work and include small breaks with cooling.</string>
+    <string name="suggestion_dark_red_top">Extreme heat is expected!</string>
+    <string name="suggestion_dark_red">If possible adjust work – use active cooling (schedule frequent breaks in shadow
+        or cooled area where you can hydrate).\nYour water needs may be more than 1 liter/hour implying that you should drink often.
+        \nIf possible add salt to your meals.</string>
+
 
     <!-- Dashboard: Location  -->
     <string name="location_error_text">Could not get device location. Make sure location is enabled on the device</string>
@@ -103,28 +82,27 @@
     <string name="cloudiness">Cloudiness</string>
     <string name="wbgt_model_temp">WBGT (temporary)</string>
 
-    <!-- Dashboard: Suggestions -->
-    <string name="suggestions">Suggestions</string>
-    <string name="suggestion_text">Try to drink 200ml of water each hour. A total of 800ml during your working hours.</string>
+    <!-- Dashboard: Hydration -->
+    <string name="hydration">Hydration</string>
+    <string name="hydration_text">What did you drink today?</string>
 
-    <!-- Clothing -->
-    <string name="field_of_work">Field of work</string>
-    <string name="outer_wear">Outer wear</string>
-    <string name="work_specific_attire">Work specific attire</string>
+    <!-- Dashboard: Alerts-->
+    <string name="alert_header_text">Alert</string>
+    <string name="alert_text_title">Weather too hot!</string>
+    <string name="alert_text_description">What caused this</string>
+    <string name="alert_text_hydration">How to properly hydrate</string>
+    <string name="alert_text_clothing">What clothes to wear</string>
 
-    <!-- Clothing - Field of work -->
-    <string-array name="field_of_work_array">
-        <item>Office</item>
-        <item>Construction</item>
-        <item>Sales Assistant</item>
-        <item>Teaching</item>
-    </string-array>
 
-    <!-- Clothing -->
-    <string name="clothing_customize_attire">Customize your attire</string>
-    <string name="clothing_customize_attire_description">By chosing exactly the items you wear to work, we can better match your needs during the day</string>
+    <!-- Settings - General titles -->
+    <string name="Age">Age</string>
+    <string name="Height">Height</string>
+    <string name="Weight">Weight</string>
+    <string name="Gender">Gender</string>
+    <string name="Acclimatization">Acclimatization</string>
+    <string name="title_activity_navigation">NavigationActivity</string>
 
-    <!-- Settings - Button hints -->
+    <!-- Settings: Button hints -->
     <string name="Input_age">Input date of birth (DDMMYYYY)</string>
     <string name="Input_gender">Input gender</string>
     <string name="Input_height">Input height</string>
@@ -136,7 +114,7 @@
     <string name="submit">Submit</string>
     <string name="wrong_age">Incorrect input format. Should be DDMMYYYY, try again.</string>
 
-    <!-- Settings - Units -->
+    <!-- Settings: Units -->
     <string name="age_unit">Years</string>
     <string name="height_unit_si">Meters</string>
     <string name="height_unit_uk">Feet/inches</string>
@@ -145,14 +123,14 @@
     <string name="weight_unit_uk">Stones</string>
     <string name="weight_unit_us">Pounds</string>
 
-    <!-- Settings - Unit array -->
+    <!-- Settings: Unit array -->
     <string-array name="units_array">
         <item>SI units (kg, m)</item>
         <item>US (pound, feet/inches)</item>
         <item>UK (stone, feet/inches)</item>
     </string-array>
 
-    <!-- Settings - Gender array -->
+    <!-- Settings: Gender array -->
     <string-array name="gender_array">
         <item>Female</item>
         <item>Male</item>
@@ -168,7 +146,7 @@
         <item>Custom..</item>
     </string-array>
 
-    <!-- Settings - overall -->
+    <!-- Settings: overall -->
     <string name="action_settings">Settings</string> <!-- dashboard -->
     <string name="Personal_Settings">Personal settings</string>
     <string name="Notifications">Notifications</string>
@@ -189,20 +167,20 @@
         or timeliness.</string>
     <string name="what_climapp">What is the ERA4CS ClimApp project?</string>
 
-    <!-- Settings - reponses -->
+    <!-- Settings: reponses -->
     <string name="age_updated">Age updated to: </string>
     <string name="weight_updated">Weight updated to:</string>
     <string name="height_updated">Height updated to:</string>
     <string name="acclimatization_true">Acclimatizatized to work environment</string>
     <string name="acclimatization_false">Not acclimatizatized to work environment</string>
 
-    <!-- Settings - initial values -->
+    <!-- Settings: initial values -->
     <string name="acclimatization_default">0.0</string>
     <string name="user_height">150</string>
     <string name="female_checked">Female checked</string>
     <string name="male_checked">Male checked</string>
 
-    <!-- Settings - sentences -->
+    <!-- Settings: sentences -->
     <string name="set_unit">Please provide measurement units from drop-down</string>
     <string name="set_age">Please provide your age</string>
     <string name="set_gender">Please provide your gender</string>
@@ -217,4 +195,45 @@
         to your workplace.
     </string>
     <string name="acclimatization_description_more">Read more about setting your acclimatization level</string>
+
+    <!--Settings: Notification values -->
+    <string name="notificationDescription">Here, we want to show the user the necessary information.</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="more">More</string>
+
+
+    <!-- Clothing: -->
+    <string name="field_of_work">Field of work</string>
+    <string name="outer_wear">Outer wear</string>
+    <string name="work_specific_attire">Work specific attire</string>
+    <string name="clothing_customize_attire">Customize your attire</string>
+    <string name="clothing_customize_attire_description">By chosing exactly the items you wear to work,
+        we can better match your needs during the day</string>
+
+    <!-- Clothing: Array items - field of work -->
+    <string-array name="field_of_work_array">
+        <item>Office</item>
+        <item>Construction</item>
+        <item>Sales Assistant</item>
+        <item>Teaching</item>
+    </string-array>
+
+    <!-- Sign-in status messages -->
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up </string>
+    <string name="signed_in_fmt">Signed in as: %s</string>
+    <string name="signed_in">Signed in</string>
+    <string name="signing_in">Signing in…</string>
+    <string name="signed_out">Signed out</string>
+    <string name="loading">Loading…</string>
+
+    <!-- Error messages -->
+    <string name="login_error">Error during login</string>
+    <string name="login_cancelled">Login cancelled. </string>
+
+    <!-- Facebook information (no translation needed) -->
+    <string name="server_client_id">912535355882-9ud102rtm4qbsn265r2va8leqdef75p3.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">136565860303378</string>
+    <string name="fb_login_protocol_scheme">fb136565860303378</string>
+
 </resources>

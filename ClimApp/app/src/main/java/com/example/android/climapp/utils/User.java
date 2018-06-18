@@ -56,13 +56,12 @@ public final class User {
      * @return true or false indicating whether input date has correct format
      */
     public boolean isWellFormedInputDate(String inputDate) {
-        if(inputDate.length() > 0) {
+        if(inputDate.length() == 8) {
                 int year = Integer.parseInt(inputDate.substring(4));
                 int month = Integer.parseInt(inputDate.substring(2, 4));
                 int day = Integer.parseInt(inputDate.substring(0, 2));
 
-                return !(inputDate.length() != 8 ||
-                        year > Calendar.getInstance().get(Calendar.YEAR) ||
+                return !(year > Calendar.getInstance().get(Calendar.YEAR) ||
                         (year < (Calendar.getInstance().get(Calendar.YEAR) - 120)) ||
                         month < 0 || month > 11 ||
                         day > 31 || day < 1);

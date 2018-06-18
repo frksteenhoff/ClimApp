@@ -107,110 +107,6 @@
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
-                style="@style/CardViewFeedStyle"
-                android:visibility="gone"
-                android:id="@+id/warning_view">
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="16dp">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:id="@+id/warning_main"
-                        android:layout_marginBottom="8dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/alert_title_view"
-                            android:text="@string/alert_text_title"
-                            android:textAllCaps="true"
-                            android:layout_marginBottom="16dp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/alert_description_view"
-                            android:text="@string/alert_text_description"
-                            android:layout_marginBottom="4dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/alert_hydration_view"
-                            android:text="@string/alert_text_hydration"
-                            android:layout_marginBottom="4dp"/>
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:id="@+id/alert_clothing_view"
-                            android:text="@string/alert_text_clothing"
-                            android:layout_marginBottom="8dp"/>
-                    </LinearLayout>
-                    <ImageView
-                        android:id="@+id/alert_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_alert_foreground"
-                        android:layout_alignParentEnd="true"/>
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="1dp"
-                        android:id="@+id/cardLine"
-                        android:layout_alignBottom="@+id/warning_main"
-                        android:background="@color/colorLightGrey"/>
-                    <TextView
-                        style="@style/ActionButtonStyle"
-                        android:id="@+id/dismiss_warning"
-                        android:layout_alignParentEnd="true"
-                        android:text="@string/dismiss"
-                        android:layout_below="@+id/cardLine"/>
-                </RelativeLayout>
-            </android.support.v7.widget.CardView>
-            <android.support.v7.widget.CardView
-                android:visibility="gone"
-                style="@style/CardViewFeedStyle">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_margin="16dp">
-                    <TextView
-                        style="@style/SmallDescriptiveTextStyleNoMargin"
-                        android:text="@string/hydration" />
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/hydration_text"
-                        android:layout_marginBottom="8dp"
-                        android:layout_marginTop="8dp"/>
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <ToggleButton
-                            style="@style/WrapWrap"
-                            android:textOn="@string/no_text"
-                            android:layout_marginTop="16dp"
-                            android:textOff="@string/no_text"
-                            android:background="@drawable/ic_soda_foreground" />
-                        <ToggleButton
-                            style="@style/WrapWrap"
-                            android:layout_marginTop="16dp"
-                            android:textOn="@string/no_text"
-                            android:textOff="@string/no_text"
-                            android:background="@drawable/ic_water_foreground" />
-                        <ToggleButton
-                            style="@style/WrapWrap"
-                            android:layout_marginTop="16dp"
-                            android:textOn="@string/no_text"
-                            android:textOff="@string/no_text"
-                            android:background="@drawable/ic_milkshake_foreground" />
-                    </LinearLayout>
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-            <android.support.v7.widget.CardView
                 style="@style/CardViewFeedStyle">
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -232,14 +128,28 @@
                             android:layout_height="wrap_content"
                             android:textSize="12sp"
                             android:textColor="@color/colorPrimaryDark"
-                            android:text="@string/suggestions"
+                            android:text="@string/heatStressLevel"
                             android:layout_gravity="center_vertical"/>
                     </LinearLayout>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:id="@+id/suggestion_top"
+                        android:text="@string/suggestion_green_top"
+                        android:textAllCaps="true"
+                        android:layout_marginTop="8dp"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:id="@+id/suggestion_text"
+                        android:layout_height="wrap_content"
                         android:text="@string/suggestion_text"
                         android:layout_marginTop="8dp"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:id="@+id/alert_view"
+                        android:src="@mipmap/ic_alert_foreground"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView

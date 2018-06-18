@@ -1,14 +1,13 @@
 package com.example.android.climapp.utils;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.climapp.R;
 import com.example.android.climapp.dashboard.DashboardFragment;
-import com.example.android.climapp.wbgt.RecommendedAlertLimit;
+import com.example.android.climapp.wbgt.RecommendedAlertLimitISO7243;
 import com.example.android.climapp.wbgt.Solar;
 import com.example.android.climapp.wbgt.SolarRad;
 import com.example.android.climapp.wbgt.WBGT;
@@ -135,18 +134,15 @@ public class APIConnection extends AsyncTask<String, String, String> {
         // Calculate WBGT model parameters
         setAndSaveDashboardWBGTModelParameters();
 
-        RecommendedAlertLimit ral = new RecommendedAlertLimit(
+        RecommendedAlertLimitISO7243 ral = new RecommendedAlertLimitISO7243(
                 mPreferences.getString("activity_level", null),
-                mPreferences.getBoolean("Acclimatization", false));
+                mPreferences.getString("Height_value", null),
+                mPreferences.getInt("Weight", 0));
 
         String color = ral.getRecommendationColor(mPreferences.getFloat("WBGT", 0), ral.calculateRALValue());
 
         // Set color in view based on RAL interval
-        ImageView recommendationView = mDashboard.getActivity().findViewById(R.id.ral);
-        ImageView recommendationSmallView = mDashboard.getActivity().findViewById(R.id.ral_small);
-
-        recommendationView.setColorFilter(Color.parseColor(color));
-        recommendationSmallView.setColorFilter(Color.parseColor(color));
+        mDashboard.setRecommendationColorAndText(color);
     }
 
     private void getJSONResponseContent(String text) {

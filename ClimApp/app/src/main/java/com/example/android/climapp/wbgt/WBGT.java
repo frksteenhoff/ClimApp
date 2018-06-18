@@ -224,7 +224,7 @@ public class WBGT {
     }
 
     /**
-     * Get TWBG with solar
+     * Get TWBG with solarFor
      * @return TWBG value with solar
      */
     public double getWBGTWithSolar() {
