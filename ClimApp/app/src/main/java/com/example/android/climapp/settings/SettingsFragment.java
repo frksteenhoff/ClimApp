@@ -203,8 +203,11 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             case R.id.units_spinner:
                 // 0 = SI, 1 = US, 2 = UK
                 preferences.edit().putInt("Unit", position).apply();
+
+                // Update view after unit change
                 String[] values = user.showCorrectHeightValues(position);
                 recalculateHeightWeight(values, position);
+
                 break;
             case R.id.notification_spinner:
                 // Based on position, user wants notification at:

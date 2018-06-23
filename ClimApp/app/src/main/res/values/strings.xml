@@ -60,7 +60,7 @@
     <string name="heatStressLevel">Your expected heat-stress level</string>
     <string name="suggestion_text">Description of actions.</string>
 
-    <string name="suggestion_green_top">No high heat expected.</string>
+    <string name="suggestion_green_top">No high heat expected</string>
     <string name="suggestion_green">Maintain normal working and hydration procedures.</string>
     <string name="suggestion_yellow_top">Moderate heat-stress is expected</string>
     <string name="suggestion_yellow">Pay extra attention to frequent drinking.</string>
@@ -100,6 +100,7 @@
     <string name="alert_text_description">What caused this</string>
     <string name="alert_text_hydration">How to properly hydrate</string>
     <string name="alert_text_clothing">What clothes to wear</string>
+    <string name="RALColorCodeArea">Showing color code</string>
 
 
     <!-- Settings - General titles -->
@@ -130,12 +131,14 @@
     <string name="weight_unit_si">Kg</string>
     <string name="weight_unit_uk">Stones</string>
     <string name="weight_unit_us">Pounds</string>
+    <string name="temperature_unit_f">Fahrenheit</string>
+    <string name="temperature_unit_c">Celcius</string>
 
     <!-- Settings: Unit array -->
     <string-array name="units_array">
-        <item>SI units (kg, m)</item>
-        <item>US (pound, feet/inches)</item>
-        <item>UK (stone, feet/inches)</item>
+        <item>SI units (kg, m, °C)</item>
+        <item>US (pound, feet/inches, °F)</item>
+        <item>UK (stone, feet/inches, °C)</item>
     </string-array>
 
     <!-- Settings: Gender array -->
@@ -243,5 +246,4 @@
     <string name="server_client_id">912535355882-9ud102rtm4qbsn265r2va8leqdef75p3.apps.googleusercontent.com</string>
     <string name="facebook_app_id">136565860303378</string>
     <string name="fb_login_protocol_scheme">fb136565860303378</string>
-
 </resources>

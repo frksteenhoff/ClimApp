@@ -60,7 +60,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
     private static final String WEATHER_ICON = "icon";
 
     private Integer pressure, temperature, cloudiness, weather_id;
-    private String city_name, description, icon, mLongitude, mLatitude;
+    private String city_name, description, icon, mLongitude, mLatitude, temperature_unit;
     private double wind_speed, humidity;
     private DashboardFragment mDashboard;
 
@@ -152,7 +152,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
             // Values fetched from API response (JSONObject) humidity, pressure, temperature etc.
             humidity = json.getJSONObject(TAG_MAIN).getInt(HUMIDITY);
             pressure = json.getJSONObject(TAG_MAIN).getInt(PRESSURE);
-            temperature = convertKelvinToCelsius(json.getJSONObject(TAG_MAIN).getInt(TEMPERATURE));
+            temperature = json.getJSONObject(TAG_MAIN).getInt(TEMPERATURE);
             wind_speed = json.getJSONObject(TAG_WIND).getDouble(SPEED);
             cloudiness = json.getJSONObject(TAG_CLOUDS).getInt(TAG_ALL);
             city_name = json.getString(TAG_CITY);
@@ -175,8 +175,12 @@ public class APIConnection extends AsyncTask<String, String, String> {
         TextView windSpeedTextView = mDashboard.getActivity().findViewById(R.id.wind_speed_value);
         TextView cloudinessTextView = mDashboard.getActivity().findViewById(R.id.cloudiness_value);
         TextView cityTextView = mDashboard.getActivity().findViewById(R.id.current_city);
+        TextView temperatureUnit = mDashboard.getActivity().findViewById(R.id.temperature_unit);
 
-        tempTextView.setText(String.format("%s°", temperature.toString()));
+        User user = new User();
+        tempTextView.setText(String.format("%s°", user.setCorrectTemperatureUnit(temperature, mPreferences.getInt("Unit",0))));
+        mPreferences.edit().putInt("temperature", Integer.parseInt(temperature.toString())).apply();
+        temperatureUnit.setText(String.format("%s", mDashboard.getResources().getString(getTemperatureUnit())));
         humidityTextView.setText(String.format("%s %s", humidity, "%"));
         windSpeedTextView.setText(String.format("%s m/s", wind_speed));
         cloudinessTextView.setText(String.format("%s %s", cloudiness, "%"));
@@ -197,57 +201,18 @@ public class APIConnection extends AsyncTask<String, String, String> {
      */
     private void setAndSaveDashboardWBGTModelParameters() {
         wbgt = calculateWBGT(wind_speed, humidity, pressure);
-        TextView wbgt_no_solar = mDashboard.getActivity().findViewById(R.id.no_solar);
-        TextView wbgt_solar = mDashboard.getActivity().findViewById(R.id.solar);
+        TextView WBGTTextView = mDashboard.getActivity().findViewById(R.id.wbgt_value);
 
-        wbgt_no_solar.setText(String.format("TWBG No solar: %s", wbgt.getWBGTWithoutSolar()));
-        wbgt_solar.setText(String.format("TWBG Solar:       %s", wbgt.getWBGTWithSolar()));
-        mPreferences.edit().putFloat("WBGT", (float) wbgt.getWBGTWithoutSolar()).apply();
-        mPreferences.edit().putFloat("WBGT_solar", (float) wbgt.getWBGTWithSolar()).apply();
+        WBGTTextView.setText(String.format("WBGT: %s", wbgt.getWBGT()));
+        mPreferences.edit().putFloat("WBGT", (float) wbgt.getWBGT()).apply();
 
         /*// Send notification if values are outside recommended range
-        if (wbgt.getWBGTWithoutSolar() > 21.0 && !notificationSent) {
+        if (wbgt.getWBGT() > 21.0 && !notificationSent) {
             setNotificationChannel();
             createNotification(getString(R.string.app_name), getString(R.string.notificationDescription), notificationID);
             preferences.edit().putBoolean("notification_sent", true).apply();
         }*/
     }
-/*
-        private void setNotificationChannel() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // Create the NotificationChannel, but only on API 26+ because
-                // the NotificationChannel class is new and not in the support library
-                CharSequence name = getString(R.string.channel_name);
-                String description = getString(R.string.channel_description);
-                int importance = NotificationManager.IMPORTANCE_DEFAULT;
-
-                NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-                channel.setDescription(description);
-                notificationManager.createNotificationChannel(channel);
-            }
-        }
-
-        private void createNotification(String title, String description, int notificationID) {
-            // Intent to open application when user clicks notification
-            Intent open_intent = new Intent(getActivity(), MainActivity.class);
-            open_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, open_intent, 0);
-
-            // Notification content
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
-                    .setSmallIcon(R.mipmap.climapp_logo3)
-                    .setContentTitle(title)
-                    .setContentText(description)
-                    .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(description))
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true);
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
-
-            // Send notification
-            notificationManager.notify(notificationID, mBuilder.build());
-        }*/
 
     /**
      * Use calculations for the WBGT mode from JTOF together with basic device input:
@@ -296,6 +261,15 @@ public class APIConnection extends AsyncTask<String, String, String> {
         return wbgt;
     }
 
+    public int getTemperatureUnit() {
+        int unit = mPreferences.getInt("Unit", 0);
+        if(unit == 1){
+            return R.string.temperature_unit_f;
+        } else {
+            return R.string.temperature_unit_c;
+        }
+    }
+
     /**
      * If weather ID is either "mist" or "fog" the weather is categorized as foggy.
      * @param weather_id ID fetched from Open Weather Map
@@ -320,7 +294,41 @@ public class APIConnection extends AsyncTask<String, String, String> {
         return Arrays.asList(rainIds).contains(weather_id);
     }
 
-    private int convertKelvinToCelsius(int temperatureInKelvin) {
-        return temperatureInKelvin - (int) 273.15;
-    }
+    /*
+        private void setNotificationChannel() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // Create the NotificationChannel, but only on API 26+ because
+                // the NotificationChannel class is new and not in the support library
+                CharSequence name = getString(R.string.channel_name);
+                String description = getString(R.string.channel_description);
+                int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+                NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+                channel.setDescription(description);
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
+
+        private void createNotification(String title, String description, int notificationID) {
+            // Intent to open application when user clicks notification
+            Intent open_intent = new Intent(getActivity(), MainActivity.class);
+            open_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, open_intent, 0);
+
+            // Notification content
+            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
+                    .setSmallIcon(R.mipmap.climapp_logo3)
+                    .setContentTitle(title)
+                    .setContentText(description)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(description))
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
+
+            // Send notification
+            notificationManager.notify(notificationID, mBuilder.build());
+        }*/
+
 }

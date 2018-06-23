@@ -39,7 +39,6 @@ public class RecommendedAlertLimitISO7243 {
     public void setActivityLevel(String activityLevel) {
         this.activityLevel = activityLevel;
     }
-
     /**
      * Getting the metabolic rate based on the users
      * activity level - if the activity level has not been
@@ -110,19 +109,21 @@ public class RecommendedAlertLimitISO7243 {
      * Set indicator (red/green/yellow) based on recommended alert limit on dashboard view
      * green    if wbgt <= 0.8 * ral
      * yellow   if wbgt >  0.8 * ral and
-     *             wbgt <= ral
+     *             wbgt <  ral
      * red      if wbgt >  ral and
-     *             wbgt <= ral * 1.2
-     * dark red if wbgt >  ral * 1.2
-     * @param WBGTWithoutSolar WBGT value
-     * @param RALValue RAL value - reference limit
+     *             wbgt <  ral * 1.2
+     * dark red if wbgt >= ral * 1.2
+     * @param WBGTin WBGT value (with or without solar)
+     * @param RAL RAL value - reference limit
      */
-    public String getRecommendationColor(double WBGTWithoutSolar, double RALValue) {
-        if(Math.round(WBGTWithoutSolar) <= Math.round(0.8 * RALValue)) {
+    public String getRecommendationColor(double WBGTin, double RAL) {
+        long WBGT = Math.round(WBGTin);
+
+        if(WBGT <= Math.round(0.8 * RAL)) {
             return "#00b200"; // Green
-        } else if(Math.round(WBGTWithoutSolar) > Math.round(0.8 * RALValue) && Math.round(WBGTWithoutSolar) <= RALValue) {
+        } else if(Math.round(0.8 * RAL) < WBGT && WBGT < RAL) {
             return "#FBBA57"; // Orange
-        } else if (Math.round(WBGTWithoutSolar) > RALValue && Math.round(WBGTWithoutSolar) <= RALValue * 1.2 ){
+        } else if (RAL < WBGT && WBGT < RAL * 1.2 ){
             return "#e50000"; // Red
         } else {
             return "#b20000"; // Dark red

@@ -152,6 +152,36 @@ public final class User {
         return (int) Math.round(calculatedWeight);
     }
 
+    /**
+     * Based on user preferences, the temperature is set in either Celcius or Fahrenheit
+     * @param inputTemperature temperature in kelvin
+     * @return the temperature in either fahrenheit or celcius based on user preference
+     */
+    public int setCorrectTemperatureUnit(int inputTemperature, int  unit){
+        if(unit == 1){
+            return convertKelvinToFahrenheit(inputTemperature);
+        } else {
+            return convertKelvinToCelsius(inputTemperature);
+        }
+    }
+
+    /**
+     * T(°C) = T(K) - 273.15
+     * @param temperatureInKelvin the temperature in kelvin
+     * @return the input temperature in kelvin converted to fahrenheit
+     */
+    private int convertKelvinToCelsius(int temperatureInKelvin) {
+        return temperatureInKelvin - (int) 273.15;
+    }
+
+    /**
+     * T(°F) = T(K) × 1.8 - 459.67
+     * @param temperatureInKelvin the temperature in kelvin
+     * @return the input temperature in kelvin converted to fahrenheit
+     */
+    private int convertKelvinToFahrenheit(int temperatureInKelvin){
+        return (int) Math.round((temperatureInKelvin * 1.8) - 459.67);
+    }
 
     /* Getters and setters */
     public void setDateOfBirth(String DDMMYYYY){mDateOfBirth = DDMMYYYY; }

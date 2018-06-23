@@ -42,6 +42,13 @@
                             android:layout_height="wrap_content"
                             android:text="@string/degrees"
                             android:textSize="80sp" />
+                        <TextView
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:id="@+id/temperature_unit"
+                            android:textSize="12sp"
+                            android:textStyle="italic"
+                            android:text="@string/temperature_unit_c"/>
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -103,6 +110,7 @@
                         android:id="@+id/ral"
                         android:layout_margin="16dp"
                         android:layout_alignParentEnd="true"
+                        android:contentDescription="@string/RALColorCodeArea"
                         android:src="@drawable/circle" />
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
@@ -121,6 +129,7 @@
                             android:layout_width="10dp"
                             android:layout_height="10dp"
                             android:layout_marginEnd="8dp"
+                            android:contentDescription="@string/RALColorCodeArea"
                             android:src="@drawable/circle"
                             android:id="@+id/ral_small"/>
                         <TextView
@@ -147,6 +156,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:contentDescription="@string/alert_header_text"
                         android:visibility="gone"
                         android:id="@+id/alert_view"
                         android:src="@mipmap/ic_alert_foreground"/>
@@ -234,14 +244,9 @@
                         style="@style/SmallDescriptiveTextStyleNoMargin"
                         android:layout_marginBottom="8dp"/>
                     <TextView
-                        android:id="@+id/solar"
+                        android:id="@+id/wbgt_value"
                         android:text=""
                         style="@style/DashboardTextStyle"/>
-                    <TextView
-                        android:id="@+id/no_solar"
-                        android:text=""
-                        style="@style/DashboardTextStyle"
-                        android:layout_marginBottom="16dp"/>
                     <TextView
                         android:text="@string/location"
                         style="@style/SmallDescriptiveTextStyleNoMargin"/>
