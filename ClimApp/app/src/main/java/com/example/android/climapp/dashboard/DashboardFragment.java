@@ -1,5 +1,6 @@
 package com.example.android.climapp.dashboard;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import com.example.android.climapp.R;
 import com.example.android.climapp.onboarding.OnBoardingActivity;
 import com.example.android.climapp.utils.APIConnection;
 import com.example.android.climapp.utils.Pair;
+import com.example.android.climapp.utils.User;
 import com.example.android.climapp.wbgt.RecommendedAlertLimitISO7243;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -79,9 +81,11 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
     private ImageView recommendationView, recommendationSmallView;
     private ToggleButton activityVeryHigh, activityHigh, activityMedium, activityLow, activityVeryLow;
     private TextView txtLong, txtLat, locationErrorTxt, activityLevelDescription,
-            activityMoreTextView, heatStressTopView, heatStressTextView;
+            activityMoreTextView, heatStressTopView, heatStressTextView,
+            temperatureValue, temperatureUnit;
 
     private String latitude, longitude;
+    private SharedPreferences.OnSharedPreferenceChangeListener sharedListener;
     private SharedPreferences preferences;
     private RecommendedAlertLimitISO7243 ral;
     //private int notificationID = 1;
@@ -117,6 +121,10 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
         mLocationButton = getActivity().findViewById(R.id.locationButton);
         txtLong = getActivity().findViewById(R.id.long_coord);
         txtLat = getActivity().findViewById(R.id.lat_coord);
+
+        // Temperature
+        temperatureValue = getActivity().findViewById(R.id.temp_value);
+        temperatureUnit = getActivity().findViewById(R.id.temperature_unit);
 
         // WBGT views
         locationErrorTxt = getActivity().findViewById(R.id.error_txt);
@@ -223,6 +231,32 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
             }
         });
 
+        /*
+         * Used preferences changed listener to update view when preferred unit changes
+         */
+        sharedListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+                // Update dashboard view when units are changed.
+                if(key.equals("Unit")){
+                    //Log.v("HESTE", key + "  " + prefs.getAll().toString() + "" + prefs.getInt("temperature",0));
+                    Activity act  = getActivity();
+                    if (act != null){
+                        User user = new User();
+
+                        if(prefs.getInt("Unit", 0) == 1) {
+                            temperatureUnit.setText(getString(R.string.temperature_unit_f));
+                            temperatureValue.setText(String.format("%s°",user.setCorrectTemperatureUnit(prefs.getInt("temperature", 0),1)+""));
+                        } else {
+                            temperatureUnit.setText(getString(R.string.temperature_unit_c));
+                            temperatureValue.setText(String.format("%s°",user.setCorrectTemperatureUnit(prefs.getInt("temperature", 0),0)+""));
+                        }
+                    }
+                }
+            }
+        };
+
+        preferences.registerOnSharedPreferenceChangeListener(sharedListener);
+
         // Set activity level on start if checked
         setCheckedActivityLevel();
     }
@@ -253,7 +287,9 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
     @Override
     public void onPause() {
+
         super.onPause();
+        preferences.registerOnSharedPreferenceChangeListener(sharedListener);
     }
 
     @Override
@@ -347,8 +383,8 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
                 heatStressTextView.setText(R.string.suggestion_yellow);
                 break;
             case "#e50000":
-                heatStressTopView.setText(R.string.suggestion_dark_red_top);
-                heatStressTextView.setText(R.string.suggestion_dark_red);
+                heatStressTopView.setText(R.string.suggestion_red_top);
+                heatStressTextView.setText(R.string.suggestion_red);
                 break;
             default:
                 heatStressTopView.setText(R.string.suggestion_dark_red_top);
@@ -374,6 +410,15 @@ public class DashboardFragment extends Fragment implements GoogleApiClient.Conne
 
         // Close main activity
         getActivity().finish();
+    }
+
+    public int getTemperatureUnit() {
+        int unit = preferences.getInt("Unit", 0);
+        if(unit == 1){
+            return R.string.temperature_unit_f;
+        } else {
+            return R.string.temperature_unit_c;
+        }
     }
 
     /**
