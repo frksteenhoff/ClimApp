@@ -18,7 +18,33 @@
                 style="@style/CardViewFeedStyle">
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:id="@+id/error_permission">
+                    <LinearLayout
+                        style="@style/SmallDescriptiveTextStyleNoMargin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_margin="16dp">
+                        <TextView
+                            style="@style/SmallDescriptiveTextStyleNoMargin"
+                            android:id="@+id/error_header"
+                            android:layout_marginBottom="4dp"
+                            android:text="Error" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/error_txt"
+                            android:text="GPS or internet disabled. Please enable both and restart the app."/>
+                    </LinearLayout>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                style="@style/CardViewFeedStyle">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/location_top">
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -119,6 +145,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/heat_stress_level"
                     android:orientation="vertical"
                     android:layout_margin="16dp">
                     <LinearLayout
@@ -168,7 +195,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_margin="16dp">
+                    android:layout_margin="16dp"
+                    android:id="@+id/activity_level">
                     <TextView
                         style="@style/SmallDescriptiveTextStyleNoMargin"
                         android:text="@string/activity_level" />
@@ -238,31 +266,26 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_margin="16dp">
+                    android:layout_margin="16dp"
+                    android:visibility="visible"
+                    android:id="@+id/update_location">
                     <TextView
-                        android:text="@string/wbgt_model_temp"
+                        android:text="@string/location"
                         style="@style/SmallDescriptiveTextStyleNoMargin"
                         android:layout_marginBottom="8dp"/>
                     <TextView
                         android:id="@+id/wbgt_value"
                         android:text=""
-                        style="@style/DashboardTextStyle"/>
+                        style="@style/DashboardTextStyle"
+                        android:visibility="gone"/>
                     <TextView
                         android:text="@string/location"
-                        style="@style/SmallDescriptiveTextStyleNoMargin"/>
-                    <TextView
-                        android:id="@+id/error_txt"
-                        android:text=""
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginTop="16dp"
-                        style="@style/DashboardTextStyle"
+                        style="@style/SmallDescriptiveTextStyleNoMargin"
                         android:visibility="gone"/>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="16dp"
-                        android:layout_marginTop="16dp">
+                        android:orientation="horizontal">
                         <TextView
                             android:id="@+id/long_coord"
                             android:visibility="gone"

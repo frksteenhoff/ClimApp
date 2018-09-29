@@ -1,4 +1,4 @@
-package com.example.android.climapp;
+package com.android.climapp;
 
 import android.support.test.runner.AndroidJUnit4;
 

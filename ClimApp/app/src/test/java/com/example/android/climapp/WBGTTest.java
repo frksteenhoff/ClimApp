@@ -1,8 +1,8 @@
-package com.example.android.climapp;
+package com.android.climapp;
 
-import com.example.android.climapp.wbgt.Solar;
-import com.example.android.climapp.wbgt.SolarRad;
-import com.example.android.climapp.wbgt.WBGT;
+import com.android.climapp.wbgt.Solar;
+import com.android.climapp.wbgt.SolarRad;
+import com.android.climapp.wbgt.WBGT;
 
 import org.junit.Test;
 

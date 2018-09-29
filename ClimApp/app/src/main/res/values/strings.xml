@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">ClimApp</string>
     <string name="no_text"> </string>
 
@@ -10,19 +10,12 @@
     <!-- Channel information - do not need translation -->
     <string name="channel_name">"ClimApp"</string>
     <string name="channel_description">"WBGT value check"</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- OnBoarding sentences -->
     <string name="welcome">Welcome!</string>
-    <string name="new_user">You seem to be a new user</string>
     <string name="set_up">Let\'s get you started..</string>
     <string name="get_to_know">Getting to know you..</string>
     <string name="almost_done">Almost done..</string>
-    <string name="user_first_name">First name</string>
-    <string name="user_last_name">Last name</string>
-    <string name="user_e_mail">E-mail address</string>
-    <string name="user_password">Password</string>
     <string name="skip">Skip</string>
     <string name="next">Next</string>
     <string name="done">Done</string>
@@ -44,7 +37,6 @@
         concrete block laying.</string>
     <string name="activity_very_high_text_short">Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs,
         running on level surface.</string>
-
     <string name="activity_very_low_text">Resting, sitting at ease.\nBreathing not challenged.</string>
     <string name="activity_low_text">Light manual work:\nwriting, typing, drawing, book-keeping.\nLight manual arm work,
         standing drilling.\nCasual walking on level surface.\nEasy to breathe and carry on a conversation. </string>
@@ -59,7 +51,6 @@
     <!-- Dashboard: recommendation text -->
     <string name="heatStressLevel">Your expected heat-stress level</string>
     <string name="suggestion_text">Description of actions.</string>
-
     <string name="suggestion_green_top">No high heat expected</string>
     <string name="suggestion_green">Maintain normal working and hydration procedures.</string>
     <string name="suggestion_yellow_top">Moderate heat-stress is expected</string>
@@ -90,16 +81,8 @@
     <string name="cloudiness">Cloudiness</string>
     <string name="wbgt_model_temp">WBGT (temporary)</string>
 
-    <!-- Dashboard: Hydration -->
-    <string name="hydration">Hydration</string>
-    <string name="hydration_text">What did you drink today?</string>
-
     <!-- Dashboard: Alerts-->
     <string name="alert_header_text">Alert</string>
-    <string name="alert_text_title">Weather too hot!</string>
-    <string name="alert_text_description">What caused this</string>
-    <string name="alert_text_hydration">How to properly hydrate</string>
-    <string name="alert_text_clothing">What clothes to wear</string>
     <string name="RALColorCodeArea">Showing color code</string>
 
 
@@ -109,7 +92,6 @@
     <string name="Weight">Weight</string>
     <string name="Gender">Gender</string>
     <string name="Acclimatization">Acclimatization</string>
-    <string name="title_activity_navigation">NavigationActivity</string>
 
     <!-- Settings: Button hints -->
     <string name="Input_age">Input date of birth (DDMMYYYY)</string>
@@ -120,8 +102,8 @@
     <string name="Input_unit">Select unit</string>
     <string name="female">Female</string>
     <string name="male">Male</string>
-    <string name="submit">Submit</string>
-    <string name="wrong_age">Incorrect input format. Should be DDMMYYYY, try again.</string>
+    <string name="set_age_button">Set age</string>
+    <string name="wrong_age">Incorrect input format or age. Should be on form DDMMYYYY with age between 18 to 120. Try again.</string>
 
     <!-- Settings: Units -->
     <string name="age_unit">Years</string>
@@ -173,10 +155,11 @@
     <string name="choose_gender">Choose gender</string>
     <string name="disclaimer">Disclaimer</string>
     <string name="disclaimer_text">ERA4CS and its partners assume no responsibility or liability for any
-        errors or omissions in the content of this site. The information contained in this site
+        errors or omissions in the content of this application. The information contained in this app
         is provided on an “as is” basis with no guarantees of completeness, accuracy, usefulness
         or timeliness.</string>
     <string name="what_climapp">What is the ERA4CS ClimApp project?</string>
+    <string name="era4cs_text">Read more on the official website: <a href="http://www.jpi-climate.eu/nl/25223441-ClimApp.html">http://www.jpi-climate.eu/nl/</a></string>
 
     <!-- Settings: reponses -->
     <string name="age_updated">Age updated to: </string>
@@ -186,7 +169,6 @@
     <string name="acclimatization_false">Not acclimatizatized to work environment</string>
 
     <!-- Settings: initial values -->
-    <string name="acclimatization_default">0.0</string>
     <string name="user_height">150</string>
     <string name="female_checked">Female checked</string>
     <string name="male_checked">Male checked</string>
@@ -208,10 +190,7 @@
     <string name="acclimatization_description_more">Read more about setting your acclimatization level</string>
 
     <!--Settings: Notification values -->
-    <string name="notificationDescription">Here, we want to show the user the necessary information.</string>
-    <string name="dismiss">Dismiss</string>
-    <string name="more">More</string>
-
+    <string name="more">Learn More</string>
 
     <!-- Clothing: -->
     <string name="field_of_work">Field of work</string>
@@ -230,17 +209,7 @@
     </string-array>
 
     <!-- Sign-in status messages -->
-    <string name="sign_in">Sign In</string>
-    <string name="sign_up">Sign Up </string>
-    <string name="signed_in_fmt">Signed in as: %s</string>
-    <string name="signed_in">Signed in</string>
-    <string name="signing_in">Signing in…</string>
-    <string name="signed_out">Signed out</string>
-    <string name="loading">Loading…</string>
-
-    <!-- Error messages -->
-    <string name="login_error">Error during login</string>
-    <string name="login_cancelled">Login cancelled. </string>
+    <string name="loading" tools:keep="@string/loading">Loading…</string>
 
     <!-- Facebook information (no translation needed) -->
     <string name="server_client_id">912535355882-9ud102rtm4qbsn265r2va8leqdef75p3.apps.googleusercontent.com</string>

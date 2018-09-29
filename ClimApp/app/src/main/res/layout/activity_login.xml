@@ -58,7 +58,7 @@
                 android:id="@+id/climapp_signup"
                 style="@style/LoginButtonStyle"
                 android:paddingBottom="12dp"
-                android:text="@string/sign_up"
+                android:text="sign_up"
                 android:backgroundTint="@color/colorPrimary"
                 android:textColor="@color/tw__solid_white"/>
         </LinearLayout>

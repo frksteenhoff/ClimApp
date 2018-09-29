@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context="com.example.android.climapp.dashboard.ActivityLevelListActivity">
+    tools:context="com.android.climapp.dashboard.ActivityLevelListActivity">
 
     <ListView
         android:id="@+id/list"

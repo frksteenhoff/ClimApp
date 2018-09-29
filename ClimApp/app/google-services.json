@@ -47,7 +47,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:912535355882:android:ee9a163939c9f882",
         "android_client_info": {
-          "package_name": "com.example.android.climapp"
+          "package_name": "com.android.climapp"
         }
       },
       "oauth_client": [
@@ -55,7 +55,7 @@
           "client_id": "912535355882-0k1teiffa4pp6312tqh18g0pkm0v429f.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.android.climapp",
+            "package_name": "com.android.climapp",
             "certificate_hash": "870eb3604ef715ac6b69a47e08d8721cd63f240f"
           }
         },

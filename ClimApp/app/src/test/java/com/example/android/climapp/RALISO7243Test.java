@@ -1,6 +1,6 @@
-package com.example.android.climapp;
+package com.android.climapp;
 
-import com.example.android.climapp.wbgt.RecommendedAlertLimitISO7243;
+import com.android.climapp.wbgt.RecommendedAlertLimitISO7243;
 
 import org.junit.Test;
 

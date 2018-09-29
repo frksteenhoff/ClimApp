@@ -1,6 +1,6 @@
-package com.example.android.climapp;
+package com.android.climapp;
 
-import com.example.android.climapp.utils.User;
+import com.android.climapp.utils.User;
 
 import org.junit.Test;
 
