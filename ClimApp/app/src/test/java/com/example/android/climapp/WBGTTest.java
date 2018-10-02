@@ -1,4 +1,4 @@
-package com.android.climapp;
+package com.example.android.climapp;
 
 import com.android.climapp.wbgt.Solar;
 import com.android.climapp.wbgt.SolarRad;
@@ -54,6 +54,23 @@ public class WBGTTest {
 
         // Making all calculations
         WBGT wbgt = new WBGT(year, month, day, hour, min, utcOffset, avg, latitude, longitude, sr.solarIrradiation(), pres, Tair, relhum, speed, zspeed, dT, urban);
+        assertEquals(26.7, wbgt.getWBGTWithoutSolar());
+        assertEquals(25.0, wbgt.getWBGTWithSolar());
+    }
+
+    @Test
+    public void testInitalValuesNumberFormatException() {
+        //Location Accra, Ghana
+        String latitude = "5.593222";
+        String longitude = "-0.140138";
+
+        calendar.set(year, month - 1, day, hour, min);
+
+        Solar s = new Solar(Double.parseDouble(longitude), Double.parseDouble(latitude), calendar, utcOffset);
+        SolarRad sr = new SolarRad(s.zenith(), calendar.get(Calendar.DAY_OF_YEAR), 0, 1, false, false); //(solar zenith angle, day no, cloud fraction, cloud type, fog, precipitation)
+
+        // Making all calculations
+        WBGT wbgt = new WBGT(year, month, day, hour, min, utcOffset, avg, Double.parseDouble(latitude), Double.parseDouble(longitude), sr.solarIrradiation(), pres, Tair, relhum, speed, zspeed, dT, urban);
         assertEquals(26.7, wbgt.getWBGTWithoutSolar());
         assertEquals(25.0, wbgt.getWBGTWithSolar());
     }

@@ -1,4 +1,4 @@
-package com.android.climapp;
+package com.example.android.climapp;
 
 import com.android.climapp.wbgt.RecommendedAlertLimitISO7243;
 

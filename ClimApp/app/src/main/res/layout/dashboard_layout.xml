@@ -30,12 +30,12 @@
                             style="@style/SmallDescriptiveTextStyleNoMargin"
                             android:id="@+id/error_header"
                             android:layout_marginBottom="4dp"
-                            android:text="Error" />
+                            android:text="@string/error" />
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:id="@+id/error_txt"
-                            android:text="GPS or internet disabled. Please enable both and restart the app."/>
+                            android:text="@string/error_text_location"/>
                     </LinearLayout>
                 </RelativeLayout>
             </android.support.v7.widget.CardView>

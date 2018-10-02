@@ -2,6 +2,7 @@ package com.android.climapp.utils;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,7 +25,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 public class APIConnection extends AsyncTask<String, String, String> {
     /* Key authorizing connection to API */
@@ -34,8 +34,6 @@ public class APIConnection extends AsyncTask<String, String, String> {
     //private String mtestURL = "http://samples.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s";
     private String mBaseURL = "http://api.openweathermap.org/data/2.5/weather?lat=%s&lon=%s&appid=%s";
 
-    /* Longitude/latitude pair */
-    private Pair<?, ?> mCoordinatePair;
     /* Calculated string based on input in constructor */
     private String mConnectionString;
     private String pageText;
@@ -58,8 +56,8 @@ public class APIConnection extends AsyncTask<String, String, String> {
     private static final String WEATHER_ICON = "icon";
 
     private Integer pressure, temperature, cloudiness, weather_id;
-    private String city_name, description, icon, mLongitude, mLatitude, temperature_unit;
-    private double wind_speed, humidity;
+    private String city_name, description, icon, temperature_unit;
+    private double wind_speed, humidity, mLongitude, mLatitude;
     private com.android.climapp.dashboard.DashboardFragment mDashboard;
 
     private SharedPreferences mPreferences;
@@ -70,22 +68,19 @@ public class APIConnection extends AsyncTask<String, String, String> {
     *  Example with input parameters:
     *  http://openweathermap.org/data/2.5/weather?lat=35&lon=139&appid=b1b15e88fa797225412429c1c50c122a1
     */
-    public APIConnection(String apiKey, Pair<?, ?> coordinatePair, SharedPreferences preferences, com.android.climapp.dashboard.DashboardFragment dashboard) {
+    public APIConnection(String apiKey, double lat, double lon, SharedPreferences preferences,
+                         com.android.climapp.dashboard.DashboardFragment dashboard) {
         mAPIKey = apiKey;
-        mCoordinatePair = coordinatePair;
         /* Create connection string (URL) */
-        mConnectionString = String.format(mBaseURL,
-                mCoordinatePair.getLeft(),
-                mCoordinatePair.getRight(),
-                mAPIKey);
+        mConnectionString = String.format(mBaseURL, lat, lon, mAPIKey);
         mPreferences = preferences;
-        mLatitude = mCoordinatePair.getLeft().toString();
-        mLongitude = mCoordinatePair.getRight().toString();
+        mLatitude = lat;
+        mLongitude = lon;
         mDashboard = dashboard;
     }
 
     /* Get URL for connection to weather API */
-    public String getAPIConnectionString() {
+    private String getAPIConnectionString() {
         return mConnectionString;
     }
 
@@ -106,8 +101,10 @@ public class APIConnection extends AsyncTask<String, String, String> {
         try {
             InputStreamReader in = new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8);
             BufferedReader reader = new BufferedReader(in);
-            pageText = reader.lines().collect(Collectors.joining("\n"));
 
+            // Only fetching one line from open weather map
+            pageText = reader.readLine();
+            Log.v("HESTE", pageText);
         } catch (Exception e1) {
             e1.printStackTrace();
         } finally {
@@ -124,24 +121,26 @@ public class APIConnection extends AsyncTask<String, String, String> {
      */
     protected void onPostExecute(String pageText) {
         // Get data from response JSON Object
-        getJSONResponseContent(pageText);
+        if(!pageText.equals("")) {
+            getJSONResponseContent(pageText);
 
-        // Display data in UI
-        setDashboardViewContentFromAPIResponse();
+            // Display data in UI
+            setDashboardViewContentFromAPIResponse();
 
-        // Calculate WBGT model parameters
-        setAndSaveDashboardWBGTModelParameters();
+            // Calculate WBGT model parameters
+            setAndSaveDashboardWBGTModelParameters();
 
-        com.android.climapp.wbgt.RecommendedAlertLimitISO7243 ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
-                // Giving default values if nothing set
-                mPreferences.getString("activity_level", "medium"),
-                mPreferences.getString("Height_value", "1.70"),
-                mPreferences.getInt("Weight", 80));
+            com.android.climapp.wbgt.RecommendedAlertLimitISO7243 ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
+                    // Giving default values if nothing set
+                    mPreferences.getString("activity_level", "medium"),
+                    mPreferences.getString("Height_value", "1.70"),
+                    mPreferences.getInt("Weight", 80));
 
-        String color = ral.getRecommendationColor(mPreferences.getFloat("WBGT", 0), ral.calculateRALValue());
+            String color = ral.getRecommendationColor(mPreferences.getFloat("WBGT", 0), ral.calculateRALValue());
 
-        // Set color in view based on RAL interval
-        mDashboard.setRecommendationColorAndText(color);
+            // Set color in view based on RAL interval
+            mDashboard.setRecommendationColorAndText(color);
+        }
     }
 
     private void getJSONResponseContent(String text) {
@@ -243,7 +242,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
 
         // Precipitation and cloudfraction now depend on data from Open Weather Map
         // cloud fraction is cloudiness in percent divided by 100 to get it as a fraction
-        Solar s = new Solar(Double.parseDouble(mLongitude), Double.parseDouble(mLatitude), calendar, utcOffset);
+        Solar s = new Solar(mLongitude, mLatitude, calendar, utcOffset);
         SolarRad sr = new SolarRad(s.zenith(),
                 calendar.get(Calendar.DAY_OF_YEAR),
                 cloudiness/100,
@@ -253,9 +252,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
         // cloud type, fog, precipitation)
 
         // Making all wbgt calculations
-        WBGT wbgt = new WBGT(year, month, day, hour, min, utcOffset, avg,
-                Double.parseDouble(mLatitude),
-                Double.parseDouble(mLongitude),
+        WBGT wbgt = new WBGT(year, month, day, hour, min, utcOffset, avg, mLatitude, mLongitude,
                 sr.solarIrradiation(), pressure, Tair, humidity, wind_speed, zspeed, dT, urban);
         return wbgt;
     }

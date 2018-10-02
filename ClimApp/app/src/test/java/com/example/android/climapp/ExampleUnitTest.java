@@ -1,4 +1,4 @@
-package com.android.climapp;
+package com.example.android.climapp;
 
 import org.junit.Test;
 

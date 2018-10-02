@@ -71,6 +71,8 @@
     <string name="update_location">Update location</string>
     <string name="current_location">Current location</string>
     <string name="permission_denied">Permission to access location denied, nothing to show.</string>
+    <string name="error_text_location">GPS or internet disabled. Please enable both and restart the app.</string>
+    <string name="error">Error</string>
 
     <!-- Dashboard: weather information -->
     <string name="humidity">Humidity</string>

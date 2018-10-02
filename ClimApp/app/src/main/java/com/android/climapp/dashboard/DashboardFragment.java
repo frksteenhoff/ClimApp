@@ -18,6 +18,7 @@ import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +36,6 @@ import android.widget.ToggleButton;
 import com.android.climapp.R;
 import com.android.climapp.onboarding.OnBoardingActivity;
 import com.android.climapp.utils.APIConnection;
-import com.android.climapp.utils.Pair;
 import com.android.climapp.utils.User;
 import com.android.climapp.wbgt.RecommendedAlertLimitISO7243;
 import com.google.android.gms.common.ConnectionResult;
@@ -45,8 +45,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-
-import java.text.DecimalFormat;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LOCATION_SERVICE;
@@ -69,8 +67,6 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     public DashboardFragment() {
         // Required empty constructor
     }
-
-    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 500;
     private static final int ACCESS_COARSE_LOCATION_CODE = 3410;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
     private static final int GPS_ENABLE_REQUEST = 0x1001;
@@ -101,7 +97,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     private RelativeLayout locationTopView, permissionErrorView;
     private LinearLayout heatStressLevelView, updateLocationView, activityLevelView;
 
-    private String latitude, longitude;
+    private double latitude, longitude;
     private SharedPreferences.OnSharedPreferenceChangeListener sharedListener;
     private SharedPreferences preferences;
     private RecommendedAlertLimitISO7243 ral;
@@ -236,7 +232,6 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
                 // Update dashboard view when units are changed.
                 if(key.equals("Unit")){
-                    //Log.v("HESTE", key + "  " + prefs.getAll().toString() + "" + prefs.getInt("temperature",0));
                     Activity act  = getActivity();
                     if (act != null){
                         User user = new User(preferences);
@@ -500,9 +495,9 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
      * @return true if access to device location is granted, false otherwise.
      */
     private boolean deviceHasLocationPermission() {
-        return !(ActivityCompat.checkSelfPermission(getActivity(),
+        return !(ContextCompat.checkSelfPermission(getActivity(),
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(),
+                ContextCompat.checkSelfPermission(getActivity(),
                         android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED);
     }
 
@@ -517,54 +512,41 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
      * not already granted.
      */
     private void displayLocation() {
-        if (ActivityCompat.checkSelfPermission(getActivity(),
+        if (ContextCompat.checkSelfPermission(getActivity(),
                 android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            Toast.makeText(getActivity().getApplicationContext(),
-                    "The application does not have location access. Cannot fetch weather data.", Toast.LENGTH_LONG)
-                    .show();
+        }
+        if(deviceHasInternetConnection()) {
+            if (deviceHasLocationPermission()) {
+                mFusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if (location != null) {
+                                    //setLocationViewVisibility(true);
+                                    showDashboardViews(true);
 
-        } else {
-            if(deviceHasInternetConnection()) {
-                if (deviceHasLocationPermission()) {
-                    mFusedLocationClient.getLastLocation()
-                            .addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                                @Override
-                                public void onSuccess(Location location) {
-                                    if (location != null) {
-                                        //setLocationViewVisibility(true);
-                                        showDashboardViews(true);
-                                        // Make lat/lon coordinates format, two decimal places
-                                        DecimalFormat df2 = new DecimalFormat(".##");
-
-                                        // Logic to get lat/lon from location object
-                                        latitude = df2.format(location.getLatitude());
-                                        longitude = df2.format(location.getLongitude());
-                                        //double altitude = location.getAltitude();
-
-                                        // Update view components
-                                        //txtLong.setText(latitude);
-                                        //txtLat.setText(longitude);
-
-                                        // Connect to weather API openweathermap.com using location coordinates
-                                        getOpenWeatherMapData(new Pair<String, String>(latitude, longitude));
-
-                                    } else {
-                                        Toast.makeText(getActivity().getApplicationContext(),
-                                                "The application does not seem to have gathered any available location data, move your device.", Toast.LENGTH_LONG)
-                                                .show();
-                                        showDashboardViews(false);
-                                    }
+                                    // Logic to get lat/lon from location object
+                                    latitude = location.getLatitude();
+                                    longitude = location.getLongitude();
+                                    //double altitude = location.getAltitude();
+                                    // Connect to weather API openweathermap.com using location coordinates
+                                    getOpenWeatherMapData(latitude, longitude);
+                                } else {
+                                    Toast.makeText(getActivity().getApplicationContext(),
+                                            "The application does not seem to have gathered any available location data, move your device.", Toast.LENGTH_LONG)
+                                            .show();
+                                    showDashboardViews(false);
                                 }
-                            });
-                } else {
-                    showDashboardViews(false);
-                    showGPSDisabledDialog();
-                }
+                            }
+                        });
             } else {
-                    showDashboardViews(false);
-                    showNoInternetDialog();
-                }
+                showDashboardViews(false);
+                showGPSDisabledDialog();
+            }
+        } else {
+            showDashboardViews(false);
+            showNoInternetDialog();
         }
     }
 
@@ -617,11 +599,11 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
 
         // On pressing Settings button
         alertDialog.setPositiveButton("Enable GPS", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent gpsOptionsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivityForResult(gpsOptionsIntent, ACCESS_COARSE_LOCATION_CODE);
-                }
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent gpsOptionsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivityForResult(gpsOptionsIntent, ACCESS_COARSE_LOCATION_CODE);
+            }
         });
 
         // on pressing cancel button
@@ -663,7 +645,6 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
                 showDashboardViews(false);
                 showNoInternetDialog();
             }
-
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
@@ -672,31 +653,12 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     /**
      * With device's location, fetch weather data from OpeanWeatherMap.com
      *
-     * @param Coordinates lat/lon pair of location coordinates fetched from device
+     * @param latitude lat part of location coordinates fetched from device
+     * @param longitude lon part of location coordinates fetched from device
      */
-    private void getOpenWeatherMapData(Pair<String, String> Coordinates) {
-        APIConnection APIConn = new APIConnection("f22065144b2119439a589cbfb9d851d3", Coordinates, preferences, this);
-        //Log.v("HESTE", "API access string:\n" + APIConn.getAPIConnectionString());
+    private void getOpenWeatherMapData(double latitude, double longitude) {
+        APIConnection APIConn = new APIConnection("f22065144b2119439a589cbfb9d851d3", latitude, longitude, preferences, this);
         APIConn.execute();
-    }
-
-    /**
-     * Set correct UI components according to whether location permission has been granted.
-     * If permission, show coordinates, no error message
-     * If not permission, show error message, no coordinates.
-     *
-     * @param locationFound boolean value determining how the dashboard view should look
-     */
-    private void setLocationViewVisibility(boolean locationFound) {
-        if (locationFound) {
-            //locationErrorTxt.setVisibility(View.GONE);
-            txtLat.setVisibility(View.VISIBLE);
-            txtLong.setVisibility(View.VISIBLE);
-        } else {
-            //locationErrorTxt.setVisibility(View.VISIBLE);
-            txtLat.setVisibility(View.GONE);
-            txtLong.setVisibility(View.GONE);
-        }
     }
 
     /**

@@ -44,13 +44,14 @@
                 <TextView
                     android:id="@+id/gender_settings"
                     android:layout_width="0dp"
-                    android:layout_weight="0.4"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:text="@string/Gender"
                     style="@style/SettingsTextStyleNoCaps"/>
                 <Spinner
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
                     android:layout_gravity="center_vertical"
                     android:id="@+id/gender_spinner"
                     android:layout_margin="16dp"
@@ -110,13 +111,14 @@
                 <TextView
                     android:id="@+id/units"
                     android:layout_width="0dp"
-                    android:layout_weight="0.4"
+                    android:layout_weight="0.5"
                     android:layout_height="wrap_content"
                     android:text="@string/measuring_units"
                     style="@style/SettingsTextStyleNoCaps"/>
                 <Spinner
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
                     android:id="@+id/units_spinner"
                     android:layout_gravity="center_vertical"
                     android:layout_margin="16dp"
