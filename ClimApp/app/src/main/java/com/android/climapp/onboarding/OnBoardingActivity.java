@@ -50,16 +50,18 @@ public class OnBoardingActivity extends FragmentActivity {
             public Fragment getItem(int position) {
                 switch (position) {
                     case 0:
-                        return new OnBoardingFragment_Units();
+                        return new OnBoardingFragment_Justification();
                     case 1:
-                        return new OnBoardingFragment_Age();
+                        return new OnBoardingFragment_Units();
                     case 2:
-                        return new OnBoardingFragment_Gender();
+                        return new OnBoardingFragment_Age();
                     case 3:
-                        return new OnBoardingFragment_Height();
+                        return new OnBoardingFragment_Gender();
                     case 4:
-                        return new OnBoardingFragment_Weight();
+                        return new OnBoardingFragment_Height();
                     case 5:
+                        return new OnBoardingFragment_Weight();
+                    case 6:
                         return new OnBoardingFragment_Acclimatization();
                     default:
                         return null;
@@ -67,7 +69,7 @@ public class OnBoardingActivity extends FragmentActivity {
             }
             @Override
             public int getCount() {
-                return 6;
+                return 7;
             }
         };
 
@@ -88,12 +90,15 @@ public class OnBoardingActivity extends FragmentActivity {
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Units
+                // Justification/first welcome
                 // if pager.getCurrentItem() == 0
+
+                // Units
+                // if pager.getCurrentItem() == 1
                 // Saving gender value done in OnBoardingFragment_Units
 
                 // Age
-                if(pager.getCurrentItem() == 1) {
+                if(pager.getCurrentItem() == 2) {
                     EditText currentText = findViewById(R.id.age_as_date_DDMMYYY);
                     if(user.isWellFormedInputDate(currentText.getText().toString())) {
                         saveDayOfBirth();
@@ -105,19 +110,19 @@ public class OnBoardingActivity extends FragmentActivity {
                     }
 
                     // Gender
-                    // if pager.getCurrentItem() == 2
+                    // if pager.getCurrentItem() == 3
                     // Saving gender value done in OnBoardingFragment_Gender
 
                     // Height
-                } else if(pager.getCurrentItem() == 3) {
+                } else if(pager.getCurrentItem() == 4) {
                     saveInformation("Height_value");
 
                     // Weight
-                } else if(pager.getCurrentItem() == 4) {
+                } else if(pager.getCurrentItem() == 5) {
                     saveInformation("Weight");
 
                     // Acclimatization (last input parameter)
-                } else if (pager.getCurrentItem() == 5) {
+                } else if (pager.getCurrentItem() == 6) {
                     // Saving acclimatization yes/no done in OnBoardingFragment_Acclimatization
                     finishOnBoarding();
 
@@ -132,7 +137,7 @@ public class OnBoardingActivity extends FragmentActivity {
         indicator.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                if (position == 5) {
+                if (position == 6) {
                     skip.setVisibility(View.GONE);
                     next.setText(R.string.done);
                 } else {

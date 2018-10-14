@@ -37,7 +37,6 @@ import com.android.climapp.R;
 import com.android.climapp.onboarding.OnBoardingActivity;
 import com.android.climapp.utils.APIConnection;
 import com.android.climapp.utils.User;
-import com.android.climapp.wbgt.RecommendedAlertLimitISO7243;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -100,7 +99,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     private double latitude, longitude;
     private SharedPreferences.OnSharedPreferenceChangeListener sharedListener;
     private SharedPreferences preferences;
-    private RecommendedAlertLimitISO7243 ral;
+    private com.android.climapp.wbgt.RecommendedAlertLimitISO7243 ral;
     //private int notificationID = 1;
     //private boolean notificationSent;
 
@@ -356,7 +355,9 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
      *                            to save in shared preferences
      * @param activityDescription the activity level description for the pressed button
      */
-    private void updateActivityLevelAndRecommendationView(ToggleButton currentButton, String preferenceText, String activityDescription) {
+    private void updateActivityLevelAndRecommendationView(ToggleButton currentButton,
+                                                          String preferenceText,
+                                                          String activityDescription) {
         // Set all views to false, afterwards: update only the one clicked to true
         activityVeryLow.setChecked(false);
         activityLow.setChecked(false);
@@ -371,9 +372,10 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         preferences.edit().putString("activity_level", preferenceText).apply();
 
         // Update color indicator after activity level change
-        ral = new RecommendedAlertLimitISO7243(preferences.getString("activity_level", null),
-                preferences.getString("Height_value",null),
-                preferences.getInt("Weight", 0));
+        ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
+                preferences.getString("activity_level", "medium"),
+                preferences.getString("Height_value","1.80"),
+                preferences.getInt("Weight", 80));
         String color = ral.getRecommendationColor(preferences.getFloat("WBGT", 0), ral.calculateRALValue());
         //Log.v("HESTE", "RAL: " + ral.calculateRALValue() + " WBGT: "+ preferences.getFloat(" WBGT ", 0) + " col:" + color);
 

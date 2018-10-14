@@ -112,9 +112,11 @@ public class RecommendedAlertLimit {
     public String getRecommendationColor(double WBGTWithoutSolar, double RALValue) {
         if(Math.round(WBGTWithoutSolar) <= Math.round(0.8 * RALValue)) {
             return "#00b200"; // Green
-        } else if(Math.round(WBGTWithoutSolar) > Math.round(0.8 * RALValue) && Math.round(WBGTWithoutSolar) <= RALValue) {
+        } else if(Math.round(WBGTWithoutSolar) > Math.round(0.8 * RALValue) &&
+                Math.round(WBGTWithoutSolar) <= RALValue) {
             return "#FBBA57"; // Orange
-        } else if (Math.round(WBGTWithoutSolar) > RALValue && Math.round(WBGTWithoutSolar) <= RALValue * 1.2 ){
+        } else if (Math.round(WBGTWithoutSolar) > RALValue &&
+                Math.round(WBGTWithoutSolar) <= RALValue * 1.2 ){
             return "#e50000"; // Red
         } else {
             return "#b20000"; // Dark red

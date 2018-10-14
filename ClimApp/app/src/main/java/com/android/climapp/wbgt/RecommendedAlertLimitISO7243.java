@@ -39,6 +39,7 @@ public class RecommendedAlertLimitISO7243 {
     public void setActivityLevel(String activityLevel) {
         this.activityLevel = activityLevel;
     }
+
     /**
      * Getting the metabolic rate based on the users
      * activity level - if the activity level has not been
@@ -47,11 +48,7 @@ public class RecommendedAlertLimitISO7243 {
      * @return metabolicRate allowed return type integer
      */
     private int getISOLevel() {
-        if(activityLevel != null) {
-            return ISOLevel.get(activityLevel);
-        } else {
-            return ISOLevel.get("medium");
-        }
+        return ISOLevel.get(activityLevel);
     }
 
     /**
@@ -68,40 +65,16 @@ public class RecommendedAlertLimitISO7243 {
     }
 
     /**
-     * Calculating the boy surface area using height and weight of user calculated as:
+     * Calculating the body surface area using height and weight of user calculated as:
      * BSA = (height (m))^0.725 * 0.20247 * weight (kg)^0.425
      *
-     * @param inputHeight user's height in meters
-     * @param inputWeight user's weight in kilograms
+     * @param inputHeight user's height in meters 1.80 as default
+     * @param inputWeight user's weight in kilograms 80 as default
      * @return the user's body surface area
      * Using default values for height and/or weight if user has not already input a value.
      */
     private double getBodySurfaceArea(String inputHeight, int inputWeight) {
-        int weight;
-        String height;
-        double BSA = 0;
-
-        int defaultWeight = 80;
-        String defaultHeight = "1.70";
-
-        if (inputHeight == null && inputWeight == 0) {
-            // If user has not yet provided any values for height and weight
-            height = defaultHeight;
-            weight = defaultWeight;
-        } else if (inputHeight == null) {
-            // If user has only provided weight
-            height = defaultHeight;
-            weight = inputWeight;
-        } else if (inputWeight == 0) {
-            // If user has only provided height
-            height = inputHeight;
-            weight = defaultWeight;
-        }else {
-            // If user has provided both height and weight
-            height = inputHeight;
-            weight = inputWeight;
-        }
-        BSA = Math.pow((Double.parseDouble(height)), 0.725) * 0.20247 * Math.pow(weight, 0.425);
+        double BSA = Math.pow((Double.parseDouble(inputHeight)), 0.725) * 0.20247 * Math.pow(inputWeight, 0.425);
         return BSA;
     }
 

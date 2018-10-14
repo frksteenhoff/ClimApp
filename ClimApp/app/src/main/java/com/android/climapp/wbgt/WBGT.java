@@ -68,7 +68,9 @@ public class WBGT {
      */
     private final double EMIS_GLOBE = 0.95;
     private final double ALB_GLOBE = 0.05;
-    private final double D_GLOBE = 0.0508; /* ((Liljegreen et al. bruger en globe med en diameter på 0.0508m. WBGT gælder for en globe på 150 mm. Metode Tg150 omregner Tglobe fra 50.8mm to 150mm */
+    private final double D_GLOBE = 0.0508; /* ((Liljegreen et al. bruger en globe med en diameter
+                                                på 0.0508m. WBGT gælder for en globe på 150 mm.
+                                                Metode Tg150 omregner Tglobe fra 50.8mm to 150mm */
 
     /*
      * define surface constants
@@ -131,7 +133,9 @@ public class WBGT {
 
     AirProperties ap = new AirProperties();
 
-    public WBGT(int year, int month, int day, int hour, int minute, int utcOffset, int avg, double lat, double lon, double solar, double pres, double Tair, double relhum, double speed, double zspeed, double dT, int urban) {
+    public WBGT(int year, int month, int day, int hour, int minute, int utcOffset, int avg,
+                double lat, double lon, double solar, double pres, double Tair, double relhum,
+                double speed, double zspeed, double dT, int urban) {
 
         this.year = year;
         this.month = month;
@@ -316,7 +320,8 @@ public class WBGT {
 	 * Argonne National Laboratory
 	 */
 
-    private double calculateWetBulbTemp(double Tair, double rh, double Pair, double speed, double solar, double fdir, double cza, int rad) {
+    private double calculateWetBulbTemp(double Tair, double rh, double Pair, double speed,
+                                        double solar, double fdir, double cza, int rad) {
 
 		/*	rad; switch to enable/disable radiative heating; Værdi 1 (med) eller 0 (uden)
 		/* no radiative heating --> pyschrometric wet bulb temp */
@@ -413,7 +418,8 @@ public class WBGT {
 	 * Argonne National Laboratory
 	 */
 
-    private double calculateGlobeTemp(double Tair, double rh, double Pair, double speed, double solar, double fdir, double cza) {
+    private double calculateGlobeTemp(double Tair, double rh, double Pair, double speed,
+                                      double solar, double fdir, double cza) {
         //	public double Tglobe() {
         double Tsfc, Tref, Tglobe_prev, Tglobe_new, h;
         boolean converged = false;

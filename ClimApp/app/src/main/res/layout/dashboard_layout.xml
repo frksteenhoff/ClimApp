@@ -61,12 +61,13 @@
                             android:layout_height="wrap_content"
                             android:id="@+id/current_city"
                             android:text="@string/current_location"
+                            android:layout_marginEnd="62dp"
                             android:textAllCaps="true"/>
                         <TextView
                             android:id="@+id/temp_value"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/degrees"
+                            android:text="@string/no_text"
                             android:textSize="80sp" />
                         <TextView
                             android:layout_height="wrap_content"

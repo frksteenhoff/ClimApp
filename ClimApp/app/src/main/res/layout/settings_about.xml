@@ -37,6 +37,12 @@
                 android:layout_marginTop="12dp"
                 android:text="@string/disclaimer_text"
                 style="@style/SettingsTextStyleNoCaps"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="App version: 0.10"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="16dp"/>
         </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

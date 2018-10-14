@@ -13,8 +13,14 @@
 
     <!-- OnBoarding sentences -->
     <string name="welcome">Welcome!</string>
+    <string name="justification">In order for the app to personalize the feedback provided to you,
+        we recommend that you input your personal information. If you don\'t feel like doing so, the app will
+        use predefined values instead.</string>
+    <string name="climapp_team">- The ClimApp Team</string>
+    <string name="before_set_up">Before we get going..</string>
     <string name="set_up">Let\'s get you started..</string>
     <string name="get_to_know">Getting to know you..</string>
+    <string name="last_step">Last step</string>
     <string name="almost_done">Almost done..</string>
     <string name="skip">Skip</string>
     <string name="next">Next</string>
@@ -156,7 +162,7 @@
     <string name="choose_units">Choose units</string>
     <string name="choose_gender">Choose gender</string>
     <string name="disclaimer">Disclaimer</string>
-    <string name="disclaimer_text">ERA4CS and its partners assume no responsibility or liability for any
+    <string name="disclaimer_text">This application is still under development and several new features will be implemented over the course of the next two years. Therefore all users should be informed frequent updates and changes to the layout and content might occur.\n\nERA4CS and its partners assume no responsibility or liability for any
         errors or omissions in the content of this application. The information contained in this app
         is provided on an “as is” basis with no guarantees of completeness, accuracy, usefulness
         or timeliness.</string>

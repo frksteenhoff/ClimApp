@@ -43,4 +43,10 @@ public class ActivityLevelListActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
 
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

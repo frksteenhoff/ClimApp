@@ -280,23 +280,30 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
     /**
      * Recalculate the height and weight values to fit the new unit of measurement
+     * Make sure to only set a value when one has actually been given
      * @param values   The list of possible height values
      * @param position the chosen unit as integer
      */
     private void recalculateHeightWeight(String[] values, int position) {
-        showHeight.setText(values[preferences.getInt("Height_index", 0)]);
+        if(preferences.getInt("Height_idnnex", 0) != 0) {
+            showHeight.setText(values[preferences.getInt("Height_index", 0)]);
+        }
         if(preferences.getString("Height_value", null) != null) {
             preferences.edit().putString("Height_value", values[preferences.getInt("Height_index", 0)]).apply();
         }
         int weight = 0;
         // SI units
         if(position == 0) {
-            weight = preferences.getInt("Weight", 0);
-            showWeight.setText(weight+"");
+            if(preferences.getInt("Weight", 0) != 0){
+                weight = preferences.getInt("Weight", 0);
+                showWeight.setText(weight + "");
+            }
         // UK or US metric system both in feet and inches
         } else {
-            weight = user.convertWeightToUnitFromKg(position, preferences.getInt("Weight", 0));
-            showWeight.setText(weight+"");
+            if(preferences.getInt("Weight", 0) != 0) {
+                weight = user.convertWeightToUnitFromKg(position, preferences.getInt("Weight", 0));
+                showWeight.setText(weight + "");
+            }
         }
     }
 

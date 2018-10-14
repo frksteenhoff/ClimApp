@@ -13,7 +13,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/set_up"
+        android:text="@string/almost_done"
         android:textSize="20sp"
         android:layout_marginBottom="20dp"
         android:textColor="@color/colorPrimaryDark"/>
@@ -28,7 +28,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.3"
+        android:layout_weight="1"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="fill_parent"

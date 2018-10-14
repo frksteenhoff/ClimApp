@@ -62,6 +62,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
 
     private SharedPreferences mPreferences;
     private com.android.climapp.wbgt.WBGT wbgt;
+    private com.android.climapp.wbgt.RecommendedAlertLimitISO7243 ral;
 
     /* Only working for creating the needed connection string to
     *  openweathermap.org, others will be implemented later on.
@@ -104,7 +105,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
 
             // Only fetching one line from open weather map
             pageText = reader.readLine();
-            Log.v("HESTE", pageText);
+            Log.v("HESTE", "pagetxt: " + pageText);
         } catch (Exception e1) {
             e1.printStackTrace();
         } finally {
@@ -121,7 +122,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
      */
     protected void onPostExecute(String pageText) {
         // Get data from response JSON Object
-        if(!pageText.equals("")) {
+        if(pageText != null && !pageText.equals("")) {
             getJSONResponseContent(pageText);
 
             // Display data in UI
@@ -130,7 +131,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
             // Calculate WBGT model parameters
             setAndSaveDashboardWBGTModelParameters();
 
-            com.android.climapp.wbgt.RecommendedAlertLimitISO7243 ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
+            ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
                     // Giving default values if nothing set
                     mPreferences.getString("activity_level", "medium"),
                     mPreferences.getString("Height_value", "1.70"),
@@ -167,8 +168,8 @@ public class APIConnection extends AsyncTask<String, String, String> {
      */
     private void setDashboardViewContentFromAPIResponse() {
         // Views updated based on data from Open Weather Map
-        ImageView weatherImage = mDashboard.getActivity().findViewById(R.id.weather_icon);
         TextView tempTextView = mDashboard.getActivity().findViewById(R.id.temp_value);
+        ImageView weatherImage = mDashboard.getActivity().findViewById(R.id.weather_icon);
         TextView humidityTextView = mDashboard.getActivity().findViewById(R.id.humidity_value);
         TextView windSpeedTextView = mDashboard.getActivity().findViewById(R.id.wind_speed_value);
         TextView cloudinessTextView = mDashboard.getActivity().findViewById(R.id.cloudiness_value);
@@ -198,7 +199,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
      * Calculate and set all WBGT model parameters and recommended alert limits
      */
     private void setAndSaveDashboardWBGTModelParameters() {
-        wbgt = calculateWBGT(wind_speed, humidity, pressure);
+        wbgt = calculateWBGT(wind_speed, humidity, pressure, mPreferences.getInt("temperature", 0));
         TextView WBGTTextView = mDashboard.getActivity().findViewById(R.id.wbgt_value);
 
         WBGTTextView.setText(String.format("WBGT: %s", wbgt.getWBGT()));
@@ -221,13 +222,14 @@ public class APIConnection extends AsyncTask<String, String, String> {
      * @param pressure   pressure in ATM
      * @return wbgt object
      */
-    private WBGT calculateWBGT(double wind_speed, double humidity, double pressure) {
+    private WBGT calculateWBGT(double wind_speed, double humidity, double pressure, int temperature) {
+        User user = new User(mPreferences);
         Calendar calendar = Calendar.getInstance();
         // Total offset (geographical and daylight savings) from UTC in hours
         int utcOffset = (calendar.get(Calendar.ZONE_OFFSET) +
                 calendar.get(Calendar.DST_OFFSET)) / (60 * 60000);
         int avg = 10;
-        double Tair = 25;
+        double Tair = user.setCorrectTemperatureUnit(temperature, mPreferences.getInt("Unit",0));
         double zspeed = 2;
         double dT = 0; //Vertical temp difference
         int urban = 0;
