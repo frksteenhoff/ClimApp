@@ -57,7 +57,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
 
     private Integer pressure, temperature, cloudiness, weather_id;
     private String city_name, description, icon, temperature_unit;
-    private double wind_speed, humidity, mLongitude, mLatitude;
+    private double wind_speed, humidity, mLongitude, mLatitude, mWBGT;
     private com.android.climapp.dashboard.DashboardFragment mDashboard;
 
     private SharedPreferences mPreferences;
@@ -78,6 +78,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
         mLatitude = lat;
         mLongitude = lon;
         mDashboard = dashboard;
+        mWBGT = 0;
     }
 
     /* Get URL for connection to weather API */
@@ -134,13 +135,16 @@ public class APIConnection extends AsyncTask<String, String, String> {
             ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
                     // Giving default values if nothing set
                     mPreferences.getString("activity_level", "medium"),
-                    mPreferences.getString("Height_value", "1.70"),
+                    mPreferences.getString("Height_value", "1.80"),
                     mPreferences.getInt("Weight", 80));
 
-            String color = ral.getRecommendationColor(mPreferences.getFloat("WBGT", 0), ral.calculateRALValue());
+            String color = ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue());
+            Log.v("HESTE", "RAL: " + ral.calculateRALValue() + " WBGT: " +
+                    mPreferences.getFloat(" WBGT ", 0) +"act " + wbgt.getWBGT()+ " col:" + color);
 
             // Set color in view based on RAL interval
             mDashboard.setRecommendationColorAndText(color);
+            mDashboard.saveStringToPreferences("color", color);
         }
     }
 
@@ -178,7 +182,8 @@ public class APIConnection extends AsyncTask<String, String, String> {
 
         User user = new User(mPreferences);
         tempTextView.setText(String.format("%s°", user.setCorrectTemperatureUnit(temperature, mPreferences.getInt("Unit",0))));
-        mPreferences.edit().putInt("temperature", Integer.parseInt(temperature.toString())).apply();
+        mPreferences.edit().putInt("temperature", Integer.parseInt(temperature.toString())).apply(); // Only to be used locally!
+        mDashboard.saveIntToPreferences("temperature", Integer.parseInt(temperature.toString())); // Will be saved
         temperatureUnit.setText(String.format("%s", mDashboard.getResources().getString(getTemperatureUnit())));
         humidityTextView.setText(String.format("%s %s", humidity, "%"));
         windSpeedTextView.setText(String.format("%s m/s", wind_speed));
@@ -203,7 +208,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
         TextView WBGTTextView = mDashboard.getActivity().findViewById(R.id.wbgt_value);
 
         WBGTTextView.setText(String.format("WBGT: %s", wbgt.getWBGT()));
-        mPreferences.edit().putFloat("WBGT", (float) wbgt.getWBGT()).apply();
+        mDashboard.saveFloatToPreferences("WBGT", (float) wbgt.getWBGT());
 
         /*// Send notification if values are outside recommended range
         if (wbgt.getWBGT() > 21.0 && !notificationSent) {
@@ -212,7 +217,6 @@ public class APIConnection extends AsyncTask<String, String, String> {
             preferences.edit().putBoolean("notification_sent", true).apply();
         }*/
     }
-
     /**
      * Use calculations for the WBGT mode from JTOF together with basic device input:
      * location, date and time and API response
@@ -230,6 +234,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
                 calendar.get(Calendar.DST_OFFSET)) / (60 * 60000);
         int avg = 10;
         double Tair = user.setCorrectTemperatureUnit(temperature, mPreferences.getInt("Unit",0));
+        Log.v("HESTE", "temp " + Tair + " in " +temperature);
         double zspeed = 2;
         double dT = 0; //Vertical temp difference
         int urban = 0;

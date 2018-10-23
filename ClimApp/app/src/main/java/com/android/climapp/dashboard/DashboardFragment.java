@@ -87,14 +87,14 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     private static int DISPLACEMENT = 10; // 10 meters
 
     // Views and buttons
-    private Button mLocationButton;
+    private Button mLocationButton, exploreButton;
     private ImageView recommendationView, recommendationSmallView;
     private ToggleButton activityVeryHigh, activityHigh, activityMedium, activityLow, activityVeryLow;
     private TextView txtLong, txtLat, locationErrorTxt, activityLevelDescription,
             activityMoreTextView, heatStressTopView, heatStressTextView,
-            temperatureValue, temperatureUnit;
+            temperatureValue, temperatureUnit, exploreLatitude, exploreLongitude;
     private RelativeLayout locationTopView, permissionErrorView;
-    private LinearLayout heatStressLevelView, updateLocationView, activityLevelView;
+    private LinearLayout heatStressLevelView, updateLocationView, activityLevelView, exploreView;
 
     private double latitude, longitude;
     private SharedPreferences.OnSharedPreferenceChangeListener sharedListener;
@@ -102,6 +102,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     private com.android.climapp.wbgt.RecommendedAlertLimitISO7243 ral;
     //private int notificationID = 1;
     //private boolean notificationSent;
+    private APIConnection APIConn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -127,6 +128,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         permissionErrorView = getActivity().findViewById(R.id.error_permission);
         updateLocationView = getActivity().findViewById(R.id.update_location);
         activityLevelView = getActivity().findViewById(R.id.activity_level);
+        exploreView = getActivity().findViewById(R.id.explore);
 
         // Activity level buttons
         activityVeryLow = getActivity().findViewById(R.id.dash_toggle_very_low);
@@ -136,6 +138,11 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         activityVeryHigh = getActivity().findViewById(R.id.dash_toggle_very_high);
         activityLevelDescription = getActivity().findViewById(R.id.activity_description_view);
         activityMoreTextView = getActivity().findViewById(R.id.activity_more);
+
+        // Explore TextView and Buttons
+        exploreButton = getActivity().findViewById(R.id.explore_button);
+        exploreLongitude = getActivity().findViewById(R.id.explore_longitude);
+        exploreLatitude = getActivity().findViewById(R.id.explore_latitude);
 
         // Location view references, updated based on device's location
         mLocationButton = getActivity().findViewById(R.id.locationButton);
@@ -151,6 +158,9 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         recommendationSmallView = getActivity().findViewById(R.id.ral_small);
         heatStressTopView = getActivity().findViewById(R.id.suggestion_top);
         heatStressTextView = getActivity().findViewById(R.id.suggestion_text);
+
+        // Set activity level on start if checked
+        setCheckedActivityLevel();
 
         activityVeryLow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -224,6 +234,18 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             }
         });
 
+        exploreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(exploreLatitude.getText().toString().equals("")
+                        && !exploreLongitude.getText().toString().equals("")){
+                    double lat = Double.parseDouble(exploreLatitude.getText().toString());
+                    double lon = Double.parseDouble(exploreLongitude.getText().toString());
+                    getOpenWeatherMapData(lat, lon);
+                }
+            }
+        });
+
         /*
          * Used preferences changed listener to update view when preferred unit changes
          */
@@ -237,10 +259,12 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
 
                         if(prefs.getInt("Unit", 0) == 1) {
                             temperatureUnit.setText(getString(R.string.temperature_unit_f));
-                            temperatureValue.setText(String.format("%s°",user.setCorrectTemperatureUnit(prefs.getInt("temperature", 0),1)+""));
+                            temperatureValue.setText(String.format("%s°",
+                                    user.setCorrectTemperatureUnit(prefs.getInt("temperature", 0),1)+""));
                         } else {
                             temperatureUnit.setText(getString(R.string.temperature_unit_c));
-                            temperatureValue.setText(String.format("%s°",user.setCorrectTemperatureUnit(prefs.getInt("temperature", 0),0)+""));
+                            temperatureValue.setText(String.format("%s°",
+                                    user.setCorrectTemperatureUnit(prefs.getInt("temperature", 0),0)+""));
                         }
                     }
                 }
@@ -253,9 +277,6 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         if(!onBoardingCompleted()) {
             startOnBoarding();
         }
-
-        // Set activity level on start if checked
-        setCheckedActivityLevel();
     }
 
     @Override
@@ -369,17 +390,13 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         // Set the rest of the parameters
         activityLevelDescription.setText(activityDescription);
         setOnCheckedColors(currentButton);
-        preferences.edit().putString("activity_level", preferenceText).apply();
 
-        // Update color indicator after activity level change
-        ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
-                preferences.getString("activity_level", "medium"),
-                preferences.getString("Height_value","1.80"),
-                preferences.getInt("Weight", 80));
-        String color = ral.getRecommendationColor(preferences.getFloat("WBGT", 0), ral.calculateRALValue());
-        //Log.v("HESTE", "RAL: " + ral.calculateRALValue() + " WBGT: "+ preferences.getFloat(" WBGT ", 0) + " col:" + color);
-
-        setRecommendationColorAndText(color);
+        // Checking that there is a WBGT value available.
+        if(preferences.getFloat("WBGT", 0) == 0 && preferences.getString("color", null) == null) {
+            setRecommendationColorAndText("");
+        } else {
+            setRecommendationColorAndText(preferences.getString("color", null));
+        }
     }
 
     /**
@@ -406,10 +423,13 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
                 heatStressTopView.setText(R.string.suggestion_red_top);
                 heatStressTextView.setText(R.string.suggestion_red);
                 break;
-            default:
+            case "#b20000":
                 heatStressTopView.setText(R.string.suggestion_dark_red_top);
                 heatStressTextView.setText(R.string.suggestion_dark_red);
                 break;
+            default:
+                heatStressTopView.setText(R.string.suggestion_default_top);
+                heatStressTextView.setText(R.string.suggestion_default);
         }
     }
 
@@ -559,11 +579,17 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             updateLocationView.setVisibility(View.VISIBLE);
             activityLevelView.setVisibility(View.VISIBLE);
             permissionErrorView.setVisibility(View.GONE);
+
+            // Only show the explorer view if enabled by the user
+            if(preferences.getBoolean("explore", false)) {
+                exploreView.setVisibility(View.VISIBLE);
+            }
         } else {
             locationTopView.setVisibility(View.GONE);
             heatStressLevelView.setVisibility(View.GONE);
             updateLocationView.setVisibility(View.GONE);
             activityLevelView.setVisibility(View.GONE);
+            exploreView.setVisibility(View.GONE);
             permissionErrorView.setVisibility(View.VISIBLE);
         }
     }
@@ -626,13 +652,11 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             if (mLocationManager == null) {
                 mLocationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
             }
-
             /*
             if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 showDashboardViews(false);
                 showGPSDisabledDialog();
             }*/
-
             if(resultCode == RESULT_OK) {
                 displayLocation();
             } else {
@@ -659,8 +683,20 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
      * @param longitude lon part of location coordinates fetched from device
      */
     private void getOpenWeatherMapData(double latitude, double longitude) {
-        APIConnection APIConn = new APIConnection("f22065144b2119439a589cbfb9d851d3", latitude, longitude, preferences, this);
+        APIConn = new APIConnection("f22065144b2119439a589cbfb9d851d3", latitude, longitude, preferences, this);
         APIConn.execute();
+    }
+
+    public void saveFloatToPreferences(String preference, float value){
+        preferences.edit().putFloat(preference, value).apply();
+    }
+
+    public void saveIntToPreferences(String preference, int value){
+        preferences.edit().putInt(preference, value).apply();
+    }
+
+    public void saveStringToPreferences(String preference, String value){
+        preferences.edit().putString(preference, value).apply();
     }
 
     /**
@@ -735,5 +771,4 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     public void onConnectionSuspended(int cause) {
         mGoogleApiClient.connect();
     }
-
 }

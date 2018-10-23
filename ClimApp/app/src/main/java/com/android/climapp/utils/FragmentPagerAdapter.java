@@ -17,7 +17,6 @@ public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     private int mNumOfTabs;
     private static final int PAGE_NUM = 2;
-    private String tabTitles[] = new String[] { "Settings", "Dashboard",};// "Clothing"};
 
     public FragmentPagerAdapter(FragmentManager fm, int PAGE_NUM) {
         super(fm);
@@ -43,6 +42,6 @@ public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         // Generate title based on item position
-        return tabTitles[position];
+        return null;
     }
 }

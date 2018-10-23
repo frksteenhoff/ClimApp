@@ -21,8 +21,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.dashboard_activity);
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Settings"));
-        tabLayout.addTab(tabLayout.newTab().setText("Dashboard"));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.round_settings_white_18dp));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.round_dashboard_white_18dp));
         //tabLayout.addTab(tabLayout.newTab().setText("Clothing"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 

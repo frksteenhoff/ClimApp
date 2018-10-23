@@ -68,6 +68,8 @@
     <string name="suggestion_dark_red">If possible adjust work – use active cooling (schedule frequent breaks in shadow
         or cooled area where you can hydrate).\nYour water needs may be more than 1 liter/hour implying that you should drink often.
         \nIf possible add salt to your meals.</string>
+    <string name="suggestion_default_top">Waiting for data</string>
+    <string name="suggestion_default">No coping strategies ready.</string>
 
 
     <!-- Dashboard: Location  -->
@@ -92,6 +94,12 @@
     <!-- Dashboard: Alerts-->
     <string name="alert_header_text">Alert</string>
     <string name="RALColorCodeArea">Showing color code</string>
+
+    <!-- Explore -->
+    <string name="explore_text_header">Input your custom coordinates</string>
+    <string name="explore_lon">Longitude</string>
+    <string name="explore_lat">Latitude</string>
+    <string name="explore">Explore</string>
 
 
     <!-- Settings - General titles -->
