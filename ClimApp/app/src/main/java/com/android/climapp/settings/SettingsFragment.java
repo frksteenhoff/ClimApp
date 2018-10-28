@@ -30,7 +30,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
     // Initializing user input values
     private static SharedPreferences preferences;
-    private Switch acclimatizationSwitch;
+    private Switch acclimatizationSwitch, exploreSwitch;
     private TextView showWeight, showHeight, showAge;
     private User user;
     private SharedPreferences.OnSharedPreferenceChangeListener sharedListener;
@@ -66,6 +66,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         Spinner genderSpinner = getActivity().findViewById(R.id.gender_spinner);
         Spinner notificationSpinner = getActivity().findViewById(R.id.notification_spinner);
         acclimatizationSwitch = getActivity().findViewById(R.id.acclimatization_switch_settings);
+        exploreSwitch = getActivity().findViewById(R.id.explore_switch_settings);
 
         // Set gender -- female as default
         genderSpinner.setSelection(preferences.getInt("gender", 0));
@@ -81,6 +82,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
         // Setting default user acclimatization
         acclimatizationSwitch.setChecked(preferences.getBoolean("Acclimatization",false));
+        exploreSwitch.setChecked(preferences.getBoolean("Explore",false));
 
         // Setting up listeners for each of the settings to open an intent
         TextView ageSettings = getActivity().findViewById(R.id.age_settings);
@@ -138,6 +140,20 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                     Toast.makeText(getActivity().getApplicationContext(), getString(R.string.acclimatization_true), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(), getString(R.string.acclimatization_false), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        exploreSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                exploreSwitch.setChecked(isChecked);
+                preferences.edit().putBoolean("Explore", isChecked).apply();
+
+                // Show Toast based on whether user switches on explore mode
+                if (isChecked) {
+                    Toast.makeText(getActivity().getApplicationContext(), getString(R.string.explore_true), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), getString(R.string.explore_false), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -322,6 +338,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         // Clear preferences
         preferences.edit().clear().apply();
         preferences.edit().putBoolean("Acclimatization", false).apply();
+        preferences.edit().putBoolean("Explore", false).apply();
         preferences.edit().putInt("gender", 0).apply();
         preferences.edit().putInt("Unit", 0).apply();
         preferences.edit().putInt("Notification", 0).apply();

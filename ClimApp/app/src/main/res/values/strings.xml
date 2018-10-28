@@ -81,6 +81,7 @@
     <string name="permission_denied">Permission to access location denied, nothing to show.</string>
     <string name="error_text_location">GPS or internet disabled. Please enable both and restart the app.</string>
     <string name="error">Error</string>
+    <string name="explore_find_lonlat_txt">Get coordinates from city name here: <a href="https://www.latlong.net/">https://www.latlong.net/</a></string>
 
     <!-- Dashboard: weather information -->
     <string name="humidity">Humidity</string>
@@ -162,7 +163,7 @@
     <string name="Preferences">Preferences</string>
     <string name="Other">Other</string>
     <string name="About">About</string>
-    <string name="Reset">Reset all preferences</string>
+    <string name="Reset">Reset personal preferences</string>
     <string name="prefs_cleared">All preferences cleared</string>
     <string name="measuring_units">Measuring units</string>
     <string name="units">Units</string>
@@ -183,6 +184,8 @@
     <string name="height_updated">Height updated to:</string>
     <string name="acclimatization_true">Acclimatizatized to work environment</string>
     <string name="acclimatization_false">Not acclimatizatized to work environment</string>
+    <string name="explore_true">Explore mode on</string>
+    <string name="explore_false">Explore mode off</string>
 
     <!-- Settings: initial values -->
     <string name="user_height">150</string>

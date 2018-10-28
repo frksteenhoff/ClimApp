@@ -139,8 +139,6 @@ public class APIConnection extends AsyncTask<String, String, String> {
                     mPreferences.getInt("Weight", 80));
 
             String color = ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue());
-            Log.v("HESTE", "RAL: " + ral.calculateRALValue() + " WBGT: " +
-                    mPreferences.getFloat(" WBGT ", 0) +"act " + wbgt.getWBGT()+ " col:" + color);
 
             // Set color in view based on RAL interval
             mDashboard.setRecommendationColorAndText(color);
@@ -209,7 +207,6 @@ public class APIConnection extends AsyncTask<String, String, String> {
 
         WBGTTextView.setText(String.format("WBGT: %s", wbgt.getWBGT()));
         mDashboard.saveFloatToPreferences("WBGT", (float) wbgt.getWBGT());
-
         /*// Send notification if values are outside recommended range
         if (wbgt.getWBGT() > 21.0 && !notificationSent) {
             setNotificationChannel();
@@ -234,7 +231,6 @@ public class APIConnection extends AsyncTask<String, String, String> {
                 calendar.get(Calendar.DST_OFFSET)) / (60 * 60000);
         int avg = 10;
         double Tair = user.setCorrectTemperatureUnit(temperature, mPreferences.getInt("Unit",0));
-        Log.v("HESTE", "temp " + Tair + " in " +temperature);
         double zspeed = 2;
         double dT = 0; //Vertical temp difference
         int urban = 0;
@@ -296,42 +292,4 @@ public class APIConnection extends AsyncTask<String, String, String> {
                 615, 616};
         return Arrays.asList(rainIds).contains(weather_id);
     }
-
-    /*
-        private void setNotificationChannel() {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // Create the NotificationChannel, but only on API 26+ because
-                // the NotificationChannel class is new and not in the support library
-                CharSequence name = getString(R.string.channel_name);
-                String description = getString(R.string.channel_description);
-                int importance = NotificationManager.IMPORTANCE_DEFAULT;
-
-                NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-                channel.setDescription(description);
-                notificationManager.createNotificationChannel(channel);
-            }
-        }
-
-        private void createNotification(String title, String description, int notificationID) {
-            // Intent to open application when user clicks notification
-            Intent open_intent = new Intent(getActivity(), MainActivity.class);
-            open_intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(), 0, open_intent, 0);
-
-            // Notification content
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
-                    .setSmallIcon(R.mipmap.climapp_logo3)
-                    .setContentTitle(title)
-                    .setContentText(description)
-                    .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(description))
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true);
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getActivity());
-
-            // Send notification
-            notificationManager.notify(notificationID, mBuilder.build());
-        }*/
-
 }

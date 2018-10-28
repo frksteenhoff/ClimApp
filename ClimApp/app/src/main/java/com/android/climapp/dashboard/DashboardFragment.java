@@ -159,9 +159,6 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         heatStressTopView = getActivity().findViewById(R.id.suggestion_top);
         heatStressTextView = getActivity().findViewById(R.id.suggestion_text);
 
-        // Set activity level on start if checked
-        setCheckedActivityLevel();
-
         activityVeryLow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -237,11 +234,14 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         exploreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(exploreLatitude.getText().toString().equals("")
-                        && !exploreLongitude.getText().toString().equals("")){
+                if (twoValuesAreGiven() && isWithinCoordinateRange()) {
                     double lat = Double.parseDouble(exploreLatitude.getText().toString());
                     double lon = Double.parseDouble(exploreLongitude.getText().toString());
                     getOpenWeatherMapData(lat, lon);
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Both coordinates need to be input and the longitude and latitude should be within proper ranges.", Toast.LENGTH_LONG)
+                            .show();
                 }
             }
         });
@@ -273,10 +273,32 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
 
         preferences.registerOnSharedPreferenceChangeListener(sharedListener);
 
+        // Set activity level on start if checked
+        setCheckedActivityLevel();
+
         // Check whether user has skipped onboarding steps
         if(!onBoardingCompleted()) {
             startOnBoarding();
         }
+    }
+
+    /**
+     * Latitude lines run east-west and are parallel to each other. If you go further north north, latitude values increase.
+     * Latitude values (Y-values) range between -90 and +90 degrees
+     *
+     * Longitude lines run north-south. They converge at the poles.
+     * Longitude values (X-values) are between -180 and +180 degrees.
+     * @return true if both values are within range, false otherwise
+     */
+    private boolean isWithinCoordinateRange() {
+        double lat = Double.parseDouble(exploreLatitude.getText().toString());
+        double lon = Double.parseDouble(exploreLongitude.getText().toString());
+        return (lat >= -90.0 && lat <= 90.0) && (lon >= -180.0 && lon <= 180.0);
+    }
+
+    public boolean twoValuesAreGiven() {
+        return exploreLatitude.getText().toString().equals("")
+                && !exploreLongitude.getText().toString().equals("");
     }
 
     @Override
@@ -391,11 +413,20 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         activityLevelDescription.setText(activityDescription);
         setOnCheckedColors(currentButton);
 
-        // Checking that there is a WBGT value available.
-        if(preferences.getFloat("WBGT", 0) == 0 && preferences.getString("color", null) == null) {
-            setRecommendationColorAndText("");
+        preferences.edit().putString("activity_level", preferenceText).apply();
+
+        if(preferences.getFloat("WBGT", 0) != 0.0) {
+            // Update color indicator after activity level change
+            ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
+                    preferences.getString("activity_level", "medium"),
+                    preferences.getString("Height_value", "1.80"),
+                    preferences.getInt("Weight", 80));
+            String color = ral.getRecommendationColor(preferences.getFloat("WBGT", 0), ral.calculateRALValue());
+            Log.v("HESTE", "RAL: " + ral.calculateRALValue() + " WBGT: "+ preferences.getFloat("WBGT", 0) + " col:" + color);
+
+            setRecommendationColorAndText(color);
         } else {
-            setRecommendationColorAndText(preferences.getString("color", null));
+            setRecommendationColorAndText("#EDE8E6");
         }
     }
 
@@ -583,6 +614,8 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             // Only show the explorer view if enabled by the user
             if(preferences.getBoolean("explore", false)) {
                 exploreView.setVisibility(View.VISIBLE);
+            } else {
+                exploreView.setVisibility(View.GONE);
             }
         } else {
             locationTopView.setVisibility(View.GONE);
@@ -591,6 +624,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             activityLevelView.setVisibility(View.GONE);
             exploreView.setVisibility(View.GONE);
             permissionErrorView.setVisibility(View.VISIBLE);
+            exploreView.setVisibility(View.GONE);
         }
     }
 
@@ -683,8 +717,24 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
      * @param longitude lon part of location coordinates fetched from device
      */
     private void getOpenWeatherMapData(double latitude, double longitude) {
-        APIConn = new APIConnection("f22065144b2119439a589cbfb9d851d3", latitude, longitude, preferences, this);
-        APIConn.execute();
+        if(exploreMode()) {
+            if (twoValuesAreGiven() && isWithinCoordinateRange()) {
+                double lat = Double.parseDouble(exploreLatitude.getText().toString());
+                double lon = Double.parseDouble(exploreLongitude.getText().toString());
+                APIConn = new APIConnection("f22065144b2119439a589cbfb9d851d3", lat, lon, preferences, this);
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(),
+                        "Both coordinates need to be input and the longitude and latitude should be within proper ranges.", Toast.LENGTH_LONG)
+                        .show();
+            }
+        } else {
+            APIConn = new APIConnection("f22065144b2119439a589cbfb9d851d3", latitude, longitude, preferences, this);
+            APIConn.execute();
+        }
+    }
+
+    private boolean exploreMode() {
+        return preferences.getBoolean("Explore", false);
     }
 
     public void saveFloatToPreferences(String preference, float value){

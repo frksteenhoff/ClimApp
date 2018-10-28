@@ -41,7 +41,8 @@
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
-                style="@style/CardViewFeedStyle">
+                style="@style/CardViewFeedStyle"
+                android:layout_marginTop="0dp">
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -173,22 +174,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/suggestion_top"
-                        android:text="@string/suggestion_green_top"
+                        android:text="@string/suggestion_default"
                         android:textAllCaps="true"
                         android:layout_marginTop="8dp"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:id="@+id/suggestion_text"
                         android:layout_height="wrap_content"
-                        android:text="@string/suggestion_text"
+                        android:text="@string/suggestion_green"
                         android:layout_marginTop="8dp"/>
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:contentDescription="@string/alert_header_text"
-                        android:visibility="gone"
-                        android:id="@+id/alert_view"
-                        android:src="@mipmap/ic_alert_foreground"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -269,18 +263,19 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_margin="16dp"
-                android:id="@+id/explore">
+                android:id="@+id/explore"
+                android:visibility="visible">
                 <TextView
                     style="@style/SmallDescriptiveTextStyleNoMargin"
                     android:id="@+id/explore_header"
-                    android:layout_marginBottom="4dp"
                     android:text="@string/explore_text_header" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <EditText
-                        android:id="@+id/explore_latitude"                        android:layout_width="0dp"
+                        android:id="@+id/explore_latitude"
+                        android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:textAlignment="center"
@@ -299,17 +294,23 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginBottom="8dp"/>
                 </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/explore_find_lonlat_txt"/>
                 <Button
                     android:id="@+id/explore_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:padding="16dp"
                     android:background="@color/tw__blue_pressed_light"
                     android:text="@string/explore"/>
             </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
-                style="@style/CardViewFeedStyle">
+                style="@style/CardViewFeedStyle"
+                android:layout_marginBottom="8dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -351,8 +352,8 @@
                         android:id="@+id/locationButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="16dp"
                         android:layout_gravity="center"
+                        android:padding="16dp"
                         android:background="@color/tw__blue_pressed_light"
                         android:text="@string/update_location" />
                 </LinearLayout>
