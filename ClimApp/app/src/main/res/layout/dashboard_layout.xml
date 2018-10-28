@@ -144,11 +144,11 @@
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
-                style="@style/CardViewFeedStyle">
+                style="@style/CardViewFeedStyle"
+                android:id="@+id/heat_stress_level">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/heat_stress_level"
                     android:orientation="vertical"
                     android:layout_margin="16dp">
                     <LinearLayout
@@ -183,6 +183,61 @@
                         android:layout_height="wrap_content"
                         android:text="@string/suggestion_green"
                         android:layout_marginTop="8dp"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+            <android.support.v7.widget.CardView
+                style="@style/CardViewFeedStyle"
+                android:visibility="gone"
+                android:id="@+id/explore">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_margin="16dp">
+                    <TextView
+                        style="@style/SmallDescriptiveTextStyleNoMargin"
+                        android:id="@+id/explore_header"
+                        android:text="@string/explore_text_header" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <EditText
+                            android:id="@+id/explore_latitude"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:hint="@string/explore_lat"
+                            android:inputType="numberDecimal"
+                            android:layout_marginStart="24dp"
+                            android:layout_marginEnd="16dp"/>
+                        <EditText
+                            android:id="@+id/explore_longitude"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:hint="@string/explore_lon"
+                            android:inputType="numberDecimal"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="24dp"
+                            android:layout_marginBottom="8dp"/>
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/latlon_link"
+                        android:text="@string/explore_find_lonlat_txt"
+                        android:layout_marginBottom="16dp"/>
+                    <Button
+                        android:id="@+id/explore_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="16dp"
+                        android:background="@color/tw__blue_pressed_light"
+                        android:text="@string/explore"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
@@ -255,58 +310,6 @@
                         android:id="@+id/activity_more"
                         android:text="@string/more"/>
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
-            <android.support.v7.widget.CardView
-                style="@style/CardViewFeedStyle">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_margin="16dp"
-                android:id="@+id/explore"
-                android:visibility="visible">
-                <TextView
-                    style="@style/SmallDescriptiveTextStyleNoMargin"
-                    android:id="@+id/explore_header"
-                    android:text="@string/explore_text_header" />
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <EditText
-                        android:id="@+id/explore_latitude"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        android:hint="@string/explore_lat"
-                        android:inputType="numberDecimal"
-                        android:layout_marginEnd="8dp"/>
-                    <EditText
-                        android:id="@+id/explore_longitude"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        android:layout_gravity="center"
-                        android:hint="@string/explore_lon"
-                        android:inputType="numberDecimal"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginBottom="8dp"/>
-                </LinearLayout>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/explore_find_lonlat_txt"/>
-                <Button
-                    android:id="@+id/explore_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:padding="16dp"
-                    android:background="@color/tw__blue_pressed_light"
-                    android:text="@string/explore"/>
-            </LinearLayout>
             </android.support.v7.widget.CardView>
             <android.support.v7.widget.CardView
                 style="@style/CardViewFeedStyle"

@@ -81,7 +81,7 @@
     <string name="permission_denied">Permission to access location denied, nothing to show.</string>
     <string name="error_text_location">GPS or internet disabled. Please enable both and restart the app.</string>
     <string name="error">Error</string>
-    <string name="explore_find_lonlat_txt">Get coordinates from city name here: <a href="https://www.latlong.net/">https://www.latlong.net/</a></string>
+    <string name="explore_find_lonlat_txt">Find coordinates from city name here:\n <a href="http://www.latlong.net/">http://www.latlong.net/</a></string>
 
     <!-- Dashboard: weather information -->
     <string name="humidity">Humidity</string>

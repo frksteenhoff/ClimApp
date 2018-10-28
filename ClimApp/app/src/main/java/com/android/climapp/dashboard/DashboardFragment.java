@@ -13,6 +13,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -70,7 +71,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
     private static final int GPS_ENABLE_REQUEST = 0x1001;
     private static final int WIFI_ENABLE_REQUEST = 0x1006;
-
+    private static final String LONLAT_LINK = "http://www.latlong.net/";
     // Google client to interact with Google API
     private GoogleApiClient mGoogleApiClient;
     private AlertDialog mInternetDialog;
@@ -91,11 +92,11 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     private ImageView recommendationView, recommendationSmallView;
     private ToggleButton activityVeryHigh, activityHigh, activityMedium, activityLow, activityVeryLow;
     private TextView txtLong, txtLat, locationErrorTxt, activityLevelDescription,
-            activityMoreTextView, heatStressTopView, heatStressTextView,
+            activityMoreTextView, heatStressTopView, heatStressTextView, lonlatView,
             temperatureValue, temperatureUnit, exploreLatitude, exploreLongitude;
     private RelativeLayout locationTopView, permissionErrorView;
-    private LinearLayout heatStressLevelView, updateLocationView, activityLevelView, exploreView;
-
+    private LinearLayout updateLocationView, activityLevelView;
+    private android.support.v7.widget.CardView exploreView, heatStressLevelView;
     private double latitude, longitude;
     private SharedPreferences.OnSharedPreferenceChangeListener sharedListener;
     private SharedPreferences preferences;
@@ -143,6 +144,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         exploreButton = getActivity().findViewById(R.id.explore_button);
         exploreLongitude = getActivity().findViewById(R.id.explore_longitude);
         exploreLatitude = getActivity().findViewById(R.id.explore_latitude);
+        lonlatView = getActivity().findViewById(R.id.latlon_link);
 
         // Location view references, updated based on device's location
         mLocationButton = getActivity().findViewById(R.id.locationButton);
@@ -238,11 +240,20 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
                     double lat = Double.parseDouble(exploreLatitude.getText().toString());
                     double lon = Double.parseDouble(exploreLongitude.getText().toString());
                     getOpenWeatherMapData(lat, lon);
+                    heatStressLevelView.setVisibility(View.VISIBLE);
                 } else {
                     Toast.makeText(getActivity().getApplicationContext(),
                             "Both coordinates need to be input and the longitude and latitude should be within proper ranges.", Toast.LENGTH_LONG)
                             .show();
                 }
+            }
+        });
+
+        lonlatView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(LONLAT_LINK));
+                startActivity(browserIntent);
             }
         });
 
@@ -266,6 +277,14 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
                             temperatureValue.setText(String.format("%s°",
                                     user.setCorrectTemperatureUnit(prefs.getInt("temperature", 0),0)+""));
                         }
+                    }
+                } else if (key.equals("Explore")) {
+                    if(prefs.getBoolean("Explore", false)) {
+                        exploreView.setVisibility(View.VISIBLE);
+                        heatStressLevelView.setVisibility(View.GONE);
+                    } else {
+                        displayLocation();
+                        exploreView.setVisibility(View.GONE);
                     }
                 }
             }
@@ -297,7 +316,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     }
 
     public boolean twoValuesAreGiven() {
-        return exploreLatitude.getText().toString().equals("")
+        return !exploreLatitude.getText().toString().equals("")
                 && !exploreLongitude.getText().toString().equals("");
     }
 
@@ -607,12 +626,12 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         if(showWeatherData) {
             locationTopView.setVisibility(View.VISIBLE);
             heatStressLevelView.setVisibility(View.VISIBLE);
-            updateLocationView.setVisibility(View.VISIBLE);
+            updateLocationView.setVisibility(View.GONE);
             activityLevelView.setVisibility(View.VISIBLE);
             permissionErrorView.setVisibility(View.GONE);
 
             // Only show the explorer view if enabled by the user
-            if(preferences.getBoolean("explore", false)) {
+            if(preferences.getBoolean("Explore", false)) {
                 exploreView.setVisibility(View.VISIBLE);
             } else {
                 exploreView.setVisibility(View.GONE);
@@ -722,10 +741,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
                 double lat = Double.parseDouble(exploreLatitude.getText().toString());
                 double lon = Double.parseDouble(exploreLongitude.getText().toString());
                 APIConn = new APIConnection("f22065144b2119439a589cbfb9d851d3", lat, lon, preferences, this);
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(),
-                        "Both coordinates need to be input and the longitude and latitude should be within proper ranges.", Toast.LENGTH_LONG)
-                        .show();
+                APIConn.execute();
             }
         } else {
             APIConn = new APIConnection("f22065144b2119439a589cbfb9d851d3", latitude, longitude, preferences, this);
