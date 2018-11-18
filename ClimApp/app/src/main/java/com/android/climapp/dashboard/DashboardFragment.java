@@ -129,7 +129,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         permissionErrorView = getActivity().findViewById(R.id.error_permission);
         updateLocationView = getActivity().findViewById(R.id.update_location);
         activityLevelView = getActivity().findViewById(R.id.activity_level);
-        exploreView = getActivity().findViewById(R.id.explore);
+        //exploreView = getActivity().findViewById(R.id.explore);
 
         // Activity level buttons
         activityVeryLow = getActivity().findViewById(R.id.dash_toggle_very_low);
@@ -141,9 +141,9 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         activityMoreTextView = getActivity().findViewById(R.id.activity_more);
 
         // Explore TextView and Buttons
-        exploreButton = getActivity().findViewById(R.id.explore_button);
-        exploreLongitude = getActivity().findViewById(R.id.explore_longitude);
-        exploreLatitude = getActivity().findViewById(R.id.explore_latitude);
+        //exploreButton = getActivity().findViewById(R.id.explore_button);
+        //exploreLongitude = getActivity().findViewById(R.id.explore_longitude);
+        //exploreLatitude = getActivity().findViewById(R.id.explore_latitude);
         lonlatView = getActivity().findViewById(R.id.latlon_link);
 
         // Location view references, updated based on device's location
@@ -233,7 +233,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             }
         });
 
-        exploreButton.setOnClickListener(new View.OnClickListener() {
+        /*exploreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (twoValuesAreGiven() && isWithinCoordinateRange()) {
@@ -247,7 +247,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
                             .show();
                 }
             }
-        });
+        });*/
 
         lonlatView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -631,19 +631,18 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             permissionErrorView.setVisibility(View.GONE);
 
             // Only show the explorer view if enabled by the user
-            if(preferences.getBoolean("Explore", false)) {
+            /*if(preferences.getBoolean("Explore", false)) {
                 exploreView.setVisibility(View.VISIBLE);
             } else {
                 exploreView.setVisibility(View.GONE);
-            }
+            }*/
         } else {
             locationTopView.setVisibility(View.GONE);
             heatStressLevelView.setVisibility(View.GONE);
             updateLocationView.setVisibility(View.GONE);
             activityLevelView.setVisibility(View.GONE);
-            exploreView.setVisibility(View.GONE);
             permissionErrorView.setVisibility(View.VISIBLE);
-            exploreView.setVisibility(View.GONE);
+            //exploreView.setVisibility(View.GONE);
         }
     }
 
