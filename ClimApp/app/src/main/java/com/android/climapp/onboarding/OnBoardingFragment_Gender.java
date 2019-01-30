@@ -13,6 +13,9 @@ import android.widget.Spinner;
 
 import com.android.climapp.R;
 
+import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
+import static com.android.climapp.utils.SharedPreferencesConstants.GENDER;
+
 /**
  * Created by frksteenhoff on 19-02-2018.
  * Making sure preferences chosen during onboarding is set correctly.
@@ -29,11 +32,11 @@ public class OnBoardingFragment_Gender extends Fragment implements AdapterView.O
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
         Spinner genderSpinner = getActivity().findViewById(R.id.set_gender);
 
         // Set gender -- female as default
-        genderSpinner.setSelection(preferences.getInt("gender", 0));
+        genderSpinner.setSelection(preferences.getInt(GENDER, 0));
         genderSpinner.setOnItemSelectedListener(this);
     }
 
@@ -42,13 +45,9 @@ public class OnBoardingFragment_Gender extends Fragment implements AdapterView.O
      */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-        if (position == 0) {
-            // If female selected, show "female" in picker
-            preferences.edit().putInt("gender", 0).apply();
-        } else {
-            // If UK units selected, show UK units in pickers
-            preferences.edit().putInt("gender", 1).apply();
-        }
+
+        // If 0 - female, if 1 male
+        preferences.edit().putInt(GENDER, position).apply();
     }
 
     /**
@@ -58,6 +57,6 @@ public class OnBoardingFragment_Gender extends Fragment implements AdapterView.O
      */
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        preferences.edit().putInt("gender", 0).apply();
+        preferences.edit().putInt(GENDER, 0).apply();
     }
 }

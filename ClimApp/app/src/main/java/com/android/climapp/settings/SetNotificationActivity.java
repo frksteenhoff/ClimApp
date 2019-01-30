@@ -15,6 +15,9 @@ import com.android.climapp.utils.AlarmReceiver;
 
 import java.util.Calendar;
 
+import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
+import static com.android.climapp.utils.SharedPreferencesConstants.NOTIFICATION;
+
 /**
  * Created by frksteenhoff on 28-03-2018.
  * Setting custom user notifications
@@ -33,7 +36,7 @@ public class SetNotificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_notification);
-        preferences = this.getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
+        preferences = this.getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
 
         alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
@@ -44,7 +47,7 @@ public class SetNotificationActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         // Get and set correct time for user notification
-        setAlarmTime(calendar, preferences.getInt("Notification", 0));
+        setAlarmTime(calendar, preferences.getInt(NOTIFICATION, 0));
 
         // Set repetition of alarm
         alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),

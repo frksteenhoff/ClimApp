@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.android.climapp.R;
 
+import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
+import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
+
 /**
  * Created by frksteenhoff on 19-02-2018.
  * Handling setting user's weight during onboarding
@@ -30,7 +33,7 @@ public class OnBoardingFragment_Height extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
         heightUnit = getActivity().findViewById(R.id.unit_text_height);
         setHeightUnit();
     }
@@ -42,7 +45,7 @@ public class OnBoardingFragment_Height extends Fragment {
      * 2 = UK units, feet
      */
     private void setHeightUnit() {
-        int preferredHeightUnit = preferences.getInt("Unit", 0);
+        int preferredHeightUnit = preferences.getInt(UNIT, 0);
         switch (preferredHeightUnit) {
             case 0:
                 heightUnit.setText(R.string.height_unit_si);

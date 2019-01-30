@@ -12,11 +12,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.climapp.R;
-import com.android.climapp.utils.User;
+import com.android.climapp.utils.Utils;
+
+import static com.android.climapp.utils.SharedPreferencesConstants.AGE;
+import static com.android.climapp.utils.SharedPreferencesConstants.AGE_ONBOARDING;
+import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
 
 /**
  * Created by frksteenhoff on 21-01-2018.
- * Setting and displaying the correct user age
+ * Setting and displaying the correct utils age
  */
 
 public class SetAgeActivity extends AppCompatActivity {
@@ -24,33 +28,33 @@ public class SetAgeActivity extends AppCompatActivity {
     static SharedPreferences preferences;
     private SharedPreferences.Editor editor;
     private TextView userInputTextView, userCalcAgeTextView;
-    private User user;
+    private Utils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_age);
 
-        preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
+        preferences = getSharedPreferences(APP_NAME, MODE_PRIVATE);
         editor = preferences.edit();
-        user = new User(preferences);
+        utils = new Utils(preferences);
 
         userInputTextView = findViewById(R.id.user_input_age);
         userCalcAgeTextView = findViewById(R.id.userAge);
         Button submitAge = findViewById(R.id.submit_age);
 
-        if(preferences.getString("Age_onboarding", null) != null) {
-            userCalcAgeTextView.setText(user.getAge() + "");
+        if(preferences.getString(AGE_ONBOARDING, null) != null) {
+            userCalcAgeTextView.setText(utils.getAge() + "");
         }
 
         submitAge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(user.isWellFormedInputDate(userInputTextView.getText().toString())) {
-                    user.setDateOfBirth(userInputTextView.getText().toString());
-                    userCalcAgeTextView.setText(user.getAge() + "");
-                    editor.putString("Age_onboarding", userInputTextView.getText().toString());
-                    editor.putInt("Age", user.getAge()).apply();
+                if(utils.isWellFormedInputDate(userInputTextView.getText().toString())) {
+                    utils.setDateOfBirth(userInputTextView.getText().toString());
+                    userCalcAgeTextView.setText(utils.getAge() + "");
+                    editor.putString(AGE_ONBOARDING, userInputTextView.getText().toString());
+                    editor.putInt(AGE, utils.getAge()).apply();
 
                     Toast.makeText(getApplicationContext(), getString(R.string.age_updated)
                             + " " + userCalcAgeTextView.getText().toString(), Toast.LENGTH_SHORT).show();

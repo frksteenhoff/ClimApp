@@ -11,11 +11,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.climapp.R;
-import com.android.climapp.utils.User;
+import com.android.climapp.utils.Utils;
+
+import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
+import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
+import static com.android.climapp.utils.SharedPreferencesConstants.WEIGHT;
 
 /**
  * Created by frksteenhoff on 21-01-2018.
- * Setting the user's weight
+ * Setting the utils's weight
  */
 
 public class SetWeightActivity extends AppCompatActivity {
@@ -23,15 +27,15 @@ public class SetWeightActivity extends AppCompatActivity {
     private SharedPreferences preferences;
     private NumberPicker np;
     private int preferred_unit;
-    private User user;
+    private Utils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_weight);
 
-        preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
-        user = new User(preferences);
+        preferences = getSharedPreferences(APP_NAME, MODE_PRIVATE);
+        utils = new Utils(preferences);
         // Set correct text indicating unit on UI
         final TextView weightUnit = findViewById(R.id.unit_text_weight);
         setCorrectPickerUnit(weightUnit);
@@ -40,11 +44,11 @@ public class SetWeightActivity extends AppCompatActivity {
         np = findViewById(R.id.WeightPicker);
 
         // Set range of values to choose from
-        preferred_unit = preferences.getInt("Unit",0);
+        preferred_unit = preferences.getInt(UNIT,0);
         showCorrectPickerWeightValues(preferred_unit);
 
-        // Set picker value based on user weigth in correct unit
-        np.setValue(user.convertWeightToUnitFromKg(preferred_unit, preferences.getInt("Weight", 100)));
+        // Set picker value based on utils weigth in correct unit
+        np.setValue(utils.convertWeightToUnitFromKg(preferred_unit, preferences.getInt(WEIGHT, 100)));
 
         //Sets whether the selector wheel wraps when reaching the min/max value.
         np.setWrapSelectorWheel(true);
@@ -54,7 +58,7 @@ public class SetWeightActivity extends AppCompatActivity {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 // Always saving weight in SI unit kilograms
-                preferences.edit().putInt("Weight", user.convertWeightToKgFromUnit(preferred_unit, newVal)).apply();
+                preferences.edit().putInt(WEIGHT, utils.convertWeightToKgFromUnit(preferred_unit, newVal)).apply();
 
                 //Display the newly selected value from picker
                 Toast.makeText(getApplicationContext(), getString(R.string.weight_updated) + " " + newVal + " " +
@@ -92,7 +96,7 @@ public class SetWeightActivity extends AppCompatActivity {
      * @param unitText the text to be displayed alongside the numberpicker
      */
     private void setCorrectPickerUnit(TextView unitText) {
-        int unit = preferences.getInt("Unit", 0);
+        int unit = preferences.getInt(UNIT, 0);
         switch (unit) {
             case 1:
                 unitText.setText(R.string.weight_unit_us);

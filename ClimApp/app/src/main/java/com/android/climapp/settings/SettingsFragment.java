@@ -17,7 +17,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.climapp.R;
-import com.android.climapp.utils.User;
+import com.android.climapp.utils.Utils;
+
+import static com.android.climapp.utils.SharedPreferencesConstants.ACCLIMATIZATION;
+import static com.android.climapp.utils.SharedPreferencesConstants.AGE;
+import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
+import static com.android.climapp.utils.SharedPreferencesConstants.GENDER;
+import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT;
+import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_INDEX;
+import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_VALUE;
+import static com.android.climapp.utils.SharedPreferencesConstants.NOTIFICATION;
+import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
+import static com.android.climapp.utils.SharedPreferencesConstants.WEIGHT;
 
 /**
  * Created by frksteenhoff on 10-10-2017.
@@ -28,11 +39,11 @@ import com.android.climapp.utils.User;
 
 public class SettingsFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
-    // Initializing user input values
+    // Initializing utils input values
     private static SharedPreferences preferences;
     private Switch acclimatizationSwitch, exploreSwitch;
     private TextView showWeight, showHeight, showAge;
-    private User user;
+    private Utils utils;
     private SharedPreferences.OnSharedPreferenceChangeListener sharedListener;
     private int old_unit;
     public SettingsFragment() {
@@ -49,15 +60,15 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        preferences = getActivity().getSharedPreferences("ClimApp",Context.MODE_PRIVATE);
-        user = new User(preferences);
+        preferences = getActivity().getSharedPreferences(APP_NAME,Context.MODE_PRIVATE);
+        utils = new Utils(preferences);
 
         // Apply settings information under settings title
         showAge = getActivity().findViewById(R.id.show_age);
-        showPreferenceIntIfExists("Age", showAge);
+        showPreferenceIntIfExists(AGE, showAge);
 
         showHeight = getActivity().findViewById(R.id.show_height);
-        showPreferenceStringIfExists("Height_value", showHeight);
+        showPreferenceStringIfExists(HEIGHT_VALUE, showHeight);
 
         showWeight = getActivity().findViewById(R.id.show_weight);
         showWeightIfExists(showWeight);
@@ -69,19 +80,19 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         //exploreSwitch = getActivity().findViewById(R.id.explore_switch_settings);
 
         // Set gender -- female as default
-        genderSpinner.setSelection(preferences.getInt("gender", 0));
+        genderSpinner.setSelection(preferences.getInt(GENDER, 0));
         genderSpinner.setOnItemSelectedListener(this);
 
         // Set units -- SI units as default
-        unitSpinner.setSelection(preferences.getInt("Unit", 0));
+        unitSpinner.setSelection(preferences.getInt(UNIT, 0));
         unitSpinner.setOnItemSelectedListener(this);
 
         // Set units -- SI units as default
-        notificationSpinner.setSelection(preferences.getInt("Notification", 0));
+        notificationSpinner.setSelection(preferences.getInt(NOTIFICATION, 0));
         notificationSpinner.setOnItemSelectedListener(this);
 
-        // Setting default user acclimatization
-        acclimatizationSwitch.setChecked(preferences.getBoolean("Acclimatization",false));
+        // Setting default utils acclimatization
+        acclimatizationSwitch.setChecked(preferences.getBoolean(ACCLIMATIZATION,false));
         //exploreSwitch.setChecked(preferences.getBoolean("Explore",false));
 
         // Setting up listeners for each of the settings to open an intent
@@ -121,11 +132,11 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
-        // Setting index of user height
-        if(preferences.getInt("Height_index",0) == 0 &&
-                preferences.getString("Height_value", null) != null) {
-            user.findClosestIndexValue(preferences.getString("Height_value", null),
-                    user.showCorrectHeightValues(preferences.getInt("Unit",0)), preferences);
+        // Setting index of utils height
+        if(preferences.getInt(HEIGHT_INDEX,0) == 0 &&
+                preferences.getString(HEIGHT_VALUE, null) != null) {
+            utils.findClosestIndexValue(preferences.getString(HEIGHT_VALUE, null),
+                    utils.showCorrectHeightValues(preferences.getInt(UNIT,0)), preferences);
         }
 
 
@@ -133,9 +144,9 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         acclimatizationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 acclimatizationSwitch.setChecked(isChecked);
-                preferences.edit().putBoolean("Acclimatization", isChecked).apply();
+                preferences.edit().putBoolean(ACCLIMATIZATION, isChecked).apply();
 
-                // Show Toast based on whether user switches from acclimatized or not acclimatized.
+                // Show Toast based on whether utils switches from acclimatized or not acclimatized.
                 if (isChecked) {
                     Toast.makeText(getActivity().getApplicationContext(), getString(R.string.acclimatization_true), Toast.LENGTH_SHORT).show();
                 } else {
@@ -149,7 +160,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                 exploreSwitch.setChecked(isChecked);
                 preferences.edit().putBoolean("Explore", isChecked).apply();
 
-                // Show Toast based on whether user switches on explore mode
+                // Show Toast based on whether utils switches on explore mode
                 if (isChecked) {
                     Toast.makeText(getActivity().getApplicationContext(), getString(R.string.explore_true), Toast.LENGTH_SHORT).show();
                 } else {
@@ -191,28 +202,28 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         sharedListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
                 // Update dashboard view when units are changed.
-                String[] values = user.showCorrectHeightValues(preferences.getInt("Unit", 0));
+                String[] values = utils.showCorrectHeightValues(preferences.getInt(UNIT, 0));
                 switch(key){
-                    case "Height_value":
-                        showHeight.setText(values[prefs.getInt("Height_index", 0)]);
+                    case HEIGHT_VALUE:
+                        showHeight.setText(values[prefs.getInt(HEIGHT_INDEX, 0)]);
                         break;
-                    case "Weight":
+                    case WEIGHT:
                         int weight = 0;
                         if(isDefaultUnit()){
-                            weight = prefs.getInt("Weight", 0);
+                            weight = prefs.getInt(WEIGHT, 0);
                             showWeight.setText(weight+"");
                             // UK or US metric system both in feet and inches
                         } else {
-                            weight = user.convertWeightToUnitFromKg(prefs.getInt("Unit", 0),
-                                    prefs.getInt("Weight", 0));
+                            weight = utils.convertWeightToUnitFromKg(prefs.getInt(UNIT, 0),
+                                    prefs.getInt(WEIGHT, 0));
                             showWeight.setText(weight+"");
                             }
                         break;
-                    case "Age":
-                        showAge.setText(prefs.getInt("Age", 0)+"");
+                    case AGE:
+                        showAge.setText(prefs.getInt(AGE, 0)+"");
                         break;
-                    case "Unit":
-                        recalculateHeightWeight(values, prefs.getInt("Unit", 0));
+                    case UNIT:
+                        recalculateHeightWeight(values, prefs.getInt(UNIT, 0));
                         break;
                     default: // If preference not specified above, do nothing
                         break;
@@ -223,7 +234,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private boolean isDefaultUnit() {
-        return preferences.getInt("Unit", 0) == 0;
+        return preferences.getInt(UNIT, 0) == 0;
     }
 
     @Override
@@ -249,11 +260,11 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     public void onNothingSelected(AdapterView<?> adapterView) {
         switch (adapterView.getId()) {
             case R.id.gender_spinner:
-                preferences.edit().putInt("gender", 0).apply();
+                preferences.edit().putInt(GENDER, 0).apply();
             case R.id.units_spinner:
-                preferences.edit().putInt("Unit", 0).apply();
+                preferences.edit().putInt(UNIT, 0).apply();
             case R.id.notification_spinner:
-                preferences.edit().putInt("Notification", 0).apply();
+                preferences.edit().putInt(NOTIFICATION, 0).apply();
         }
     }
 
@@ -270,24 +281,24 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         switch(adapterView.getId()){
             case R.id.gender_spinner:
                 // 0 = female, 1 = male
-                preferences.edit().putInt("gender", position).apply();
+                preferences.edit().putInt(GENDER, position).apply();
                 break;
             case R.id.units_spinner:
                 // 0 = SI, 1 = US, 2 = UK
-                preferences.edit().putInt("Unit", position).apply();
+                preferences.edit().putInt(UNIT, position).apply();
                 break;
-            case R.id.notification_spinner:
-                // Based on position, user wants notification at:
+            case R.id.notification_spinner: // currently not used
+                // Based on position, utils wants notification at:
                 // 0 - each day at 6AM
                 // 1 - work days at 6AM
                 // 2 - each day at 7AM
                 // 3 - work days at 7AM
                 // 4 - no notifications
                 if (position == 0 || position == 1 || position == 2 || position == 3 ||position == 4) {
-                    // User wants notifications each day at 6AM
-                    preferences.edit().putInt("Notification", position).apply();
+                    // Utils wants notifications each day at 6AM
+                    preferences.edit().putInt(NOTIFICATION, position).apply();
                 } else {
-                    // User wants to setup custom notifications
+                    // Utils wants to setup custom notifications
                     Intent notification_settings = new Intent(getActivity(), com.android.climapp.settings.SetNotificationActivity.class);
                     startActivity(notification_settings);
                 }
@@ -301,23 +312,23 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
      * @param position the chosen unit as integer
      */
     private void recalculateHeightWeight(String[] values, int position) {
-        if(preferences.getInt("Height_idnnex", 0) != 0) {
-            showHeight.setText(values[preferences.getInt("Height_index", 0)]);
+        if(preferences.getInt(HEIGHT_INDEX, 0) != 0) {
+            showHeight.setText(values[preferences.getInt(HEIGHT_INDEX, 0)]);
         }
-        if(preferences.getString("Height_value", null) != null) {
-            preferences.edit().putString("Height_value", values[preferences.getInt("Height_index", 0)]).apply();
+        if(preferences.getString(HEIGHT_VALUE, null) != null) {
+            preferences.edit().putString(HEIGHT_VALUE, values[preferences.getInt(HEIGHT_INDEX, 0)]).apply();
         }
         int weight = 0;
         // SI units
         if(position == 0) {
-            if(preferences.getInt("Weight", 0) != 0){
-                weight = preferences.getInt("Weight", 0);
+            if(preferences.getInt(WEIGHT, 0) != 0){
+                weight = preferences.getInt(WEIGHT, 0);
                 showWeight.setText(weight + "");
             }
         // UK or US metric system both in feet and inches
         } else {
-            if(preferences.getInt("Weight", 0) != 0) {
-                weight = user.convertWeightToUnitFromKg(position, preferences.getInt("Weight", 0));
+            if(preferences.getInt(WEIGHT, 0) != 0) {
+                weight = utils.convertWeightToUnitFromKg(position, preferences.getInt(WEIGHT, 0));
                 showWeight.setText(weight + "");
             }
         }
@@ -332,16 +343,26 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
      * Age              - 30 years
      * Height           - 1.8m
      * Weight           - 80kg
-     * Clear age, height and weight from view (more intuitive to the user)
+     * Clear age, height and weight from view (more intuitive to the utils)
      */
     private void resetPreferences() {
-        // Clear preferences
-        preferences.edit().clear().apply();
-        preferences.edit().putBoolean("Acclimatization", false).apply();
+        // Clear personal preferences (not using clear as we want to store some informations still)
+        preferences.edit().remove(ACCLIMATIZATION).apply();
+        preferences.edit().remove(UNIT).apply();
+        preferences.edit().remove(GENDER).apply();
+        preferences.edit().remove(NOTIFICATION).apply();
+        preferences.edit().remove(AGE).apply();
+        preferences.edit().remove(UNIT).apply();
+        preferences.edit().remove(HEIGHT_VALUE).apply();
+        preferences.edit().remove(HEIGHT).apply();
+        preferences.edit().remove(HEIGHT_INDEX).apply();
+        preferences.edit().remove(WEIGHT).apply();
+
+        preferences.edit().putBoolean(ACCLIMATIZATION, false).apply();
         //preferences.edit().putBoolean("Explore", false).apply();
-        preferences.edit().putInt("gender", 0).apply();
-        preferences.edit().putInt("Unit", 0).apply();
-        preferences.edit().putInt("Notification", 0).apply();
+        preferences.edit().putInt(GENDER, 0).apply();
+        preferences.edit().putInt(UNIT, 0).apply();
+        preferences.edit().putInt(NOTIFICATION, 0).apply();
 
         // Clear information from view
         showAge.setText("");
@@ -357,8 +378,8 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
      * When settings have been updated, make sure to rerun all subtext values
      */
     private void updateAllSettingsSubtexts() {
-        showPreferenceIntIfExists("Age", showAge);
-        showPreferenceStringIfExists("Height_value", showHeight);
+        showPreferenceIntIfExists(AGE, showAge);
+        showPreferenceStringIfExists(HEIGHT_VALUE, showHeight);
         showWeightIfExists(showWeight);
     }
 
@@ -375,10 +396,10 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private void showWeightIfExists(TextView view) {
-        if(preferences.getInt("Weight", 0) != 0) {
-            int preferred_unit = preferences.getInt("Unit", 0);
-            int weight = preferences.getInt("Weight", 0);
-            view.setText(String.format("%s", user.convertWeightToUnitFromKg(preferred_unit, weight)));
+        if(preferences.getInt(WEIGHT, 0) != 0) {
+            int preferred_unit = preferences.getInt(UNIT, 0);
+            int weight = preferences.getInt(WEIGHT, 0);
+            view.setText(String.format("%s", utils.convertWeightToUnitFromKg(preferred_unit, weight)));
         }
     }
 }

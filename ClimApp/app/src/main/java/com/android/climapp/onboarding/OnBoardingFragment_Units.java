@@ -12,18 +12,21 @@ import android.widget.AdapterView;
 import android.widget.Spinner;
 
 import com.android.climapp.R;
-import com.android.climapp.utils.User;
+import com.android.climapp.utils.Utils;
+
+import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
+import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
 
 /**
  * Created by frksteenhoff on 19-02-2018.
- * Handling the user setting preferred unit
+ * Handling the utils setting preferred unit
  */
 
 public class OnBoardingFragment_Units extends DialogFragment implements AdapterView.OnItemSelectedListener {
 
     private SharedPreferences preferences;
     private Spinner unitSpinner;
-    private User user;
+    private Utils utils;
 
     @Nullable
     @Override
@@ -33,9 +36,9 @@ public class OnBoardingFragment_Units extends DialogFragment implements AdapterV
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
 
-        user = new User(preferences);
+        utils = new Utils(preferences);
         unitSpinner = getActivity().findViewById(R.id.set_units);
 
         unitSpinner.setOnItemSelectedListener(this);
@@ -48,8 +51,8 @@ public class OnBoardingFragment_Units extends DialogFragment implements AdapterV
     */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-        preferences.edit().putInt("Unit", position).apply();
-        user.setUnit(position);
+        preferences.edit().putInt(UNIT, position).apply();
+        utils.setUnit(position);
     }
 
     /**
@@ -59,7 +62,7 @@ public class OnBoardingFragment_Units extends DialogFragment implements AdapterV
      */
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        preferences.edit().putInt("Unit", 0).apply();
+        preferences.edit().putInt(UNIT, 0).apply();
     }
 }
 

@@ -2,6 +2,11 @@ package com.android.climapp.wbgt;
 
 import java.util.HashMap;
 
+import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_DARKRED;
+import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_GREEN;
+import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_ORANGE;
+import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_RED;
+
 /**
  * Created by frksteenhoff on 14-05-2018.
  * Calculating Recommended Alert Limit
@@ -111,15 +116,15 @@ public class RecommendedAlertLimit {
      */
     public String getRecommendationColor(double WBGTWithoutSolar, double RALValue) {
         if(Math.round(WBGTWithoutSolar) <= Math.round(0.8 * RALValue)) {
-            return "#00b200"; // Green
+            return COLOR_GREEN;
         } else if(Math.round(WBGTWithoutSolar) > Math.round(0.8 * RALValue) &&
                 Math.round(WBGTWithoutSolar) <= RALValue) {
-            return "#FBBA57"; // Orange
+            return COLOR_ORANGE;
         } else if (Math.round(WBGTWithoutSolar) > RALValue &&
                 Math.round(WBGTWithoutSolar) <= RALValue * 1.2 ){
-            return "#e50000"; // Red
+            return COLOR_RED;
         } else {
-            return "#b20000"; // Dark red
+            return COLOR_DARKRED;
         }
     }
 }

@@ -7,27 +7,27 @@ package com.android.climapp;
 
 public class UserTest {
 /*
-    private User user = new User();
+    private Utils utils = new Utils();
 
     @Test
     public void testAgeConversion() {
-        user.setDateOfBirth("27021992");
+        utils.setDateOfBirth("27021992");
 
-        assertEquals(26, user.getAge());
-        assertNotEquals(25, user.getAge());
+        assertEquals(26, utils.getAge());
+        assertNotEquals(25, utils.getAge());
     }
 
     @Test
     public void testAgeConversion2() {
-        user.setDateOfBirth("27021988");
+        utils.setDateOfBirth("27021988");
 
-        assertEquals(30, user.getAge());
-        assertNotEquals(25, user.getAge());
+        assertEquals(30, utils.getAge());
+        assertNotEquals(25, utils.getAge());
     }
     @Test
     public void testWrongAgeInput() {
-        user.setDateOfBirth("32021988");
+        utils.setDateOfBirth("32021988");
 
-        assertEquals(false, user.getAge());
+        assertEquals(false, utils.getAge());
     }*/
 }

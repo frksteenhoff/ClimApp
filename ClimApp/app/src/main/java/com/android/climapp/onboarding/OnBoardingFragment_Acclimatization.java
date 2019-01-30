@@ -13,6 +13,9 @@ import android.widget.Switch;
 
 import com.android.climapp.R;
 
+import static com.android.climapp.utils.SharedPreferencesConstants.ACCLIMATIZATION;
+import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
+
 /**
  * Created by frksteenhoff on 19-02-2018.
  * Making sure the choice for acclimatization is saved to shared preferences during onboarding.
@@ -31,13 +34,13 @@ public class OnBoardingFragment_Acclimatization extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
         acclimatization = getActivity().findViewById(R.id.set_acclimatization);
 
         acclimatization.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 acclimatization.setChecked(isChecked);
-                preferences.edit().putBoolean("Acclimatization", true).apply();
+                preferences.edit().putBoolean(ACCLIMATIZATION, true).apply();
 
             }
         });

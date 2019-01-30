@@ -26,6 +26,13 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.android.climapp.utils.SharedPreferencesConstants.ACTIVITY_LEVEL;
+import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_VALUE;
+import static com.android.climapp.utils.SharedPreferencesConstants.TEMPERATURE_STR;
+import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
+import static com.android.climapp.utils.SharedPreferencesConstants.WBGT_VALUE;
+import static com.android.climapp.utils.SharedPreferencesConstants.WEIGHT;
+
 public class APIConnection extends AsyncTask<String, String, String> {
     /* Key authorizing connection to API */
     private String mAPIKey;
@@ -134,9 +141,9 @@ public class APIConnection extends AsyncTask<String, String, String> {
 
             ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
                     // Giving default values if nothing set
-                    mPreferences.getString("activity_level", "medium"),
-                    mPreferences.getString("Height_value", "1.80"),
-                    mPreferences.getInt("Weight", 80));
+                    mPreferences.getString(ACTIVITY_LEVEL, "medium"),
+                    mPreferences.getString(HEIGHT_VALUE, "1.80"),
+                    mPreferences.getInt(WEIGHT, 80));
 
             String color = ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue());
 
@@ -178,10 +185,10 @@ public class APIConnection extends AsyncTask<String, String, String> {
         TextView cityTextView = mDashboard.getActivity().findViewById(R.id.current_city);
         TextView temperatureUnit = mDashboard.getActivity().findViewById(R.id.temperature_unit);
 
-        User user = new User(mPreferences);
-        tempTextView.setText(String.format("%s°", user.setCorrectTemperatureUnit(temperature, mPreferences.getInt("Unit",0))));
-        mPreferences.edit().putInt("temperature", Integer.parseInt(temperature.toString())).apply(); // Only to be used locally!
-        mDashboard.saveIntToPreferences("temperature", Integer.parseInt(temperature.toString())); // Will be saved
+        Utils utils = new Utils(mPreferences);
+        tempTextView.setText(String.format("%s°", utils.setCorrectTemperatureUnit(temperature, mPreferences.getInt(UNIT,0))));
+        mPreferences.edit().putInt(TEMPERATURE_STR, Integer.parseInt(temperature.toString())).apply(); // Only to be used locally!
+        mDashboard.saveIntToPreferences(TEMPERATURE_STR, Integer.parseInt(temperature.toString())); // Will be saved
         temperatureUnit.setText(String.format("%s", mDashboard.getResources().getString(getTemperatureUnit())));
         humidityTextView.setText(String.format("%s %s", humidity, "%"));
         windSpeedTextView.setText(String.format("%s m/s", wind_speed));
@@ -202,11 +209,11 @@ public class APIConnection extends AsyncTask<String, String, String> {
      * Calculate and set all WBGT model parameters and recommended alert limits
      */
     private void setAndSaveDashboardWBGTModelParameters() {
-        wbgt = calculateWBGT(wind_speed, humidity, pressure, mPreferences.getInt("temperature", 0));
+        wbgt = calculateWBGT(wind_speed, humidity, pressure, mPreferences.getInt(TEMPERATURE_STR, 0));
         TextView WBGTTextView = mDashboard.getActivity().findViewById(R.id.wbgt_value);
 
         WBGTTextView.setText(String.format("WBGT: %s", wbgt.getWBGT()));
-        mDashboard.saveFloatToPreferences("WBGT", (float) wbgt.getWBGT());
+        mDashboard.saveFloatToPreferences(WBGT_VALUE, (float) wbgt.getWBGT());
         /*// Send notification if values are outside recommended range
         if (wbgt.getWBGT() > 21.0 && !notificationSent) {
             setNotificationChannel();
@@ -224,13 +231,13 @@ public class APIConnection extends AsyncTask<String, String, String> {
      * @return wbgt object
      */
     private WBGT calculateWBGT(double wind_speed, double humidity, double pressure, int temperature) {
-        User user = new User(mPreferences);
+        Utils utils = new Utils(mPreferences);
         Calendar calendar = Calendar.getInstance();
         // Total offset (geographical and daylight savings) from UTC in hours
         int utcOffset = (calendar.get(Calendar.ZONE_OFFSET) +
                 calendar.get(Calendar.DST_OFFSET)) / (60 * 60000);
         int avg = 10;
-        double Tair = user.setCorrectTemperatureUnit(temperature, mPreferences.getInt("Unit",0));
+        double Tair = utils.setCorrectTemperatureUnit(temperature, mPreferences.getInt(UNIT,0));
         double zspeed = 2;
         double dT = 0; //Vertical temp difference
         int urban = 0;
@@ -261,7 +268,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
     }
 
     public int getTemperatureUnit() {
-        int unit = mPreferences.getInt("Unit", 0);
+        int unit = mPreferences.getInt(UNIT, 0);
         if(unit == 1){
             return R.string.temperature_unit_f;
         } else {

@@ -15,6 +15,9 @@ import android.widget.TextView;
 
 import com.android.climapp.R;
 
+import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
+import static com.android.climapp.utils.SharedPreferencesConstants.FIELD_OF_WORK;
+
 /**
  * Created by frksteenhoff on 26-02-2018.
  * Choosing work specific attire in order to more accurately calculate the user's clo-value
@@ -26,7 +29,7 @@ import com.android.climapp.R;
  * Made available under Creative Commons License BY 3.0
  */
 
-public class ClothingFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class ClothingFragment extends Fragment      implements AdapterView.OnItemSelectedListener {
 
     Spinner fieldOfWorkSpinner;
     HorizontalScrollView workSpecificView;
@@ -40,14 +43,14 @@ public class ClothingFragment extends Fragment implements AdapterView.OnItemSele
     }
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        preferences = getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
 
         fieldOfWorkSpinner = getActivity().findViewById(R.id.field_of_work_spinner);
         workSpecificText = getActivity().findViewById(R.id.clothing_top);
         workSpecificView = getActivity().findViewById(R.id.construction_specific);
 
         // Set gender -- female as default
-        fieldOfWorkSpinner.setSelection(preferences.getInt("field_of_work", 0));
+        fieldOfWorkSpinner.setSelection(preferences.getInt(FIELD_OF_WORK, 0));
         fieldOfWorkSpinner.setOnItemSelectedListener(this);
     }
 
@@ -56,25 +59,25 @@ public class ClothingFragment extends Fragment implements AdapterView.OnItemSele
         switch (position) {
             case 1:
                 // If construction selected
-                preferences.edit().putInt("field_of_work", 1).apply();
+                preferences.edit().putInt(FIELD_OF_WORK, 1).apply();
                 workSpecificView.setVisibility(View.VISIBLE);
                 workSpecificText.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 // If construction selected
-                preferences.edit().putInt("field_of_work", 2).apply();
+                preferences.edit().putInt(FIELD_OF_WORK, 2).apply();
                 workSpecificView.setVisibility(View.GONE);
                 workSpecificText.setVisibility(View.GONE);
                 break;
             case 3:
                 // If construction selected
-                preferences.edit().putInt("field_of_work", 3).apply();
+                preferences.edit().putInt(FIELD_OF_WORK, 3).apply();
                 workSpecificView.setVisibility(View.GONE);
                 workSpecificText.setVisibility(View.GONE);
                 break;
             default:
                 // If office selected or default
-                preferences.edit().putInt("field_of_work", 0).apply();
+                preferences.edit().putInt(FIELD_OF_WORK, 0).apply();
                 workSpecificView.setVisibility(View.GONE);
                 workSpecificText.setVisibility(View.GONE);
         }
@@ -86,6 +89,6 @@ public class ClothingFragment extends Fragment implements AdapterView.OnItemSele
      */
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        preferences.edit().putInt("field_of_work", 0).apply();
+        preferences.edit().putInt(FIELD_OF_WORK, 0).apply();
     }
 }

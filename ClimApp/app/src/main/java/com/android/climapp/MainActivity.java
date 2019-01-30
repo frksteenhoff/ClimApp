@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.android.climapp.utils.FragmentPagerAdapter;
 
+import static com.android.climapp.utils.SharedPreferencesConstants.DASHBOARD;
+import static com.android.climapp.utils.SharedPreferencesConstants.SETTINGS;
+
 /**
  * Created by frksteenhoff on 29-10-2017.
  * Setting correct tab layout upon opening the app
@@ -24,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
         //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.round_settings_white_18dp));
         //tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.round_dashboard_white_18dp));
 
-        tabLayout.addTab(tabLayout.newTab().setText("Settings"));
-        tabLayout.addTab(tabLayout.newTab().setText("Dashboard"));
+        tabLayout.addTab(tabLayout.newTab().setText(SETTINGS));
+        tabLayout.addTab(tabLayout.newTab().setText(DASHBOARD));
         //tabLayout.addTab(tabLayout.newTab().setText("Clothing"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 

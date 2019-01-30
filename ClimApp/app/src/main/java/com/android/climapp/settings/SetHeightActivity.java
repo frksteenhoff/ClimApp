@@ -11,7 +11,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.climapp.R;
-import com.android.climapp.utils.User;
+import com.android.climapp.utils.Utils;
+
+import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
+import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_INDEX;
+import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_VALUE;
+import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
 
 /**
  * Created by frksteenhoff on 21-01-2018.
@@ -21,17 +26,17 @@ import com.android.climapp.utils.User;
 public class SetHeightActivity extends AppCompatActivity {
 
     private static SharedPreferences preferences;
-    private User user;
+    private Utils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_height);
 
-        preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
-        user = new User(preferences);
-        int preferred_unit = preferences.getInt("Unit",0);
-        final String height_values[] = user.showCorrectHeightValues(preferred_unit);
+        preferences = getSharedPreferences(APP_NAME, MODE_PRIVATE);
+        utils = new Utils(preferences);
+        int preferred_unit = preferences.getInt(UNIT,0);
+        final String height_values[] = utils.showCorrectHeightValues(preferred_unit);
 
         // Additional text stating input unit
         final TextView heightUnit = findViewById(R.id.unit_text_height);
@@ -46,7 +51,7 @@ public class SetHeightActivity extends AppCompatActivity {
         np.setMinValue(0); //from array first value
         np.setMaxValue(height_values.length-1); //to array last value
         np.setDisplayedValues(height_values);
-        np.setValue(preferences.getInt("Height_index", 0));
+        np.setValue(preferences.getInt(HEIGHT_INDEX, 0));
 
         //Sets whether the selector wheel wraps when reaching the min/max value.
         np.setWrapSelectorWheel(true);
@@ -56,8 +61,8 @@ public class SetHeightActivity extends AppCompatActivity {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 // Save index position of height value
-                preferences.edit().putInt("Height_index", newVal).apply();
-                preferences.edit().putString("Height_value", height_values[newVal]).apply();
+                preferences.edit().putInt(HEIGHT_INDEX, newVal).apply();
+                preferences.edit().putString(HEIGHT_VALUE, height_values[newVal]).apply();
 
                 //Display the newly selected value from picker
                 Toast.makeText(getApplicationContext(),
@@ -72,7 +77,7 @@ public class SetHeightActivity extends AppCompatActivity {
      * @param heightUnit the text to be displayed alongside the numberpicker
      */
     private void setCorrectPickerUnit(TextView heightUnit) {
-        int unit = preferences.getInt("Unit", 0);
+        int unit = preferences.getInt(UNIT, 0);
         switch (unit) {
             case 1:
                 heightUnit.setText(R.string.height_unit_uk);

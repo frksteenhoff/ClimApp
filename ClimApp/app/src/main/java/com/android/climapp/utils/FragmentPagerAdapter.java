@@ -7,6 +7,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.android.climapp.dashboard.DashboardFragment;
 import com.android.climapp.settings.SettingsFragment;
 
+import static com.android.climapp.utils.SharedPreferencesConstants.DASHBOARD;
+import static com.android.climapp.utils.SharedPreferencesConstants.SETTINGS;
+
 /**
  * Created by frksteenhoff on 26-02-2018.
  * Handling logic for changing between the 3 main screens:
@@ -17,7 +20,7 @@ public class FragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     private int mNumOfTabs;
     private static final int PAGE_NUM = 2;
-    private String tabTitles[] = new String[] { "Settings", "Dashboard",};// "Clothing"};
+    private String tabTitles[] = new String[] { SETTINGS, DASHBOARD,};// CLOTHING};
 
     public FragmentPagerAdapter(FragmentManager fm, int PAGE_NUM) {
         super(fm);

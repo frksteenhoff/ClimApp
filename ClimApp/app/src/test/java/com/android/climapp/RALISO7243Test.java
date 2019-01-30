@@ -10,6 +10,9 @@ import org.junit.Test;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_GREEN;
+import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_ORANGE;
+import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_RED;
 import static junit.framework.Assert.assertEquals;
 
 /**
@@ -77,7 +80,7 @@ public class RALISO7243Test {
 
         assertEquals(499, Math.round(ral.getMetabolicRate()));
         // Expected color: Green
-        assertEquals("#00b200", ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue()));
+        assertEquals(COLOR_GREEN, ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue()));
         // Expected WBGT value
         assertEquals(15.6099, wbgt.getWBGT(), 0.0001);
         // Expected RAL value
@@ -100,7 +103,7 @@ public class RALISO7243Test {
 
         assertEquals(499, Math.round(ral.getMetabolicRate()));
         // Expected color: orange
-        assertEquals("#FBBA57", ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue()));
+        assertEquals(COLOR_ORANGE, ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue()));
         // Expected WBGT value
         assertEquals(18.3944, wbgt.getWBGT(), 0.0001);
         // Expected RAL value
@@ -123,7 +126,7 @@ public class RALISO7243Test {
 
         assertEquals(299, Math.round(ral.getMetabolicRate()));
         // Expected color: Red
-        assertEquals("#e50000", ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue()));
+        assertEquals(COLOR_RED, ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue()));
         // Expected WBGT value
         assertEquals(25.8685, wbgt.getWBGT(), 0.0001);
         // Expected RAL value
@@ -146,7 +149,7 @@ public class RALISO7243Test {
 
         assertEquals(299, Math.round(ral.getMetabolicRate()));
         // Expected color: green
-        assertEquals("#00b200", ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue()));
+        assertEquals(COLOR_GREEN, ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue()));
         // Expected WBGT value
         assertEquals(12.8343, wbgt.getWBGT(), 0.0001);
         // Expected RAL value
@@ -171,7 +174,7 @@ public class RALISO7243Test {
         // a reference limit of 26 when user is acclimatized
         assertEquals(299, Math.round(ral.getMetabolicRate()));
         // Expected color: green
-        assertEquals("#00b200", ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue()));
+        assertEquals(COLOR_GREEN, ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue()));
         // Expected WBGT value
         assertEquals(7.7400, wbgt.getWBGT(), 0.0001);
         // Expected RAL value
