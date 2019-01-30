@@ -15,13 +15,21 @@ import android.widget.Toast;
 
 import com.android.climapp.MainActivity;
 import com.android.climapp.R;
-import com.android.climapp.utils.User;
+import com.android.climapp.utils.Utils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
+
+import static com.android.climapp.utils.SharedPreferencesConstants.AGE;
+import static com.android.climapp.utils.SharedPreferencesConstants.AGE_ONBOARDING;
+import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
+import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_VALUE;
+import static com.android.climapp.utils.SharedPreferencesConstants.ONBOARDING_COMPLETE;
+import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
+import static com.android.climapp.utils.SharedPreferencesConstants.WEIGHT;
 
 /**
  * Created by frksteenhoff on 19-02-2018.
- * Handling onboarding process for new user
- * Saving user preferences on device
+ * Handling onboarding process for new utils
+ * Saving utils preferences on device
  */
 
 public class OnBoardingActivity extends FragmentActivity {
@@ -29,7 +37,7 @@ public class OnBoardingActivity extends FragmentActivity {
     private ViewPager pager;
     private Button skip;
     private Button next;
-    private User user;
+    private Utils utils;
     private SharedPreferences preferences;
 
     @Override
@@ -41,8 +49,8 @@ public class OnBoardingActivity extends FragmentActivity {
         SmartTabLayout indicator = findViewById(R.id.indicator);
         skip = findViewById(R.id.skip);
         next = findViewById(R.id.next);
-        preferences = getSharedPreferences("ClimApp", MODE_PRIVATE);
-        user = new User(preferences);
+        preferences = getSharedPreferences(APP_NAME, MODE_PRIVATE);
+        utils = new Utils(preferences);
 
         // Returning the correct onboarding fragment
         FragmentStatePagerAdapter adapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
@@ -86,7 +94,7 @@ public class OnBoardingActivity extends FragmentActivity {
             }
         });
 
-        // Handle storage of user preference input during onboarding
+        // Handle storage of utils preference input during onboarding
         next.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,10 +108,10 @@ public class OnBoardingActivity extends FragmentActivity {
                 // Age
                 if(pager.getCurrentItem() == 2) {
                     EditText currentText = findViewById(R.id.age_as_date_DDMMYYY);
-                    if(user.isWellFormedInputDate(currentText.getText().toString())) {
+                    if(utils.isWellFormedInputDate(currentText.getText().toString())) {
                         saveDayOfBirth();
-                        user.setDateOfBirth(currentText.getText().toString());
-                        preferences.edit().putInt("Age", user.getAge()).apply();
+                        utils.setDateOfBirth(currentText.getText().toString());
+                        preferences.edit().putInt(AGE, utils.getAge()).apply();
                         pager.setCurrentItem(pager.getCurrentItem() + 1);
                     } else {
                         Toast.makeText(getApplicationContext(), R.string.wrong_age, Toast.LENGTH_SHORT).show();
@@ -115,11 +123,11 @@ public class OnBoardingActivity extends FragmentActivity {
 
                     // Height
                 } else if(pager.getCurrentItem() == 4) {
-                    saveInformation("Height_value");
+                    saveInformation(HEIGHT_VALUE);
 
                     // Weight
                 } else if(pager.getCurrentItem() == 5) {
-                    saveInformation("Weight");
+                    saveInformation(WEIGHT);
 
                     // Acclimatization (last input parameter)
                 } else if (pager.getCurrentItem() == 6) {
@@ -149,12 +157,12 @@ public class OnBoardingActivity extends FragmentActivity {
     }
 
     /**
-     * Saving user preferences -- only if input format is correct
+     * Saving utils preferences -- only if input format is correct
      * Age: Correct means max lenght 8, all numbers
      */
     private void saveDayOfBirth() {
         EditText currentText = findViewById(R.id.age_as_date_DDMMYYY);
-        preferences.edit().putString("Age_onboarding", currentText.getText().toString()).apply();
+        preferences.edit().putString(AGE_ONBOARDING, currentText.getText().toString()).apply();
     }
 
     /**
@@ -163,7 +171,7 @@ public class OnBoardingActivity extends FragmentActivity {
      * @param preferenceName name of preference for which to save data
      */
     private void saveInformation(String preferenceName) {
-        if (preferenceName.equals("Height_value")) {
+        if (preferenceName.equals(HEIGHT_VALUE)) {
             EditText inputHeight = findViewById(R.id.set_height);
             String height = inputHeight.getText().toString();
 
@@ -171,25 +179,27 @@ public class OnBoardingActivity extends FragmentActivity {
                 preferences.edit().putString(preferenceName, height).apply();
                 pager.setCurrentItem(pager.getCurrentItem() + 1);
             } else {
-                Toast.makeText(getApplicationContext(), "Height should be within human boundaries, separated by punctuation like: 1.80 (meters).", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        R.string.height_boundaries, Toast.LENGTH_SHORT).show();
             }
         } else {
             // Can only be weight, save as SI unit
             EditText inputWeight = findViewById(R.id.set_weight);
             if (inputWeight.getText().toString().length() > 1 && isReasonable(inputWeight.getText().toString())) {
-                int unit = preferences.getInt("Unit", 0);
+                int unit = preferences.getInt(UNIT, 0);
                 int weight = Integer.parseInt(inputWeight.getText().toString());
-                preferences.edit().putInt(preferenceName, user.convertWeightToKgFromUnit(unit, weight)).apply();
+                preferences.edit().putInt(preferenceName, utils.convertWeightToKgFromUnit(unit, weight)).apply();
                 pager.setCurrentItem(pager.getCurrentItem() + 1);
             } else {
-                Toast.makeText(getApplicationContext(), "Weight should be within reasonable human boundaries.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),
+                        R.string.weight_boundaries, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     private boolean isReasonableH(String height) {
-        int unit = preferences.getInt("Unit", 0);
-        String[] height_values = user.showCorrectHeightValues(unit);
+        int unit = preferences.getInt(UNIT, 0);
+        String[] height_values = utils.showCorrectHeightValues(unit);
         double minHeight = Double.parseDouble(height_values[0]);
         double maxHeight = Double.parseDouble(height_values[height_values.length-1]);
         return Double.parseDouble(height) >= minHeight && Double.parseDouble(height) <= maxHeight;
@@ -198,9 +208,9 @@ public class OnBoardingActivity extends FragmentActivity {
     private boolean isReasonable(String weight) {
         int maxWeight = 350;
         int minWeight = 45;
-        int unit = preferences.getInt("Unit", 0);
-                return user.convertWeightToKgFromUnit(unit, Integer.parseInt(weight)) >= minWeight &&
-                        user.convertWeightToKgFromUnit(unit, Integer.parseInt(weight)) <= maxWeight;
+        int unit = preferences.getInt(UNIT, 0);
+                return utils.convertWeightToKgFromUnit(unit, Integer.parseInt(weight)) >= minWeight &&
+                        utils.convertWeightToKgFromUnit(unit, Integer.parseInt(weight)) <= maxWeight;
     }
 
     private boolean isParsable(String input_height) {
@@ -218,7 +228,7 @@ public class OnBoardingActivity extends FragmentActivity {
     // On boarding steps were not skipped -- might still be incomplete
     private void finishOnBoarding() {
         // Set on_boarding complete to true
-        preferences.edit().putBoolean("onboarding_complete", true).apply();
+        preferences.edit().putBoolean(ONBOARDING_COMPLETE, true).apply();
 
         // Launch main activity
         Intent main = new Intent(this, MainActivity.class);
@@ -228,13 +238,13 @@ public class OnBoardingActivity extends FragmentActivity {
         finish();
     }
 
-    // On boarding steps were skipped, user information is incomplete
+    // On boarding steps were skipped, utils information is incomplete
     private void finishOnBoardingIncomplete() {
         // Set on_boarding complete to true
-        preferences.edit().putBoolean("onboarding_complete", true).apply();
+        preferences.edit().putBoolean(ONBOARDING_COMPLETE, true).apply();
 
         Toast.makeText(getApplicationContext(),
-                "Onboarding not completed, using default values in calculations.", Toast.LENGTH_LONG)
+                R.string.onboarding_not_completed, Toast.LENGTH_LONG)
                 .show();
 
         // Launch main activity

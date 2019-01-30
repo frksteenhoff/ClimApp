@@ -16,6 +16,7 @@
     <string name="justification">In order for the app to personalize the feedback provided to you,
         we recommend that you input your personal information. If you don\'t feel like doing so, the app will
         use predefined values instead.</string>
+    <string name="onboarding_not_completed">Onboarding not completed, using default values in calculations.</string>
     <string name="climapp_team">- The ClimApp Team</string>
     <string name="before_set_up">Before we get going..</string>
     <string name="set_up">Let\'s get you started..</string>
@@ -72,7 +73,7 @@
     <string name="suggestion_default">No coping strategies ready.</string>
 
 
-    <!-- Dashboard: Location  -->
+    <!-- Dashboard: Location and internet access -->
     <string name="location_error_text">Could not get device location. Make sure location is enabled on the device</string>
     <string name="location">Location</string>
     <string name="weather_current">Current</string>
@@ -82,6 +83,15 @@
     <string name="error_text_location">GPS or internet disabled. Please enable both and restart the app.</string>
     <string name="error">Error</string>
     <string name="explore_find_lonlat_txt">Find coordinates from city name here:\n <a href="http://www.latlong.net/">http://www.latlong.net/</a></string>
+    <string name="missing_location_data">The application does not seem to have gathered any available location data, move your device.</string>
+    <string name="internet_disabled">Internet Disabled</string>
+    <string name="internet_disabled_message">No active Internet connection found. In order for the application to work properly, you need to enable internet on your device.</string>
+    <string name="turn_on_wifi">Turn on Wifi</string>
+    <string name="choice_return_button">Return to app</string>
+    <string name="gps_turned_off">GPS turned off</string>
+    <string name="gps_turned_off_message">GPS is disabled. In order for the application to work properly, you need to enable GPS on your device.</string>
+    <string name="enable_gps">Enable GPS</string>
+    <string name="device_not_supported">This device is not supported.</string>
 
     <!-- Dashboard: weather information -->
     <string name="humidity">Humidity</string>
@@ -147,14 +157,14 @@
     </string-array>
 
     <!-- Settings - Notification frequency array -->
-    <string-array name="frequency_array">
-        <item>Workdays 6AM</item>
-        <item>Daily 6AM</item>
-        <item>Workdays 7AM</item>
-        <item>Daily 7AM</item>
-        <item>Off</item>
-        <item>Custom..</item>
-    </string-array>
+        <string-array name="frequency_array">
+            <item>Workdays 6AM</item>
+            <item>Daily 6AM</item>
+            <item>Workdays 7AM</item>
+            <item>Daily 7AM</item>
+            <item>Off</item>
+            <item>Custom..</item>
+        </string-array>
 
     <!-- Settings: overall -->
     <string name="action_settings">Settings</string> <!-- dashboard -->
@@ -164,7 +174,7 @@
     <string name="Other">Other</string>
     <string name="About">About</string>
     <string name="Reset">Reset personal preferences</string>
-    <string name="prefs_cleared">All preferences cleared</string>
+    <string name="prefs_cleared">Personal preferences cleared</string>
     <string name="measuring_units">Measuring units</string>
     <string name="units">Units</string>
     <string name="unit">Unit</string>
@@ -192,7 +202,11 @@
     <string name="female_checked">Female checked</string>
     <string name="male_checked">Male checked</string>
 
-    <!-- Settings: sentences -->
+    <!-- Settings: warnings -->
+    <string name="height_boundaries">Height should be within human boundaries, separated by punctuation like: 1.80 (meters).</string>
+    <string name="weight_boundaries">Weight should be within reasonable human boundaries.</string>
+
+    <!-- Settings: sentences tips -->
     <string name="set_unit">Please provide measurement units from drop-down</string>
     <string name="set_age">Please provide your age</string>
     <string name="set_gender">Please provide your gender</string>

@@ -14,6 +14,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -35,9 +36,10 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.android.climapp.R;
+import com.android.climapp.data.RequestHandler;
 import com.android.climapp.onboarding.OnBoardingActivity;
 import com.android.climapp.utils.APIConnection;
-import com.android.climapp.utils.User;
+import com.android.climapp.utils.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -46,8 +48,29 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.UUID;
+
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LOCATION_SERVICE;
+import static com.android.climapp.utils.SharedPreferencesConstants.ACTIVITY_LEVEL;
+import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
+import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_DARKRED;
+import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_GREEN;
+import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_ORANGE;
+import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_PLAIN;
+import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_RED;
+import static com.android.climapp.utils.SharedPreferencesConstants.EXPLORE_MODE;
+import static com.android.climapp.utils.SharedPreferencesConstants.GUID;
+import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_VALUE;
+import static com.android.climapp.utils.SharedPreferencesConstants.ONBOARDING_COMPLETE;
+import static com.android.climapp.utils.SharedPreferencesConstants.TEMPERATURE_STR;
+import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
+import static com.android.climapp.utils.SharedPreferencesConstants.WBGT_VALUE;
+import static com.android.climapp.utils.SharedPreferencesConstants.WEIGHT;
 
 /**
  * Created by frksteenhoff
@@ -67,11 +90,16 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     public DashboardFragment() {
         // Required empty constructor
     }
+
+    private static final int CODE_GET_REQUEST = 1024;
+    private static final int CODE_POST_REQUEST = 1025;
+
     private static final int ACCESS_COARSE_LOCATION_CODE = 3410;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
     private static final int GPS_ENABLE_REQUEST = 0x1001;
     private static final int WIFI_ENABLE_REQUEST = 0x1006;
-    private static final String LONLAT_LINK = "http://www.latlong.net/";
+    private static final String LONLAT_LINK = "http://www.latlong.net/"; // Used in explore mode, currently commented out
+
     // Google client to interact with Google API
     private GoogleApiClient mGoogleApiClient;
     private AlertDialog mInternetDialog;
@@ -116,8 +144,14 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
-        preferences = this.getActivity().getSharedPreferences("ClimApp", Context.MODE_PRIVATE);
+        preferences = this.getActivity().getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        // Store unique user ID once
+        if(preferences.getString(GUID, null) == null) {
+            String uniqueID = UUID.randomUUID().toString();
+            preferences.edit().putString(GUID, uniqueID).apply();
+        }
 
         // Notification view and logic components
         //notificationManager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
@@ -263,23 +297,23 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         sharedListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
                 // Update dashboard view when units are changed.
-                if(key.equals("Unit")){
+                if(key.equals(UNIT)){
                     Activity act  = getActivity();
                     if (act != null){
-                        User user = new User(preferences);
+                        Utils utils = new Utils(preferences);
 
-                        if(prefs.getInt("Unit", 0) == 1) {
+                        if(prefs.getInt(UNIT, 0) == 1) {
                             temperatureUnit.setText(getString(R.string.temperature_unit_f));
                             temperatureValue.setText(String.format("%s°",
-                                    user.setCorrectTemperatureUnit(prefs.getInt("temperature", 0),1)+""));
+                                    utils.setCorrectTemperatureUnit(prefs.getInt(TEMPERATURE_STR, 0),1)+""));
                         } else {
                             temperatureUnit.setText(getString(R.string.temperature_unit_c));
                             temperatureValue.setText(String.format("%s°",
-                                    user.setCorrectTemperatureUnit(prefs.getInt("temperature", 0),0)+""));
+                                    utils.setCorrectTemperatureUnit(prefs.getInt(TEMPERATURE_STR, 0),0)+""));
                         }
                     }
-                } else if (key.equals("Explore")) {
-                    if(prefs.getBoolean("Explore", false)) {
+                } else if (key.equals(EXPLORE_MODE)) {
+                    if(prefs.getBoolean(EXPLORE_MODE, false)) {
                         exploreView.setVisibility(View.VISIBLE);
                         heatStressLevelView.setVisibility(View.GONE);
                     } else {
@@ -383,9 +417,8 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
      * On app start, set activity level to last value or medium if none.
      */
     private void setCheckedActivityLevel() {
-        String activityLevel = preferences.getString("activity_level", null);
+        String activityLevel = preferences.getString(ACTIVITY_LEVEL, null);
         if (activityLevel != null) {
-            //Log.v("HESTE", "ACTIVITY LEVEL: " + activityLevel);
             switch (activityLevel) {
                 case "very low":
                     activityVeryLow.setChecked(true);
@@ -404,7 +437,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
                     break;
             }
         } else {
-            preferences.edit().putString("activity_level", "medium").apply();
+            preferences.edit().putString(ACTIVITY_LEVEL, "medium").apply();
             activityMedium.setChecked(true);
         }
     }
@@ -428,24 +461,35 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         activityVeryHigh.setChecked(false);
         currentButton.setChecked(true);
 
-        // Set the rest of the parameters
-        activityLevelDescription.setText(activityDescription);
+        // Set colors correctly
+        setUncheckedColors(activityVeryLow);
+        setUncheckedColors(activityLow);
+        setUncheckedColors(activityMedium);
+        setUncheckedColors(activityHigh);
+        setUncheckedColors(activityVeryHigh);
+
+        // Mark new correct button
         setOnCheckedColors(currentButton);
 
-        preferences.edit().putString("activity_level", preferenceText).apply();
+        // Set corresponding description
+        activityLevelDescription.setText(activityDescription);
 
-        if(preferences.getFloat("WBGT", 0) != 0.0) {
+        preferences.edit().putString(ACTIVITY_LEVEL, preferenceText).apply();
+
+        if(preferences.getFloat(WBGT_VALUE, 0) != 0.0) {
             // Update color indicator after activity level change
             ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
-                    preferences.getString("activity_level", "medium"),
-                    preferences.getString("Height_value", "1.80"),
-                    preferences.getInt("Weight", 80));
-            String color = ral.getRecommendationColor(preferences.getFloat("WBGT", 0), ral.calculateRALValue());
-            Log.v("HESTE", "RAL: " + ral.calculateRALValue() + " WBGT: "+ preferences.getFloat("WBGT", 0) + " col:" + color);
+                    preferences.getString(ACTIVITY_LEVEL, "medium"),
+                    preferences.getString(HEIGHT_VALUE, "1.80"),
+                    preferences.getInt(WEIGHT, 80));
+            String color = ral.getRecommendationColor(preferences.getFloat(WBGT_VALUE, 0), ral.calculateRALValue());
+            Log.v("HESTE", "UID: " + preferences.getString(GUID, null) +
+                    " RAL: " + ral.calculateRALValue() +
+                    " WBGT: "+ preferences.getFloat(WBGT_VALUE, 0) + " col:" + color);
 
             setRecommendationColorAndText(color);
         } else {
-            setRecommendationColorAndText("#EDE8E6");
+            setRecommendationColorAndText(COLOR_PLAIN);
         }
     }
 
@@ -461,19 +505,19 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
 
         // Update text view with correction comping strategies
         switch (color) {
-            case "#00b200":
+            case COLOR_GREEN:
                 heatStressTopView.setText(R.string.suggestion_green_top);
                 heatStressTextView.setText(R.string.suggestion_green);
                 break;
-            case "#FBBA57":
+            case COLOR_ORANGE:
                 heatStressTopView.setText(R.string.suggestion_yellow_top);
                 heatStressTextView.setText(R.string.suggestion_yellow);
                 break;
-            case "#e50000":
+            case COLOR_RED:
                 heatStressTopView.setText(R.string.suggestion_red_top);
                 heatStressTextView.setText(R.string.suggestion_red);
                 break;
-            case "#b20000":
+            case COLOR_DARKRED:
                 heatStressTopView.setText(R.string.suggestion_dark_red_top);
                 heatStressTextView.setText(R.string.suggestion_dark_red);
                 break;
@@ -503,7 +547,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     }
 
     public int getTemperatureUnit() {
-        int unit = preferences.getInt("Unit", 0);
+        int unit = preferences.getInt(UNIT, 0);
         if(unit == 1){
             return R.string.temperature_unit_f;
         } else {
@@ -574,7 +618,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     }
 
     private boolean onBoardingCompleted() {
-        return preferences.getBoolean("onboarding_complete", false);
+        return preferences.getBoolean(ONBOARDING_COMPLETE, false);
     }
 
     /**
@@ -606,7 +650,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
                                     getOpenWeatherMapData(latitude, longitude);
                                 } else {
                                     Toast.makeText(getActivity().getApplicationContext(),
-                                            "The application does not seem to have gathered any available location data, move your device.", Toast.LENGTH_LONG)
+                                            R.string.missing_location_data, Toast.LENGTH_LONG)
                                             .show();
                                     showDashboardViews(false);
                                 }
@@ -651,15 +695,15 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             return;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Internet Disabled");
-        builder.setMessage("No active Internet connection found. In order for the application to work properly, you need to enable internet on your device.");
-        builder.setPositiveButton("Turn on Wifi", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.internet_disabled);
+        builder.setMessage(R.string.internet_disabled_message);
+        builder.setPositiveButton(R.string.turn_on_wifi, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent wifiOptionsIntent = new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS);
                 startActivityForResult(wifiOptionsIntent, WIFI_ENABLE_REQUEST);
             }
-        }).setNegativeButton("Return to app", new DialogInterface.OnClickListener() {
+        }).setNegativeButton(R.string.choice_return_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
@@ -673,12 +717,12 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
 
         // Setting Dialog Title
-        alertDialog.setTitle("GPS turned off");
+        alertDialog.setTitle(R.string.gps_turned_off);
         // Setting Dialog Message
-        alertDialog.setMessage("GPS is disabled. In order for the application to work properly, you need to enable GPS on your device.");
+        alertDialog.setMessage(R.string.gps_turned_off_message);
 
         // On pressing Settings button
-        alertDialog.setPositiveButton("Enable GPS", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton( R.string.enable_gps, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent gpsOptionsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
@@ -687,7 +731,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         });
 
         // on pressing cancel button
-        alertDialog.setNegativeButton("Return to app", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton(R.string.choice_return_button, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
             }
@@ -739,6 +783,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             if (twoValuesAreGiven() && isWithinCoordinateRange()) {
                 double lat = Double.parseDouble(exploreLatitude.getText().toString());
                 double lon = Double.parseDouble(exploreLongitude.getText().toString());
+                // TODO: Written in clear text should be hidden somehow
                 APIConn = new APIConnection("f22065144b2119439a589cbfb9d851d3", lat, lon, preferences, this);
                 APIConn.execute();
             }
@@ -749,7 +794,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     }
 
     private boolean exploreMode() {
-        return preferences.getBoolean("Explore", false);
+        return preferences.getBoolean(EXPLORE_MODE, false);
     }
 
     public void saveFloatToPreferences(String preference, float value){
@@ -800,7 +845,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
                         PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
                 Toast.makeText(getActivity().getApplicationContext(),
-                        "This device is not supported.", Toast.LENGTH_LONG)
+                        R.string.device_not_supported, Toast.LENGTH_LONG)
                         .show();
             }
             return false;
@@ -835,5 +880,53 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     @Override
     public void onConnectionSuspended(int cause) {
         mGoogleApiClient.connect();
+    }
+
+
+    /*
+     * Network request to connect API with database
+     * NOT YET INTEGRATED WITH REMAINING CODE BASE
+     * */
+    private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
+        String url;
+        HashMap<String, String> params;
+        int requestCode;
+
+        PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
+            this.url = url;
+            this.params = params;
+            this.requestCode = requestCode;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            try {
+                JSONObject object = new JSONObject(s);
+                if (!object.getBoolean("error")) {
+                    Toast.makeText(getActivity().getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            RequestHandler requestHandler = new RequestHandler();
+
+            if (requestCode == CODE_POST_REQUEST)
+                return requestHandler.sendPostRequest(url, params);
+
+            if (requestCode == CODE_GET_REQUEST)
+                return requestHandler.sendGetRequest(url);
+
+            return null;
+        }
     }
 }
