@@ -6,22 +6,28 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import static com.android.climapp.utils.SharedPreferencesConstants.AGE_ONBOARDING;
+import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT;
+import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_INDEX;
+import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
+import static com.android.climapp.utils.SharedPreferencesConstants.WEIGHT;
+
 /**
  * Created by frksteenhoff on 12-06-2018.
  * Defining the different user parameters
  * Providing methods for setting and getting all values correctly
  */
 
-public final class User {
+public final class Utils {
 
     private String mDateOfBirth, mHeight;
     private int mWeight, mUnit;
 
-    public User(SharedPreferences preferences) {
-        this.mDateOfBirth = preferences.getString("Age_onboarding", null); // 30 as default (should not be hard coded)
-        this.mHeight = preferences.getString("height", "1.70");;  // 1.70m as default
-        this.mWeight = preferences.getInt("weight", 90);      // 90kg as default
-        this.mUnit = preferences.getInt("Unit", 0);         // 0 SI, 1 US, 2 UK
+    public Utils(SharedPreferences preferences) {
+        this.mDateOfBirth = preferences.getString(AGE_ONBOARDING, null); // 30 as default (should not be hard coded)
+        this.mHeight = preferences.getString(HEIGHT, "1.70");;  // 1.70m as default
+        this.mWeight = preferences.getInt(WEIGHT, 90);      // 90kg as default
+        this.mUnit = preferences.getInt(UNIT, 0);         // 0 SI, 1 US, 2 UK
     }
 
     /**
@@ -160,7 +166,7 @@ public final class User {
         }
 
         if(idx-1 < height_units.length) {
-            preferences.edit().putInt("Height_index", idx).apply();
+            preferences.edit().putInt(HEIGHT_INDEX, idx).apply();
         }
     }
 
