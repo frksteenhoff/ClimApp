@@ -112,5 +112,10 @@
             android:theme="@style/AppTheme"
             android:parentActivityName=".MainActivity">
         </activity>
+        <provider
+            android:authorities="com.android.climapp"
+            android:name=".data.ClimAppProvider"
+            android:exported="false">
+        </provider>
     </application>
 </manifest>
