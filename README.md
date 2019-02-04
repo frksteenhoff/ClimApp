@@ -24,14 +24,17 @@ Structure of the program files:
 ``` 
    ./                                                           <-- Repository
     .idea/                                                                                                                             
-    app/src/main/java/com/example/android/climapp/              <-- Source code
-                                                  clothing/     <-- clothing fragment (currently not enabled in app) 
-                                                  dashboard/    <-- dashboard fragment
-                                                  data/         <-- database API + sqlite3 work
-                                                  onboarding/   <-- onboarding fragment + onboarding activites
-                                                  settings/     <-- settings fragment + settings activites
-                                                  utils/        <-- helper classes
-                                                  wbgt/         <-- wbgt classes
+    app/release/                                                <-- Application package for Google Play
+    app/src/                                                    <-- source code
+     │  └──   main/java/com/example/android/climapp/             
+     │                                        └──   clothing/   <-- clothing fragment (currently not enabled in app) 
+     │                                        └──   dashboard/  <-- dashboard fragment
+     │                                        └──   data/       <-- database API + sqlite3 work
+     │                                        └──   onboarding/ <-- onboarding fragment + onboarding activites
+     │                                        └──   settings/   <-- settings fragment + settings activites
+     │                                        └──   utils/      <-- helper classes
+     │                                        └──   wbgt/       <-- wbgt classes
+     │   └──  test/java/com/android/climapp                     <-- test classes for critical parts of application
     build/
     gradle/wrapper/ 
  ```
