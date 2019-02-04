@@ -7,11 +7,12 @@ Follow the app development (with some delay) in this interactive screen visualiz
 Note! Not all functionality is made available in the app, furthermore, the commits to the github prototype codebase will not be 1:1 with Invision App.
 
 ## Requirements and installation
-The scripts in Jupyter Notebooks require an installation of Python 2.7.
-
 For all Java code you need to install [Java](https://java.com/en/download/) and [Android Studio](https://developer.android.com/studio/install.html) including different SDKs/JDKs and JRE. 
 
 For the best simulation of the app, use USB Debugging on your device (Developer mode).
+
+Inspection of the scripts in Jupyter Notebooks require an installation of Python 2.7.
+
 
 ## App folder structure
 **ClimApp**
