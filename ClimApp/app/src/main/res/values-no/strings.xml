@@ -1,0 +1,235 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">ClimApp</string>
+    <string name="no_text"> </string>
+
+    <!-- Main Screen Labels -->
+    <string name="dashboard">Dashboard</string>
+    <string name="settings">Innstillinger</string>
+    <string name="clothing">Klær</string>
+
+    <!-- Channel information - do not need translation -->
+    <string name="channel_name">"ClimApp"</string>
+    <string name="channel_description">"WBGT value check"</string>
+
+    <!-- OnBoarding sentences -->
+    <string name="welcome">Velkommen</string>
+    <string name="onboarding_not_completed">Onboarding ikke avsluttet, bruker predefinerte verdier.</string>
+    <string name="climapp_team">- ClimApp Teamet</string>
+    <string name="before_set_up">Før vi går igang..</string>
+    <string name="set_up">La oss begynne</string>
+    <string name="get_to_know">Lær os mer om deg</string>
+    <string name="last_step">Siste skritt</string>
+    <string name="almost_done">Nesten ferdig..</string>
+    <string name="skip">Hopp over</string>
+    <string name="next">Neste</string>
+    <string name="done">Ferdig</string>
+
+    <!-- Dashboard: Activity Level -->
+    <string name="activity_level">Aktivitetsnivå</string>
+    <string name="activity_level_text">Hvordan vil aktivitetsnivået ditt være idag?</string>
+    <string name="activity_level_very_low">Lav-</string>
+    <string name="activity_level_low">Lav</string>
+    <string name="activity_level_medium">Medium</string>
+    <string name="activity_level_high">Høy</string>
+    <string name="activity_level_very_high">Høy+</string>
+    <string name="activity_description">Beskrivelse av de forskjellige aktivitetsnivåene vises på klikk</string>
+    <!-- Descriptions of activity level as described in "Classification of levels of metabolic rate ISO 8996" -->
+
+    <!-- Dashboard: recommendation text -->
+    <string name="heatStressLevel">Ditt forventede varme-stress nivå</string>
+    <string name="suggestion_text">Beskrivelse av handlinger.</string>
+    <string name="suggestion_green_top">Ingen høy varme forventes</string>
+    <string name="suggestion_green">Maintain norOppretthold normale arbeids- og hydratiseringsprosedyrer.</string>
+    <string name="suggestion_yellow_top">Moderat varme-stress forventes</string>
+    <string name="suggestion_yellow">Vær ekstra oppmerksom på hyppig drikking.</string>
+    <string name="suggestion_red_top">Høy varme-stress forventes!</string>
+    <string name="suggestion_dark_red_top">Ekstrem varme-stress forventes!</string>
+    <string name="suggestion_default_top">Venter på data</string>
+    <string name="suggestion_default">Ingen mestringsstrategier klar.</string>
+
+
+    <!-- Dashboard: Location and internet access -->
+    <string name="location_error_text">Kunne ikke finne enhetens plassering. Sørg for at plassering er aktivert på enheten.</string>
+    <string name="location">Plassering</string>
+    <string name="weather_current">Aktuelt</string>
+    <string name="update_location">Oppdater plassering</string>
+    <string name="current_location">Nåværende plassering</string>
+    <string name="permission_denied">Plasseringstillatelse avslått, ingeting å vise.</string>
+    <string name="error_text_location">GPS eller internett deaktivert. Vennligst aktiver begge og gjennstart appen.</string>
+    <string name="error">Feil</string>
+    <string name="missing_location_data">Appen har ikke innsamlet plasseringsdata, flytt på enheten.</string>
+    <string name="internet_disabled">Internett deaktivert</string>
+    <string name="internet_disabled_message">Ingen aktiv internettforbindelse. For att appen skal virke riktig må du slå på internett.</string>
+    <string name="turn_on_wifi">Slå på Wifi</string>
+    <string name="choice_return_button">Tilbake til appen</string>
+    <string name="gps_turned_off">GPS deaktivert</string>
+    <string name="gps_turned_off_message">GPS deaktivert. For att appen skal virke riktig må du aktivere GPS.</string>
+    <string name="enable_gps">Slå på GPS</string>
+    <string name="device_not_supported">Denne enheten er ikke understøttet.</string>
+
+    <!-- Dashboard: weather information -->
+    <string name="humidity">Luftfuktighet</string>
+    <string name="pressure">Trykk</string>
+    <string name="temperature">Temperatur</string>
+    <string name="wind_speed">Vindhastighet</string>
+    <string name="degrees">16°</string>
+    <string name="cloudiness">Uklarhet</string>
+    <string name="wbgt_model_temp">WBGT (temporary)</string>
+
+    <!-- Dashboard: Alerts-->
+    <string name="alert_header_text">Alarm</string>
+    <string name="RALColorCodeArea">Viser fargekode</string>
+
+    <!-- Explore -->
+    <string name="explore_text_header">Angi egne koordinater</string>
+    <string name="explore_lon">Lengdegrad</string>
+    <string name="explore_lat">Breddegrad</string>
+    <string name="explore">Utforsk</string>
+
+
+    <!-- Settings - General titles -->
+    <string name="Age">Alder</string>
+    <string name="Height">Høyde</string>
+    <string name="Weight">Vekt</string>
+    <string name="Gender">Kjønn</string>
+    <string name="Acclimatization">Akklimatisert</string>
+
+    <!-- Settings: Button hints -->
+    <string name="Input_age">Tillføy føtselsdato (DDMMYYYY)</string>
+    <string name="Input_gender">Angi kjønn</string>
+    <string name="Input_height">Angi høyde</string>
+    <string name="Input_weight">Angi vekt</string>
+    <string name="Input_acclimatization">Velg akklimatisering</string>
+    <string name="Input_unit">Velg enhet</string>
+    <string name="female">Kvinne</string>
+    <string name="male">Mann</string>
+    <string name="set_age_button">Angi alder</string>
+    <string name="wrong_age">Feil format eller alder. Skal skrives på formen DDMMYYYY med alder mellom 18 og 120. Prøv igjen.</string>
+
+    <!-- Settings: Units -->
+    <string name="age_unit">År</string>
+    <string name="height_unit_si">Meter</string>
+    <string name="height_unit_uk">Feet/inches</string>
+    <string name="height_unit_us">Feet/inches</string>
+    <string name="weight_unit_si">Kg</string>
+    <string name="weight_unit_uk">Stones</string>
+    <string name="weight_unit_us">Pounds</string>
+    <string name="temperature_unit_f">Fahrenheit</string>
+    <string name="temperature_unit_c">Celcius</string>
+
+    <!-- Settings: Unit array -->
+    <string-array name="units_array">
+        <item>SI units (kg, m, °C)</item>
+        <item>US (pound, feet/inches, °F)</item>
+        <item>UK (stone, feet/inches, °C)</item>
+    </string-array>
+
+    <!-- Settings: Gender array -->
+    <string-array name="gender_array">
+        <item>Female</item>
+        <item>Male</item>
+    </string-array>
+
+    <!-- Settings - Notification frequency array -->
+    <string-array name="frequency_array">
+        <item>Workdays 6AM</item>
+        <item>Daily 6AM</item>
+        <item>Workdays 7AM</item>
+        <item>Daily 7AM</item>
+        <item>Off</item>
+        <item>Custom..</item>
+    </string-array>
+
+    <!-- Settings: overall -->
+    <string name="action_settings">Innstillinger</string> <!-- dashboard -->
+    <string name="Personal_Settings">Personlige innstillinger</string>
+    <string name="Notifications">Varslinger</string>
+    <string name="Preferences">Preferanser</string>
+    <string name="Other">Annet</string>
+    <string name="About">Om</string>
+    <string name="Reset">Tilbakestill personlige preferanser</string>
+    <string name="prefs_cleared">Personlige preferanser tilbakestillet</string>
+    <string name="measuring_units">Måleenheter</string>
+    <string name="units">Enheter</string>
+    <string name="unit">Enhet</string>
+    <string name="choose_units">Velg enhet</string>
+    <string name="choose_gender">Velg kjønn</string>
+    <string name="disclaimer">Ansvarsfraskrivelse</string>
+    <string name="disclaimer_text">This application is still under development and several new features will be implemented over the course of the next two years. Therefore all users should be informed frequent updates and changes to the layout and content might occur.\n\nERA4CS and its partners assume no responsibility or liability for any
+        errors or omissions in the content of this application. The information contained in this app
+        is provided on an “as is” basis with no guarantees of completeness, accuracy, usefulness
+        or timeliness.</string>
+    <string name="what_climapp">Hva er ERA4CS ClimApp prosjektet?</string>
+    <string name="era4cs_text">Les mere på den offisielle hjemmesiden: <a href="http://www.jpi-climate.eu/nl/25223441-ClimApp.html">http://www.jpi-climate.eu/nl/</a></string>
+
+    <!-- Settings: reponses -->
+    <string name="age_updated">"Alder oppdatert til: "</string>
+    <string name="weight_updated">Vekt oppdatert til:</string>
+    <string name="height_updated">Høyde oppdatert til:</string>
+    <string name="acclimatization_true">Akklimatisert til arbeidsforhold</string>
+    <string name="acclimatization_false">Ikke akklimatisert til arbeidsforhold</string>
+    <string name="explore_true">Utforskningsmodus på</string>
+    <string name="explore_false">Udforskningsmodus av</string>
+
+    <!-- Settings: initial values -->
+    <string name="user_height">150</string>
+    <string name="female_checked">Female checked</string>
+    <string name="male_checked">Male checked</string>
+
+    <!-- Settings: warnings -->
+    <string name="height_boundaries">Høyde må være innenfor menneskelige grenser, separert med mellomrum som f.eks: 1.80 (meter)</string>
+    <string name="weight_boundaries">Vekt må være innenfor menneskelige grenser.</string>
+
+    <!-- Settings: sentences tips -->
+    <string name="set_unit">Vennligst oppgi måleenhet fra nedtrekksmenyen</string>
+    <string name="set_age">Vennligst angi alderen din</string>
+    <string name="set_gender">Vennligst oppgi kjønnet ditt</string>
+    <string name="set_height">Vennligst oppgi høyden din</string>
+    <string name="set_weight">Vennligst oppgi vekten din</string>
+    <string name="set_acclimatization">Vennligst oppgi om du er akklimatiser til arbeidsforholdene dine.</string>
+    <string name="select_age_picker_string">Vennligst velg alder ved bruk av hjulet eller skriv inn selv.</string>
+    <string name="select_height_picker_string">Vennligst velg høyde ved bruk av hjulet eller skriv inn selv.</string>
+    <string name="select_weight_picker_string">Vennligst velg vekt ved bruk av hjulet eller skriv inn selv.</string>
+    <string name="acclimatization_description_more">Les mere om å sette akklimatisering</string>
+
+    <!--Settings: Notification values -->
+    <string name="more">Lær mer</string>
+
+    <!-- Clothing: -->
+    <string name="field_of_work">Arbeidsfelt</string>
+    <string name="outer_wear">Yttertøy</string>
+    <string name="work_specific_attire">Arbeidsspesifikke antrekk</string>
+    <string name="clothing_customize_attire">Tilpass ditt eget antrekk</string>
+    <string name="clothing_customize_attire_description">"Ved å velge netopp de klærne du bruker på jobb kan vi bedre tilpasse oss behovene dine i løpet av dagen "</string>
+
+    <!-- Clothing: Array items - field of work -->
+    <string-array name="field_of_work_array">
+        <item>Office</item>
+        <item>Construction</item>
+        <item>Sales Assistant</item>
+        <item>Teaching</item>
+    </string-array>
+
+    <!-- Sign-in status messages -->
+    <string name="loading" tools:keep="@string/loading">Laster...</string>
+
+    <!-- Facebook information (no translation needed) -->
+    <string name="server_client_id">912535355882-9ud102rtm4qbsn265r2va8leqdef75p3.apps.googleusercontent.com</string>
+    <string name="facebook_app_id">136565860303378</string>
+    <string name="fb_login_protocol_scheme">fb136565860303378</string>
+    <string name="acclimatization_description">Vennligst velt om du er akklimatisert til arbeidsmiljøet ditt. Hviss du har jobbet med de samme betingelsene i mere enn en uke, er du akklimatisert.</string>
+    <string name="justification">For att appen skal kunne personalisere tilbakemeldingene for deg anbefaler viatt du tilføyer dine personlige informasjoner. Hvis ikke du vill er det også greit, så bruker vi bare forhåndsdefinerte verdier.</string>
+    <string name="activity_very_low_text_short">Slapper av, sitter rolig. Pusten er ikke utfordret.</string>
+    <string name="activity_low_text_short">Lett manuelt arbeid: skriver, tegner, bokføring. Lett å puste og konversere.</string>
+    <string name="activity_medium_text_short">Vedvarende arm- og håndarbeid: håndterer moderat tungt maskineri, luker, plukker frukt.</string>
+    <string name="activity_high_text_short">Intenst arm- og kroppsarbeid: bærer tungt materiale, saging, gressklipping, betongblokklegging</string>
+    <string name="activity_very_high_text_short">Veldig intens aktivitet ved maksimum tempo: jobbe med øks, gå op trapper, løper på plan overflate.</string>
+    <string name="activity_very_low_text">Slapper av, sitter rolig. Pusten er ikke utfordret.</string>
+    <string name="activity_low_text">Lett manuelt arbeid: skriver, tegner, bokføring. Lett armbevegelse: står og driller. Lett gang på plan overflate. Lett å puste og konversere.</string>
+    <string name="activity_medium_text">Vedvarende arm- og håndarbeid: håndterer moderat tungt maskineri, luker, plukker frukt. Skyve eller trekke en trillebørre. Gang ved 2.5 til 5.5 km/h. Kan konversere.</string>
+    <string name="activity_high_text">Intenst arm- og kroppsarbeid: bærer tungt materiale, saging, gressklipping, betongblokklegging. Rask gang ved 5.5 til 7 km/h. Konversation krever maksimal anstrengelse.</string>
+    <string name="activity_very_high_text">Veldig intens aktivitet ved maksimum tempo: jobbe med øks, gå op trapper, løper på plan overflate. Gang ved mere enn 7 km/h. Vanskelig å konversere.</string>
+    <string name="suggestion_red">Vannbehovene dine vil være høye. Drikk ofte og husk å rehydrere etter arbeid/trening. Hvis mulig, tilpass arbeidsintensiteten og inkludér små pauser under avkjøling.</string>
+    <string name="suggestion_dark_red">Hvis mulig tilpass arbeidet - bruk aktiv kjøling (planlegg hyppige pauser i skyggen eller avkjølte områder hvor du kan hydrere). Du kan ha bruk for mere enn 1L vann per time.</string>
+    <string name="explore_find_lonlat_txt">Finn koordinater for byen din her:  <a href="http://www.latlong.net/">http://www.latlong.net/</a></string>
+</resources>
