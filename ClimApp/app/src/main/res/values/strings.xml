@@ -130,8 +130,8 @@
     <!-- Settings: Units -->
     <string name="age_unit">Years</string>
     <string name="height_unit_si">Meters</string>
-    <string name="height_unit_uk">Feet/inches</string>
-    <string name="height_unit_us">Feet/inches</string>
+    <string name="height_unit_uk" translatable="false">Feet/inches</string>
+    <string name="height_unit_us" translatable="false">Feet/inches</string>
     <string name="weight_unit_si" translatable="false">Kg</string>
     <string name="weight_unit_uk">Stones</string>
     <string name="weight_unit_us">Pounds</string>

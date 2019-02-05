@@ -1,15 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name">ClimApp</string>
-    <string name="no_text"> </string>
 
     <!-- Main Screen Labels -->
-    <string name="dashboard">Dashboard</string>
+    <string name="dashboard">Dashbord</string>
     <string name="settings">Innstillinger</string>
     <string name="clothing">Klær</string>
 
     <!-- Channel information - do not need translation -->
     <string name="channel_name">"ClimApp"</string>
-    <string name="channel_description">"WBGT value check"</string>
 
     <!-- OnBoarding sentences -->
     <string name="welcome">Velkommen</string>
@@ -72,9 +69,7 @@
     <string name="pressure">Trykk</string>
     <string name="temperature">Temperatur</string>
     <string name="wind_speed">Vindhastighet</string>
-    <string name="degrees">16°</string>
     <string name="cloudiness">Uklarhet</string>
-    <string name="wbgt_model_temp">WBGT (temporary)</string>
 
     <!-- Dashboard: Alerts-->
     <string name="alert_header_text">Alarm</string>
@@ -109,13 +104,8 @@
     <!-- Settings: Units -->
     <string name="age_unit">År</string>
     <string name="height_unit_si">Meter</string>
-    <string name="height_unit_uk">Feet/inches</string>
-    <string name="height_unit_us">Feet/inches</string>
-    <string name="weight_unit_si">Kg</string>
     <string name="weight_unit_uk">Stones</string>
     <string name="weight_unit_us">Pounds</string>
-    <string name="temperature_unit_f">Fahrenheit</string>
-    <string name="temperature_unit_c">Celcius</string>
 
     <!-- Settings: Unit array -->
     <string-array name="units_array">
@@ -155,10 +145,6 @@
     <string name="choose_units">Velg enhet</string>
     <string name="choose_gender">Velg kjønn</string>
     <string name="disclaimer">Ansvarsfraskrivelse</string>
-    <string name="disclaimer_text">This application is still under development and several new features will be implemented over the course of the next two years. Therefore all users should be informed frequent updates and changes to the layout and content might occur.\n\nERA4CS and its partners assume no responsibility or liability for any
-        errors or omissions in the content of this application. The information contained in this app
-        is provided on an “as is” basis with no guarantees of completeness, accuracy, usefulness
-        or timeliness.</string>
     <string name="what_climapp">Hva er ERA4CS ClimApp prosjektet?</string>
     <string name="era4cs_text">Les mere på den offisielle hjemmesiden: <a href="http://www.jpi-climate.eu/nl/25223441-ClimApp.html">http://www.jpi-climate.eu/nl/</a></string>
 
@@ -172,9 +158,6 @@
     <string name="explore_false">Udforskningsmodus av</string>
 
     <!-- Settings: initial values -->
-    <string name="user_height">150</string>
-    <string name="female_checked">Female checked</string>
-    <string name="male_checked">Male checked</string>
 
     <!-- Settings: warnings -->
     <string name="height_boundaries">Høyde må være innenfor menneskelige grenser, separert med mellomrum som f.eks: 1.80 (meter)</string>
@@ -214,11 +197,8 @@
     <string name="loading" tools:keep="@string/loading">Laster...</string>
 
     <!-- Facebook information (no translation needed) -->
-    <string name="server_client_id">912535355882-9ud102rtm4qbsn265r2va8leqdef75p3.apps.googleusercontent.com</string>
-    <string name="facebook_app_id">136565860303378</string>
-    <string name="fb_login_protocol_scheme">fb136565860303378</string>
     <string name="acclimatization_description">Vennligst velt om du er akklimatisert til arbeidsmiljøet ditt. Hviss du har jobbet med de samme betingelsene i mere enn en uke, er du akklimatisert.</string>
-    <string name="justification">For att appen skal kunne personalisere tilbakemeldingene for deg anbefaler viatt du tilføyer dine personlige informasjoner. Hvis ikke du vill er det også greit, så bruker vi bare forhåndsdefinerte verdier.</string>
+    <string name="justification">For att appen skal kunne personalisere tilbakemeldingene for deg anbefaler vi att du tilføyer dine personlige informasjoner. Hvis ikke du vill er det også greit, så bruker vi bare forhåndsdefinerte verdier.</string>
     <string name="activity_very_low_text_short">Slapper av, sitter rolig. Pusten er ikke utfordret.</string>
     <string name="activity_low_text_short">Lett manuelt arbeid: skriver, tegner, bokføring. Lett å puste og konversere.</string>
     <string name="activity_medium_text_short">Vedvarende arm- og håndarbeid: håndterer moderat tungt maskineri, luker, plukker frukt.</string>
@@ -232,4 +212,5 @@
     <string name="suggestion_red">Vannbehovene dine vil være høye. Drikk ofte og husk å rehydrere etter arbeid/trening. Hvis mulig, tilpass arbeidsintensiteten og inkludér små pauser under avkjøling.</string>
     <string name="suggestion_dark_red">Hvis mulig tilpass arbeidet - bruk aktiv kjøling (planlegg hyppige pauser i skyggen eller avkjølte områder hvor du kan hydrere). Du kan ha bruk for mere enn 1L vann per time.</string>
     <string name="explore_find_lonlat_txt">Finn koordinater for byen din her:  <a href="http://www.latlong.net/">http://www.latlong.net/</a></string>
+    <string name="disclaimer_text">"Denne appen er fortsatt under utvikling og flere nye utvidelser vil bli implementert i løpet av de neste to årene. Brukere av denne appen skal derfor vite at hyppige oppdateringer og endringer av utseendet vil forekomme.\n\nERA4CS og tilhørende partnere påtar seg intet ansvar for feil eller mangler i denne appen. Informasjonen som finnes i denne appen er gitt på samme måte uten noen garanti for fullstendighet, nøyaktighet, brukbarhet eller aktualitet."</string>
 </resources>
