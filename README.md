@@ -25,9 +25,18 @@ Structure of the program files:
  ./                                                               <-- Repository
  ├── ..
  ├── .idea/                                                                                                                             
- ├── app/release/                                                 <-- Application package for Google Play
+ ├── app/release/                                                 <-- Application package (.apk) for Google Play
  ├── app/src/                                                     <-- source code
- │        ├──   main/java/com/example/android/climapp/             
+ │        ├── main/
+ │        │     ├── res/
+ │        │     │     ├── drawable                                <-- assets
+ │        │     │     ├── font                                    <-- font
+ │        │     │     ├── mipmap                                  <-- images
+ │        │     │     ├── layout                                  <-- xml layout files
+ │        │     │     ├── values                                  <-- globally accessible settings
+ │        │     │     ├── xml                                     <-- network configuration 
+ │        │     │     └── ..                                       
+ │        │     └── java/com/example/android/climapp/             <-- fragments and activities  
  │        │                                     ├──   clothing/   <-- clothing fragment (currently not enabled in app) 
  │        │                                     ├──   dashboard/  <-- dashboard fragment
  │        │                                     ├──   data/       <-- database API + sqlite3 classes
@@ -35,7 +44,8 @@ Structure of the program files:
  │        │                                     ├──   settings/   <-- settings fragment + settings activites
  │        │                                     ├──   utils/      <-- helper classes
  │        │                                     └──   wbgt/       <-- wbgt classes
- │        └──  test/java/com/android/climapp                      <-- test classes for critical parts of application
+ │        ├──  test/java/com/android/climapp                      <-- test classes for critical parts of application
+ │        └── ...
  ├── build/
  ├── gradle/wrapper/
  └── ...
