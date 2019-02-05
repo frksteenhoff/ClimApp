@@ -2,10 +2,10 @@ package com.android.climapp.wbgt;
 
 import java.util.HashMap;
 
-import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_DARKRED;
-import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_GREEN;
-import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_ORANGE;
-import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_RED;
+import static com.android.climapp.utils.ApplicationConstants.COLOR_DARKRED;
+import static com.android.climapp.utils.ApplicationConstants.COLOR_GREEN;
+import static com.android.climapp.utils.ApplicationConstants.COLOR_ORANGE;
+import static com.android.climapp.utils.ApplicationConstants.COLOR_RED;
 
 /**
  * Created by frksteenhoff on 14-05-2018.

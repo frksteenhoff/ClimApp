@@ -15,8 +15,8 @@ import com.android.climapp.utils.AlarmReceiver;
 
 import java.util.Calendar;
 
-import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
-import static com.android.climapp.utils.SharedPreferencesConstants.NOTIFICATION;
+import static com.android.climapp.utils.ApplicationConstants.APP_NAME;
+import static com.android.climapp.utils.ApplicationConstants.NOTIFICATION;
 
 /**
  * Created by frksteenhoff on 28-03-2018.

@@ -10,9 +10,9 @@ import org.junit.Test;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_GREEN;
-import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_ORANGE;
-import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_RED;
+import static com.android.climapp.utils.ApplicationConstants.COLOR_GREEN;
+import static com.android.climapp.utils.ApplicationConstants.COLOR_ORANGE;
+import static com.android.climapp.utils.ApplicationConstants.COLOR_RED;
 import static junit.framework.Assert.assertEquals;
 
 /**

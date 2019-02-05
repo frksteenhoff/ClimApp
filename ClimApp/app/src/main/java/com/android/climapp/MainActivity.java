@@ -8,8 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.android.climapp.utils.FragmentPagerAdapter;
 
-import static com.android.climapp.utils.SharedPreferencesConstants.DASHBOARD;
-import static com.android.climapp.utils.SharedPreferencesConstants.SETTINGS;
+import static com.android.climapp.utils.ApplicationConstants.DASHBOARD;
+import static com.android.climapp.utils.ApplicationConstants.SETTINGS;
 
 /**
  * Created by frksteenhoff on 29-10-2017.

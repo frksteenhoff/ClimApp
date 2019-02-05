@@ -6,13 +6,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-import static com.android.climapp.utils.SharedPreferencesConstants.AGE_ONBOARDING;
-import static com.android.climapp.utils.SharedPreferencesConstants.DEFAULT_HEIGHT;
-import static com.android.climapp.utils.SharedPreferencesConstants.DEFAULT_WEIGHT;
-import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT;
-import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_INDEX;
-import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
-import static com.android.climapp.utils.SharedPreferencesConstants.WEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.AGE_ONBOARDING;
+import static com.android.climapp.utils.ApplicationConstants.DEFAULT_HEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.DEFAULT_WEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.HEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.HEIGHT_INDEX;
+import static com.android.climapp.utils.ApplicationConstants.UNIT;
+import static com.android.climapp.utils.ApplicationConstants.WEIGHT;
 
 /**
  * Created by frksteenhoff on 12-06-2018.

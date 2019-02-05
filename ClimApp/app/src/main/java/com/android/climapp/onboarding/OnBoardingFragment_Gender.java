@@ -13,8 +13,8 @@ import android.widget.Spinner;
 
 import com.android.climapp.R;
 
-import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
-import static com.android.climapp.utils.SharedPreferencesConstants.GENDER;
+import static com.android.climapp.utils.ApplicationConstants.APP_NAME;
+import static com.android.climapp.utils.ApplicationConstants.GENDER;
 
 /**
  * Created by frksteenhoff on 19-02-2018.

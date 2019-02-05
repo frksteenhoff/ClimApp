@@ -18,13 +18,13 @@ import com.android.climapp.R;
 import com.android.climapp.utils.Utils;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
-import static com.android.climapp.utils.SharedPreferencesConstants.AGE;
-import static com.android.climapp.utils.SharedPreferencesConstants.AGE_ONBOARDING;
-import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
-import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_VALUE;
-import static com.android.climapp.utils.SharedPreferencesConstants.ONBOARDING_COMPLETE;
-import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
-import static com.android.climapp.utils.SharedPreferencesConstants.WEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.AGE;
+import static com.android.climapp.utils.ApplicationConstants.AGE_ONBOARDING;
+import static com.android.climapp.utils.ApplicationConstants.APP_NAME;
+import static com.android.climapp.utils.ApplicationConstants.HEIGHT_VALUE;
+import static com.android.climapp.utils.ApplicationConstants.ONBOARDING_COMPLETE;
+import static com.android.climapp.utils.ApplicationConstants.UNIT;
+import static com.android.climapp.utils.ApplicationConstants.WEIGHT;
 
 /**
  * Created by frksteenhoff on 19-02-2018.

@@ -26,14 +26,14 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.android.climapp.utils.SharedPreferencesConstants.ACTIVITY_LEVEL;
-import static com.android.climapp.utils.SharedPreferencesConstants.DEFAULT_HEIGHT;
-import static com.android.climapp.utils.SharedPreferencesConstants.DEFAULT_WEIGHT;
-import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_VALUE;
-import static com.android.climapp.utils.SharedPreferencesConstants.TEMPERATURE_STR;
-import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
-import static com.android.climapp.utils.SharedPreferencesConstants.WBGT_VALUE;
-import static com.android.climapp.utils.SharedPreferencesConstants.WEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.ACTIVITY_LEVEL;
+import static com.android.climapp.utils.ApplicationConstants.DEFAULT_HEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.DEFAULT_WEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.HEIGHT_VALUE;
+import static com.android.climapp.utils.ApplicationConstants.TEMPERATURE_STR;
+import static com.android.climapp.utils.ApplicationConstants.UNIT;
+import static com.android.climapp.utils.ApplicationConstants.WBGT_VALUE;
+import static com.android.climapp.utils.ApplicationConstants.WEIGHT;
 
 public class APIConnection extends AsyncTask<String, String, String> {
     /* Key authorizing connection to API */

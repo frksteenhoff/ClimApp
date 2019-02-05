@@ -56,23 +56,23 @@ import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LOCATION_SERVICE;
-import static com.android.climapp.utils.SharedPreferencesConstants.ACTIVITY_LEVEL;
-import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
-import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_DARKRED;
-import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_GREEN;
-import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_ORANGE;
-import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_PLAIN;
-import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_RED;
-import static com.android.climapp.utils.SharedPreferencesConstants.DEFAULT_HEIGHT;
-import static com.android.climapp.utils.SharedPreferencesConstants.DEFAULT_WEIGHT;
-import static com.android.climapp.utils.SharedPreferencesConstants.EXPLORE_MODE;
-import static com.android.climapp.utils.SharedPreferencesConstants.GUID;
-import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_VALUE;
-import static com.android.climapp.utils.SharedPreferencesConstants.ONBOARDING_COMPLETE;
-import static com.android.climapp.utils.SharedPreferencesConstants.TEMPERATURE_STR;
-import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
-import static com.android.climapp.utils.SharedPreferencesConstants.WBGT_VALUE;
-import static com.android.climapp.utils.SharedPreferencesConstants.WEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.ACTIVITY_LEVEL;
+import static com.android.climapp.utils.ApplicationConstants.APP_NAME;
+import static com.android.climapp.utils.ApplicationConstants.COLOR_DARKRED;
+import static com.android.climapp.utils.ApplicationConstants.COLOR_GREEN;
+import static com.android.climapp.utils.ApplicationConstants.COLOR_ORANGE;
+import static com.android.climapp.utils.ApplicationConstants.COLOR_PLAIN;
+import static com.android.climapp.utils.ApplicationConstants.COLOR_RED;
+import static com.android.climapp.utils.ApplicationConstants.DEFAULT_HEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.DEFAULT_WEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.EXPLORE_MODE;
+import static com.android.climapp.utils.ApplicationConstants.GUID;
+import static com.android.climapp.utils.ApplicationConstants.HEIGHT_VALUE;
+import static com.android.climapp.utils.ApplicationConstants.ONBOARDING_COMPLETE;
+import static com.android.climapp.utils.ApplicationConstants.TEMPERATURE_STR;
+import static com.android.climapp.utils.ApplicationConstants.UNIT;
+import static com.android.climapp.utils.ApplicationConstants.WBGT_VALUE;
+import static com.android.climapp.utils.ApplicationConstants.WEIGHT;
 
 /**
  * Created by frksteenhoff

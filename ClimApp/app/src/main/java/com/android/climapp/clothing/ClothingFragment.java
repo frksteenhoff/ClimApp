@@ -15,8 +15,8 @@ import android.widget.TextView;
 
 import com.android.climapp.R;
 
-import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
-import static com.android.climapp.utils.SharedPreferencesConstants.FIELD_OF_WORK;
+import static com.android.climapp.utils.ApplicationConstants.APP_NAME;
+import static com.android.climapp.utils.ApplicationConstants.FIELD_OF_WORK;
 
 /**
  * Created by frksteenhoff on 26-02-2018.

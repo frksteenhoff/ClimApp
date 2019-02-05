@@ -12,8 +12,8 @@ import android.widget.Toast;
 
 import com.android.climapp.R;
 
-import static com.android.climapp.utils.SharedPreferencesConstants.ACCLIMATIZATION;
-import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
+import static com.android.climapp.utils.ApplicationConstants.ACCLIMATIZATION;
+import static com.android.climapp.utils.ApplicationConstants.APP_NAME;
 
 /**
  * Created by frksteenhoff on 21-01-2018.

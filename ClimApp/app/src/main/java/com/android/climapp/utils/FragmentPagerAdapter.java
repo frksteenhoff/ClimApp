@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.android.climapp.dashboard.DashboardFragment;
 import com.android.climapp.settings.SettingsFragment;
 
-import static com.android.climapp.utils.SharedPreferencesConstants.DASHBOARD;
-import static com.android.climapp.utils.SharedPreferencesConstants.SETTINGS;
+import static com.android.climapp.utils.ApplicationConstants.DASHBOARD;
+import static com.android.climapp.utils.ApplicationConstants.SETTINGS;
 
 /**
  * Created by frksteenhoff on 26-02-2018.

@@ -5,9 +5,9 @@ package com.android.climapp.utils;
  * Overview of all constants used to store shared preferences
  * NOTE: As the constants play a huge role in the app logic, these should not be changed/refactored
  */
-public final class SharedPreferencesConstants {
+public final class ApplicationConstants {
 
-    private SharedPreferencesConstants() {
+    private ApplicationConstants() {
     }
 
     public static final String APP_NAME = "ClimApp";

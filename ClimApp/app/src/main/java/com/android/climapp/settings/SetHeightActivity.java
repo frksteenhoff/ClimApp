@@ -13,10 +13,10 @@ import android.widget.Toast;
 import com.android.climapp.R;
 import com.android.climapp.utils.Utils;
 
-import static com.android.climapp.utils.SharedPreferencesConstants.APP_NAME;
-import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_INDEX;
-import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_VALUE;
-import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
+import static com.android.climapp.utils.ApplicationConstants.APP_NAME;
+import static com.android.climapp.utils.ApplicationConstants.HEIGHT_INDEX;
+import static com.android.climapp.utils.ApplicationConstants.HEIGHT_VALUE;
+import static com.android.climapp.utils.ApplicationConstants.UNIT;
 
 /**
  * Created by frksteenhoff on 21-01-2018.
