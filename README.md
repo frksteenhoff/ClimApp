@@ -22,21 +22,23 @@ Contains the Java code for the app
 Structure of the program files:
 
 ``` 
-   ./                                                           <-- Repository
-    .idea/                                                                                                                             
-    app/release/                                                <-- Application package for Google Play
-    app/src/                                                    <-- source code
-     │  └──   main/java/com/example/android/climapp/             
-     │                                        └──   clothing/   <-- clothing fragment (currently not enabled in app) 
-     │                                        └──   dashboard/  <-- dashboard fragment
-     │                                        └──   data/       <-- database API + sqlite3 work
-     │                                        └──   onboarding/ <-- onboarding fragment + onboarding activites
-     │                                        └──   settings/   <-- settings fragment + settings activites
-     │                                        └──   utils/      <-- helper classes
-     │                                        └──   wbgt/       <-- wbgt classes
-     │   └──  test/java/com/android/climapp                     <-- test classes for critical parts of application
-    build/
-    gradle/wrapper/ 
+ ./                                                               <-- Repository
+ ├── ..
+ ├── .idea/                                                                                                                             
+ ├── app/release/                                                 <-- Application package for Google Play
+ ├── app/src/                                                     <-- source code
+ │        ├──   main/java/com/example/android/climapp/             
+ │        │                                     ├──   clothing/   <-- clothing fragment (currently not enabled in app) 
+ │        │                                     ├──   dashboard/  <-- dashboard fragment
+ │        │                                     ├──   data/       <-- database API + sqlite3 classes
+ │        │                                     ├──   onboarding/ <-- onboarding fragment + onboarding activites
+ │        │                                     ├──   settings/   <-- settings fragment + settings activites
+ │        │                                     ├──   utils/      <-- helper classes
+ │        │                                     └──   wbgt/       <-- wbgt classes
+ │        └──  test/java/com/android/climapp                      <-- test classes for critical parts of application
+ ├── build/
+ ├── gradle/wrapper/
+ └── ...
  ```
 
 ### Other folders
@@ -61,4 +63,4 @@ Tests for fetching data from DWD Open Data and Open Weather Map in Jupyter Noteb
 Documentation of the app can be found in the [ClimApp Wiki](https://github.com/frksteenhoff/ClimApp/wiki). 
 
 
-Copyright frksteenhoff
+Copyright @frksteenhoff
