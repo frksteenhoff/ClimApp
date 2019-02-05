@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 
 import static com.android.climapp.utils.SharedPreferencesConstants.AGE_ONBOARDING;
+import static com.android.climapp.utils.SharedPreferencesConstants.DEFAULT_HEIGHT;
+import static com.android.climapp.utils.SharedPreferencesConstants.DEFAULT_WEIGHT;
 import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT;
 import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_INDEX;
 import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
@@ -25,9 +27,9 @@ public final class Utils {
 
     public Utils(SharedPreferences preferences) {
         this.mDateOfBirth = preferences.getString(AGE_ONBOARDING, null); // 30 as default (should not be hard coded)
-        this.mHeight = preferences.getString(HEIGHT, "1.70");;  // 1.70m as default
-        this.mWeight = preferences.getInt(WEIGHT, 90);      // 90kg as default
-        this.mUnit = preferences.getInt(UNIT, 0);         // 0 SI, 1 US, 2 UK
+        this.mHeight = preferences.getString(HEIGHT, DEFAULT_HEIGHT); // 1.75m as default
+        this.mWeight = preferences.getInt(WEIGHT, DEFAULT_WEIGHT);    // 75kg as default
+        this.mUnit = preferences.getInt(UNIT, 0);                  // 0 SI, 1 US, 2 UK
     }
 
     /**

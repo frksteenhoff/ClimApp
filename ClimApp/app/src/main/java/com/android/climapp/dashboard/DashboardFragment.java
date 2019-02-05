@@ -63,6 +63,8 @@ import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_GREEN;
 import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_ORANGE;
 import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_PLAIN;
 import static com.android.climapp.utils.SharedPreferencesConstants.COLOR_RED;
+import static com.android.climapp.utils.SharedPreferencesConstants.DEFAULT_HEIGHT;
+import static com.android.climapp.utils.SharedPreferencesConstants.DEFAULT_WEIGHT;
 import static com.android.climapp.utils.SharedPreferencesConstants.EXPLORE_MODE;
 import static com.android.climapp.utils.SharedPreferencesConstants.GUID;
 import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_VALUE;
@@ -480,8 +482,8 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             // Update color indicator after activity level change
             ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
                     preferences.getString(ACTIVITY_LEVEL, "medium"),
-                    preferences.getString(HEIGHT_VALUE, "1.80"),
-                    preferences.getInt(WEIGHT, 80));
+                    preferences.getString(HEIGHT_VALUE, DEFAULT_HEIGHT),
+                    preferences.getInt(WEIGHT, DEFAULT_WEIGHT));
             String color = ral.getRecommendationColor(preferences.getFloat(WBGT_VALUE, 0), ral.calculateRALValue());
             Log.v("HESTE", "UID: " + preferences.getString(GUID, null) +
                     " RAL: " + ral.calculateRALValue() +

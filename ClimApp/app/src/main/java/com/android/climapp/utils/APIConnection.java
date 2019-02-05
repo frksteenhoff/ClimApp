@@ -27,6 +27,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static com.android.climapp.utils.SharedPreferencesConstants.ACTIVITY_LEVEL;
+import static com.android.climapp.utils.SharedPreferencesConstants.DEFAULT_HEIGHT;
+import static com.android.climapp.utils.SharedPreferencesConstants.DEFAULT_WEIGHT;
 import static com.android.climapp.utils.SharedPreferencesConstants.HEIGHT_VALUE;
 import static com.android.climapp.utils.SharedPreferencesConstants.TEMPERATURE_STR;
 import static com.android.climapp.utils.SharedPreferencesConstants.UNIT;
@@ -142,8 +144,8 @@ public class APIConnection extends AsyncTask<String, String, String> {
             ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
                     // Giving default values if nothing set
                     mPreferences.getString(ACTIVITY_LEVEL, "medium"),
-                    mPreferences.getString(HEIGHT_VALUE, "1.80"),
-                    mPreferences.getInt(WEIGHT, 80));
+                    mPreferences.getString(HEIGHT_VALUE, DEFAULT_HEIGHT),
+                    mPreferences.getInt(WEIGHT, DEFAULT_WEIGHT));
 
             String color = ral.getRecommendationColor(wbgt.getWBGT(), ral.calculateRALValue());
 

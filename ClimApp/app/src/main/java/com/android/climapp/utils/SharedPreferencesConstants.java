@@ -26,6 +26,9 @@ public final class SharedPreferencesConstants {
     public static final String NOTIFICATION = "Notification";
     public static final String ACTIVITY_LEVEL = "activity_level";
 
+    public static final String DEFAULT_HEIGHT = "1.75"; // metres
+    public static final int DEFAULT_WEIGHT = 75;        // kilograms
+
     // Spinner values - clothing
     public static final String FIELD_OF_WORK = "field_of_work";
 

@@ -39,7 +39,7 @@
     <string name="heatStressLevel">Ditt forventede varme-stress nivå</string>
     <string name="suggestion_text">Beskrivelse av handlinger.</string>
     <string name="suggestion_green_top">Ingen høy varme forventes</string>
-    <string name="suggestion_green">Maintain norOppretthold normale arbeids- og hydratiseringsprosedyrer.</string>
+    <string name="suggestion_green">Oppretthold normale arbeids- og hydratiseringsprosedyrer.</string>
     <string name="suggestion_yellow_top">Moderat varme-stress forventes</string>
     <string name="suggestion_yellow">Vær ekstra oppmerksom på hyppig drikking.</string>
     <string name="suggestion_red_top">Høy varme-stress forventes!</string>

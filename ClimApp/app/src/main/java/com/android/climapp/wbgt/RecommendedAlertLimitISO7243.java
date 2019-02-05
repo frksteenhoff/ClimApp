@@ -73,8 +73,8 @@ public class RecommendedAlertLimitISO7243 {
      * Calculating the body surface area using height and weight of user calculated as:
      * BSA = (height (m))^0.725 * 0.20247 * weight (kg)^0.425
      *
-     * @param inputHeight user's height in meters 1.80 as default
-     * @param inputWeight user's weight in kilograms 80 as default
+     * @param inputHeight user's height in meters 1.75 as default
+     * @param inputWeight user's weight in kilograms 75 as default
      * @return the user's body surface area
      * Using default values for height and/or weight if user has not already input a value.
      */
