@@ -25,14 +25,14 @@ body {
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     background-color:#E4E4E4;
-    background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-webkit-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-ms-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
+    background-image:linear-gradient(top, #C7C7C7 0%, #E4E4E4 51%);
+    background-image:-webkit-linear-gradient(top, #C7C7C7 0%, #E4E4E4 51%);
+    background-image:-ms-linear-gradient(top, #C7C7C7 0%, #E4E4E4 51%);
     background-image:-webkit-gradient(
         linear,
         left top,
         left bottom,
-        color-stop(0, #A7A7A7),
+        color-stop(0, #C7C7C7),
         color-stop(0.51, #E4E4E4)
     );
     background-attachment:fixed;
@@ -45,7 +45,45 @@ body {
 
 /* Portrait layout (default) */
 .app {
+	
 }
+
+/* BEGIN navigation bar style*/
+.navbar {
+    background-image:linear-gradient(top, #4747F7 0%, #4444E4 100%);
+    background-image:-webkit-linear-gradient(top, #4747F7 0%, #4444E4 100%);
+    background-image:-ms-linear-gradient(top, #4747F7 0%, #4444E4 100%);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.main-nav {
+    list-style-type: none;
+    display: none;
+}
+
+.nav-links {
+    text-decoration: none;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.main-nav li {
+    text-align: center;
+	font-size: 2em;
+    margin: 0.5em auto;
+}
+
+.navbar-toggle {
+	display: inline-block;
+    margin: 0.5em;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 2em;
+}
+
+.active {
+    display: block;
+}
+/* END navigation bar style */
+
 
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {

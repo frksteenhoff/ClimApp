@@ -20,6 +20,7 @@ var app = {
     // Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+		//this.onDeviceReady(); //call this to run on browser, as browser does not fire the event by itself.
     },
 
     // deviceready Event Handler
@@ -32,12 +33,19 @@ var app = {
 
     // Update DOM on a Received Event
     receivedEvent: function(id) {
+		this.initListeners();
 		$.get("page-hello-world.html", function( content ){
-			$("#app").html( content );
-			$("#tipOfTheDay").html( "Tip of the Day");
+			$("#content").html( content );
+			//$("#tipOfTheDay").html( "Tip of the Day");
 		})
-		
-    }
+    },
+	initListeners: function(){
+		// navigation menu
+		$("#js-navbar-toggle").on('click', function () {
+		  	$("#js-menu").toggle('active');
+		});
+	}
+	
 };
 
 app.initialize();

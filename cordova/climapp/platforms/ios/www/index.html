@@ -31,13 +31,30 @@
         <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, viewport-fit=cover">
         <link rel="stylesheet" type="text/css" href="css/index.css">
+		<link rel="stylesheet" type="text/css" href="css/fas.min.css">
         <title>Climapp</title>
     </head>
     <body>
-        <div id="app" class="app">
-            
+        <div id="root" class="app">
+			<nav class="navbar">
+			        <span class="navbar-toggle" id="js-navbar-toggle">
+			            <i class="fas fa-bars"></i>
+			        </span>
+			       <ul class="main-nav" id="js-menu">
+			            <li>
+			                <a href="#" class="nav-links">Settings</a>
+			            </li>
+			            <li>
+			                <a href="#" class="nav-links">Dashboard</a>
+			            </li>
+			        </ul>
+			</nav>
+			<div id="content">
+			</div>
+        <!-- BK feb 6 2019: we use this div as our root, and dynamically populate it with the content we require.
+		-->    
             
         </div>
         <script type="text/javascript" src="cordova.js"></script>
