@@ -25,17 +25,6 @@ body {
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     background-color:#E4E4E4;
-    background-image:linear-gradient(top, #C7C7C7 0%, #E4E4E4 51%);
-    background-image:-webkit-linear-gradient(top, #C7C7C7 0%, #E4E4E4 51%);
-    background-image:-ms-linear-gradient(top, #C7C7C7 0%, #E4E4E4 51%);
-    background-image:-webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        color-stop(0, #C7C7C7),
-        color-stop(0.51, #E4E4E4)
-    );
-    background-attachment:fixed;
     font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
     height:100%;
     margin:0px;
@@ -48,12 +37,19 @@ body {
 	
 }
 
+.panel{
+	background: #d3d3d3;
+	width: 95%;
+	padding: 0 1%;
+	margin: 0.5em auto;
+	border: 1px solid rgba(0, 0, 0, 0.5);
+	box-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+}
+
 /* BEGIN navigation bar style*/
 .navbar {
-    background-image:linear-gradient(top, #4747F7 0%, #4444E4 100%);
-    background-image:-webkit-linear-gradient(top, #4747F7 0%, #4444E4 100%);
-    background-image:-ms-linear-gradient(top, #4747F7 0%, #4444E4 100%);
-    border: 1px solid rgba(0, 0, 0, 0.2);
+    background: #41AFDE;
+    border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 .main-nav {
@@ -63,7 +59,7 @@ body {
 
 .nav-links {
     text-decoration: none;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 1);
 }
 
 .main-nav li {
@@ -75,7 +71,7 @@ body {
 .navbar-toggle {
 	display: inline-block;
     margin: 0.5em;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 1);
     font-size: 2em;
 }
 
