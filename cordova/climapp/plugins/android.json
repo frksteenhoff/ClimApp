@@ -9,6 +9,15 @@
   "installed_plugins": {
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.climapp.app"
+    },
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "com.climapp.app"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.climapp.app"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "com.climapp.app"
     }
   },
   "dependent_plugins": {}
