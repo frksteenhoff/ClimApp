@@ -82,6 +82,7 @@ var app = {
 	},
 	updateLocation: function(){
 		var self = this; //copy current scope into local scope for use in anonymous function 
+		let options = {timeout: 30000 };
 		navigator.geolocation.getCurrentPosition( 
 			function( position ){ //on success
 				self.knowledgeBase.position.lat = position.coords.latitude;
@@ -95,7 +96,9 @@ var app = {
 			}, 
 			function( error ){ //on error
 				console.log( error );
-			});
+			},
+			options
+		);
 	},
 	updateWeather: function(){
 		var self = this;
