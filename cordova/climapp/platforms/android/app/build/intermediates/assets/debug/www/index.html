@@ -38,19 +38,11 @@
     </head>
     <body>
         <div id="root" class="app">
-			<nav class="navbar">
-			        <span class="navbar-toggle" id="js-navbar-toggle">
-			            <i class="fas fa-bars"></i>
-			        </span>
-			       <ul class="main-nav" id="js-menu">
-			            <li>
-			                <a href="#" class="nav-links">Settings</a>
-			            </li>
-			            <li>
-			                <a href="#" class="nav-links">Dashboard</a>
-			            </li>
-			        </ul>
-			</nav>
+			<div class="navigation fa-2x">			        
+				<div> <img src='./img/logo.png' />Climapp </div>
+				<div> <img src='./img/transparant.png' /><i class="fas fa-cog" data-target="settings" id="navbar-toggle"></i> </div>
+			</div>
+			</div>
 			<div id="content">
 			</div>
         <!-- BK feb 6 2019: we use this div as our root, and dynamically populate it with the content we require.

@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      Ionic2 Wheel Selector Example
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+<ion-content padding>
+  <ion-grid>
+    <ion-row>
+      <ion-col col-12><span class="selected-tag">Selected:</span> <span class="selected">{{selected}}</span></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><button ion-button round outline (click)="simpleFruit()">Fruit</button></ion-col>
+      <ion-col><button ion-button round outline (click)="selectNumber()">Number</button></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><button ion-button round outline (click)="selectFruitQuantity()">Fruit quantity</button></ion-col>
+      <ion-col><button ion-button round outline (click)="selectFruitQuantityFromPlanet()">Fruit quantity from planet</button></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><button ion-button round outline (click)="selectQuanity()">Quantity</button></ion-col>
+      <ion-col><button ion-button round outline (click)="selectWithDefaultValues()">Default values</button></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><button ion-button round outline (click)="selectNames()">Names</button></ion-col>
+      <ion-col><button ion-button round outline (click)="selectUuids()">UUID's</button></ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col><button ion-button round outline (click)="selectDefaultValuesThatDontExist()">DefaultValuesThatDontExist</button></ion-col>
+    </ion-row>
+
+  </ion-grid>
+</ion-content>

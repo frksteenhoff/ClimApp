@@ -47,6 +47,15 @@ module.exports = [
     "clobbers": [
       "navigator.splashscreen"
     ]
+  },
+  {
+    "id": "cordova-wheel-selector-plugin.plugin",
+    "file": "plugins/cordova-wheel-selector-plugin/www/selectorplugin.js",
+    "pluginId": "cordova-wheel-selector-plugin",
+    "clobbers": [
+      "SelectorCordovaPlugin"
+    ],
+    "runs": true
   }
 ];
 module.exports.metadata = 
@@ -55,7 +64,8 @@ module.exports.metadata =
   "cordova-plugin-device": "2.0.2",
   "cordova-plugin-geolocation": "4.0.1",
   "cordova-plugin-splashscreen": "5.0.2",
-  "cordova-plugin-whitelist": "1.3.3"
+  "cordova-plugin-whitelist": "1.3.3",
+  "cordova-wheel-selector-plugin": "1.0.0"
 };
 // BOTTOM OF METADATA
 });
