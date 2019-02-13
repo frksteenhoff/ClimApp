@@ -50,8 +50,10 @@ var app = {
     },
 	initListeners: function(){
 		// navigation menu
-		$("#js-navbar-toggle").on('click', function () {
-		  	$("#js-menu").toggle('active');
+		$("#navbar-toggle").on('click', function () {
+		});
+		$("#sync-toggle").on('click', function () {
+			$("#sync-toggle").toggleClass('fa-spin');
 		});
 	},
 	loadSettings: function(){
