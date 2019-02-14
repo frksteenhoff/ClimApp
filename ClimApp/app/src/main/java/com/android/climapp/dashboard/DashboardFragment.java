@@ -36,6 +36,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.android.climapp.R;
+import com.android.climapp.data.Api;
 import com.android.climapp.data.RequestHandler;
 import com.android.climapp.onboarding.OnBoardingActivity;
 import com.android.climapp.utils.APIConnection;
@@ -57,6 +58,7 @@ import java.util.UUID;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LOCATION_SERVICE;
 import static com.android.climapp.utils.ApplicationConstants.ACTIVITY_LEVEL;
+import static com.android.climapp.utils.ApplicationConstants.AGE;
 import static com.android.climapp.utils.ApplicationConstants.APP_NAME;
 import static com.android.climapp.utils.ApplicationConstants.COLOR_DARKRED;
 import static com.android.climapp.utils.ApplicationConstants.COLOR_GREEN;
@@ -66,7 +68,9 @@ import static com.android.climapp.utils.ApplicationConstants.COLOR_RED;
 import static com.android.climapp.utils.ApplicationConstants.DEFAULT_HEIGHT;
 import static com.android.climapp.utils.ApplicationConstants.DEFAULT_WEIGHT;
 import static com.android.climapp.utils.ApplicationConstants.EXPLORE_MODE;
+import static com.android.climapp.utils.ApplicationConstants.GENDER;
 import static com.android.climapp.utils.ApplicationConstants.GUID;
+import static com.android.climapp.utils.ApplicationConstants.HEIGHT;
 import static com.android.climapp.utils.ApplicationConstants.HEIGHT_VALUE;
 import static com.android.climapp.utils.ApplicationConstants.ONBOARDING_COMPLETE;
 import static com.android.climapp.utils.ApplicationConstants.TEMPERATURE_STR;
@@ -153,6 +157,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         if(preferences.getString(GUID, null) == null) {
             String uniqueID = UUID.randomUUID().toString();
             preferences.edit().putString(GUID, uniqueID).apply();
+            createUserInDatabase();
         }
 
         // Notification view and logic components
@@ -335,6 +340,28 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         if(!onBoardingCompleted()) {
             startOnBoarding();
         }
+    }
+
+    private void createUserInDatabase() {
+        String age = Integer.toString(preferences.getInt(AGE, 0));
+        String gender = Integer.toString(preferences.getInt(GENDER, 0));
+        String height = Float.toString(preferences.getFloat(HEIGHT, 0));
+        String weight = Float.toString(preferences.getFloat(WEIGHT, 0));
+        String unit = Integer.toString(preferences.getInt(UNIT, 0));
+
+
+
+        HashMap<String, String> params = new HashMap<>();
+        params.put("_id", preferences.getString(GUID, null));
+        params.put("age", age);
+        params.put("gender", gender);
+        params.put("height", height);
+        params.put("weight", weight);
+        params.put("unit", unit);
+
+        // Calling API to create user
+        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_CREATE_USER, params, CODE_POST_REQUEST);
+        request.execute();
     }
 
     /**

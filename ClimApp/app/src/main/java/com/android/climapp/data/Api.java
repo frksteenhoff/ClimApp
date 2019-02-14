@@ -1,13 +1,37 @@
 package com.android.climapp.data;
 
+/**
+ * @author frksteenhoff
+ * CRUD Operations allowed from the app on the database
+ *
+ * All information here reflects that implemented on the ClimApp server side API
+ * more information here:
+ * - https://github.com/frksteenhoff/ClimApp/wiki/Database-API
+ *
+ * Changes here will only be valid if they are in compliance with these.
+ */
 public class Api {
 
-    private static final String DB_IP = "xx";
-    private static final String ROOT_URL = "http://" + DB_IP + "/dummyPHPdir/v1/ClimAppApi.php?apicall=";
+    // IP address of the ClimApp database server
+    private static final String DB_IP = "10.61.2.104";
+    private static final String ROOT_URL = "http://" + DB_IP + "/ClimAppAPI/v1/ClimAppApi.php?apicall=";
 
-    public static final String URL_CREATE_USER = ROOT_URL + "createUser";
-    public static final String URL_READ_USERS = ROOT_URL + "getUser";
+    // USER RELATED
+    public static final String URL_CREATE_USER = ROOT_URL + "createUserRecord";
+    public static final String URL_READ_USERS = ROOT_URL + "getUsers";
     public static final String URL_UPDATE_USER = ROOT_URL + "updateUser";
+    public static final String URL_UPDATE_USER_AGE = ROOT_URL + "updateUserAge";
+    public static final String URL_UPDATE_USER_GENDER = ROOT_URL + "updateUserGender";
+    public static final String URL_UPDATE_USER_HEIGHT = ROOT_URL + "updateUserHeight";
+    public static final String URL_UPDATE_USER_WEIGHT = ROOT_URL + "updateUserWeight";
     public static final String URL_DELETE_USER = ROOT_URL + "deleteUser&_id=";
+
+    // WEATHER RELATED
+    public static final String URL_ADD_WEATHER_INFO = ROOT_URL + "addWeatherInformation";
+    public static final String URL_GET_WEATHER_INFO = ROOT_URL + "getWeather";
+
+    // FEEDBACK RELATED
+    public static final String URL_CREATE_FEEDBACK = ROOT_URL + "updateUser";
+    public static final String URL_GET_FEEDBACK = ROOT_URL + "updateUser";
 }
 

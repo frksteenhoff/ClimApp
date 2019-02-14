@@ -51,6 +51,7 @@ public class RequestHandler {
 
             int responseCode = conn.getResponseCode();
 
+            // If the response code is 200 (OK)
             if (responseCode == HttpsURLConnection.HTTP_OK) {
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));

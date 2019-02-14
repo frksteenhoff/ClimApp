@@ -1,5 +1,10 @@
 package com.android.climapp.data;
 
+/**
+ * @author frksteenhoff
+ * Model class for the ClimApp user to be pushed to databas.
+ */
+
 public class User {
     private int _id;
     private String age;
