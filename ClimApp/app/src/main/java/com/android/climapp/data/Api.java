@@ -31,7 +31,7 @@ public class Api {
     public static final String URL_GET_WEATHER_INFO = ROOT_URL + "getWeather";
 
     // FEEDBACK RELATED
-    public static final String URL_CREATE_FEEDBACK = ROOT_URL + "updateUser";
-    public static final String URL_GET_FEEDBACK = ROOT_URL + "updateUser";
+    public static final String URL_CREATE_FEEDBACK = ROOT_URL + "createFeedbackRecord";
+    public static final String URL_GET_FEEDBACK = ROOT_URL + "getFeedback";
 }
 
