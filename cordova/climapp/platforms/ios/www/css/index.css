@@ -57,9 +57,9 @@ body {
     display: flex;
   
     -webkit-flex-flow: row wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
 }
-.flexbox-2 div{
+.flexbox-2 div.center{
 	margin: auto;
 }
 .flexbox-2 div.wide{
@@ -68,8 +68,10 @@ body {
 .flexbox-5 div{
 	margin: auto;
 	flex-basis: 18%;
-	background: #ffffff;
 	text-align: center;
+}
+.flexbox-5 div.button{
+	background: #ffffff;
 	border: 1px solid rgba(0, 0, 0, 0.5);
 	box-shadow: 2px 2px rgba(0, 0, 0, 0.2);
 }
@@ -134,13 +136,13 @@ p.center{
 }
 
 .navigation div{
-	height: 2em;
 	color: white;
+	display: border-box;
+	border: 1px #ccc;
 	margin: auto;
 }
-.navigation img{
+.navigation i{
     vertical-align: middle; /* | top | bottom */
-	height: 100%;
 }
 
 /* END navigation bar style */

@@ -51,19 +51,9 @@ var app = {
 	initListeners: function(){
 		// navigation menu
 		var self = this;
-		$("#navbar-toggle").on('click', function () {
-			$( this ).toggleClass( "fa-cog" );
-			$( this ).toggleClass( "fa-home" );
+		$("div[data-listener='navbar']").on("click", function(){
 			let target = $( this ).attr("data-target");
-			
 			self.loadUI( target );
-			if( target === "settings" ){
-				$( this ).attr("data-target", "dashboard" );
-			}
-			else{
-				$( this ).attr("data-target", "settings" );
-			}
-			
 		});
 		/*
 		$("#sync-toggle").on('click', function () {
@@ -251,12 +241,9 @@ var app = {
 		if( this.currentPageID == "dashboard" ){
 			if( 'weather' in this.knowledgeBase && this.knowledgeBase.weather.station !== "" ){
 				let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
-				
 				$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
-				
 				$("#temperature").html( parseFloat( this.knowledgeBase.weather.temperature ).toFixed(0) );
 				$("#humidity").html( parseFloat( this.knowledgeBase.weather.humidity ).toFixed(0) );
-				$("#windspeed").html( parseFloat( this.knowledgeBase.weather.windspeed ).toFixed(0) );
 			}
 			
 			this.initActivityListeners();
@@ -265,6 +252,17 @@ var app = {
 			$("div[data-target='"+selected+"']").addClass("selected");
 			let caption_ = this.knowledgeBase.activity.label[ selected ];
 			$("#activityCaption").html( caption_ );
+			
+			let width = $( window ).width() / 3;
+			this.drawGauge( 'main_gauge', width, -0.75, 32 );
+			
+			width = $( window ).width() / 7;
+			this.drawGauge( 'ct1', width, 1.5, 32);
+			this.drawGauge( 'ct2', width, 2.2, 32 );
+			this.drawGauge( 'ct3', width, 0.5, 32);
+			this.drawGauge( 'ct4', width, -1.2, 32 );
+			this.drawGauge( 'ct5', width, -2.6, 32 );
+			
 		}
 		else if( this.currentPageID == "settings" ){
 			this.initSettingsListeners();
@@ -274,6 +272,86 @@ var app = {
 			$("#gender").html( this.knowledgeBase.settings.gender.value );	
 		}
 	},
+	drawGauge: function( id, width, value, fontsize ){
+		var gauge = new RadialGauge({
+		    renderTo: id,
+		    width: width,
+		    height: width,
+			value: value,
+			units: "",
+		    title: "",
+    		ticksAngle: 270,
+		    startAngle: 45,
+		    minValue: -4,
+		    maxValue: 4,
+		    majorTicks: [
+		        -4,
+		        -3,
+		        -2,
+		        -1,
+		        0,
+		        1,
+		        2,
+		        3,
+		        4
+		    ],
+		    minorTicks: 0,
+		    strokeTicks: false,
+		    highlights: [
+		        {
+		            "from": -4,
+		            "to": -3,
+		            "color": "rgba(0, 0, 255, 1.0)"
+		        },
+		        {
+		            "from": -3,
+		            "to": -2,
+		            "color": "rgba(0, 128, 255, 1.0)"
+		        },
+		        {
+		            "from": -2,
+		            "to": -1,
+		            "color": "rgba(0, 255, 255, 1.0)"
+		        },
+		        {
+		            "from": -1,
+		            "to": 1,
+		            "color": "rgba(0, 255, 0, 1.0)"
+		        },
+		        {
+		            "from": 1,
+		            "to": 2,
+		            "color": "rgba(255, 255, 0, 1.0)"
+		        },
+		        {
+		            "from": 2,
+		            "to": 3,
+		            "color": "rgba(255, 128, 0, 1.0)"
+		        },
+		        {
+		            "from": 3,
+		            "to": 4,
+		            "color": "rgba(255, 0, 0, 1.0)"
+		        }
+		    ],
+    		colorPlate: '#fff',
+    		colorPlateEnd: '#f3f3f3',
+			borderShadowWidth: 0,
+		    borders: false,
+		    needleType: "arrow",
+		    needleWidth: 5,
+			needleShadow: false,
+			colorNeedle: "#f00",
+			colorNeedleEnd: "#000",
+		    needleCircleSize: 7,
+		    needleCircleOuter: false,
+		    needleCircleInner: false,
+			animationDuration: 1500,
+		    animationRule: "linear",
+		    valueBox: false,
+			fontNumbersSize: fontsize,
+		}).draw();
+	}
 	
 	
 };

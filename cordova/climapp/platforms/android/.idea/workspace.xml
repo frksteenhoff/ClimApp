@@ -139,7 +139,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
   </component>
-  <component name="ProjectFrameBounds" extendedState="1">
+  <component name="ProjectFrameBounds">
     <option name="x" value="20" />
     <option name="y" value="43" />
     <option name="width" value="1400" />
@@ -284,7 +284,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="20" y="43" width="1400" height="771" extended-state="1" />
+    <frame x="20" y="43" width="1400" height="771" extended-state="0" />
     <layout>
       <window_info id="Capture Tool" />
       <window_info content_ui="combo" id="Project" visible="true" weight="0.3298969" />
