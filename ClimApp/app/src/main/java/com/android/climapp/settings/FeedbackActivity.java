@@ -108,26 +108,21 @@ public class FeedbackActivity extends AppCompatActivity {
             }
         });
 
-        mSendFeedback.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (mFeedback.getText().toString().isEmpty()) {
-                    Toast.makeText(FeedbackActivity.this, "Please fill in feedback text box", Toast.LENGTH_LONG).show();
-                } else {
-                    mFeedback.setText("");
-                    mRatingBarHydration.setRating(0);
-                    mRatingBarActivity.setRating(0);
-                    mRatingBarClothing.setRating(0);
-                    Toast.makeText(FeedbackActivity.this, "Thank you for sharing your feedback", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
         // Set default rating as three stars for all ratingBars
         mRatingBarHydration.setRating(3);
         mRatingBarActivity.setRating(3);
         mRatingBarClothing.setRating(3);
 
+        mSendFeedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mFeedback.setText("");
+                mRatingBarHydration.setRating(3);
+                mRatingBarActivity.setRating(3);
+                mRatingBarClothing.setRating(3);
+                Toast.makeText(FeedbackActivity.this, "Thank you for sharing your feedback!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
