@@ -53,6 +53,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LOCATION_SERVICE;
@@ -154,9 +155,9 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         // Store unique user ID once
-        if(preferences.getString(GUID, null) != null) {
-            //String uniqueID = UUID.randomUUID().toString();
-            //preferences.edit().putString(GUID, uniqueID).apply();
+        if(preferences.getString(GUID, null) == null) {
+            String uniqueID = UUID.randomUUID().toString();
+            preferences.edit().putString(GUID, uniqueID).apply();
             createUserInDatabase();
         }
 
@@ -170,9 +171,6 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         permissionErrorView = getActivity().findViewById(R.id.error_permission);
         updateLocationView = getActivity().findViewById(R.id.update_location);
         activityLevelView = getActivity().findViewById(R.id.activity_level);
-        if(EXPLORE_ENABLED) {
-            exploreView = getActivity().findViewById(R.id.explore);
-        }
 
         // Activity level buttons
         activityVeryLow = getActivity().findViewById(R.id.dash_toggle_very_low);
@@ -185,19 +183,17 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
 
         // Explore TextView and Buttons
         if(EXPLORE_ENABLED) {
+            exploreView = getActivity().findViewById(R.id.explore);
             exploreButton = getActivity().findViewById(R.id.explore_button);
             exploreLongitude = getActivity().findViewById(R.id.explore_longitude);
             exploreLatitude = getActivity().findViewById(R.id.explore_latitude);
+            txtLong = getActivity().findViewById(R.id.long_coord);
+            txtLat = getActivity().findViewById(R.id.lat_coord);
         }
         lonlatView = getActivity().findViewById(R.id.latlon_link);
 
         // Location view references, updated based on device's location
         mLocationButton = getActivity().findViewById(R.id.locationButton);
-
-        if(EXPLORE_ENABLED) {
-            txtLong = getActivity().findViewById(R.id.long_coord);
-            txtLat = getActivity().findViewById(R.id.lat_coord);
-        }
 
         // Temperature
         temperatureValue = getActivity().findViewById(R.id.temp_value);
