@@ -13,7 +13,7 @@ package com.android.climapp.data;
 public class Api {
 
     // IP address of the ClimApp database server
-    private static final String DB_IP = "10.61.2.104";
+    private static final String DB_IP = "192.38.64.244";
     private static final String ROOT_URL = "http://" + DB_IP + "/ClimAppAPI/v1/ClimAppApi.php?apicall=";
 
     // USER RELATED
