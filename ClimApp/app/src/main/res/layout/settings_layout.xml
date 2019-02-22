@@ -156,6 +156,10 @@
                 android:text="@string/Reset"
                 style="@style/SettingsTextStyleNoCaps"/>
             <TextView
+                android:id="@+id/feedback"
+                android:text="@string/Feedback"
+                style="@style/SettingsTextStyleNoCaps"/>
+            <TextView
                 android:id="@+id/about"
                 android:text="@string/About"
                 style="@style/SettingsTextStyleNoCaps"/>

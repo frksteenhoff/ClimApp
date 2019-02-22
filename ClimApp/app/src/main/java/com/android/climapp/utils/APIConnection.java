@@ -216,8 +216,8 @@ public class APIConnection extends AsyncTask<String, String, String> {
 
         WBGTTextView.setText(String.format("WBGT: %s", wbgt.getWBGT()));
         mDashboard.saveFloatToPreferences(WBGT_VALUE, (float) wbgt.getWBGT());
-        /*// Send notification if values are outside recommended range
-        if (wbgt.getWBGT() > 21.0 && !notificationSent) {
+        // Send notification if values are outside recommended range
+        /*if (wbgt.getWBGT() > 21.0 && !notificationSent) {
             setNotificationChannel();
             createNotification(getString(R.string.app_name), getString(R.string.notificationDescription), notificationID);
             preferences.edit().putBoolean("notification_sent", true).apply();

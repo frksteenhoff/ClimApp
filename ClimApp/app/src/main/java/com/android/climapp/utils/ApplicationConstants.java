@@ -34,7 +34,7 @@ public final class ApplicationConstants {
 
     // App modes
     public static final String EXPLORE_MODE = "Explore"; // logic currently commented out
-
+    public static final boolean EXPLORE_ENABLED = false; // deciding whether exploration mode is shown
     // Flags
     public static final String ONBOARDING_COMPLETE = "onboarding_complete";
 
@@ -53,6 +53,5 @@ public final class ApplicationConstants {
     public static final String COLOR_RED = "#e50000";
     public static final String COLOR_DARKRED = "#b20000";
     public static final String COLOR_PLAIN = "#EDE8E6";
-
 
 }

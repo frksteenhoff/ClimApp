@@ -168,6 +168,7 @@
     <string name="Preferences">Preferences</string>
     <string name="Other">Other</string>
     <string name="About">About</string>
+    <string name="Feedback">Feedback</string>
     <string name="Reset">Reset personal preferences</string>
     <string name="prefs_cleared">Personal preferences cleared</string>
     <string name="measuring_units">Measuring units</string>
@@ -227,6 +228,30 @@
     <string name="clothing_customize_attire">Customize your attire</string>
     <string name="clothing_customize_attire_description">By chosing exactly the items you wear to work,
         we can better match your needs during the day</string>
+
+    <!-- Rating questions -->
+    <string name="rating_hydration_question">How were your drinking needs?</string>
+    <string name="rating_activity_question">Did you take more breaks today than you expected?</string>
+    <string name="rating_clothing_question">How would you evaluate the amount of clothing you wore today?</string>
+
+    <string name="rating_1_hydration">Much lower than expected</string>
+    <string name="rating_2_hydration">Lower than expected</string>
+    <string name="rating_3_hydration">Normal</string>
+    <string name="rating_4_hydration">Higher than expected</string>
+    <string name="rating_5_hydration">Much higher than expected</string>
+
+    <string name="rating_1_activity">Not at all</string>
+    <string name="rating_2_activity">Less than usual</string>
+    <string name="rating_3_activity">No</string>
+    <string name="rating_4_activity">More than usual</string>
+    <string name="rating_5_activity">A lot more than usual</string>
+
+    <string name="rating_1_clothing">Much less than needed</string>
+    <string name="rating_2_clothing">Less than needed</string>
+    <string name="rating_3_clothing">I wore the right amount of clothing</string>
+    <string name="rating_4_clothing">A little too much clothing</string>
+    <string name="rating_5_clothing">A lot more than needed</string>
+
 
     <!-- Clothing: Array items - field of work -->
     <string-array name="field_of_work_array">

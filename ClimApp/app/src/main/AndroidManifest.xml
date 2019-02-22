@@ -95,6 +95,12 @@
             android:parentActivityName=".MainActivity">
         </activity>
         <activity
+            android:name=".settings.FeedbackActivity"
+            android:label="Tell us about your day"
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".MainActivity">
+        </activity>
+        <activity
             android:name=".settings.SetAcclimatizationActivity"
             android:label="@string/Acclimatization"
             android:theme="@style/AppTheme"

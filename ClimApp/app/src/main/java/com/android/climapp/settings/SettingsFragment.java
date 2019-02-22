@@ -22,6 +22,7 @@ import com.android.climapp.utils.Utils;
 import static com.android.climapp.utils.ApplicationConstants.ACCLIMATIZATION;
 import static com.android.climapp.utils.ApplicationConstants.AGE;
 import static com.android.climapp.utils.ApplicationConstants.APP_NAME;
+import static com.android.climapp.utils.ApplicationConstants.EXPLORE_ENABLED;
 import static com.android.climapp.utils.ApplicationConstants.GENDER;
 import static com.android.climapp.utils.ApplicationConstants.HEIGHT;
 import static com.android.climapp.utils.ApplicationConstants.HEIGHT_INDEX;
@@ -60,7 +61,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        preferences = getActivity().getSharedPreferences(APP_NAME,Context.MODE_PRIVATE);
+        preferences = getActivity().getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
         utils = new Utils(preferences);
 
         // Apply settings information under settings title
@@ -77,8 +78,9 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         Spinner genderSpinner = getActivity().findViewById(R.id.gender_spinner);
         Spinner notificationSpinner = getActivity().findViewById(R.id.notification_spinner);
         acclimatizationSwitch = getActivity().findViewById(R.id.acclimatization_switch_settings);
-        //exploreSwitch = getActivity().findViewById(R.id.explore_switch_settings);
-
+        if (EXPLORE_ENABLED) {
+            exploreSwitch = getActivity().findViewById(R.id.explore_switch_settings);
+        }
         // Set gender -- female as default
         genderSpinner.setSelection(preferences.getInt(GENDER, 0));
         genderSpinner.setOnItemSelectedListener(this);
@@ -92,8 +94,10 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         notificationSpinner.setOnItemSelectedListener(this);
 
         // Setting default utils acclimatization
-        acclimatizationSwitch.setChecked(preferences.getBoolean(ACCLIMATIZATION,false));
-        //exploreSwitch.setChecked(preferences.getBoolean("Explore",false));
+        acclimatizationSwitch.setChecked(preferences.getBoolean(ACCLIMATIZATION, false));
+        if (EXPLORE_ENABLED) {
+            exploreSwitch.setChecked(preferences.getBoolean("Explore", false));
+        }
 
         // Setting up listeners for each of the settings to open an intent
         TextView ageSettings = getActivity().findViewById(R.id.age_settings);
@@ -132,11 +136,21 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
+        TextView feedbackModule = getActivity().findViewById(R.id.feedback);
+        feedbackModule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent feedback_module = new Intent(getActivity(), com.android.climapp.settings.FeedbackActivity.class);
+                startActivity(feedback_module);
+            }
+        });
+
+
         // Setting index of utils height
-        if(preferences.getInt(HEIGHT_INDEX,0) == 0 &&
+        if (preferences.getInt(HEIGHT_INDEX, 0) == 0 &&
                 preferences.getString(HEIGHT_VALUE, null) != null) {
             utils.findClosestIndexValue(preferences.getString(HEIGHT_VALUE, null),
-                    utils.showCorrectHeightValues(preferences.getInt(UNIT,0)), preferences);
+                    utils.showCorrectHeightValues(preferences.getInt(UNIT, 0)), preferences);
         }
 
 
@@ -155,20 +169,21 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             }
         });
 
-        /*exploreSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                exploreSwitch.setChecked(isChecked);
-                preferences.edit().putBoolean("Explore", isChecked).apply();
+        if(EXPLORE_ENABLED) {
+            exploreSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    exploreSwitch.setChecked(isChecked);
+                    preferences.edit().putBoolean("Explore", isChecked).apply();
 
-                // Show Toast based on whether utils switches on explore mode
-                if (isChecked) {
-                    Toast.makeText(getActivity().getApplicationContext(), getString(R.string.explore_true), Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(), getString(R.string.explore_false), Toast.LENGTH_SHORT).show();
+                    // Show Toast based on whether utils switches on explore mode
+                    if (isChecked) {
+                        Toast.makeText(getActivity().getApplicationContext(), getString(R.string.explore_true), Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(), getString(R.string.explore_false), Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });*/
-
+            });
+        }
         TextView notificationSettings = getActivity().findViewById(R.id.notifications);
         notificationSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -359,7 +374,9 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         preferences.edit().remove(WEIGHT).apply();
 
         preferences.edit().putBoolean(ACCLIMATIZATION, false).apply();
-        //preferences.edit().putBoolean("Explore", false).apply();
+        if(EXPLORE_ENABLED) {
+            preferences.edit().putBoolean("Explore", false).apply();
+        }
         preferences.edit().putInt(GENDER, 0).apply();
         preferences.edit().putInt(UNIT, 0).apply();
         preferences.edit().putInt(NOTIFICATION, 0).apply();

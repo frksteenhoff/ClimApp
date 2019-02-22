@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="8dp">
+        <TextView
+            android:id="@+id/hydration_feedback"
+            style="@style/RatingBarQuestionStyle"
+            android:text="@string/rating_hydration_question"/>
+        <RatingBar
+            android:id="@+id/rating_hydration"
+            style="@style/RatingBarStyle"/>
+        <TextView
+            android:id="@+id/ratingScaleHydration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+        <TextView
+            android:id="@+id/activity_feedback"
+            style="@style/RatingBarQuestionStyle"
+            android:text="@string/rating_activity_question"/>
+        <RatingBar
+            android:id="@+id/rating_activity"
+            style="@style/RatingBarStyle"/>
+        <TextView
+            android:id="@+id/ratingScaleActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+        <TextView
+            android:id="@+id/clothing_feedback"
+            style="@style/RatingBarQuestionStyle"
+            android:text="@string/rating_clothing_question" />
+        <RatingBar
+            android:id="@+id/rating_clothing"
+            style="@style/RatingBarStyle"/>
+        <TextView
+            android:id="@+id/ratingScaleClothing"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="16sp"
+            android:textStyle="italic" />
+        <EditText
+            android:id="@+id/feedback_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:hint="Anything you would like to add?"
+            android:lines="3"/>
+        <Button
+            android:id="@+id/button_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:layout_gravity="center_horizontal"
+            android:text="Send feedback"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/tw__blue_pressed"/>
+    </LinearLayout>
+</ScrollView>

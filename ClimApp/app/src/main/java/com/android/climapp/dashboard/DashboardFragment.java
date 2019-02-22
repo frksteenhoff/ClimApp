@@ -53,7 +53,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LOCATION_SERVICE;
@@ -67,6 +66,7 @@ import static com.android.climapp.utils.ApplicationConstants.COLOR_PLAIN;
 import static com.android.climapp.utils.ApplicationConstants.COLOR_RED;
 import static com.android.climapp.utils.ApplicationConstants.DEFAULT_HEIGHT;
 import static com.android.climapp.utils.ApplicationConstants.DEFAULT_WEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.EXPLORE_ENABLED;
 import static com.android.climapp.utils.ApplicationConstants.EXPLORE_MODE;
 import static com.android.climapp.utils.ApplicationConstants.GENDER;
 import static com.android.climapp.utils.ApplicationConstants.GUID;
@@ -136,7 +136,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     private SharedPreferences preferences;
     private com.android.climapp.wbgt.RecommendedAlertLimitISO7243 ral;
     //private int notificationID = 1;
-    //private boolean notificationSent;
+    private boolean notificationSent;
     private APIConnection APIConn;
 
     @Override
@@ -154,9 +154,9 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         // Store unique user ID once
-        if(preferences.getString(GUID, null) == null) {
-            String uniqueID = UUID.randomUUID().toString();
-            preferences.edit().putString(GUID, uniqueID).apply();
+        if(preferences.getString(GUID, null) != null) {
+            //String uniqueID = UUID.randomUUID().toString();
+            //preferences.edit().putString(GUID, uniqueID).apply();
             createUserInDatabase();
         }
 
@@ -170,7 +170,9 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         permissionErrorView = getActivity().findViewById(R.id.error_permission);
         updateLocationView = getActivity().findViewById(R.id.update_location);
         activityLevelView = getActivity().findViewById(R.id.activity_level);
-        //exploreView = getActivity().findViewById(R.id.explore);
+        if(EXPLORE_ENABLED) {
+            exploreView = getActivity().findViewById(R.id.explore);
+        }
 
         // Activity level buttons
         activityVeryLow = getActivity().findViewById(R.id.dash_toggle_very_low);
@@ -182,15 +184,20 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         activityMoreTextView = getActivity().findViewById(R.id.activity_more);
 
         // Explore TextView and Buttons
-        //exploreButton = getActivity().findViewById(R.id.explore_button);
-        //exploreLongitude = getActivity().findViewById(R.id.explore_longitude);
-        //exploreLatitude = getActivity().findViewById(R.id.explore_latitude);
+        if(EXPLORE_ENABLED) {
+            exploreButton = getActivity().findViewById(R.id.explore_button);
+            exploreLongitude = getActivity().findViewById(R.id.explore_longitude);
+            exploreLatitude = getActivity().findViewById(R.id.explore_latitude);
+        }
         lonlatView = getActivity().findViewById(R.id.latlon_link);
 
         // Location view references, updated based on device's location
         mLocationButton = getActivity().findViewById(R.id.locationButton);
-        //txtLong = getActivity().findViewById(R.id.long_coord);
-        //txtLat = getActivity().findViewById(R.id.lat_coord);
+
+        if(EXPLORE_ENABLED) {
+            txtLong = getActivity().findViewById(R.id.long_coord);
+            txtLat = getActivity().findViewById(R.id.lat_coord);
+        }
 
         // Temperature
         temperatureValue = getActivity().findViewById(R.id.temp_value);
@@ -274,21 +281,23 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             }
         });
 
-        /*exploreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (twoValuesAreGiven() && isWithinCoordinateRange()) {
-                    double lat = Double.parseDouble(exploreLatitude.getText().toString());
-                    double lon = Double.parseDouble(exploreLongitude.getText().toString());
-                    getOpenWeatherMapData(lat, lon);
-                    heatStressLevelView.setVisibility(View.VISIBLE);
-                } else {
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            "Both coordinates need to be input and the longitude and latitude should be within proper ranges.", Toast.LENGTH_LONG)
-                            .show();
+        if(EXPLORE_ENABLED) {
+            exploreButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (twoValuesAreGiven() && isWithinCoordinateRange()) {
+                        double lat = Double.parseDouble(exploreLatitude.getText().toString());
+                        double lon = Double.parseDouble(exploreLongitude.getText().toString());
+                        getOpenWeatherMapData(lat, lon);
+                        heatStressLevelView.setVisibility(View.VISIBLE);
+                    } else {
+                        Toast.makeText(getActivity().getApplicationContext(),
+                                "Both coordinates need to be input and the longitude and latitude should be within proper ranges.", Toast.LENGTH_LONG)
+                                .show();
+                    }
                 }
-            }
-        });*/
+            });
+        }
 
         lonlatView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,8 +358,6 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         String weight = Float.toString(preferences.getFloat(WEIGHT, 0));
         String unit = Integer.toString(preferences.getInt(UNIT, 0));
 
-
-
         HashMap<String, String> params = new HashMap<>();
         params.put("_id", preferences.getString(GUID, null));
         params.put("age", age);
@@ -361,6 +368,11 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
 
         // Calling API to create user
         PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_CREATE_USER, params, CODE_POST_REQUEST);
+        request.execute();
+    }
+
+    private void readUsers() {
+        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_READ_USERS, null, CODE_GET_REQUEST);
         request.execute();
     }
 
@@ -512,8 +524,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
                     preferences.getString(HEIGHT_VALUE, DEFAULT_HEIGHT),
                     preferences.getInt(WEIGHT, DEFAULT_WEIGHT));
             String color = ral.getRecommendationColor(preferences.getFloat(WBGT_VALUE, 0), ral.calculateRALValue());
-            Log.v("HESTE", "UID: " + preferences.getString(GUID, null) +
-                    " RAL: " + ral.calculateRALValue() +
+            Log.v("HESTE", " RAL: " + ral.calculateRALValue() +
                     " WBGT: "+ preferences.getFloat(WBGT_VALUE, 0) + " col:" + color);
 
             setRecommendationColorAndText(color);
@@ -704,18 +715,22 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             permissionErrorView.setVisibility(View.GONE);
 
             // Only show the explorer view if enabled by the user
-            /*if(preferences.getBoolean("Explore", false)) {
-                exploreView.setVisibility(View.VISIBLE);
-            } else {
-                exploreView.setVisibility(View.GONE);
-            }*/
+            if(EXPLORE_ENABLED) {
+                if (preferences.getBoolean("Explore", false)) {
+                    exploreView.setVisibility(View.VISIBLE);
+                } else {
+                    exploreView.setVisibility(View.GONE);
+                }
+            }
         } else {
             locationTopView.setVisibility(View.GONE);
             heatStressLevelView.setVisibility(View.GONE);
             updateLocationView.setVisibility(View.GONE);
             activityLevelView.setVisibility(View.GONE);
             permissionErrorView.setVisibility(View.VISIBLE);
-            //exploreView.setVisibility(View.GONE);
+            if(EXPLORE_ENABLED) {
+                exploreView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -949,12 +964,13 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         protected String doInBackground(Void... voids) {
             RequestHandler requestHandler = new RequestHandler();
 
-            if (requestCode == CODE_POST_REQUEST)
+            if (requestCode == CODE_POST_REQUEST) {
                 return requestHandler.sendPostRequest(url, params);
+            }
 
-            if (requestCode == CODE_GET_REQUEST)
+            if (requestCode == CODE_GET_REQUEST) {
                 return requestHandler.sendGetRequest(url);
-
+            }
             return null;
         }
     }

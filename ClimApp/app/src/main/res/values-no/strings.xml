@@ -136,7 +136,8 @@
     <string name="Notifications">Varslinger</string>
     <string name="Preferences">Preferanser</string>
     <string name="Other">Annet</string>
-    <string name="About">Om</string>
+    <string name="About">About</string>
+    <string name="Feedback">Feedback</string>
     <string name="Reset">Tilbakestill personlige preferanser</string>
     <string name="prefs_cleared">Personlige preferanser tilbakestillet</string>
     <string name="measuring_units">Måleenheter</string>
@@ -184,6 +185,29 @@
     <string name="work_specific_attire">Arbeidsspesifikke antrekk</string>
     <string name="clothing_customize_attire">Tilpass ditt eget antrekk</string>
     <string name="clothing_customize_attire_description">"Ved å velge netopp de klærne du bruker på jobb kan vi bedre tilpasse oss behovene dine i løpet av dagen "</string>
+
+    <!-- Rating questions -->
+    <string name="rating_hydration_question">How were your drinking needs?</string>
+    <string name="rating_activity_question">Did you take more breaks today than you expected?</string>
+    <string name="rating_clothing_question">How would you evaluate the amount of clothing you wore today?</string>
+
+    <string name="rating_1_hydration">Much lower than expected</string>
+    <string name="rating_2_hydration">Lower than expected</string>
+    <string name="rating_3_hydration">Normal</string>
+    <string name="rating_4_hydration">Higher than expected</string>
+    <string name="rating_5_hydration">Much higher than expected</string>
+
+    <string name="rating_1_activity">Not at all</string>
+    <string name="rating_2_activity">Less than usual</string>
+    <string name="rating_3_activity">No</string>
+    <string name="rating_4_activity">More than usual</string>
+    <string name="rating_5_activity">A lot more than usual</string>
+
+    <string name="rating_1_clothing">Much less than needed</string>
+    <string name="rating_2_clothing">Less than needed</string>
+    <string name="rating_3_clothing">I wore the right amount of clothing</string>
+    <string name="rating_4_clothing">A little too much clothing</string>
+    <string name="rating_5_clothing">A lot more than needed</string>
 
     <!-- Clothing: Array items - field of work -->
     <string-array name="field_of_work_array">
