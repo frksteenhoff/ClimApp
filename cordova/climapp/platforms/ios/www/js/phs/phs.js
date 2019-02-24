@@ -27,18 +27,17 @@ heatindex.PHS = ( function ( options ) {
     
     var params = options || {	air:{
 										"Tair": 	40, 	//C
-										"Pw_air": 	3.7, 	//kPa partial water vapour pressure
+										"Pw_air": 	2.5, 	//kPa partial water vapour pressure
 										"Trad": 	40, 	//C radiant temperature
 										"v_air": 	0.3, 	//m/s air velocity
 								},
 								body:{
 										"posture": 	2,		//1= sitting, 2= standing, 3= crouching
 										"Met": 		150, 	//W/m2 
-										"work": 	0,		//W/m2 external work 
 										"weight":   75,		//kg  
 										"height": 	1.8,	//m
-										"drink": 	0,	// may drink freely
-										"accl": 	0		//% acclimatisation state either 0 or 100
+										"drink": 	true,	// may drink freely
+										"accl": 	20		//% acclimatisation state 
 								},
 								cloth:{
 										"Icl": 		0.5, 	//clo
@@ -49,10 +48,7 @@ heatindex.PHS = ( function ( options ) {
 								move:{
 										"walk_dir":	NaN, 	//degree walk direction
 										"v_walk": 	NaN,	//m/s walking speed
-										
-								},
-								sim: {
-										"mod": 0
+										"work": 	0,		//W/m2 external work 
 								}
 						};
 
@@ -70,7 +66,7 @@ heatindex.PHS = ( function ( options ) {
     //         = 2 iso7933 ver. 2,
     //         = 3 as 1 and modified core_temp_pred,
     //         = 4 as 2 and modified core_temp_pred
-    var sim_mod = params.sim.mod;
+    var sim_mod;
     var sim_time;
 
     function var_reset(){

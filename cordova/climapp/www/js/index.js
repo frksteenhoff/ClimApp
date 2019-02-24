@@ -26,6 +26,15 @@ var app = {
     // Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+		
+		/*
+		heatindex.PHS.sim_init();
+		for( var i=1;i<=480;i++){
+			var res = heatindex.PHS.time_step();
+			console.log(res);
+		}
+		console.log( heatindex.PHS.current_result() );
+		*/
 		//this.onDeviceReady(); //call this to run on browser, as browser does not fire the event by itself.
     },
 
