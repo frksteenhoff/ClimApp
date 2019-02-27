@@ -170,8 +170,8 @@
     <string name="set_gender">Vennligst oppgi kjønnet ditt</string>
     <string name="set_height">Vennligst oppgi høyden din</string>
     <string name="set_weight">Vennligst oppgi vekten din</string>
-    <string name="set_acclimatization">Vennligst oppgi om du er akklimatiser til arbeidsforholdene dine.</string>
-    <string name="select_age_picker_string">Vennligst velg alder ved bruk av hjulet eller skriv inn selv.</string>
+    <string name="set_acclimatization">Vennligst oppgi om du er akklimatisert til arbeidsforholdene dine.</string>
+    <string name="select_age_picker_string">Vennligst oppgi alderen din ved å skrive det inn i det spesifiserte formatet.</string>
     <string name="select_height_picker_string">Vennligst velg høyde ved bruk av hjulet eller skriv inn selv.</string>
     <string name="select_weight_picker_string">Vennligst velg vekt ved bruk av hjulet eller skriv inn selv.</string>
     <string name="acclimatization_description_more">Les mere om å sette akklimatisering</string>

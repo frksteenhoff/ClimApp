@@ -209,7 +209,7 @@
     <string name="set_height">Please provide your height</string>
     <string name="set_weight">Please provide your weight</string>
     <string name="set_acclimatization">Please provide information about your acclimatization to your work environment</string>
-    <string name="select_age_picker_string">Please select your age by using the wheel or simply type it in.</string>
+    <string name="select_age_picker_string">Please input your age by typing it in the specified format.</string>
     <string name="select_height_picker_string">Please select your height by using the wheel or simply type it in.</string>
     <string name="select_weight_picker_string">Please select your weight by using the wheel or simply type it in.</string>
     <string name="acclimatization_description">Please select whether you are acclimatized to your work environment.
