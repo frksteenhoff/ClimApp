@@ -120,7 +120,7 @@ public class FeedbackActivity extends AppCompatActivity {
                 mRatingBarHydration.setRating(3);
                 mRatingBarActivity.setRating(3);
                 mRatingBarClothing.setRating(3);
-                Toast.makeText(FeedbackActivity.this, "Thank you for sharing your feedback!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FeedbackActivity.this, R.string.feedback_thanks, Toast.LENGTH_SHORT).show();
             }
         });
     }

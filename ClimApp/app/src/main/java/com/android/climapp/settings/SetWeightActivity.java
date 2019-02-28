@@ -2,6 +2,7 @@ package com.android.climapp.settings;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +12,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.climapp.R;
+import com.android.climapp.data.Api;
+import com.android.climapp.data.RequestHandler;
 import com.android.climapp.utils.Utils;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
 import static com.android.climapp.utils.ApplicationConstants.APP_NAME;
+import static com.android.climapp.utils.ApplicationConstants.CODE_GET_REQUEST;
+import static com.android.climapp.utils.ApplicationConstants.CODE_POST_REQUEST;
+import static com.android.climapp.utils.ApplicationConstants.DB_ID;
+import static com.android.climapp.utils.ApplicationConstants.DB_WEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.DEFAULT_WEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.GUID;
 import static com.android.climapp.utils.ApplicationConstants.UNIT;
 import static com.android.climapp.utils.ApplicationConstants.WEIGHT;
 
@@ -48,7 +62,7 @@ public class SetWeightActivity extends AppCompatActivity {
         showCorrectPickerWeightValues(preferred_unit);
 
         // Set picker value based on utils weigth in correct unit
-        np.setValue(utils.convertWeightToUnitFromKg(preferred_unit, preferences.getInt(WEIGHT, 100)));
+        np.setValue(utils.convertWeightToUnitFromKg(preferred_unit, preferences.getInt(WEIGHT, DEFAULT_WEIGHT)));
 
         //Sets whether the selector wheel wraps when reaching the min/max value.
         np.setWrapSelectorWheel(true);
@@ -113,6 +127,14 @@ public class SetWeightActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                // Update age in database
+                HashMap<String, String> params = new HashMap<>();
+                params.put(DB_ID, preferences.getString(GUID, null));
+                params.put(DB_WEIGHT, Integer.toString(preferences.getInt(WEIGHT, 0)));
+
+                PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_UPDATE_USER_WEIGHT, params, CODE_POST_REQUEST);
+                request.execute();
+
                 Intent parentIntent = NavUtils.getParentActivityIntent(this);
                 parentIntent.setFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(parentIntent);
@@ -120,5 +142,55 @@ public class SetWeightActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /*
+     * Network request to connect API with database
+     * */
+    private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
+        String url;
+        HashMap<String, String> params;
+        int requestCode;
+
+        PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
+            this.url = url;
+            this.params = params;
+            this.requestCode = requestCode;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            try {
+                JSONObject object = new JSONObject(s);
+                if (!object.getBoolean("error")) {
+                    //Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT.show();
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.db_error, Toast.LENGTH_SHORT).show();
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            RequestHandler requestHandler = new RequestHandler();
+
+            if (requestCode == CODE_POST_REQUEST) {
+                return requestHandler.sendPostRequest(url, params);
+            }
+
+            if (requestCode == CODE_GET_REQUEST) {
+                return requestHandler.sendGetRequest(url);
+            }
+            return null;
+        }
     }
 }

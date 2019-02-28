@@ -60,11 +60,20 @@ import static android.content.Context.LOCATION_SERVICE;
 import static com.android.climapp.utils.ApplicationConstants.ACTIVITY_LEVEL;
 import static com.android.climapp.utils.ApplicationConstants.AGE;
 import static com.android.climapp.utils.ApplicationConstants.APP_NAME;
+import static com.android.climapp.utils.ApplicationConstants.CODE_GET_REQUEST;
+import static com.android.climapp.utils.ApplicationConstants.CODE_POST_REQUEST;
 import static com.android.climapp.utils.ApplicationConstants.COLOR_DARKRED;
 import static com.android.climapp.utils.ApplicationConstants.COLOR_GREEN;
 import static com.android.climapp.utils.ApplicationConstants.COLOR_ORANGE;
 import static com.android.climapp.utils.ApplicationConstants.COLOR_PLAIN;
 import static com.android.climapp.utils.ApplicationConstants.COLOR_RED;
+import static com.android.climapp.utils.ApplicationConstants.DB_AGE;
+import static com.android.climapp.utils.ApplicationConstants.DB_GENDER;
+import static com.android.climapp.utils.ApplicationConstants.DB_HEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.DB_ID;
+import static com.android.climapp.utils.ApplicationConstants.DB_UNIT;
+import static com.android.climapp.utils.ApplicationConstants.DB_WEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.DEFAULT_ACTIVITY;
 import static com.android.climapp.utils.ApplicationConstants.DEFAULT_HEIGHT;
 import static com.android.climapp.utils.ApplicationConstants.DEFAULT_WEIGHT;
 import static com.android.climapp.utils.ApplicationConstants.EXPLORE_ENABLED;
@@ -97,9 +106,6 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
     public DashboardFragment() {
         // Required empty constructor
     }
-
-    private static final int CODE_GET_REQUEST = 1024;
-    private static final int CODE_POST_REQUEST = 1025;
 
     private static final int ACCESS_COARSE_LOCATION_CODE = 3410;
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
@@ -154,7 +160,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         preferences = this.getActivity().getSharedPreferences(APP_NAME, Context.MODE_PRIVATE);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-        // Store unique user ID once
+        // Store unique user ID once, happens once first time user opens app
         if(preferences.getString(GUID, null) == null) {
             String uniqueID = UUID.randomUUID().toString();
             preferences.edit().putString(GUID, uniqueID).apply();
@@ -355,20 +361,15 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         String unit = Integer.toString(preferences.getInt(UNIT, 0));
 
         HashMap<String, String> params = new HashMap<>();
-        params.put("_id", preferences.getString(GUID, null));
-        params.put("age", age);
-        params.put("gender", gender);
-        params.put("height", height);
-        params.put("weight", weight);
-        params.put("unit", unit);
+        params.put(DB_ID, preferences.getString(GUID, null));
+        params.put(DB_AGE, age);
+        params.put(DB_GENDER, gender);
+        params.put(DB_HEIGHT, height);
+        params.put(DB_WEIGHT, weight);
+        params.put(DB_UNIT, unit);
 
         // Calling API to create user
         PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_CREATE_USER, params, CODE_POST_REQUEST);
-        request.execute();
-    }
-
-    private void readUsers() {
-        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_READ_USERS, null, CODE_GET_REQUEST);
         request.execute();
     }
 
@@ -474,7 +475,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
                     break;
             }
         } else {
-            preferences.edit().putString(ACTIVITY_LEVEL, "medium").apply();
+            preferences.edit().putString(ACTIVITY_LEVEL, DEFAULT_ACTIVITY).apply();
             activityMedium.setChecked(true);
         }
     }
@@ -516,7 +517,7 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
         if(preferences.getFloat(WBGT_VALUE, 0) != 0.0) {
             // Update color indicator after activity level change
             ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
-                    preferences.getString(ACTIVITY_LEVEL, "medium"),
+                    preferences.getString(ACTIVITY_LEVEL, DEFAULT_ACTIVITY),
                     preferences.getString(HEIGHT_VALUE, DEFAULT_HEIGHT),
                     preferences.getInt(WEIGHT, DEFAULT_WEIGHT));
             String color = ral.getRecommendationColor(preferences.getFloat(WBGT_VALUE, 0), ral.calculateRALValue());
@@ -925,7 +926,6 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
 
     /*
      * Network request to connect API with database
-     * NOT YET INTEGRATED WITH REMAINING CODE BASE
      * */
     private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
         String url;
@@ -949,7 +949,10 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             try {
                 JSONObject object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
-                    Toast.makeText(getActivity().getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            object.getString("message"),
+                            Toast.LENGTH_SHORT)
+                            .show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -126,6 +126,8 @@
     <string name="male">Male</string>
     <string name="set_age_button">Set age</string>
     <string name="wrong_age">Incorrect input format or age. Should be on form DDMMYYYY with age between 18 to 120. Try again.</string>
+    <string name="db_error">Error when updating user values in database</string>
+    <string name="feedback_thanks">Thank you for sharing your feedback!</string>
 
     <!-- Settings: Units -->
     <string name="age_unit">Years</string>

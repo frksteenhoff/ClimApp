@@ -100,6 +100,8 @@
     <string name="male">Mann</string>
     <string name="set_age_button">Angi alder</string>
     <string name="wrong_age">Feil format eller alder. Skal skrives på formen DDMMYYYY med alder mellom 18 og 120. Prøv igjen.</string>
+    <string name="db_error">Feil ved opdatering af bruker i database</string>
+    <string name="feedback_thanks">Takk for at du hjelper oss med å bli bedre!</string>
 
     <!-- Settings: Units -->
     <string name="age_unit">År</string>

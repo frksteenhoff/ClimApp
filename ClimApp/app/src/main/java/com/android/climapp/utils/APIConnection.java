@@ -7,6 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.climapp.R;
+import com.android.climapp.data.Api;
+import com.android.climapp.data.RequestHandler;
 import com.android.climapp.wbgt.Solar;
 import com.android.climapp.wbgt.SolarRad;
 import com.android.climapp.wbgt.WBGT;
@@ -25,10 +27,25 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import static com.android.climapp.utils.ApplicationConstants.ACTIVITY_LEVEL;
+import static com.android.climapp.utils.ApplicationConstants.CODE_GET_REQUEST;
+import static com.android.climapp.utils.ApplicationConstants.CODE_POST_REQUEST;
+import static com.android.climapp.utils.ApplicationConstants.DB_ACTIVITY;
+import static com.android.climapp.utils.ApplicationConstants.DB_CLOUD;
+import static com.android.climapp.utils.ApplicationConstants.DB_HUM;
+import static com.android.climapp.utils.ApplicationConstants.DB_ID;
+import static com.android.climapp.utils.ApplicationConstants.DB_LAT;
+import static com.android.climapp.utils.ApplicationConstants.DB_LONG;
+import static com.android.climapp.utils.ApplicationConstants.DB_TEMP;
+import static com.android.climapp.utils.ApplicationConstants.DB_TEMP_MAX;
+import static com.android.climapp.utils.ApplicationConstants.DB_TEMP_MIN;
+import static com.android.climapp.utils.ApplicationConstants.DB_WIND;
+import static com.android.climapp.utils.ApplicationConstants.DEFAULT_ACTIVITY;
 import static com.android.climapp.utils.ApplicationConstants.DEFAULT_HEIGHT;
 import static com.android.climapp.utils.ApplicationConstants.DEFAULT_WEIGHT;
+import static com.android.climapp.utils.ApplicationConstants.GUID;
 import static com.android.climapp.utils.ApplicationConstants.HEIGHT_VALUE;
 import static com.android.climapp.utils.ApplicationConstants.TEMPERATURE_STR;
 import static com.android.climapp.utils.ApplicationConstants.UNIT;
@@ -60,13 +77,15 @@ public class APIConnection extends AsyncTask<String, String, String> {
     private static final String TAG_ALL = "all";
     private static final String PRESSURE = "pressure";
     private static final String SPEED = "speed";
+    private static final String TEMP_MIN = "temp_min";
+    private static final String TEMP_MAX= "temp_max";
     private static final String WEATHER_DESCRIPTION = "description";
     private static final String WEATHER_ID = "id";
     private static final String WEATHER_ICON = "icon";
 
     private Integer pressure, temperature, cloudiness, weather_id;
     private String city_name, description, icon, temperature_unit;
-    private double wind_speed, humidity, mLongitude, mLatitude, mWBGT;
+    private double wind_speed, humidity, mLongitude, mLatitude, temp_exact, mWBGT, temp_min, temp_max;
     private com.android.climapp.dashboard.DashboardFragment mDashboard;
 
     private SharedPreferences mPreferences;
@@ -143,7 +162,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
 
             ral = new com.android.climapp.wbgt.RecommendedAlertLimitISO7243(
                     // Giving default values if nothing set
-                    mPreferences.getString(ACTIVITY_LEVEL, "medium"),
+                    mPreferences.getString(ACTIVITY_LEVEL, DEFAULT_ACTIVITY),
                     mPreferences.getString(HEIGHT_VALUE, DEFAULT_HEIGHT),
                     mPreferences.getInt(WEIGHT, DEFAULT_WEIGHT));
 
@@ -152,6 +171,9 @@ public class APIConnection extends AsyncTask<String, String, String> {
             // Set color in view based on RAL interval
             mDashboard.setRecommendationColorAndText(color);
             mDashboard.saveStringToPreferences("color", color);
+
+            // Update weather in database
+            updateWeatherInDatabase();
         }
     }
 
@@ -162,6 +184,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
             // Values fetched from API response (JSONObject) humidity, pressure, temperature etc.
             humidity = json.getJSONObject(TAG_MAIN).getInt(HUMIDITY);
             pressure = json.getJSONObject(TAG_MAIN).getInt(PRESSURE);
+            temp_exact = json.getJSONObject(TAG_MAIN).getDouble(TEMPERATURE);
             temperature = json.getJSONObject(TAG_MAIN).getInt(TEMPERATURE);
             wind_speed = json.getJSONObject(TAG_WIND).getDouble(SPEED);
             cloudiness = json.getJSONObject(TAG_CLOUDS).getInt(TAG_ALL);
@@ -169,6 +192,9 @@ public class APIConnection extends AsyncTask<String, String, String> {
             weather_id = json.getJSONArray(TAG_WEATHER).getJSONObject(0).getInt(WEATHER_ID);
             description = json.getJSONArray(TAG_WEATHER).getJSONObject(0).getString(WEATHER_DESCRIPTION);
             icon = json.getJSONArray(TAG_WEATHER).getJSONObject(0).getString(WEATHER_ICON);
+
+            temp_min = json.getJSONObject(TAG_MAIN).getDouble(TEMP_MIN);
+            temp_max = json.getJSONObject(TAG_MAIN).getDouble(TEMP_MAX);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -223,6 +249,25 @@ public class APIConnection extends AsyncTask<String, String, String> {
             preferences.edit().putBoolean("notification_sent", true).apply();
         }*/
     }
+
+    private void updateWeatherInDatabase() {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(DB_ID, mPreferences.getString(GUID, null));
+        params.put(DB_LONG, Double.toString(mLongitude));
+        params.put(DB_LAT, Double.toString(mLatitude));
+        params.put(DB_TEMP, Double.toString(temp_exact));
+        params.put(DB_WIND, Double.toString(wind_speed));
+        params.put(DB_HUM, Double.toString(humidity));
+        params.put(DB_CLOUD, Integer.toString(cloudiness));
+        params.put(DB_ACTIVITY, mPreferences.getString(ACTIVITY_LEVEL, DEFAULT_ACTIVITY));
+        params.put(DB_TEMP_MIN, Double.toString(temp_min));
+        params.put(DB_TEMP_MAX, Double.toString(temp_max));
+        Log.v("HESTE", mPreferences.getString(GUID, null));
+
+        PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_ADD_WEATHER_INFO, params, CODE_POST_REQUEST);
+        request.execute();
+    }
+
     /**
      * Use calculations for the WBGT mode from JTOF together with basic device input:
      * location, date and time and API response
@@ -300,5 +345,52 @@ public class APIConnection extends AsyncTask<String, String, String> {
                 500, 501, 502, 503, 504, 511, 520, 521, 522, 531,
                 615, 616};
         return Arrays.asList(rainIds).contains(weather_id);
+    }
+
+    /*
+     * Network request to connect API with database
+     * */
+    private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
+        String url;
+        HashMap<String, String> params;
+        int requestCode;
+
+        PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
+            this.url = url;
+            this.params = params;
+            this.requestCode = requestCode;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            try {
+                JSONObject object = new JSONObject(s);
+                if (!object.getBoolean("error")) {
+                    Log.v("HESTE", object.getString("message"));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            RequestHandler requestHandler = new RequestHandler();
+
+            if (requestCode == CODE_POST_REQUEST) {
+                return requestHandler.sendPostRequest(url, params);
+            }
+
+            if (requestCode == CODE_GET_REQUEST) {
+                return requestHandler.sendGetRequest(url);
+            }
+            return null;
+        }
     }
 }

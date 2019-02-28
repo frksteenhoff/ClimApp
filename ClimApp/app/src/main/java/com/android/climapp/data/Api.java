@@ -24,10 +24,11 @@ public class Api {
     public static final String URL_UPDATE_USER_GENDER = ROOT_URL + "updateUserGender";
     public static final String URL_UPDATE_USER_HEIGHT = ROOT_URL + "updateUserHeight";
     public static final String URL_UPDATE_USER_WEIGHT = ROOT_URL + "updateUserWeight";
+    public static final String URL_UPDATE_USER_UNIT = ROOT_URL + "updateUserUnit";
     public static final String URL_DELETE_USER = ROOT_URL + "deleteUser&_id=";
 
     // WEATHER RELATED
-    public static final String URL_ADD_WEATHER_INFO = ROOT_URL + "addWeatherInformation";
+    public static final String URL_ADD_WEATHER_INFO = ROOT_URL + "createWeatherRecord";
     public static final String URL_GET_WEATHER_INFO = ROOT_URL + "getWeather";
 
     // FEEDBACK RELATED

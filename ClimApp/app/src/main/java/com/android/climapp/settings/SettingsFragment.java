@@ -3,6 +3,7 @@ package com.android.climapp.settings;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -17,13 +18,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.climapp.R;
+import com.android.climapp.data.Api;
+import com.android.climapp.data.RequestHandler;
 import com.android.climapp.utils.Utils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 import static com.android.climapp.utils.ApplicationConstants.ACCLIMATIZATION;
 import static com.android.climapp.utils.ApplicationConstants.AGE;
 import static com.android.climapp.utils.ApplicationConstants.APP_NAME;
+import static com.android.climapp.utils.ApplicationConstants.CODE_GET_REQUEST;
+import static com.android.climapp.utils.ApplicationConstants.CODE_POST_REQUEST;
+import static com.android.climapp.utils.ApplicationConstants.DB_GENDER;
+import static com.android.climapp.utils.ApplicationConstants.DB_ID;
+import static com.android.climapp.utils.ApplicationConstants.DB_UNIT;
 import static com.android.climapp.utils.ApplicationConstants.EXPLORE_ENABLED;
 import static com.android.climapp.utils.ApplicationConstants.GENDER;
+import static com.android.climapp.utils.ApplicationConstants.GUID;
 import static com.android.climapp.utils.ApplicationConstants.HEIGHT;
 import static com.android.climapp.utils.ApplicationConstants.HEIGHT_INDEX;
 import static com.android.climapp.utils.ApplicationConstants.HEIGHT_VALUE;
@@ -42,6 +56,7 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
 
     // Initializing utils input values
     private static SharedPreferences preferences;
+    private Spinner unitSpinner, genderSpinner;
     private Switch acclimatizationSwitch, exploreSwitch;
     private TextView showWeight, showHeight, showAge;
     private Utils utils;
@@ -74,10 +89,11 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
         showWeight = getActivity().findViewById(R.id.show_weight);
         showWeightIfExists(showWeight);
 
-        Spinner unitSpinner = getActivity().findViewById(R.id.units_spinner);
-        Spinner genderSpinner = getActivity().findViewById(R.id.gender_spinner);
+        unitSpinner = getActivity().findViewById(R.id.units_spinner);
+        genderSpinner = getActivity().findViewById(R.id.gender_spinner);
         Spinner notificationSpinner = getActivity().findViewById(R.id.notification_spinner);
         acclimatizationSwitch = getActivity().findViewById(R.id.acclimatization_switch_settings);
+
         if (EXPLORE_ENABLED) {
             exploreSwitch = getActivity().findViewById(R.id.explore_switch_settings);
         }
@@ -153,7 +169,6 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                     utils.showCorrectHeightValues(preferences.getInt(UNIT, 0)), preferences);
         }
 
-
         // TECHNICAL DEBT - same code existing here and in SetAcclimatizationActivity
         acclimatizationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -218,6 +233,9 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
                 // Update dashboard view when units are changed.
                 String[] values = utils.showCorrectHeightValues(preferences.getInt(UNIT, 0));
+
+                HashMap<String, String> params = new HashMap<>();
+                PerformNetworkRequest request;
                 switch(key){
                     case HEIGHT_VALUE:
                         showHeight.setText(values[prefs.getInt(HEIGHT_INDEX, 0)]);
@@ -234,11 +252,23 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
                             showWeight.setText(weight+"");
                             }
                         break;
-                    case AGE:
-                        showAge.setText(prefs.getInt(AGE, 0)+"");
-                        break;
                     case UNIT:
                         recalculateHeightWeight(values, prefs.getInt(UNIT, 0));
+
+                        // Update age in database
+                        params.put(DB_ID, preferences.getString(GUID, null));
+                        params.put(DB_UNIT, Integer.toString(preferences.getInt(UNIT, 0)));
+
+                        request = new PerformNetworkRequest(Api.URL_UPDATE_USER_UNIT, params, CODE_POST_REQUEST);
+                        request.execute();
+                        break;
+                    case GENDER:
+                        // Update age in database
+                        params.put(DB_ID, preferences.getString(GUID, null));
+                        params.put(DB_GENDER, Integer.toString(preferences.getInt(GENDER, 0)));
+
+                        request = new PerformNetworkRequest(Api.URL_UPDATE_USER_GENDER, params, CODE_POST_REQUEST);
+                        request.execute();
                         break;
                     default: // If preference not specified above, do nothing
                         break;
@@ -417,6 +447,56 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             int preferred_unit = preferences.getInt(UNIT, 0);
             int weight = preferences.getInt(WEIGHT, 0);
             view.setText(String.format("%s", utils.convertWeightToUnitFromKg(preferred_unit, weight)));
+        }
+    }
+
+    /*
+     * Network request to connect API with database
+     * */
+    private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
+        String url;
+        HashMap<String, String> params;
+        int requestCode;
+
+        PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
+            this.url = url;
+            this.params = params;
+            this.requestCode = requestCode;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            try {
+                JSONObject object = new JSONObject(s);
+                if (!object.getBoolean("error")) {
+                    //Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT.show();
+                } else {
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.db_error, Toast.LENGTH_SHORT).show();
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            RequestHandler requestHandler = new RequestHandler();
+
+            if (requestCode == CODE_POST_REQUEST) {
+                return requestHandler.sendPostRequest(url, params);
+            }
+
+            if (requestCode == CODE_GET_REQUEST) {
+                return requestHandler.sendGetRequest(url);
+            }
+            return null;
         }
     }
 }
