@@ -18,6 +18,9 @@
     },
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.climapp.app"
+    },
+    "cordova-wheel-selector-plugin": {
+      "PACKAGE_NAME": "com.climapp.app"
     }
   },
   "dependent_plugins": {}

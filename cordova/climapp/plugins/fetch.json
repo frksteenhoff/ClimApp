@@ -30,5 +30,13 @@
     },
     "is_top_level": true,
     "variables": {}
+  },
+  "cordova-wheel-selector-plugin": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-wheel-selector-plugin"
+    },
+    "is_top_level": true,
+    "variables": {}
   }
 }

@@ -21,6 +21,7 @@
 		68A396C4D9D945AC9E78D2CD /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 36A587B25ADD4B51AE29C880 /* CoreLocation.framework */; };
 		99E93F5944AB4AEE8BB6E7C7 /* CDVSplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = E48414816F614009B6A3DC7D /* CDVSplashScreen.m */; };
 		DC6B1DCD04854E0085A96D61 /* CDVViewController+SplashScreen.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E4C722406704B43B1DB2048 /* CDVViewController+SplashScreen.m */; };
+		E052ABE4981D45CEA159CA7B /* SelectorCordovaPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 557B86437A0B41E2B1B45472 /* SelectorCordovaPlugin.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -70,6 +71,8 @@
 		2E4C722406704B43B1DB2048 /* CDVViewController+SplashScreen.m */ = {isa = PBXFileReference; name = "CDVViewController+SplashScreen.m"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
 		B151E5885AB94986BEAA20DB /* CDVSplashScreen.h */ = {isa = PBXFileReference; name = "CDVSplashScreen.h"; path = "cordova-plugin-splashscreen/CDVSplashScreen.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 		A6FEE499C9674B33B9A0D7D9 /* CDVViewController+SplashScreen.h */ = {isa = PBXFileReference; name = "CDVViewController+SplashScreen.h"; path = "cordova-plugin-splashscreen/CDVViewController+SplashScreen.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		557B86437A0B41E2B1B45472 /* SelectorCordovaPlugin.m */ = {isa = PBXFileReference; name = "SelectorCordovaPlugin.m"; path = "cordova-wheel-selector-plugin/SelectorCordovaPlugin.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		0C38325935E6453FB181B6D7 /* SelectorCordovaPlugin.h */ = {isa = PBXFileReference; name = "SelectorCordovaPlugin.h"; path = "cordova-wheel-selector-plugin/SelectorCordovaPlugin.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +186,8 @@
 				2E4C722406704B43B1DB2048 /* CDVViewController+SplashScreen.m */,
 				B151E5885AB94986BEAA20DB /* CDVSplashScreen.h */,
 				A6FEE499C9674B33B9A0D7D9 /* CDVViewController+SplashScreen.h */,
+				557B86437A0B41E2B1B45472 /* SelectorCordovaPlugin.m */,
+				0C38325935E6453FB181B6D7 /* SelectorCordovaPlugin.h */,
 			);
 			name = Plugins;
 			path = "ClimApp/Plugins";
@@ -299,6 +304,7 @@
 				21F8B37EB23543B8881B7F55 /* CDVLocation.m in Sources */,
 				99E93F5944AB4AEE8BB6E7C7 /* CDVSplashScreen.m in Sources */,
 				DC6B1DCD04854E0085A96D61 /* CDVViewController+SplashScreen.m in Sources */,
+				E052ABE4981D45CEA159CA7B /* SelectorCordovaPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

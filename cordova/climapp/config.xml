@@ -29,6 +29,7 @@
     <plugin name="cordova-plugin-geolocation" spec="^4.0.1" />
     <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
+    <plugin name="cordova-wheel-selector-plugin" spec="^1.1.2" />
     <engine name="android" spec="^7.1.4" />
     <engine name="ios" spec="^4.5.5" />
 </widget>

@@ -38,19 +38,15 @@
     </head>
     <body>
         <div id="root" class="app">
-			<nav class="navbar">
-			        <span class="navbar-toggle" id="js-navbar-toggle">
-			            <i class="fas fa-bars"></i>
-			        </span>
-			       <ul class="main-nav" id="js-menu">
-			            <li>
-			                <a href="#" class="nav-links">Settings</a>
-			            </li>
-			            <li>
-			                <a href="#" class="nav-links">Dashboard</a>
-			            </li>
-			        </ul>
-			</nav>
+			<div class="navigation">
+				<div data-target="dashboard" data-listener="navbar">
+					<p><i class="fas fa-tachometer-alt fa-2x"></i> Dashboard</p>
+				</div>
+				<div data-target="settings" data-listener="navbar"> 
+					<p><i class="fas fa-cog fa-2x" ></i> Settings</p>
+				</div>
+			</div>
+			</div>
 			<div id="content">
 			</div>
         <!-- BK feb 6 2019: we use this div as our root, and dynamically populate it with the content we require.
@@ -59,6 +55,9 @@
         </div>
         <script type="text/javascript" src="cordova.js"></script>
 		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="js/gauge.min.js"></script>
+		<script type="text/javascript" src="js/phs/phs.js"></script>
+		<script type="text/javascript" src="js/phs/ireq.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
     </body>
 </html>
