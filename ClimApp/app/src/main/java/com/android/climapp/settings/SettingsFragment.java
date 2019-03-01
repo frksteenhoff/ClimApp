@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -475,10 +476,9 @@ public class SettingsFragment extends Fragment implements AdapterView.OnItemSele
             try {
                 JSONObject object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
-                    //Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT.show();
+                    Log.v("HESTE", object.getString("message"));
                 } else {
-                    Toast.makeText(getActivity().getApplicationContext(), R.string.db_error, Toast.LENGTH_SHORT).show();
-
+                    Log.v("HESTE", "PHP response message: " + object.getString("message"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

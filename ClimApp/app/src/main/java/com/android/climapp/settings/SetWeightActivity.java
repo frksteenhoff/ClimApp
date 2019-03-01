@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -169,10 +170,9 @@ public class SetWeightActivity extends AppCompatActivity {
             try {
                 JSONObject object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
-                    //Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT.show();
+                    Log.v("HESTE", object.getString("message"));
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.db_error, Toast.LENGTH_SHORT).show();
-
+                    Log.v("HESTE", "PHP response message: " + object.getString("message"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -151,10 +151,9 @@ public class SetHeightActivity extends AppCompatActivity {
             try {
                 JSONObject object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
-                    //Toast.makeText(getApplicationContext(), object.getString("message"), Toast.LENGTH_SHORT.show();
+                    Log.v("HESTE", object.getString("message"));
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.db_error, Toast.LENGTH_SHORT).show();
-
+                    Log.v("HESTE", "PHP response message: " + object.getString("message"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
