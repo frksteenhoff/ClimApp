@@ -83,9 +83,9 @@ public class APIConnection extends AsyncTask<String, String, String> {
     private static final String WEATHER_ID = "id";
     private static final String WEATHER_ICON = "icon";
 
-    private Integer pressure, temperature, cloudiness, weather_id;
+    private Integer pressure, temperature, weather_id;
     private String city_name, description, icon, temperature_unit;
-    private double wind_speed, humidity, mLongitude, mLatitude, temp_exact, mWBGT, temp_min, temp_max;
+    private double wind_speed, humidity, cloudiness, mLongitude, mLatitude, temp_exact, mWBGT, temp_min, temp_max;
     private com.android.climapp.dashboard.DashboardFragment mDashboard;
 
     private SharedPreferences mPreferences;
@@ -182,12 +182,12 @@ public class APIConnection extends AsyncTask<String, String, String> {
             JSONObject json = new JSONObject(text);
 
             // Values fetched from API response (JSONObject) humidity, pressure, temperature etc.
-            humidity = json.getJSONObject(TAG_MAIN).getInt(HUMIDITY);
+            humidity = json.getJSONObject(TAG_MAIN).getInt(HUMIDITY)/100.0;
             pressure = json.getJSONObject(TAG_MAIN).getInt(PRESSURE);
             temp_exact = json.getJSONObject(TAG_MAIN).getDouble(TEMPERATURE);
             temperature = json.getJSONObject(TAG_MAIN).getInt(TEMPERATURE);
             wind_speed = json.getJSONObject(TAG_WIND).getDouble(SPEED);
-            cloudiness = json.getJSONObject(TAG_CLOUDS).getInt(TAG_ALL);
+            cloudiness = json.getJSONObject(TAG_CLOUDS).getInt(TAG_ALL)/100.0;
             city_name = json.getString(TAG_CITY);
             weather_id = json.getJSONArray(TAG_WEATHER).getJSONObject(0).getInt(WEATHER_ID);
             description = json.getJSONArray(TAG_WEATHER).getJSONObject(0).getString(WEATHER_DESCRIPTION);
@@ -258,11 +258,10 @@ public class APIConnection extends AsyncTask<String, String, String> {
         params.put(DB_TEMP, Double.toString(temp_exact));
         params.put(DB_WIND, Double.toString(wind_speed));
         params.put(DB_HUM, Double.toString(humidity));
-        params.put(DB_CLOUD, Integer.toString(cloudiness));
+        params.put(DB_CLOUD, Double.toString(cloudiness));
         params.put(DB_ACTIVITY, mPreferences.getString(ACTIVITY_LEVEL, DEFAULT_ACTIVITY));
         params.put(DB_TEMP_MIN, Double.toString(temp_min));
         params.put(DB_TEMP_MAX, Double.toString(temp_max));
-        Log.v("HESTE", mPreferences.getString(GUID, null));
 
         PerformNetworkRequest request = new PerformNetworkRequest(Api.URL_ADD_WEATHER_INFO, params, CODE_POST_REQUEST);
         request.execute();
@@ -302,7 +301,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
         Solar s = new Solar(mLongitude, mLatitude, calendar, utcOffset);
         SolarRad sr = new SolarRad(s.zenith(),
                 calendar.get(Calendar.DAY_OF_YEAR),
-                cloudiness/100,
+                cloudiness,
                 1,
                 isItFoggy(weather_id),
                 isItRaining(weather_id)); //(solar zenith angle, day no, cloud fraction,
@@ -350,7 +349,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
     /*
      * Network request to connect API with database
      * */
-    private class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
+    private static class PerformNetworkRequest extends AsyncTask<Void, Void, String> {
         String url;
         HashMap<String, String> params;
         int requestCode;
@@ -373,6 +372,8 @@ public class APIConnection extends AsyncTask<String, String, String> {
                 JSONObject object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
                     Log.v("HESTE", object.getString("message"));
+                } else {
+                    Log.v("HESTE", "PHP response message: " + object.getString("message"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

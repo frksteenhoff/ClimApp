@@ -439,8 +439,8 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
 
     @Override
     public void onPause() {
-        super.onPause();
         preferences.registerOnSharedPreferenceChangeListener(sharedListener);
+        super.onPause();
     }
 
     @Override
@@ -949,10 +949,9 @@ public class DashboardFragment extends Fragment implements LocationListener, Goo
             try {
                 JSONObject object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
-                    Toast.makeText(getActivity().getApplicationContext(),
-                            object.getString("message"),
-                            Toast.LENGTH_SHORT)
-                            .show();
+                    Log.v("HESTE", object.getString("message"));
+                } else {
+                    Log.v("HESTE", "PHP response message: " + object.getString("message"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

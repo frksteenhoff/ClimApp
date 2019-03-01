@@ -53,7 +53,12 @@ public final class ApplicationConstants {
     public static final String DB_TEMP_MAX = "temp_max";
 
     // Database fields feedback
-
+    public static final String DB_USER_ID = "user_id";       // user global unique identifier
+    public static final String DB_QUESTION_ID = "question_combo_id";
+    public static final String DB_RATING1 = "rating1";
+    public static final String DB_RATING2 = "rating2";
+    public static final String DB_RATING3 = "rating3";
+    public static final String DB_TXT = "txt";
 
     // Spinner values - clothing
     public static final String FIELD_OF_WORK = "field_of_work";
