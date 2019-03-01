@@ -8,7 +8,7 @@ Redistribution and use in source and binary forms, with or without modification,
 - Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
 - Neither the name of the Department of Design Sciences (EAT), Lund University nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OFMERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 *************************************************************************************************************************************************
 
@@ -33,7 +33,7 @@ heatindex.PHS = ( function ( options ) {
 								},
 								body:{
 										"posture": 	2,		//1= sitting, 2= standing, 3= crouching
-										"Met": 		150, 	//W/m2 
+										"M": 		150, 	//W/m2 
 										"work": 	0,		//W/m2 external work 
 										"weight":   75,		//kg  
 										"height": 	1.8,	//m
@@ -85,7 +85,7 @@ heatindex.PHS = ( function ( options ) {
         body.fAdu_rad = NaN;
         body.drink = NaN;
         body.height = NaN;
-        body.Met = NaN;
+        body.M = NaN;
         body.posture = NaN;
         body.spHeat = NaN;
         body.Tbm = NaN;
@@ -176,8 +176,8 @@ heatindex.PHS = ( function ( options ) {
 
     function calc_sim_const(){
         if ( sim_mod === 0 ) { sim_mod = 1; }
-        body.Adu = 0.202 * Math.pow( body.weight, 0.425 ) *
-            Math.pow( body.height, 0.725);
+        body.Adu = 0.202 *Math.pow( body.weight, 0.425 ) *
+           Math.pow( body.height, 0.725);
         body.spHeat = 57.83 * body.weight / body.Adu;
         if ( body.drink === 1 ){
             limit.sweat_max50 = 0.075 * body.weight * 1000;
@@ -189,10 +189,10 @@ heatindex.PHS = ( function ( options ) {
         }
         if ( body.accl < 50 ) { skin.w_max = 0.85; }
         else { skin.w_max = 1; }
-        core.Tcreq_mr_ConstTeq = Math.exp( -1 / 10 );
+        core.Tcreq_mr_ConstTeq =Math.exp( -1 / 10 );
 
-        skin.ConstTsk = Math.exp( -1 / 3 );
-        sweat.ConstSW = Math.exp( -1 / 10 );
+        skin.ConstTsk =Math.exp( -1 / 3 );
+        sweat.ConstSW =Math.exp( -1 / 10 );
         calc_step_const();
     }
 
@@ -204,7 +204,7 @@ heatindex.PHS = ( function ( options ) {
         else { body.fAdu_rad = 0.7; }
         body.fAdu_rad_aux = 5.67E-08 * body.fAdu_rad;
         if ( sim_mod === 1 || sim_mod === 3 ) { // iso7933 ver. 1
-            sweat.SWmax = (body.Met - 32) * body.Adu;
+            sweat.SWmax = (body.M - 32) * body.Adu;
             if ( sweat.SWmax > 400 ) { sweat.SWmax = 400; }
             if ( sweat.SWmax < 250 ) { sweat.SWmax = 250; }
         }
@@ -213,7 +213,7 @@ heatindex.PHS = ( function ( options ) {
         }
         else { alert( 'ERROR in calc_step_const ' + sim_mod ); }
         if ( body.accl >= 50 ) { sweat.SWmax = sweat.SWmax * 1.25; }
-        core.Tcreq_rm_ss = 0.0036 * body.Met + 36.6;
+        core.Tcreq_rm_ss = 0.0036 * body.M + 36.6;
         cloth.Icl_st = cloth.Icl * 0.155;
         cloth.fAcl = 1 + 0.3 * cloth.Icl;
         cloth.Ia_st = 0.111;
@@ -221,8 +221,8 @@ heatindex.PHS = ( function ( options ) {
         if ( ! isNaN( move.v_walk_in ) ) {
             move.v_walk = move.v_walk_in;
             if (  ! isNaN( move.walk_dir_in ) ){
-                move.v_air_rel = Math.abs( air.v_air - move.v_walk *
-                                           Math.cos(3.14159 * move.walk_dir_in / 180));
+                move.v_air_rel =Math.abs( air.v_air - move.v_walk *
+                                          Math.cos(3.14159 * move.walk_dir_in / 180));
             }
             else {
                 if ( air.v_air < move.v_walk ) {
@@ -231,18 +231,18 @@ heatindex.PHS = ( function ( options ) {
             }
         }
         else {
-            move.v_walk = 0.0052 * (body.Met - 58);
+            move.v_walk = 0.0052 * (body.M - 58);
             if ( move.v_walk > 0.7) { move.v_walk = 0.7; }
             move.v_air_rel = air.v_air;
         }
         heatex.Tresp =
             28.56 + 0.115 * air.Tair + 0.641 * air.Pw_air;
         heatex.Cresp =
-            0.001516 * body.Met * (heatex.Tresp - air.Tair);
-        heatex.Eresp = 0.00127 * body.Met *
+            0.001516 * body.M * (heatex.Tresp - air.Tair);
+        heatex.Eresp = 0.00127 * body.M *
             (59.34 + 0.53 * air.Tair - 11.63 * air.Pw_air);
         if ( move.v_air_rel > 1 ) {
-            heatex.Z = 8.7 * Math.pow( move.v_air_rel, 0.6 ); }
+            heatex.Z = 8.7 *Math.pow( move.v_air_rel, 0.6 ); }
         else {heatex.Z = 3.5 + 5.2 * move.v_air_rel; }
     }
 
@@ -287,7 +287,7 @@ heatindex.PHS = ( function ( options ) {
 
     function skin_temp_equilibrium(){
         var Tskeq_cl = 12.165 + 0.02017 * air.Tair + 0.04361 * air.Trad + 0.19354 * air.Pw_air -
-            0.25315 * air.v_air + 0.005346 * body.Met + 0.51274 * core.Trec;
+            0.25315 * air.v_air + 0.005346 * body.M + 0.51274 * core.Trec;
         var Tskeq_nu = 7.191 + 0.064 * air.Tair + 0.061 * air.Trad + 0.198 * air.Pw_air -
             0.348 * air.v_air + 0.616 * core.Trec;
         var I_cl = cloth.Icl;
@@ -301,7 +301,7 @@ heatindex.PHS = ( function ( options ) {
         var Tskeq = skin_temp_equilibrium();
         var ConstTsk = skin.ConstTsk;
         skin.Tsk = skin.Tsk_0 * ConstTsk + Tskeq * ( 1 - ConstTsk);
-        skin.Pw_sk = 0.6105 * Math.exp( 17.27 * skin.Tsk / (skin.Tsk + 237.3));
+        skin.Pw_sk = 0.6105 *Math.exp( 17.27 * skin.Tsk / (skin.Tsk + 237.3));
     }
 
     function calc_dynamic_insulation(){
@@ -310,10 +310,10 @@ heatindex.PHS = ( function ( options ) {
         var Waux = move.v_walk;
         if ( move.v_walk > 1.5 ) { Waux = 1.5; }
         cloth.CORcl =
-            1.044 * Math.exp(( 0.066 * Vaux - 0.398 ) * Vaux + ( 0.094 * Waux - 0.378 ) * Waux);
+            1.044 *Math.exp(( 0.066 * Vaux - 0.398 ) * Vaux + ( 0.094 * Waux - 0.378 ) * Waux);
         if ( cloth.CORcl > 1 ) { cloth.CORcl = 1; }
         cloth.CORia =
-            Math.exp(( 0.047 * move.v_air_rel - 0.472) * move.v_air_rel +
+           Math.exp(( 0.047 * move.v_air_rel - 0.472) * move.v_air_rel +
                      ( 0.117 * Waux - 0.342) * Waux);
         if ( cloth.CORia > 1 ) { cloth.CORia = 1; }
         cloth.CORtot = cloth.CORcl;
@@ -337,7 +337,7 @@ heatindex.PHS = ( function ( options ) {
 
     function dynamic_convection_coefficient(){
         heatex.Hcdyn =
-            2.38 * Math.pow( Math.abs( skin.Tsk - air.Tair ), 0.25);
+            2.38 *Math.pow(Math.abs( skin.Tsk - air.Tair ), 0.25);
         if ( heatex.Z > heatex.Hcdyn ) { heatex.Hcdyn = heatex.Z; }
         cloth.fAcl_rad = (1 - cloth.fAref) * 0.97 +
             cloth.fAref * cloth.Fr;
@@ -363,7 +363,7 @@ heatindex.PHS = ( function ( options ) {
                 ((cloth.fAcl * (Hcdyn * air.Tair + heatex.Hr * air.Trad) +
                   skin.Tsk / cloth.Icl_dyn)) /
                 (cloth.fAcl *(Hcdyn + heatex.Hr) + 1 / cloth.Icl_dyn);
-            if ( Math.abs(cloth.Tcl - Tcl1) > 0.001 ) {
+            if (Math.abs(cloth.Tcl - Tcl1) > 0.001 ) {
                 cloth.Tcl = (cloth.Tcl + Tcl1) / 2;
             }
             else { return; }
@@ -374,7 +374,7 @@ heatindex.PHS = ( function ( options ) {
     function calc_heat_exchange(){
         heatex.Conv = cloth.fAcl * heatex.Hcdyn * (cloth.Tcl - air.Tair);
         heatex.Rad = cloth.fAcl * heatex.Hr * (cloth.Tcl - air.Trad);
-        sweat.Ereq = body.Met - core.dStoreq - body.work - heatex.Cresp -
+        sweat.Ereq = body.M - core.dStoreq - body.work - heatex.Cresp -
             heatex.Eresp - heatex.Conv - heatex.Rad;
     }
 
@@ -425,7 +425,7 @@ heatindex.PHS = ( function ( options ) {
             var k = sweat.Emax / sweat.SWpre;
             skin.w_pre = 1;
             if ( k >= 0.5 ) {
-                skin.w_pre= -k + Math.sqrt( k * k + 2 );
+                skin.w_pre= -k +Math.sqrt( k * k + 2 );
                 //trace branch( 'sp2.1');
             }
             if ( skin.w_pre > skin.w_max ) {
@@ -456,7 +456,7 @@ heatindex.PHS = ( function ( options ) {
                 skin.Tsk * core.sk_cr_rel / 2;
             core.Tcr = (core.Tcr + core.Tcr_0 * (1 - core.sk_cr_rel_0 / 2)) /
                 (1 - core.sk_cr_rel / 2);
-            if ( Math.abs(core.Tcr - core.Tcr_1 ) > 0.001 ) { 
+            if (Math.abs(core.Tcr - core.Tcr_1 ) > 0.001 ) { 
                 core.Tcr_1 = (core.Tcr_1 + core.Tcr) / 2;
             }
             else{
@@ -485,7 +485,7 @@ heatindex.PHS = ( function ( options ) {
             //Tbm_1 = Tcr( 1 - sk_cr_rel * 0.5 ) + Tsk * sk_cr_rel * 0.5;
             Tbm_1 = Tcr * ( 1 - sk_cr_rel_0_5 ) + Tsk * sk_cr_rel_0_5;
             var diff = Tbm_1 - Tbm;
-            if ( Math.abs( diff ) > 0.001 ) {
+            if (Math.abs( diff ) > 0.001 ) {
                 Tcr = Tcr - diff * 0.5;
             }
             else {

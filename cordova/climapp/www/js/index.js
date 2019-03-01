@@ -35,6 +35,10 @@ var app = {
 		}
 		console.log( heatindex.PHS.current_result() );
 		*/
+		heatindex.IREQ.sim_init();
+	
+		
+		console.log( heatindex.IREQ.current_result() );
 		//this.onDeviceReady(); //call this to run on browser, as browser does not fire the event by itself.
     },
 
