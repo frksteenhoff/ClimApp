@@ -62,6 +62,10 @@ body {
 .flexbox-2 div.center{
 	margin: auto;
 }
+.flexbox-2 div.right{
+	margin: auto;
+	align-self: flex-end;
+}
 .flexbox-2 div.wide{
 	flex-basis: 70%;
 }

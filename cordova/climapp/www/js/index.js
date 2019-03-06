@@ -35,10 +35,10 @@ var app = {
 		}
 		console.log( heatindex.PHS.current_result() );
 		*/
-		heatindex.IREQ.sim_init();
+		
 	
 		
-		console.log( heatindex.IREQ.current_result() );
+		//console.log( heatindex.IREQ.current_result() );
 		//this.onDeviceReady(); //call this to run on browser, as browser does not fire the event by itself.
     },
 
@@ -107,6 +107,7 @@ var app = {
 			self.knowledgeBase.activity.selected = target;
 			
 			$( "div[data-listener='activity']" ).removeClass( "selected" );
+			self.calcThermalIndices();
 			self.updateUI();
 		});	
 	},
@@ -134,13 +135,14 @@ var app = {
 												"windspeed": -99,
 												"radiation": -99},
 								  "settings": { "age": {"title": "What is your age?",
-														"value": ""},
+														"value": "36"},
 												 "height": {"title": "What is your height?",
-															"value": ""},
+															"value": "179"},
 												 "weight": {"title": "What is your weight?",
-															"value": ""},
+															"value": "80"},
 												 "gender": {"title": "What is your gender?",
-															"value": ""} },
+															"value": "Male"} 
+											  },
 								  "activity": { "label": {	"LOW-": "Resting, sitting at ease.\nBreathing not challenged.",
 													 		"LOW":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
 													 		"MEDIUM":"Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.",
@@ -154,7 +156,11 @@ var app = {
 															"HIGH+": 500
 												},	
 												"selected": "LOW",	
-											}				
+											},
+								  "thermalindices":	{ "ireq":{ "ICLneutral": 0.0,
+											 				   "DLEneutral": 0.0}
+								  					
+								  			}			
 								  };
 		//}
 	},
@@ -210,32 +216,40 @@ var app = {
 	updateWeather: function(){
 		var self = this;
 		if( 'position' in this.knowledgeBase ){
+			let appid = "f22065144b2119439a589cbfb9d851d3";
 			let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 			let data = { "action": "helios",
 						 "lat": this.knowledgeBase.position.lat,
 					 	 "lon": this.knowledgeBase.position.lng,
+						 "climapp": appid,
 					 	 "utc": new Date().toJSON() };
 			$.get( url, 
 				   data, 
 				   function( output ){//on success
-					   let weather = JSON.parse( output );
-					   self.knowledgeBase.weather.station = weather.station;
-					   self.knowledgeBase.weather.distance = weather.distance;
-					   self.knowledgeBase.weather.utc = weather.utc;
+					   try{
+					   	   let weather = JSON.parse( output );
+						   self.knowledgeBase.weather.station = weather.station;
+						   self.knowledgeBase.weather.distance = weather.distance;
+						   self.knowledgeBase.weather.utc = weather.utc;
 					   
-					   self.knowledgeBase.weather.lat = weather.lat;
-					   self.knowledgeBase.weather.lng = weather.lon;
-					   self.knowledgeBase.weather.wbgt = weather.wbgt_max;
-					   self.knowledgeBase.weather.windchill = weather.windchill;
-					   self.knowledgeBase.weather.temperature = weather.tair;
-					   self.knowledgeBase.weather.globetemperature = weather.tglobe;
-					   self.knowledgeBase.weather.humidity = weather.rh;
-					   self.knowledgeBase.weather.windspeed = weather.vair;
-					   self.knowledgeBase.weather.radiation = weather.solar;
+						   self.knowledgeBase.weather.lat = weather.lat;
+						   self.knowledgeBase.weather.lng = weather.lon;
+						   self.knowledgeBase.weather.wbgt = weather.wbgt_max.map(Number);
+						   self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
+						   self.knowledgeBase.weather.temperature = weather.tair.map(Number);
+						   self.knowledgeBase.weather.globetemperature = weather.tglobe.map(Number);
+						   self.knowledgeBase.weather.humidity = weather.rh.map(Number);
+						   self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
+						   self.knowledgeBase.weather.radiation = weather.solar.map(Number);
 					   
 					   
-	   				   self.saveSettings();
-	   				   self.updateUI();
+		   				   self.saveSettings();
+						   self.calcThermalIndices();
+		   				   self.updateUI();
+					   }
+					   catch( error ){
+						   console.log( error );
+					   }
 			});
 		}
 	},
@@ -249,14 +263,43 @@ var app = {
 			//$("#tipOfTheDay").html( "Tip of the Day");
 		})
 	},
+	calcThermalIndices: function(){
+		//ireq
+		var options =  {	air:{
+										"Tair": this.knowledgeBase.weather.temperature[0], 	//C
+										"rh": 	this.knowledgeBase.weather.humidity[0], 	//% relative humidity
+										"Trad": this.knowledgeBase.weather.globetemperature[0], 	//C mean radiant temperature
+										"v_air": Math.pow( this.knowledgeBase.weather.windspeed[0], 0.16 ), 	//m/s air velocity
+								},
+								body:{
+										"M": this.knowledgeBase.activity.values[ this.knowledgeBase.activity.selected ], 	//W/m2 
+										"work": 	0,		//W/m2 external work 
+								},
+								cloth:{
+										"Icl": 		0.5, 	//clo
+										"p": 	50, 	// Air permeability (low < 5, medium 50, high > 100 l/m2s) 
+								},
+								move:{
+										"v_walk": 	0,	//m/s walking speed
+								},
+						};
+		
+		heatindex.IREQ.set_options( options );
+		heatindex.IREQ.sim_run();
+		
+		var ireq = heatindex.IREQ.current_result();
+		this.knowledgeBase.thermalindices.ireq.ICLneutral = ireq.ICLneutral;
+		this.knowledgeBase.thermalindices.ireq.DLEneutral = ireq.DLEneutral;
+	},
 	updateUI: function(){
 		// context dependent filling of content
 		if( this.currentPageID == "dashboard" ){
 			if( 'weather' in this.knowledgeBase && this.knowledgeBase.weather.station !== "" ){
 				let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
 				$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
-				$("#temperature").html( parseFloat( this.knowledgeBase.weather.temperature ).toFixed(0) );
-				$("#humidity").html( parseFloat( this.knowledgeBase.weather.humidity ).toFixed(0) );
+				$("#temperature").html( parseFloat( this.knowledgeBase.weather.temperature[0] ).toFixed(0) );
+				$("#windchill").html( parseFloat( this.knowledgeBase.weather.windchill[0] ).toFixed(0) );
+				$("#humidity").html( parseFloat( this.knowledgeBase.weather.humidity[0] ).toFixed(0) );
 			}
 			
 			this.initActivityListeners();
@@ -267,7 +310,8 @@ var app = {
 			$("#activityCaption").html( caption_ );
 			
 			let width = $( window ).width() / 3;
-			this.drawGauge( 'main_gauge', width, -0.75, 32 );
+			var icl_neutral = this.knowledgeBase.thermalindices.ireq.ICLneutral;
+			this.drawGauge( 'main_gauge', width, -icl_neutral, 32 );
 			
 			width = $( window ).width() / 7;
 			this.drawGauge( 'ct1', width, 1.5, 32);
