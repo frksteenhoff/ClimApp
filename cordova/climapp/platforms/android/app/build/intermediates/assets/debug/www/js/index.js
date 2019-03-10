@@ -247,7 +247,7 @@ var app = {
 									},
 									"thresholds":{
 										"ireq":{
-											"Icl": 1.0
+											"icl": 1.0
 										},
 										"phs":{
 											"duration": 120,
