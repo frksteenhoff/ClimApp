@@ -1,42 +1,47 @@
 <div class="panel ">
-	<p class="label">Current</p>
 	<div class="flexbox-2">
-		<div class="wide">
-			<p>
+		<div><p class="label"><span id="current_time"></span></p></div>
+		<div data-listener="geolocation">
+			<p class="right">
 				<i class="fas fa-map-marker-alt"></i>
 				<span id="station"><i class="fas fa-spinner fa-pulse"></i></span> 
+				<i class="fas fa-sync-alt"></i>
 			</p>
-			<p>
-				<i class="fas fa-thermometer"></i>
-				<span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span> &#8451;
-				|
-				<i class="fas fa-percent"></i>
-				<span id="humidity"><i class="fas fa-spinner fa-pulse"></i></span> %
-				|
-				<i class="fas fa-wind"></i>
-				<span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span> m/s
-			</p>
-		</div>
-		<div>
-			<p><i class="fas fa-5x fa-thermometer-half neutral" id="thermometer"></i></p>
 		</div>
 	</div>
+	<div class="flexbox-2">
+		<div class="center">
+			<div id="main_gauge"></div>
+		</div>
+		<div class="center">
+			<p>Temperature <span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span>&#8451;</p>
+			<p>Wind <span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span>m/s</p>
+			<p>Humidity <span id="humidity"><i class="fas fa-spinner fa-pulse"></i></span>%</p>
+		</div>
+		
+	</div>
+	<p>
+		<span id="ts_y_score" class="score">+0.7</span> 
+		<span id="ts_y_label">more cold stress than yesterday, mainly due to lower air temperature.</span>
+	</p>
+	
+	
 </div>
 
 <div class="panel">
-	<p class="label">Your thermal environment</p>
-	<p id="tipOfTheDay">Maintain normal working and hydration procedures</p>
+	<p class="label">Implication when wearing normal office clothes</p>
+	<div id="tips"></div>
 </div>
 
 <div class="panel">
 	<p class="label">Activity level</p>
 	<p>What is your activity level?</p>
 	<div class="flexbox-5">
-		<div data-target="LOW-" data-listener="activity"><p>LOW-</p></div>
-		<div data-target="LOW" data-listener="activity"><p>LOW</p></div>
-		<div data-target="MEDIUM" data-listener="activity"><p>MEDIUM</p></div>
-		<div data-target="HIGH" data-listener="activity"><p>HIGH</p></div>
-		<div data-target="HIGH+" data-listener="activity"><p>HIGH+</p></div>	
+		<div data-target="LOW-" data-listener="activity" class="button">LOW-</div>
+		<div data-target="LOW" data-listener="activity" class="button">LOW</div>
+		<div data-target="MEDIUM" data-listener="activity" class="button">MEDIUM</div>
+		<div data-target="HIGH" data-listener="activity" class="button">HIGH</div>
+		<div data-target="HIGH+" data-listener="activity" class="button">HIGH+</div>	
 	</div>
 	<p class="caption" id="activityCaption"></p>
 </div>

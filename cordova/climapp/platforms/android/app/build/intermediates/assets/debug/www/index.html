@@ -38,9 +38,13 @@
     </head>
     <body>
         <div id="root" class="app">
-			<div class="navigation fa-2x">			        
-				<div> <img src='./img/logo.png' />Climapp </div>
-				<div> <img src='./img/transparant.png' /><i class="fas fa-cog" data-target="settings" id="navbar-toggle"></i> </div>
+			<div class="navigation">
+				<div data-target="dashboard" data-listener="navbar">
+					<p><i class="fas fa-tachometer-alt fa-2x"></i> Dashboard</p>
+				</div>
+				<div data-target="settings" data-listener="navbar"> 
+					<p><i class="fas fa-cog fa-2x" ></i> Settings</p>
+				</div>
 			</div>
 			</div>
 			<div id="content">
@@ -51,6 +55,10 @@
         </div>
         <script type="text/javascript" src="cordova.js"></script>
 		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="js/raphael-2.1.4.min.js"></script>
+		<script type="text/javascript" src="js/justgage.js"></script>
+		<script type="text/javascript" src="js/phs/phs.js"></script>
+		<script type="text/javascript" src="js/phs/ireq.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
     </body>
 </html>
