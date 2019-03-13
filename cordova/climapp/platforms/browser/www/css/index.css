@@ -73,14 +73,12 @@ body {
 }
 .flexbox-5 div.button{
 	background: #ffffff;
-	border: 1px solid rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.2);
+	box-shadow: 2px 2px rgba(0, 0, 0, 0.2);
 }
 .flexbox-5 div.selected{
     color: #ffffff;
     background: #7EBFE5; /* Old browsers */
-    background: -moz-linear-gradient(top, #52A5D5 0%, #A1D4F2 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, #52A5D5 0%,#A1D4F2 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, #52A5D5 0%,#A1D4F2 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 .cold{
@@ -131,10 +129,7 @@ p.center{
   margin: 0; 
   
   background: #7EBFE5; /* Old browsers */
-  background: -moz-linear-gradient(top, #52A5D5 0%, #A1D4F2 100%); /* FF3.6-15 */
-  background: -webkit-linear-gradient(top, #52A5D5 0%,#A1D4F2 100%); /* Chrome10-25,Safari5.1-6 */
-  background: linear-gradient(to bottom, #52A5D5 0%,#A1D4F2 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  
+
   display: -webkit-box;
   display: -moz-box;
   display: -ms-flexbox;
@@ -197,6 +192,16 @@ p.rating_text {
     border: 0;
 }
 
+
+input#feedback_text {
+    margin-top: 1em;
+    margin-bottom: 2em;
+    width: 70%;
+    border: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    font-size: 100%;
+}
+
 /* :not(:checked) is a filter, so that browsers that don’t support :checked don’t 
    follow these rules. Every browser that supports :checked also supports :not(), so
    it doesn’t make the test unnecessarily selective */
@@ -204,6 +209,7 @@ p.rating_text {
     position:absolute;
     top:-9999px;
 }
+
 
 .rating:not(:checked) > label {
     width:1em;
@@ -241,4 +247,24 @@ p.rating_text {
     position:relative;
     top:2px;
     left:2px;
+}   
+
+.submit_button div {
+    margin: auto;
+    text-align: center;
+}
+
+.button {
+    padding-top: 1em;
+    padding-bottom: 1em;
+    width: 40%;
+    font-size: 100%;
+	background: #7EBFE5;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+}
+
+.button:active {
+	background: #4F71BE;
 }

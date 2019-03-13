@@ -343,12 +343,10 @@ var app = {
 			$("#question2").html( this.knowledgeBase.feedback.question2.text );
 			$("#question3").html( this.knowledgeBase.feedback.question3.text );
 
-			// Rating text
+			// Rating text + rating bar values
 			$("#ratingtext1").html( this.knowledgeBase.feedback.question1.ratingtext[this.knowledgeBase.feedback.question1.rating] );
 			$("#ratingtext2").html( this.knowledgeBase.feedback.question2.ratingtext[this.knowledgeBase.feedback.question2.rating] );
 			$("#ratingtext3").html( this.knowledgeBase.feedback.question3.ratingtext[this.knowledgeBase.feedback.question3.rating] );
-
-			// Set ratingbars
 		}
 	},
 	drawGauge: function( id, width, value, fontsize ){
