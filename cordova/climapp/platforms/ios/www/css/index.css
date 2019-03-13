@@ -180,17 +180,47 @@ p.rating_text {
 	color: #939393;
 	font-size: 1em;
     font-style: italic;
-    margin-bottom: 2
-    em;
+    margin-bottom: 1em;
 }
 
-/* Rating - https://jsfiddle.net/leaverou/CGP87/ */
+/* Rating - https://jsfiddle.net/leaverou/CGP87/https://codepen.io/jamesbarnett/pen/vlpkh?editors=1100 */
+
 .rating {
-    width: 70%;
-	padding: 0.1em 0.5em;
-    margin: 0.5em auto;
+    width: 100%;
     border: 0;
+    font-size: 200%;
+    position:relative; /*Add this*/
+    transform:translate(-35%,0); /*Add this*/
 }
+
+.rating:not(:checked) > label:before {
+    content: '★ ';
+}
+
+.rating > input { display: none; } 
+.rating > label:before { 
+    margin: 5px;
+    font-size: 1.25em;
+    font-family: FontAwesome;
+    display: inline-block;
+    content: "\f005";
+  }
+  
+.rating > label { 
+    color: #ddd; 
+    float: right; 
+  }
+  
+/***** CSS Magic to Highlight Stars on Hover *****/
+  
+.rating > input:checked ~ label, /* show gold star when clicked */
+.rating:not(:checked) > label:hover, /* hover current star */
+.rating:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+  
+.rating > input:checked + label:hover, /* hover current star when changing rating */
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+.rating > input:checked ~ label:hover ~ label { color: #FFED85;  } 
 
 
 input#feedback_text {
@@ -202,53 +232,7 @@ input#feedback_text {
     font-size: 100%;
 }
 
-/* :not(:checked) is a filter, so that browsers that don’t support :checked don’t 
-   follow these rules. Every browser that supports :checked also supports :not(), so
-   it doesn’t make the test unnecessarily selective */
-.rating:not(:checked) > input {
-    position:absolute;
-    top:-9999px;
-}
-
-
-.rating:not(:checked) > label {
-    width:1em;
-    padding:0 .1em;
-    overflow:hidden;
-    white-space:nowrap;
-    cursor:pointer;
-    line-height:1.2;
-    font-size:300%;
-    color:#ddd;
-}
-
-.rating:not(:checked) > label:before {
-    content: '★ ';
-}
-
-.rating > input:checked ~ label {
-    color: #f70;
-}
-
-.rating:not(:checked) > label:hover,
-.rating:not(:checked) > label:hover ~ label {
-    color: gold;
-}
-
-.rating > input:checked + label:hover,
-.rating > input:checked + label:hover ~ label,
-.rating > input:checked ~ label:hover,
-.rating > input:checked ~ label:hover ~ label,
-.rating > label:hover ~ input:checked ~ label {
-    color: #ea0;
-}
-
-.rating > label:active {
-    position:relative;
-    top:2px;
-    left:2px;
-}   
-
+  
 .submit_button div {
     margin: auto;
     text-align: center;
