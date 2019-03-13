@@ -26,6 +26,19 @@ var app = {
     // Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+		
+		/*
+		heatindex.PHS.sim_init();
+		for( var i=1;i<=480;i++){
+			var res = heatindex.PHS.time_step();
+			console.log(res);
+		}
+		console.log( heatindex.PHS.current_result() );
+		*/
+		heatindex.IREQ.sim_init();
+	
+		
+		console.log( heatindex.IREQ.current_result() );
 		//this.onDeviceReady(); //call this to run on browser, as browser does not fire the event by itself.
     },
 
@@ -41,6 +54,7 @@ var app = {
     receivedEvent: function(id) {
 		this.initListeners();
 		this.loadSettings();
+		this.loadFeedbackQuestions();
 		this.loadUI( "dashboard" );
 		
 		this.updateLocation();
@@ -60,6 +74,9 @@ var app = {
 			$("#sync-toggle").toggleClass('fa-spin');
 		});
 		*/
+	},
+	initFeedbackListeners: function() {
+		var self = this;
 	},
 	initSettingsListeners: function(){
 		var self = this;
@@ -99,7 +116,8 @@ var app = {
 	},
 	loadSettings: function(){
 		this.pageMap = { "dashboard": "./pages/dashboard.html",
-						 "settings": "./pages/settings.html" };
+						 "settings": "./pages/settings.html",
+						 "feedback": "./pages/feedback.html" };
 		
 		//if ( localStorage.getItem("knowledgebase") !== null) {
 		//	this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
@@ -141,9 +159,56 @@ var app = {
 															"HIGH+": 500
 												},	
 												"selected": "LOW",	
-											}				
+											},
+									"feedback": { "question1": { 
+													"text": "How were your drinking needs?",
+													"rating": 3,
+													"ratingtype": "ratingbar",
+													"ratingtext": {
+														"1": "Much lower than expected",
+            											"2": "Lower than expected",
+      												    "3": "Normal",
+    											        "4": "Higher than expected",
+   												        "5": "Much higher than expected"
+													}
+												}, 
+												"question2": {
+													"text": "Did you take more breaks today than you expected?",
+													"rating": 3, 
+													"ratingtype": "ratingbar",
+													"ratingtext": {
+														"1": "Not exhausted at all",
+														"2": "Less exhausted than usual",
+														"3": "Normal",
+														"4": "More exhausted than usual",
+														"5": "A lot more exhausted than usual"
+													}
+												},
+												"question3": {
+													"text": "How would you evaluate the amount of clothing you wore today?",
+													"rating": 3,
+													"ratingtype": "ratingbar",
+													"ratingtext": {
+														"1": "Much less than needed",
+														"2": "Less than needed",
+														"3": "I wore the right amount of clothing",
+														"4": "A little too much clothing",
+														"5": "A lot more than needed"
+													}
+												}
+										}			
 								  };
 		//}
+	},
+	loadFeedbackQuestions: function() {
+		feedback = $.getJSON("../data/feedbackQuestions.json", function(result){
+		result = JSON.parse(result);
+			console.log("here ---- " + result.question1.text);
+			self.knowledgeBase.feedback.question1.text = result.question1.text;
+			self.knowledgeBase.feedback.question2.text = result.question2.text;
+			self.knowledgeBase.feedback.question3.text = result.question3.text;
+		});
+		// Implement logic to handle different types of rating bars
 	},
 	getSelectables: function( key ){
 		var obj_array = [];
@@ -271,6 +336,20 @@ var app = {
 			$("#weight").html( this.knowledgeBase.settings.weight.value );
 			$("#gender").html( this.knowledgeBase.settings.gender.value );	
 		}
+		else if( this.currentPageID == "feedback" ){
+			this.initFeedbackListeners();
+			// Question text
+			$("#question1").html( this.knowledgeBase.feedback.question1.text );
+			$("#question2").html( this.knowledgeBase.feedback.question2.text );
+			$("#question3").html( this.knowledgeBase.feedback.question3.text );
+
+			// Rating text
+			$("#ratingtext1").html( this.knowledgeBase.feedback.question1.ratingtext[this.knowledgeBase.feedback.question1.rating] );
+			$("#ratingtext2").html( this.knowledgeBase.feedback.question2.ratingtext[this.knowledgeBase.feedback.question2.rating] );
+			$("#ratingtext3").html( this.knowledgeBase.feedback.question3.ratingtext[this.knowledgeBase.feedback.question3.rating] );
+
+			// Set ratingbars
+		}
 	},
 	drawGauge: function( id, width, value, fontsize ){
 		var gauge = new RadialGauge({
@@ -352,8 +431,6 @@ var app = {
 			fontNumbersSize: fontsize,
 		}).draw();
 	}
-	
-	
 };
 
 app.initialize();

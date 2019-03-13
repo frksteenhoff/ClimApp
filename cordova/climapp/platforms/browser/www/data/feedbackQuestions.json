@@ -1,0 +1,38 @@
+[{ 
+    "question1": {
+        "text": "How were your drinking needs?",
+        "rating": 3,
+        "ratingtype": "ratingbar",
+        "ratingtext": {
+            "1": "Much lower than expected",
+            "2": "Lower than expected",
+            "3": "Normal",
+            "4": "Higher than expected",
+            "5": "Much higher than expected"
+        }
+    },
+    "question2": {
+        "text": "Did you take more breaks today than you expected?",
+        "rating": 3,
+        "ratingtype": "ratingbar",
+        "ratingtext": {
+            "1": "Not exhausted at all",
+            "2": "Less exhausted than usual",
+            "3": "Normal",
+            "4": "More exhausted than usual",
+            "5": "A lot more exhausted than usual"
+        }
+    },      
+    "question3": {
+        "text": "How would you evaluate the amount of clothing you wore today?",
+        "rating": 3,
+        "ratingtype": "ratingbar",
+        "ratingtext": {
+            "1": "Much less than needed",
+            "2": "Less than needed",
+            "3": "I wore the right amount of clothing",
+            "4": "A little too much clothing",
+            "5": "A lot more than needed"
+        }
+    }
+}]

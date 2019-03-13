@@ -34,13 +34,21 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, viewport-fit=cover">
         <link rel="stylesheet" type="text/css" href="css/index.css">
 		<link rel="stylesheet" type="text/css" href="css/fas.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
         <title>Climapp</title>
     </head>
     <body>
         <div id="root" class="app">
-			<div class="navigation fa-2x">			        
-				<div> <img src='./img/logo.png' />Climapp </div>
-				<div> <img src='./img/transparant.png' /><i class="fas fa-cog" data-target="settings" id="navbar-toggle"></i> </div>
+			<div class="navigation">
+				<div data-target="dashboard" data-listener="navbar">
+					<p><i class="fas fa-tachometer-alt fa-2x"></i> DASHBOARD</p>
+				</div>
+				<div data-target="settings" data-listener="navbar"> 
+					<p><i class="fas fa-cog fa-2x" ></i> SETTINGS</p>
+                </div>
+                <div data-target="feedback" data-listener="navbar"> 
+					<p><i class="fas fa-cog fa-2x" ></i> FEEDBACK</p>
+				</div>
 			</div>
 			</div>
 			<div id="content">
@@ -51,6 +59,12 @@
         </div>
         <script type="text/javascript" src="cordova.js"></script>
 		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="js/gauge.min.js"></script>
+		<script type="text/javascript" src="js/phs/phs.js"></script>
+		<script type="text/javascript" src="js/phs/ireq.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="data/feedbackQuestions.json"></script>
+        <!-- Rating bar-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
     </body>
 </html>

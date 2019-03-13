@@ -26,6 +26,19 @@ var app = {
     // Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+		
+		/*
+		heatindex.PHS.sim_init();
+		for( var i=1;i<=480;i++){
+			var res = heatindex.PHS.time_step();
+			console.log(res);
+		}
+		console.log( heatindex.PHS.current_result() );
+		*/
+		heatindex.IREQ.sim_init();
+	
+		
+		console.log( heatindex.IREQ.current_result() );
 		//this.onDeviceReady(); //call this to run on browser, as browser does not fire the event by itself.
     },
 
@@ -41,6 +54,7 @@ var app = {
     receivedEvent: function(id) {
 		this.initListeners();
 		this.loadSettings();
+		this.loadFeedbackQuestions();
 		this.loadUI( "dashboard" );
 		
 		this.updateLocation();
@@ -51,25 +65,18 @@ var app = {
 	initListeners: function(){
 		// navigation menu
 		var self = this;
-		$("#navbar-toggle").on('click', function () {
-			$( this ).toggleClass( "fa-cog" );
-			$( this ).toggleClass( "fa-home" );
+		$("div[data-listener='navbar']").on("click", function(){
 			let target = $( this ).attr("data-target");
-			
 			self.loadUI( target );
-			if( target === "settings" ){
-				$( this ).attr("data-target", "dashboard" );
-			}
-			else{
-				$( this ).attr("data-target", "settings" );
-			}
-			
 		});
 		/*
 		$("#sync-toggle").on('click', function () {
 			$("#sync-toggle").toggleClass('fa-spin');
 		});
 		*/
+	},
+	initFeedbackListeners: function() {
+		var self = this;
 	},
 	initSettingsListeners: function(){
 		var self = this;
@@ -109,7 +116,8 @@ var app = {
 	},
 	loadSettings: function(){
 		this.pageMap = { "dashboard": "./pages/dashboard.html",
-						 "settings": "./pages/settings.html" };
+						 "settings": "./pages/settings.html",
+						 "feedback": "./pages/feedback.html" };
 		
 		//if ( localStorage.getItem("knowledgebase") !== null) {
 		//	this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
@@ -151,9 +159,56 @@ var app = {
 															"HIGH+": 500
 												},	
 												"selected": "LOW",	
-											}				
+											},
+									"feedback": { "question1": { 
+													"text": "How were your drinking needs?",
+													"rating": 3,
+													"ratingtype": "ratingbar",
+													"ratingtext": {
+														"1": "Much lower than expected",
+            											"2": "Lower than expected",
+      												    "3": "Normal",
+    											        "4": "Higher than expected",
+   												        "5": "Much higher than expected"
+													}
+												}, 
+												"question2": {
+													"text": "Did you take more breaks today than you expected?",
+													"rating": 3, 
+													"ratingtype": "ratingbar",
+													"ratingtext": {
+														"1": "Not exhausted at all",
+														"2": "Less exhausted than usual",
+														"3": "Normal",
+														"4": "More exhausted than usual",
+														"5": "A lot more exhausted than usual"
+													}
+												},
+												"question3": {
+													"text": "How would you evaluate the amount of clothing you wore today?",
+													"rating": 3,
+													"ratingtype": "ratingbar",
+													"ratingtext": {
+														"1": "Much less than needed",
+														"2": "Less than needed",
+														"3": "I wore the right amount of clothing",
+														"4": "A little too much clothing",
+														"5": "A lot more than needed"
+													}
+												}
+										}			
 								  };
 		//}
+	},
+	loadFeedbackQuestions: function() {
+		feedback = $.getJSON("../data/feedbackQuestions.json", function(result){
+		result = JSON.parse(result);
+			console.log("here ---- " + result.question1.text);
+			self.knowledgeBase.feedback.question1.text = result.question1.text;
+			self.knowledgeBase.feedback.question2.text = result.question2.text;
+			self.knowledgeBase.feedback.question3.text = result.question3.text;
+		});
+		// Implement logic to handle different types of rating bars
 	},
 	getSelectables: function( key ){
 		var obj_array = [];
@@ -251,12 +306,9 @@ var app = {
 		if( this.currentPageID == "dashboard" ){
 			if( 'weather' in this.knowledgeBase && this.knowledgeBase.weather.station !== "" ){
 				let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
-				
 				$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
-				
 				$("#temperature").html( parseFloat( this.knowledgeBase.weather.temperature ).toFixed(0) );
 				$("#humidity").html( parseFloat( this.knowledgeBase.weather.humidity ).toFixed(0) );
-				$("#windspeed").html( parseFloat( this.knowledgeBase.weather.windspeed ).toFixed(0) );
 			}
 			
 			this.initActivityListeners();
@@ -265,6 +317,17 @@ var app = {
 			$("div[data-target='"+selected+"']").addClass("selected");
 			let caption_ = this.knowledgeBase.activity.label[ selected ];
 			$("#activityCaption").html( caption_ );
+			
+			let width = $( window ).width() / 3;
+			this.drawGauge( 'main_gauge', width, -0.75, 32 );
+			
+			width = $( window ).width() / 7;
+			this.drawGauge( 'ct1', width, 1.5, 32);
+			this.drawGauge( 'ct2', width, 2.2, 32 );
+			this.drawGauge( 'ct3', width, 0.5, 32);
+			this.drawGauge( 'ct4', width, -1.2, 32 );
+			this.drawGauge( 'ct5', width, -2.6, 32 );
+			
 		}
 		else if( this.currentPageID == "settings" ){
 			this.initSettingsListeners();
@@ -273,9 +336,101 @@ var app = {
 			$("#weight").html( this.knowledgeBase.settings.weight.value );
 			$("#gender").html( this.knowledgeBase.settings.gender.value );	
 		}
+		else if( this.currentPageID == "feedback" ){
+			this.initFeedbackListeners();
+			// Question text
+			$("#question1").html( this.knowledgeBase.feedback.question1.text );
+			$("#question2").html( this.knowledgeBase.feedback.question2.text );
+			$("#question3").html( this.knowledgeBase.feedback.question3.text );
+
+			// Rating text
+			$("#ratingtext1").html( this.knowledgeBase.feedback.question1.ratingtext[this.knowledgeBase.feedback.question1.rating] );
+			$("#ratingtext2").html( this.knowledgeBase.feedback.question2.ratingtext[this.knowledgeBase.feedback.question2.rating] );
+			$("#ratingtext3").html( this.knowledgeBase.feedback.question3.ratingtext[this.knowledgeBase.feedback.question3.rating] );
+
+			// Set ratingbars
+		}
 	},
-	
-	
+	drawGauge: function( id, width, value, fontsize ){
+		var gauge = new RadialGauge({
+		    renderTo: id,
+		    width: width,
+		    height: width,
+			value: value,
+			units: "",
+		    title: "",
+    		ticksAngle: 270,
+		    startAngle: 45,
+		    minValue: -4,
+		    maxValue: 4,
+		    majorTicks: [
+		        -4,
+		        -3,
+		        -2,
+		        -1,
+		        0,
+		        1,
+		        2,
+		        3,
+		        4
+		    ],
+		    minorTicks: 0,
+		    strokeTicks: false,
+		    highlights: [
+		        {
+		            "from": -4,
+		            "to": -3,
+		            "color": "rgba(0, 0, 255, 1.0)"
+		        },
+		        {
+		            "from": -3,
+		            "to": -2,
+		            "color": "rgba(0, 128, 255, 1.0)"
+		        },
+		        {
+		            "from": -2,
+		            "to": -1,
+		            "color": "rgba(0, 255, 255, 1.0)"
+		        },
+		        {
+		            "from": -1,
+		            "to": 1,
+		            "color": "rgba(0, 255, 0, 1.0)"
+		        },
+		        {
+		            "from": 1,
+		            "to": 2,
+		            "color": "rgba(255, 255, 0, 1.0)"
+		        },
+		        {
+		            "from": 2,
+		            "to": 3,
+		            "color": "rgba(255, 128, 0, 1.0)"
+		        },
+		        {
+		            "from": 3,
+		            "to": 4,
+		            "color": "rgba(255, 0, 0, 1.0)"
+		        }
+		    ],
+    		colorPlate: '#fff',
+    		colorPlateEnd: '#f3f3f3',
+			borderShadowWidth: 0,
+		    borders: false,
+		    needleType: "arrow",
+		    needleWidth: 5,
+			needleShadow: false,
+			colorNeedle: "#f00",
+			colorNeedleEnd: "#000",
+		    needleCircleSize: 7,
+		    needleCircleOuter: false,
+		    needleCircleInner: false,
+			animationDuration: 1500,
+		    animationRule: "linear",
+		    valueBox: false,
+			fontNumbersSize: fontsize,
+		}).draw();
+	}
 };
 
 app.initialize();

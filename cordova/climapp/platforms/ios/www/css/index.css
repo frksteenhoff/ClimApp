@@ -38,16 +38,17 @@ body {
 }
 
 .panel{
-	background: #f3f3f3;
+	background: #ffffff;
 	width: 95%;
 	padding: 0.1em 0.5em;
 	margin: 0.5em auto;
-	border: 1px solid rgba(0, 0, 0, 0.5);
+	border: 1px solid rgba(0, 0, 0, 0.2);
 	box-shadow: 2px 2px rgba(0, 0, 0, 0.2);
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;         /* Opera/IE 8+ */
 }
+
 
 .flexbox-5, .flexbox-2{
     display: -webkit-box;
@@ -68,14 +69,14 @@ body {
 .flexbox-5 div{
 	margin: auto;
 	flex-basis: 18%;
-	text-align: center;
+    text-align: center;
 }
 .flexbox-5 div.button{
 	background: #ffffff;
 	border: 1px solid rgba(0, 0, 0, 0.5);
-	box-shadow: 2px 2px rgba(0, 0, 0, 0.2);
 }
 .flexbox-5 div.selected{
+    color: #ffffff;
     background: #7EBFE5; /* Old browsers */
     background: -moz-linear-gradient(top, #52A5D5 0%, #A1D4F2 100%); /* FF3.6-15 */
     background: -webkit-linear-gradient(top, #52A5D5 0%,#A1D4F2 100%); /* Chrome10-25,Safari5.1-6 */
@@ -99,10 +100,19 @@ body {
 	color: #B02318;
 }
 
+p {
+    margin-left: 0.5em;
+}
+
+button p {
+    margin: 0;
+}
+
 p.label{
 	color: #52A5D5;
 	font-size: 1em;
-	font-weight: bold;
+    font-weight: bold;
+    font-size: 75%;
 }
 p.caption{
 	font-size: 1em;
@@ -143,6 +153,7 @@ p.center{
 }
 .navigation i{
     vertical-align: middle; /* | top | bottom */
+    margin-right: 0.25em;
 }
 
 /* END navigation bar style */
@@ -152,4 +163,82 @@ p.center{
 @media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
     .app {
     }
+}
+
+/* -----------------------------------
+ * Feedback styling
+ * ----------------------------------- */
+.feedbackpanel{
+    text-align: center;
+	width: 95%;
+	padding: 0.1em 0.5em;
+	margin: 0.5em auto;
+}
+
+p.strongtext {
+	color: #000000;
+	font-size: 1em;
+    font-weight: bold;
+}
+    
+p.rating_text {
+	color: #939393;
+	font-size: 1em;
+    font-style: italic;
+    margin-bottom: 2
+    em;
+}
+
+/* Rating - https://jsfiddle.net/leaverou/CGP87/ */
+.rating {
+    width: 70%;
+	padding: 0.1em 0.5em;
+    margin: 0.5em auto;
+    border: 0;
+}
+
+/* :not(:checked) is a filter, so that browsers that don’t support :checked don’t 
+   follow these rules. Every browser that supports :checked also supports :not(), so
+   it doesn’t make the test unnecessarily selective */
+.rating:not(:checked) > input {
+    position:absolute;
+    top:-9999px;
+}
+
+.rating:not(:checked) > label {
+    width:1em;
+    padding:0 .1em;
+    overflow:hidden;
+    white-space:nowrap;
+    cursor:pointer;
+    line-height:1.2;
+    font-size:300%;
+    color:#ddd;
+}
+
+.rating:not(:checked) > label:before {
+    content: '★ ';
+}
+
+.rating > input:checked ~ label {
+    color: #f70;
+}
+
+.rating:not(:checked) > label:hover,
+.rating:not(:checked) > label:hover ~ label {
+    color: gold;
+}
+
+.rating > input:checked + label:hover,
+.rating > input:checked + label:hover ~ label,
+.rating > input:checked ~ label:hover,
+.rating > input:checked ~ label:hover ~ label,
+.rating > label:hover ~ input:checked ~ label {
+    color: #ea0;
+}
+
+.rating > label:active {
+    position:relative;
+    top:2px;
+    left:2px;
 }
