@@ -2,7 +2,8 @@ package com.android.climapp.data;
 
 /**
  * @author frksteenhoff
- * Model class for the ClimApp Weather to be pushed to databas.
+ * Model class for the ClimApp Weather to be pushed to database.
+ * Currently not used in the app
  */
 
 public class Weather {

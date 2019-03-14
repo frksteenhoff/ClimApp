@@ -203,7 +203,6 @@ var app = {
 	loadFeedbackQuestions: function() {
 		feedback = $.getJSON("../data/feedbackQuestions.json", function(result){
 		result = JSON.parse(result);
-			console.log("here ---- " + result.question1.text);
 			self.knowledgeBase.feedback.question1.text = result.question1.text;
 			self.knowledgeBase.feedback.question2.text = result.question2.text;
 			self.knowledgeBase.feedback.question3.text = result.question3.text;
