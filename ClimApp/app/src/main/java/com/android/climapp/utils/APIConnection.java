@@ -265,7 +265,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
         params.put(DB_HUM, Double.toString(humidity));
         params.put(DB_CLOUD, Double.toString(cloudiness));
         params.put(DB_ACTIVITY, mPreferences.getString(ACTIVITY_LEVEL, DEFAULT_ACTIVITY));
-        params.put(DB_ACCLIMATIZATION, Boolean.toString(mPreferences.getBoolean(ACCLIMATIZATION, DEFAULT_ACCLIMATIZATION)));
+
         params.put(DB_TEMP_MIN, Double.toString(temp_min));
         params.put(DB_TEMP_MAX, Double.toString(temp_max));
 
@@ -375,6 +375,7 @@ public class APIConnection extends AsyncTask<String, String, String> {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             try {
+                Log.v("HESTE", "ddddddddddddd" + s);
                 JSONObject object = new JSONObject(s);
                 if (!object.getBoolean("error")) {
                     Log.v("HESTE", object.getString("message"));
