@@ -29,10 +29,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
+import static com.android.climapp.utils.ApplicationConstants.ACCLIMATIZATION;
 import static com.android.climapp.utils.ApplicationConstants.ACTIVITY_LEVEL;
 import static com.android.climapp.utils.ApplicationConstants.CODE_GET_REQUEST;
 import static com.android.climapp.utils.ApplicationConstants.CODE_POST_REQUEST;
+import static com.android.climapp.utils.ApplicationConstants.DB_ACCLIMATIZATION;
 import static com.android.climapp.utils.ApplicationConstants.DB_ACTIVITY;
+import static com.android.climapp.utils.ApplicationConstants.DB_CITY;
 import static com.android.climapp.utils.ApplicationConstants.DB_CLOUD;
 import static com.android.climapp.utils.ApplicationConstants.DB_HUM;
 import static com.android.climapp.utils.ApplicationConstants.DB_ID;
@@ -42,6 +45,7 @@ import static com.android.climapp.utils.ApplicationConstants.DB_TEMP;
 import static com.android.climapp.utils.ApplicationConstants.DB_TEMP_MAX;
 import static com.android.climapp.utils.ApplicationConstants.DB_TEMP_MIN;
 import static com.android.climapp.utils.ApplicationConstants.DB_WIND;
+import static com.android.climapp.utils.ApplicationConstants.DEFAULT_ACCLIMATIZATION;
 import static com.android.climapp.utils.ApplicationConstants.DEFAULT_ACTIVITY;
 import static com.android.climapp.utils.ApplicationConstants.DEFAULT_HEIGHT;
 import static com.android.climapp.utils.ApplicationConstants.DEFAULT_WEIGHT;
@@ -255,11 +259,13 @@ public class APIConnection extends AsyncTask<String, String, String> {
         params.put(DB_ID, mPreferences.getString(GUID, null));
         params.put(DB_LONG, Double.toString(mLongitude));
         params.put(DB_LAT, Double.toString(mLatitude));
+        params.put(DB_CITY, city_name);
         params.put(DB_TEMP, Double.toString(temp_exact));
         params.put(DB_WIND, Double.toString(wind_speed));
         params.put(DB_HUM, Double.toString(humidity));
         params.put(DB_CLOUD, Double.toString(cloudiness));
         params.put(DB_ACTIVITY, mPreferences.getString(ACTIVITY_LEVEL, DEFAULT_ACTIVITY));
+        params.put(DB_ACCLIMATIZATION, Boolean.toString(mPreferences.getBoolean(ACCLIMATIZATION, DEFAULT_ACCLIMATIZATION)));
         params.put(DB_TEMP_MIN, Double.toString(temp_min));
         params.put(DB_TEMP_MAX, Double.toString(temp_max));
 

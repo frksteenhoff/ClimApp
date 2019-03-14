@@ -18,6 +18,7 @@ public final class ApplicationConstants {
     public static final String DEFAULT_HEIGHT = "1.75"; // metres
     public static final int DEFAULT_WEIGHT = 75;        // kilograms
     public static final String DEFAULT_ACTIVITY = "medium";
+    public static final Boolean DEFAULT_ACCLIMATIZATION = false;
 
     // Settings field values
     public static final String ACCLIMATIZATION = "Acclimatization";
@@ -44,11 +45,13 @@ public final class ApplicationConstants {
     // Database fields weather
     public static final String DB_LONG = "longitude";
     public static final String DB_LAT = "latitude";
+    public static final String DB_CITY = "city";
     public static final String DB_TEMP = "temperature";
     public static final String DB_WIND = "wind_speed";
     public static final String DB_HUM = "humidity";
     public static final String DB_CLOUD = "cloudiness";
     public static final String DB_ACTIVITY = "activity_level";
+    public static final String DB_ACCLIMATIZATION = "acclimatization";
     public static final String DB_TEMP_MIN = "temp_min";
     public static final String DB_TEMP_MAX = "temp_max";
 
