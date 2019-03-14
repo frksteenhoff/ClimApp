@@ -266,6 +266,13 @@ public class APIConnection extends AsyncTask<String, String, String> {
         params.put(DB_CLOUD, Double.toString(cloudiness));
         params.put(DB_ACTIVITY, mPreferences.getString(ACTIVITY_LEVEL, DEFAULT_ACTIVITY));
 
+        /* When converting to string we get false/true, but want the integer representation as below */
+        if(mPreferences.getBoolean(ACCLIMATIZATION, DEFAULT_ACCLIMATIZATION)) {
+            params.put(DB_ACCLIMATIZATION, "1");
+        } else {
+            params.put(DB_ACCLIMATIZATION, "0");
+        }
+
         params.put(DB_TEMP_MIN, Double.toString(temp_min));
         params.put(DB_TEMP_MAX, Double.toString(temp_max));
 
