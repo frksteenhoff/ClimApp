@@ -164,8 +164,8 @@ var app = {
 												 }
 								   },
 								  "activity": { "label": {	"LOW-": "Resting, sitting at ease.\nBreathing not challenged.",
-													 		"LOW":"Strolling. Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
-													 		"MEDIUM":"Walking 2.5 - 5.5km/h.Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.",
+													 		"LOW":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
+													 		"MEDIUM":"Walking 2.5 - 5.5km/h. Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.",
 														 	"HIGH":"Intense arm and trunk work: carrying heavy material, shovelling, sawing, hand mowing, concrete block laying.",
 															"HIGH+":"Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs, running on level surface." 
 												},
@@ -204,7 +204,11 @@ var app = {
 									},
 									"gauge":{
 										"cold":{
-											"title": "cold stress level",
+											"title": { 0: "Good",
+													  1: "Cool",
+													  2: "Cold",
+													  3: "Very cold",
+													  4: "Extremely cold!"},
 											"sectors":[{
 												          color : "#00ff00",
 													      lo : 0,
@@ -224,7 +228,11 @@ var app = {
 												        } ],
 											},
 										"heat":{
-											"title":"heat stress level",
+											"title":{ 0: "Good",
+													  1: "Warm",
+													  2: "Hot",
+													  3: "Very hot",
+													  4: "Extremely hot!"},
 											"sectors":[{
 										          color : "#00ff00",
 											      lo : 0,
@@ -515,13 +523,13 @@ var app = {
 		}
 	},
 	drawGauge: function( id, width, value, key ){
-		
+		var title = this.knowledgeBase.gauge[key].title[ Math.floor( value ) ];
 	    var g = new JustGage({
 	      id: id,
 	      value: value,
 	      min: 0,
 	      max: 4,
-	      title: this.knowledgeBase.gauge[key].title,
+	      title: title,
 		  titleFontColor: "#222",
 		  decimals: 1,
 	      customSectors: this.knowledgeBase.gauge[key].sectors,

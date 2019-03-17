@@ -164,8 +164,8 @@ var app = {
 												 }
 								   },
 								  "activity": { "label": {	"LOW-": "Resting, sitting at ease.\nBreathing not challenged.",
-													 		"LOW":"Strolling. Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
-													 		"MEDIUM":"Walking 2.5 - 5.5km/h.Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.",
+													 		"LOW":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
+													 		"MEDIUM":"Walking 2.5 - 5.5km/h. Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.",
 														 	"HIGH":"Intense arm and trunk work: carrying heavy material, shovelling, sawing, hand mowing, concrete block laying.",
 															"HIGH+":"Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs, running on level surface." 
 												},
@@ -204,7 +204,11 @@ var app = {
 									},
 									"gauge":{
 										"cold":{
-											"title": "cold stress level",
+											"title": { 0: "Good",
+													  1: "Cool",
+													  2: "Cold",
+													  3: "Very cold",
+													  4: "Extremely cold!"},
 											"sectors":[{
 												          color : "#00ff00",
 													      lo : 0,
@@ -224,7 +228,11 @@ var app = {
 												        } ],
 											},
 										"heat":{
-											"title":"heat stress level",
+											"title":{ 0: "Good",
+													  1: "Warm",
+													  2: "Hot",
+													  3: "Very hot",
+													  4: "Extremely hot!"},
 											"sectors":[{
 										          color : "#00ff00",
 											      lo : 0,
@@ -244,9 +252,18 @@ var app = {
 										        } ]
 											}
 										
+									},
+									"thresholds":{
+										"ireq":{
+											"icl": 1.0
 										},
+										"phs":{
+											"duration": 120,
+											"sweat":1.0,
+										},
+									},
 									"sim":{
-												"duration": 240, //minutes (required for PHS)
+										"duration": 240, //minutes (required for PHS)
 									}
 								  };
 		//}
@@ -378,7 +395,7 @@ var app = {
 									},
 									cloth:{
 											"Icl": 		0.8, 	//clo
-											"p": 		5, 	// Air permeability (low < 5, medium 50, high > 100 l/m2s)
+											"p": 		50, 	// Air permeability (low < 5, medium 50, high > 100 l/m2s)
 											"im_st": 	0.38, 	// static moisture permeability index
 											"fAref": 	0.54,	// Fraction covered by reflective clothing
 											"Fr": 		0.97,	// Emissivity reflective clothing
@@ -400,6 +417,9 @@ var app = {
 			this.knowledgeBase.thermalindices.ireq.DLEminimal = ireq.DLEminimal;
 		
 			//PHS
+			if( ireq.ICLminimal > 1.0){
+				options.cloth.Icl = ireq.ICLminimal;
+			}
 			heatindex.PHS.set_options( options );
 			heatindex.PHS.sim_init();
 			
@@ -443,36 +463,42 @@ var app = {
 			sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
 			let tip_html = "";
 			
-			let draw_cold_gauge = false;
-			let draw_heat_gauge = false;
 			
 			let cold_index = icl_min;
 			let heat_index = this.knowledgeBase.thermalindices.wbgt.risk();
 			
-			if( icl_min > 1 ){
+			let draw_cold_gauge = cold_index > heat_index;
+			let draw_heat_gauge = !draw_cold_gauge;
+			
+			let icl_min_threshold = this.knowledgeBase.thresholds.ireq.icl;
+			let duration_threshold = this.knowledgeBase.thresholds.phs.duration;
+			let sweat_threshold = this.knowledgeBase.thresholds.phs.sweat;
+			
+			if( icl_min > icl_min_threshold ){
 				//this.drawGauge( 'main_gauge', width, icl_min , "cold stress level" );
 				tip_html += "<p><span class='score'>"+dle_min+"</span> minutes before low body temperature.</p>";
-				draw_cold_gauge = true;
 			}
-			if( d_tre < 120 ){
+			if( icl_min > icl_min_threshold 
+				&& 
+				( d_tre < duration_threshold || d_sw < duration_threshold ) ){
+				tip_html += "<p class='label'>Implication when adjusting clothing appropriatly to cold.</p>";
+			}
+			if( d_tre < duration_threshold ){
 				//this.drawGauge( 'main_gauge', width, icl_min , "heat stress level" );
 				tip_html += "<p><span class='score'>"+d_tre+"</span> minutes before high body temperature.</p>";
-				draw_heat_gauge = true;
 			}
-			if( d_sw < 120 ){
+			if( d_sw < duration_threshold ){
 				//this.drawGauge( 'main_gauge', width, icl_min , "heat stress level" );
 				tip_html += "<p>Risk for severe dehydration in <span class='score'>"+d_sw+"</span> minutes.</p>";
-				draw_heat_gauge = true;
 			}
-			if( sw_tot_per_hour >= 1 ){
+			if( sw_tot_per_hour >= sweat_threshold ){
 				//
 				tip_html += "<p><span class='score'>"+sw_tot_per_hour+"</span> liter sweat loss per hour.</p>";
-				draw_heat_gauge = true;
 			}
 			
 			let width = $( window ).width() / 1.67;
 			$("#main_gauge").width( width );
-			$("#main_gauge").html("");
+			$("#main_gauge").html("");//clear gauge
 			
 			if( draw_cold_gauge ){
 				this.drawGauge( 'main_gauge', width, cold_index , "cold" );
@@ -480,7 +506,7 @@ var app = {
 			else if( draw_heat_gauge ){
 				this.drawGauge( 'main_gauge', width, heat_index , "heat" );
 			}
-			else {
+			else { //unreachable as long as draw_cold_gauge | draw_heat_gauge = true.
 				tip_html += "<p>No significant thermal stress expected.</p>";
 				$("#main_gauge").html( "<p class='label'>no thermal stress</p>");
 			}
@@ -497,13 +523,13 @@ var app = {
 		}
 	},
 	drawGauge: function( id, width, value, key ){
-		
+		var title = this.knowledgeBase.gauge[key].title[ Math.floor( value ) ];
 	    var g = new JustGage({
 	      id: id,
 	      value: value,
 	      min: 0,
 	      max: 4,
-	      title: this.knowledgeBase.gauge[key].title,
+	      title: title,
 		  titleFontColor: "#222",
 		  decimals: 1,
 	      customSectors: this.knowledgeBase.gauge[key].sectors,
