@@ -236,6 +236,7 @@ input#feedback_text {
   
 .submit_button div {
     margin: auto;
+    margin-bottom: 2em;
     text-align: center;
 }
 

@@ -77,6 +77,7 @@ var app = {
 	},
 	initFeedbackListeners: function() {
 		var self = this;
+		// When user rates the feedback questions
 		$("input[data-listener='feedback']").off(); //prevent multiple instances of listeners on same object
 		$("input[data-listener='feedback']").on("click", function(){
 			var target = $(this).attr("data-target");
@@ -94,7 +95,25 @@ var app = {
 
 			$( "input[data-listener='feedback']" ).removeClass( "checked" );
 			self.updateUI();
-		});	
+		});
+		
+		// When user submits feedback, add to object to send to db + reset values
+		$("button[data-listener='submit']").on("click", function(){
+			var target = $("#feedback_text").val();
+			var feedback = {
+				rating1: self.knowledgeBase.feedback.question1.rating,
+				rating2: self.knowledgeBase.feedback.question1.rating,
+				rating3: self.knowledgeBase.feedback.question1.rating,
+				comment: target
+			}
+			// reset values
+			$('#feedback_text').val("");
+			
+			// send values to database
+			self.sendFeedbackToDatabase(feedback);
+			self.showSubmitSucceedToast();
+			self.updateUI();
+		});
 	},
 	initSettingsListeners: function(){
 		var self = this;
@@ -118,8 +137,12 @@ var app = {
 			}, function() {
 			    console.log('Canceled');
 			});
-			
 		});		
+
+		$("div[data-listener='feedback_page']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='feedback_page']").on("click", function(){
+			self.loadUI('feedback');
+		});
 	},
 	initActivityListeners: function(){
 		var self = this;
@@ -188,7 +211,8 @@ var app = {
       												    "3": "Normal",
     											        "4": "Higher than expected",
    												        "5": "Much higher than expected"
-													}
+													},
+													"comment": "",
 												}, 
 												"question2": {
 													"text": "Did you take more breaks today than you expected?",
@@ -200,7 +224,8 @@ var app = {
 														"3": "Normal",
 														"4": "More exhausted than usual",
 														"5": "A lot more exhausted than usual"
-													}
+													},
+													"comment": "",
 												},
 												"question3": {
 													"text": "How would you evaluate the amount of clothing you wore today?",
@@ -212,15 +237,16 @@ var app = {
 														"3": "I wore the right amount of clothing",
 														"4": "A little too much clothing",
 														"5": "A lot more than needed"
-													}
+													},
+													"comment": "",
 												}
 										}			
 								  };
 		//}
 	},
 	/* In the future this should be used to fetch the needed question from the database
-	   Currently working with static content, just for proof of concept. 
-	loadFeedbackQuestions: function() {
+	   Currently working with static content, just for proof of concept. */
+	/*loadFeedbackQuestions: function() {
 		feedback = $.getJSON("../data/feedbackQuestions.json", function(result){
 		result = JSON.parse(result);
 			self.knowledgeBase.feedback.question1.text = result.question1.text;
@@ -308,6 +334,15 @@ var app = {
 	   				   self.saveSettings();
 	   				   self.updateUI();
 			});
+		}
+		// Schedule a notification if weather conditions are out of the ordinary
+		// functionality will be extended to handle more complex scenarios - only when not in browser
+		if(device.platform != 'browser') {
+			var threshold = 0;
+			if(self.knowledgeBase.weather.wbgt > threshold) {
+				self.scheduleDefaultNotification();
+				console.log("Notification scheduled");
+			}
 		}
 	},
 	loadUI: function( pageid ){
@@ -452,6 +487,36 @@ var app = {
 		    valueBox: false,
 			fontNumbersSize: fontsize,
 		}).draw();
+	}, 
+	scheduleDefaultNotification: function() {
+		// Scheduling a notification 1 minute from time it opens
+		cordova.plugins.notification.local.schedule({
+			title: 'Feedback',
+			text: 'Ready to give some feedback?',
+			trigger: { in: 1, unit: 'minute' },
+			actions: [
+				{ id: 'positive', title: 'Yes' },
+				{ id: 'negative',  title: 'No' }
+			]
+		});	
+	},
+	sendFeedbackToDatabase: function(feedback){
+		// TODO: implement logic to add to database
+		console.log('data for database: ' + Object.keys(feedback));
+	}, 
+	showSubmitSucceedToast: function(){
+		if(device.platform != 'browser') {
+			window.plugins.toast.showWithOptions(
+			{
+				message: "Feedback submitted!",
+				duration: "short", // 2000 ms
+				position: "bottom",
+				addPixelsY: -40  // giving a margin at the bottom by moving text up
+			},
+			onSuccess, // optional
+			onError    // optional
+			);
+		}
 	}
 };
 

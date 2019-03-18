@@ -188,13 +188,15 @@ p.rating_text {
 .rating {
     width: 100%;
     border: 0;
-    font-size: 200%;
-    position: relative; /*Add this*/
-    transform:translate(-35%,0); /*Add this*/
+    font-size: 400%;
+    padding: 0;
+    padding-top: 1em;
+    left: 80%;
+    transform: translate(-30%, -40%);
 }
 
 .rating:not(:checked) > label:before {
-    content: '★ ';
+    content: '• ';
 }
 
 .rating > input { display: none; } 
@@ -234,6 +236,7 @@ input#feedback_text {
   
 .submit_button div {
     margin: auto;
+    margin-bottom: 2em;
     text-align: center;
 }
 

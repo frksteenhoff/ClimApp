@@ -1,27 +1,34 @@
 {
-    "prepare_queue": {
-        "installed": [],
-        "uninstalled": []
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "com.climapp.app"
     },
-    "config_munge": {
-        "files": {}
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "com.climapp.app"
     },
-    "installed_plugins": {
-        "cordova-plugin-device": {
-            "PACKAGE_NAME": "com.climapp.app"
-        },
-        "cordova-plugin-geolocation": {
-            "PACKAGE_NAME": "com.climapp.app"
-        },
-        "cordova-plugin-splashscreen": {
-            "PACKAGE_NAME": "com.climapp.app"
-        },
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.climapp.app"
-        },
-        "cordova-wheel-selector-plugin": {
-            "PACKAGE_NAME": "com.climapp.app"
-        }
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "com.climapp.app"
     },
-    "dependent_plugins": {}
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.climapp.app"
+    },
+    "cordova-wheel-selector-plugin": {
+      "PACKAGE_NAME": "com.climapp.app"
+    },
+    "de.appplant.cordova.plugin.local-notification": {
+      "PACKAGE_NAME": "com.climapp.app"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-app-event": {
+      "PACKAGE_NAME": "com.climapp.app"
+    }
+  }
 }
