@@ -24,7 +24,7 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    background: url("../img/background.jpg");
+    background: url("../img/backgrounds/rain.jpg");
      background-repeat: no-repeat;
      background-size: auto;
     font-family: Arial, sans-serif;
@@ -48,7 +48,7 @@ canvas{
 }
 
 .panel{
-	background: rgba(255,255,255,0.4);
+	background: rgba(255,255,255,0.8);
 	width: 100%;
 	padding: 0.1em 0.5em;
 	margin: 0.5em auto;
@@ -86,9 +86,13 @@ canvas{
 }
 .flexbox-5 div.button{
 	background: #ffffff;
+    background: -moz-linear-gradient(top, #ddd 0%, #fff 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, #ddd 0%,#fff 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #ddd 0%,#fff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 	padding: 0.2em;
-	border: 1px solid rgba(0, 0, 0, 0.5);
-	box-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+	border-radius: 2px;
+	border: 1px solid rgba(200, 200, 200, 0.5);
+	box-shadow: 2px 2px rgba(155, 155, 155, 0.2);
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;         /* Opera/IE 8+ */
@@ -96,8 +100,9 @@ canvas{
 
 .flexbox-5 div.selected{
     background: #7EBFE5; /* Old browsers */
-	border: 1px solid rgba(0.7, 0.7, 0.7, 0.9);
-	box-shadow: 2px 2px rgba(0.8, 0.8, 0.8, 0.2);
+    background: -moz-linear-gradient(top, #7EBFE5 0%, #A1D4F2 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, #7EBFE5 0%,#A1D4F2 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #7EBFE5 0%,#A1D4F2 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 }
 
 .cold{
@@ -153,7 +158,7 @@ img.small{
 /* BEGIN navigation bar style*/
 .navigation {
   margin: 0; 
-  background: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.8);
   /*background: #7EBFE5; /* Old browsers */
   /*background: -moz-linear-gradient(top, #52A5D5 0%, #A1D4F2 100%); /* FF3.6-15 */
   /*background: -webkit-linear-gradient(top, #52A5D5 0%,#A1D4F2 100%); /* Chrome10-25,Safari5.1-6 */

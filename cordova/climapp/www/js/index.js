@@ -54,12 +54,12 @@ var app = {
     receivedEvent: function(id) {
 		this.initListeners();
 		this.loadSettings();
-		this.loadUI( "dashboard" );
-		
+		if( this.knowledgeBase.isFirstUse ){//onboarding
+			this.loadUI( "onboarding" );
+		}else{
+			this.loadUI( "dashboard" );
+		}
 		this.updateLocation();
-		
-		//
-		
     },
 	initListeners: function(){
 		// navigation menu
@@ -120,14 +120,16 @@ var app = {
 	},
 	loadSettings: function(){
 		this.pageMap = { "dashboard": "./pages/dashboard.html",
-						 "settings": "./pages/settings.html" };
+						 "settings": "./pages/settings.html",
+		 				 "onboarding": "./pages/onboarding.html"};
 		
 		//if ( localStorage.getItem("knowledgebase") !== null) {
 		//	this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
 		//}
 		//else{
 			var self = this;
-			this.knowledgeBase = { "position": { "lat": 0, 
+			this.knowledgeBase = { "isFirstUse": true,
+								   "position": { "lat": 0, 
 												 "lng": 0, 
 												 "timestamp": "" },
 								   "weather": {	"station": "",
@@ -160,7 +162,7 @@ var app = {
 												 "M": function(){ //W/m2
 													 let ISO_selected = self.knowledgeBase.activity.selected;
 												 	 let ISO_level = self.knowledgeBase.activity.values[ ISO_selected ];
-													 return 50 * (ISO_level + 1);
+													 return 50 * (ISO_level);
 												 }
 								   },
 								  "activity": { "label": {	"LOW-": "Resting, sitting at ease.\nBreathing not challenged.",
@@ -169,37 +171,53 @@ var app = {
 														 	"HIGH":"Intense arm and trunk work: carrying heavy material, shovelling, sawing, hand mowing, concrete block laying.",
 															"HIGH+":"Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs, running on level surface." 
 												},
-												"values": { "LOW-": 0, //ISO 8896
-															"LOW": 1,
-															"MEDIUM": 2,
-															"HIGH": 3,
-															"HIGH+": 4
+												"values": { "LOW-": 1, //ISO 8896
+															"LOW": 2,
+															"MEDIUM": 3,
+															"HIGH": 4,
+															"HIGH+": 5
 												},	
 												"selected": "LOW",	
 									},
 									"thermalindices":	{ 
-												"ireq":{ "ICLminimal":0.0,
-							  						   "ICLneutral": 0.0,
-									 				   "DLEneutral": 0.0,
-														"DLEminimal": 0.0
-														
-												},
-											  	"phs": { "D_Tre" : 0.0,
+												"ireq":[{ 	"ICLminimal":0.0,//array of objects
+							  						    	"ICLneutral": 0.0,
+									 				    	"DLEneutral": 0.0,
+															"DLEminimal": 0.0,
+															"utc":"2019/12/31 00:00:00",
+												}],
+											  	"phs": [{ "D_Tre" : 0.0,//array of objects
 													   	 "Dwl50": 0.0,
-													   	 "SWtotg": 0.0
-											  	},
+													   	 "SWtotg": 0.0,
+													     "utc":"2019/12/31 00:00:00",
+											  	}],
 												"wbgt": { "RAL" : function(){
 																		let M = self.knowledgeBase.settings.M(); //W/m2
 																		let BSA = self.knowledgeBase.settings.BSA(); //m2
 																		let watt = M * BSA;
 																		return 59.9 - 14.1 * Math.log10( watt );
 																	},
-														"risk" : function(){ 
+														"risk" : function( wbgt ){ //wbgt from weather report
 																		let RAL = self.knowledgeBase.thermalindices.wbgt.RAL();
-																		let wbgt = self.knowledgeBase.weather.wbgt[0];
 																		let risk = wbgt / RAL; 
 																		return 3 * ( ( risk ) / 1.2 ); //scale >1.2 to >3 for visualisation
 																	}
+												},
+												"windchill":{ 
+													"risk": function( windchill ){ //returns time before frostbite in minutes
+														if( windchill <-50 ){
+															return 2;
+														}
+														else if( windchill < -40 ){
+															return 10;
+														}
+														else if( windchill < -20 ){
+															return 30;
+														}
+														else if( windchill < -15 ){
+															return 60;
+														}
+													}
 												}
 									},
 									"gauge":{
@@ -293,8 +311,6 @@ var app = {
 	},
 	saveSettings: function(){
 		let jsonData = JSON.stringify( this.knowledgeBase );
-		//console.log( "saving settings: " + jsonData );
-		
 		localStorage.setItem("knowledgebase", jsonData );
 	},
 	updateLocation: function(){
@@ -333,11 +349,14 @@ var app = {
 				   function( output ){//on success
 					   try{
 					   	   let weather = JSON.parse( output );
-						   console.log( JSON.stringify( weather ));
 						   self.knowledgeBase.weather.station = weather.station;
 						   self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
 						   self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
-					   
+					   	   self.knowledgeBase.weather.utc = self.knowledgeBase.weather.utc.map( function(val){
+							   	let str = val.replace(/-/g,"/");
+								str += " UTC";
+								return str;
+					   	   });
 						   self.knowledgeBase.weather.lat = weather.lat;
 						   self.knowledgeBase.weather.lng = weather.lon;
 						   self.knowledgeBase.weather.wbgt = weather.wbgt_max.map(Number);
@@ -352,9 +371,12 @@ var app = {
 								   let wvp = ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
 								   self.knowledgeBase.weather.watervapourpressure.push( wvp );	
 						   }); 
-						   self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
+						   self.knowledgeBase.weather.windspeed = weather.vair.map(Number).map( function( v ){
+							   return Math.pow( v, 0.16 );
+						   } );
+						   
 						   self.knowledgeBase.weather.radiation = weather.solar.map(Number);
-					   	   //console.log( "succes weather " + JSON.stringify( self.knowledgeBase.weather ));
+					   	   console.log( "succes weather " + JSON.stringify( self.knowledgeBase.weather ));
 		   				   self.saveSettings();
 						   self.calcThermalIndices();
 		   				   self.updateUI();
@@ -374,15 +396,17 @@ var app = {
 			self.updateUI();
 		})
 	},
-	calcThermalIndices: function(){
-		
+	calcThermalIndices: function( ){
+		this.knowledgeBase.thermalindices.ireq = [];
+		this.knowledgeBase.thermalindices.phs = [];
+			var index = 0; //
 			//ireq
 			var options =  {	air:{
-											"Tair": this.knowledgeBase.weather.temperature[0], 	//C
-											"rh": 	this.knowledgeBase.weather.humidity[0], 	//% relative humidity
-											"Pw_air": this.knowledgeBase.weather.watervapourpressure[0],   //kPa partial water vapour pressure
-											"Trad": this.knowledgeBase.weather.globetemperature[0], 	//C mean radiant temperature
-											"v_air": Math.pow( this.knowledgeBase.weather.windspeed[0], 0.16 ), 	//m/s air velocity at ground level
+											"Tair": this.knowledgeBase.weather.temperature[index], 	//C
+											"rh": 	this.knowledgeBase.weather.humidity[index], 	//% relative humidity
+											"Pw_air": this.knowledgeBase.weather.watervapourpressure[index],   //kPa partial water vapour pressure
+											"Trad": this.knowledgeBase.weather.globetemperature[index], 	//C mean radiant temperature
+											"v_air": this.knowledgeBase.weather.windspeed[index], 	//m/s air velocity at ground level
 									},
 									body:{
 											"M": this.knowledgeBase.settings.M(), 	//W/m2 
@@ -413,13 +437,15 @@ var app = {
 			heatindex.IREQ.sim_run();
 		
 			var ireq = heatindex.IREQ.current_result();
-			this.knowledgeBase.thermalindices.ireq.ICLminimal= ireq.ICLminimal;
-			this.knowledgeBase.thermalindices.ireq.DLEminimal = ireq.DLEminimal;
-		
-			//PHS
-			if( ireq.ICLminimal > 1.0){
-				options.cloth.Icl = ireq.ICLminimal;
-			}
+			var ireq_object = {
+				"ICLminimal": ireq.ICLminimal,
+				"DLEminimal": ireq.DLEminimal,
+				"ICLneutral": ireq.ICLneutral,
+				"DLEneutral": ireq.DLEneutral,
+				"utc": this.knowledgeBase.weather.utc[index],
+			};
+			this.knowledgeBase.thermalindices.ireq.push( ireq_object );
+			
 			heatindex.PHS.set_options( options );
 			heatindex.PHS.sim_init();
 			
@@ -428,16 +454,22 @@ var app = {
 				var res = heatindex.PHS.time_step();
 			}
 			var phs = heatindex.PHS.current_result();
-			this.knowledgeBase.thermalindices.phs.D_Tre = phs.D_Tre;
-			this.knowledgeBase.thermalindices.phs.Dwl50 = phs.Dwl50;
-			this.knowledgeBase.thermalindices.phs.SWtotg = phs.SWtotg;	
+			var phs_object = {
+				"D_Tre": phs.D_Tre,
+				"Dwl50": phs.Dwl50,
+				"SWtotg": phs.SWtotg,
+				"utc": this.knowledgeBase.weather.utc[index],
+			};
+			this.knowledgeBase.thermalindices.phs.push( phs_object );
 	},
 	updateUI: function(){
 		// context dependent filling of content
 		if( this.currentPageID == "dashboard" ){
 			if( 'weather' in this.knowledgeBase && this.knowledgeBase.weather.station !== "" ){
 				let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
-				$("#current_time").html( this.knowledgeBase.weather.utc[0] );
+				let local_date = new Date( this.knowledgeBase.weather.utc[0] ); //
+				
+				$("#current_time").html( local_date.toLocaleString() );
 				$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
 				$("#temperature").html( parseFloat( this.knowledgeBase.weather.temperature[0] ).toFixed(0) );
 				$("#windspeed").html( parseFloat( this.knowledgeBase.weather.windspeed[0] ).toFixed(0) );
@@ -453,19 +485,18 @@ var app = {
 			$("#activityCaption").html( caption_ );
 			
 			
-			let icl_min = this.knowledgeBase.thermalindices.ireq.ICLminimal;
-			let dle_min = 60 * this.knowledgeBase.thermalindices.ireq.DLEminimal;
+			let icl_min = this.knowledgeBase.thermalindices.ireq[0].ICLminimal;
+			let dle_min = 60 * this.knowledgeBase.thermalindices.ireq[0].DLEminimal;
 			dle_min = dle_min.toFixed(0);
-			let d_tre = this.knowledgeBase.thermalindices.phs.D_Tre;
-			let d_sw = this.knowledgeBase.thermalindices.phs.Dwl50;
-			let sw_tot_per_hour = 0.001 * 60 * this.knowledgeBase.thermalindices.phs.SWtotg / 
+			let d_tre = this.knowledgeBase.thermalindices.phs[0].D_Tre;
+			let d_sw = this.knowledgeBase.thermalindices.phs[0].Dwl50;
+			let sw_tot_per_hour = 0.001 * 60 * this.knowledgeBase.thermalindices.phs[0].SWtotg / 
 			(this.knowledgeBase.sim.duration ); //liter per hour
 			sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
-			let tip_html = "";
 			
 			
 			let cold_index = icl_min;
-			let heat_index = this.knowledgeBase.thermalindices.wbgt.risk();
+			let heat_index = this.knowledgeBase.thermalindices.wbgt.risk( this.knowledgeBase.weather.wbgt[0] );
 			
 			let draw_cold_gauge = cold_index > heat_index;
 			let draw_heat_gauge = !draw_cold_gauge;
@@ -474,15 +505,20 @@ var app = {
 			let duration_threshold = this.knowledgeBase.thresholds.phs.duration;
 			let sweat_threshold = this.knowledgeBase.thresholds.phs.sweat;
 			
+			let tip_html = "";
+			
 			if( icl_min > icl_min_threshold ){
 				//this.drawGauge( 'main_gauge', width, icl_min , "cold stress level" );
 				tip_html += "<p><span class='score'>"+dle_min+"</span> minutes before low body temperature.</p>";
 			}
+			/* 
+			// requires phs to be calculated with ireqmin
 			if( icl_min > icl_min_threshold 
 				&& 
 				( d_tre < duration_threshold || d_sw < duration_threshold ) ){
 				tip_html += "<p class='label'>Implication when adjusting clothing appropriatly to cold.</p>";
 			}
+			*/
 			if( d_tre < duration_threshold ){
 				//this.drawGauge( 'main_gauge', width, icl_min , "heat stress level" );
 				tip_html += "<p><span class='score'>"+d_tre+"</span> minutes before high body temperature.</p>";
@@ -496,6 +532,9 @@ var app = {
 				tip_html += "<p><span class='score'>"+sw_tot_per_hour+"</span> liter sweat loss per hour.</p>";
 			}
 			
+			if( tip_html === ""){
+				tip_html += "<p>No significant thermal stress expected.</p>";
+			}
 			let width = $( window ).width() / 1.67;
 			$("#main_gauge").width( width );
 			$("#main_gauge").html("");//clear gauge
@@ -505,10 +544,6 @@ var app = {
 			}
 			else if( draw_heat_gauge ){
 				this.drawGauge( 'main_gauge', width, heat_index , "heat" );
-			}
-			else { //unreachable as long as draw_cold_gauge | draw_heat_gauge = true.
-				tip_html += "<p>No significant thermal stress expected.</p>";
-				$("#main_gauge").html( "<p class='label'>no thermal stress</p>");
 			}
 			
 			$("#tips").html( tip_html );
@@ -531,93 +566,11 @@ var app = {
 	      max: 4,
 	      title: title,
 		  titleFontColor: "#222",
+		  gaugeColor: "rgba(80,80,80,0.5)",
 		  decimals: 1,
 	      customSectors: this.knowledgeBase.gauge[key].sectors,
 	      counter: true
 	    });
-		/*
-		var gauge = new RadialGauge({
-		    renderTo: id,
-		    width: width,
-		    height: width,
-			value: value,
-			units: "",
-		    title: "",
-    		ticksAngle: 270,
-		    startAngle: 45,
-		    minValue: -4,
-		    maxValue: 4,
-		    majorTicks: [
-		        -4,
-		        -3,
-		        -2,
-		        -1,
-		        0,
-		        1,
-		        2,
-		        3,
-		        4
-		    ],
-		    minorTicks: 0,
-		    strokeTicks: false,
-		    highlights: [
-		        {
-		            "from": -4,
-		            "to": -3,
-		            "color": "rgba(0, 0, 255, 1.0)"
-		        },
-		        {
-		            "from": -3,
-		            "to": -2,
-		            "color": "rgba(0, 128, 255, 1.0)"
-		        },
-		        {
-		            "from": -2,
-		            "to": -1,
-		            "color": "rgba(0, 255, 255, 1.0)"
-		        },
-		        {
-		            "from": -1,
-		            "to": 1,
-		            "color": "rgba(0, 255, 0, 1.0)"
-		        },
-		        {
-		            "from": 1,
-		            "to": 2,
-		            "color": "rgba(255, 255, 0, 1.0)"
-		        },
-		        {
-		            "from": 2,
-		            "to": 3,
-		            "color": "rgba(255, 128, 0, 1.0)"
-		        },
-		        {
-		            "from": 3,
-		            "to": 4,
-		            "color": "rgba(255, 0, 0, 1.0)"
-		        }
-		    ],
-    		colorPlate: '#fff',
-    		colorPlateEnd: '#f3f3f3',
-			borderShadowWidth: 0,
-		    borders: false,
-		    needleType: "arrow",
-		    needleWidth: 5,
-			needleShadow: false,
-			colorNeedle: "#f00",
-			colorNeedleEnd: "#000",
-		    needleCircleSize: 7,
-		    needleCircleOuter: false,
-		    needleCircleInner: false,
-			animationDuration: 1500,
-		    animationRule: "linear",
-		    valueBox: false,
-			fontNumbersSize: fontsize,
-			valueBoxBorderRadius: 0,
-		    colorValueBoxRect: "#fff",
-		    colorValueBoxRectEnd: "#ccc",
-		}).draw();
-		*/
 	}
 	
 	
