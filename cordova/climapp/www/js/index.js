@@ -139,8 +139,8 @@ var app = {
 			});
 		});		
 
-		$("div[data-listener='navbar']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='navbar']").on("click", function(){
+		$("div[data-listener='feedback_page']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='feedback_page']").on("click", function(){
 			self.loadUI('feedback');
 		});
 	},
