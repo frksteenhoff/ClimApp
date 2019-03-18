@@ -54,7 +54,7 @@ var app = {
     receivedEvent: function(id) {
 		this.initListeners();
 		this.loadSettings();
-		this.loadFeedbackQuestions();
+		//this.loadFeedbackQuestions();
 		this.loadUI( "dashboard" );
 		
 		this.updateLocation();
@@ -77,6 +77,24 @@ var app = {
 	},
 	initFeedbackListeners: function() {
 		var self = this;
+		$("input[data-listener='feedback']").off(); //prevent multiple instances of listeners on same object
+		$("input[data-listener='feedback']").on("click", function(){
+			var target = $(this).attr("data-target");
+			
+			// Updating rating bar using first char in ID
+			var rating_id = $(this).attr("id")[0];
+
+			if(rating_id === '1') {
+				self.knowledgeBase.feedback.question1.rating = target;
+			} else if(rating_id === '2') {
+				self.knowledgeBase.feedback.question2.rating = target;
+			} else {
+				self.knowledgeBase.feedback.question3.rating = target;
+			}
+
+			$( "input[data-listener='feedback']" ).removeClass( "checked" );
+			self.updateUI();
+		});	
 	},
 	initSettingsListeners: function(){
 		var self = this;
@@ -162,7 +180,7 @@ var app = {
 											},
 									"feedback": { "question1": { 
 													"text": "How were your drinking needs?",
-													"rating": 3,
+													"rating": 3, 
 													"ratingtype": "ratingbar",
 													"ratingtext": {
 														"1": "Much lower than expected",
@@ -186,7 +204,7 @@ var app = {
 												},
 												"question3": {
 													"text": "How would you evaluate the amount of clothing you wore today?",
-													"rating": 3,
+													"rating": 3, 
 													"ratingtype": "ratingbar",
 													"ratingtext": {
 														"1": "Much less than needed",
@@ -200,6 +218,8 @@ var app = {
 								  };
 		//}
 	},
+	/* In the future this should be used to fetch the needed question from the database
+	   Currently working with static content, just for proof of concept. 
 	loadFeedbackQuestions: function() {
 		feedback = $.getJSON("../data/feedbackQuestions.json", function(result){
 		result = JSON.parse(result);
@@ -208,7 +228,7 @@ var app = {
 			self.knowledgeBase.feedback.question3.text = result.question3.text;
 		});
 		// Implement logic to handle different types of rating bars
-	},
+	},*/
 	getSelectables: function( key ){
 		var obj_array = [];
 		if( key === "age" ){
@@ -342,7 +362,12 @@ var app = {
 			$("#question2").html( this.knowledgeBase.feedback.question2.text );
 			$("#question3").html( this.knowledgeBase.feedback.question3.text );
 
-			// Rating text + rating bar values
+			// Rating bar values -- still not setting the default color..
+			$("input[id='1star"+this.knowledgeBase.feedback.question1.rating+"']").addClass("checked");
+			$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").addClass("checked");
+			$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").addClass("checked");
+			
+			// Rating text 
 			$("#ratingtext1").html( this.knowledgeBase.feedback.question1.ratingtext[this.knowledgeBase.feedback.question1.rating] );
 			$("#ratingtext2").html( this.knowledgeBase.feedback.question2.ratingtext[this.knowledgeBase.feedback.question2.rating] );
 			$("#ratingtext3").html( this.knowledgeBase.feedback.question3.ratingtext[this.knowledgeBase.feedback.question3.rating] );

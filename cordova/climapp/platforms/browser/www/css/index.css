@@ -189,7 +189,7 @@ p.rating_text {
     width: 100%;
     border: 0;
     font-size: 200%;
-    position:relative; /*Add this*/
+    position: relative; /*Add this*/
     transform:translate(-35%,0); /*Add this*/
 }
 
@@ -210,7 +210,7 @@ p.rating_text {
     color: #ddd; 
     float: right; 
   }
-  
+
 /***** CSS Magic to Highlight Stars on Hover *****/
   
 .rating > input:checked ~ label, /* show gold star when clicked */
@@ -221,7 +221,6 @@ p.rating_text {
 .rating > input:checked ~ label:hover,
 .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
 .rating > input:checked ~ label:hover ~ label { color: #FFED85;  } 
-
 
 input#feedback_text {
     margin-top: 1em;
