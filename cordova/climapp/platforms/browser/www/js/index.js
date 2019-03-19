@@ -92,8 +92,8 @@ var app = {
 			} else {
 				self.knowledgeBase.feedback.question3.rating = target;
 			}
-
 			$( "input[data-listener='feedback']" ).removeClass( "checked" );
+			self.updateUI();
 		});
 		
 		// When user submits feedback, add to object to send to db + reset values
