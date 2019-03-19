@@ -188,7 +188,7 @@ p.rating_text {
 .rating {
     width: 100%;
     border: 0;
-    font-size: 400%;
+    font-size: 200%;
     padding: 0;
     padding-top: 1em;
     left: 80%;
@@ -196,16 +196,17 @@ p.rating_text {
 }
 
 .rating:not(:checked) > label:before {
-    content: '• ';
+    font-family: "Font Awesome 5 Free";
+    content: "\f111";
 }
 
 .rating > input { display: none; } 
 .rating > label:before { 
     margin: 5px;
     font-size: 1.25em;
-    font-family: FontAwesome;
+    font-family: "Font Awesome 5 Free";
     display: inline-block;
-    content: "\f005";
+    content: "\f111";
   }
   
 .rating > label { 
