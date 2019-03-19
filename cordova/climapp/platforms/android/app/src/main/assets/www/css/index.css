@@ -164,39 +164,45 @@ p.center{
  * Feedback styling
  * ----------------------------------- */
 .feedbackpanel{
-    text-align: center;
+    display: block;
+    justify-content: center;
+    align-items: center;
 	width: 95%;
 	padding: 0.1em 0.5em;
 	margin: 0.5em auto;
 }
 
 p.strongtext {
+    text-align: center;
 	color: #000000;
 	font-size: 1em;
     font-weight: bold;
 }
     
 p.rating_text {
+    text-align: center;
 	color: #939393;
 	font-size: 1em;
     font-style: italic;
     margin-bottom: 1em;
+    margin-top: 6em;
 }
 
 /* Rating - https://jsfiddle.net/leaverou/CGP87/https://codepen.io/jamesbarnett/pen/vlpkh?editors=1100 */
 
 .rating {
-    width: 100%;
+    margin-top: 1.5em;
+    position: absolute;
     border: 0;
     font-size: 200%;
     padding: 0;
-    padding-top: 1em;
-    left: 80%;
-    transform: translate(-30%, -40%);
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .rating:not(:checked) > label:before {
     font-family: "Font Awesome 5 Free";
+    display: inlinemblock;
     content: "\f111";
 }
 
@@ -226,8 +232,10 @@ p.rating_text {
 .rating > input:checked ~ label:hover ~ label { color: #FFED85;  } 
 
 input#feedback_text {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
     margin-top: 1em;
-    margin-bottom: 2em;
     width: 70%;
     border: 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.2);
@@ -238,10 +246,12 @@ input#feedback_text {
 .submit_button div {
     margin: auto;
     margin-bottom: 2em;
-    text-align: center;
 }
 
 .submit_button .button {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
     padding-top: 1em;
     padding-bottom: 1em;
     width: 40%;
@@ -250,6 +260,7 @@ input#feedback_text {
     border: 1px solid rgba(0, 0, 0, 0.2);
     box-shadow: 2px 2px rgba(0, 0, 0, 0.2);
     color: #ffffff;
+    margin-top: 3em;
 }
 
 .button:active {
