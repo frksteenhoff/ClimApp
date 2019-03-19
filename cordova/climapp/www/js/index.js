@@ -94,7 +94,6 @@ var app = {
 			}
 
 			$( "input[data-listener='feedback']" ).removeClass( "checked" );
-			self.updateUI();
 		});
 		
 		// When user submits feedback, add to object to send to db + reset values
@@ -112,7 +111,6 @@ var app = {
 			// send values to database
 			self.sendFeedbackToDatabase(feedback);
 			self.showSubmitSucceedToast();
-			self.updateUI();
 		});
 	},
 	initSettingsListeners: function(){
@@ -240,7 +238,10 @@ var app = {
 													},
 													"comment": "",
 												}
-										}			
+										},
+									"user_info": {
+										"firstLogin": true
+									}	
 								  };
 		//}
 	},
@@ -253,6 +254,7 @@ var app = {
 			self.knowledgeBase.feedback.question2.text = result.question2.text;
 			self.knowledgeBase.feedback.question3.text = result.question3.text;
 		});
+		var uuid = device.uuid;
 		// Implement logic to handle different types of rating bars
 	},*/
 	getSelectables: function( key ){
@@ -502,7 +504,14 @@ var app = {
 	},
 	sendFeedbackToDatabase: function(feedback){
 		// TODO: implement logic to add to database
+		console.log(this.knowledgeBase.user_info.firstLogin);
+		if(this.knowledgeBase.user_info.firstLogin) {
+			this.createUserRecord();
+			this.knowledgeBase.user_info.firstLogin = false;
+		} else {
 		console.log('data for database: ' + Object.keys(feedback));
+		}
+		console.log(this.knowledgeBase.user_info.firstLogin);
 	}, 
 	showSubmitSucceedToast: function(){
 		if(device.platform != 'browser') {
@@ -517,6 +526,9 @@ var app = {
 			onError    // optional
 			);
 		}
+	},
+	createUserRecord: function(){
+		console.log("User information for database: " + Object.keys(this.knowledgeBase.settings));
 	}
 };
 
