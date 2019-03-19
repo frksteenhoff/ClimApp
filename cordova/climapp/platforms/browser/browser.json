@@ -38,6 +38,9 @@
         },
         "cordova-plugin-app-event": {
             "PACKAGE_NAME": "com.climapp.app"
+        },
+        "cordova-plugin-x-toast": {
+            "PACKAGE_NAME": "com.climapp.app"
         }
     },
     "dependent_plugins": {},
@@ -96,6 +99,14 @@
                 "cordova.plugins.notification.local.core",
                 "plugin.notification.local.core"
             ]
+        },
+        {
+            "file": "plugins/cordova-plugin-x-toast/www/Toast.js",
+            "id": "cordova-plugin-x-toast.Toast",
+            "pluginId": "cordova-plugin-x-toast",
+            "clobbers": [
+                "window.plugins.toast"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -105,6 +116,7 @@
         "cordova-plugin-whitelist": "1.3.3",
         "cordova-wheel-selector-plugin": "1.0.0",
         "de.appplant.cordova.plugin.local-notification": "0.8.5",
-        "cordova-plugin-app-event": "1.2.1"
+        "cordova-plugin-app-event": "1.2.1",
+        "cordova-plugin-x-toast": "2.7.2"
     }
 }

@@ -54,6 +54,14 @@ module.exports = [
             "cordova.plugins.notification.local.core",
             "plugin.notification.local.core"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-x-toast/www/Toast.js",
+        "id": "cordova-plugin-x-toast.Toast",
+        "pluginId": "cordova-plugin-x-toast",
+        "clobbers": [
+            "window.plugins.toast"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -65,7 +73,8 @@ module.exports.metadata =
     "cordova-plugin-whitelist": "1.3.3",
     "cordova-wheel-selector-plugin": "1.0.0",
     "de.appplant.cordova.plugin.local-notification": "0.8.5",
-    "cordova-plugin-app-event": "1.2.1"
+    "cordova-plugin-app-event": "1.2.1",
+    "cordova-plugin-x-toast": "2.7.2"
 }
 // BOTTOM OF METADATA
 });

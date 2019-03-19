@@ -1,55 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="wbgt" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="67afe0db-aa5f-4898-8579-b44ec6ff04f4" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/plugin.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/android/nl/xservices/plugins/Toast.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/.cproject" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/.project" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/device/libToast.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/device/public/json_reader.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/device/public/json_value.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/device/public/json_writer.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/device/public/plugin.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/device/public/tokenizer.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/device/src/Logger.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/device/src/toast_js.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/device/src/toast_ndk.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json/autolink.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json/config.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json/features.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json/forwards.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json/json.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json/reader.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json/value.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json/writer.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json_batchallocator.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json_internalarray.inl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json_internalmap.inl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json_reader.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json_value.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json_valueiterator.inl" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/json_writer.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/plugin.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/plugin.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/tokenizer.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/public/tokenizer.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/simulator/libToast.so" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/simulator/public/json_reader.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/simulator/public/json_value.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/simulator/public/json_writer.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/simulator/public/plugin.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/simulator/public/tokenizer.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/simulator/src/Logger.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/simulator/src/toast_js.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/simulator/src/toast_ndk.o" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/src/Logger.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/src/Logger.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/src/toast_js.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/src/toast_js.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/src/toast_ndk.cpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/blackberry10/native/src/toast_ndk.hpp" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/ios/Toast+UIView.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/ios/Toast+UIView.m" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/ios/Toast.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/ios/Toast.m" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/windows/toastProxy.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/src/wp8/Toast.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../node_modules/cordova-plugin-x-toast/www/Toast.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/nl/xservices/plugins/Toast$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/nl/xservices/plugins/Toast$1$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/nl/xservices/plugins/Toast$1$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/nl/xservices/plugins/Toast$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/nl/xservices/plugins/Toast.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/nl/xservices/plugins/Toast$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/nl/xservices/plugins/Toast$1$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/nl/xservices/plugins/Toast$1$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/nl/xservices/plugins/Toast$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/nl/xservices/plugins/Toast.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/22/nl/xservices/plugins/Toast$1$1.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/22/nl/xservices/plugins/Toast$1$2.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/22/nl/xservices/plugins/Toast$1$3.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/22/nl/xservices/plugins/Toast$1.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/22/nl/xservices/plugins/Toast.dex" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/nl/xservices/plugins/Toast$1$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/nl/xservices/plugins/Toast$1$2.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/nl/xservices/plugins/Toast$1$3.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/nl/xservices/plugins/Toast$1.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/nl/xservices/plugins/Toast.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/assets/www/plugins/cordova-plugin-x-toast/www/Toast.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/nl/xservices/plugins/Toast.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/platform_www/plugins/cordova-plugin-x-toast/www/Toast.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../browser/platform_www/plugins/cordova-plugin-x-toast/www/Toast.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../browser/www/plugins/cordova-plugin-x-toast/www/Toast.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ios/ClimApp/Plugins/cordova-plugin-x-toast/Toast+UIView.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ios/ClimApp/Plugins/cordova-plugin-x-toast/Toast+UIView.m" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ios/ClimApp/Plugins/cordova-plugin-x-toast/Toast.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ios/ClimApp/Plugins/cordova-plugin-x-toast/Toast.m" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ios/platform_www/plugins/cordova-plugin-x-toast/www/Toast.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../ios/www/plugins/cordova-plugin-x-toast/www/Toast.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../plugins/cordova-plugin-x-toast/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../plugins/cordova-plugin-x-toast/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../plugins/cordova-plugin-x-toast/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../plugins/cordova-plugin-x-toast/plugin.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../plugins/cordova-plugin-x-toast/src/android/nl/xservices/plugins/Toast.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../config.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/resourceHashesCache.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/resourceHashesCache.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/javaCompile/classAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/javaCompile/jarAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/javaCompile/jarAnalysis.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/javaCompile/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/taskHistory/taskHistory.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CordovaLib/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/generateDebugRFile/R.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/build/intermediates/compile_only_not_namespaced_r_class_jar/debug/generateDebugRFile/R.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CordovaLib/build/intermediates/incremental/packageDebugResources/compile-file-map.properties" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/build/intermediates/incremental/packageDebugResources/compile-file-map.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/build/intermediates/intermediate-jars/debug/classes.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/build/intermediates/intermediate-jars/debug/classes.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/CordovaPlugin.class" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/CordovaPlugin.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/CordovaResourceApi$OpenForReadResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/CordovaResourceApi$OpenForReadResult.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/CordovaResourceApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/CordovaResourceApi.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/CoreAndroid.class" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/CoreAndroid.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/engine/SystemCookieManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/engine/SystemCookieManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/build/intermediates/packaged-classes/debug/classes.jar" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/build/intermediates/packaged-classes/debug/classes.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/build/outputs/aar/CordovaLib-debug.aar" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/build/outputs/aar/CordovaLib-debug.aar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/cordova.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/cordova.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CordovaDialogsHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CordovaDialogsHelper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CordovaInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CordovaInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CordovaPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CordovaPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CordovaResourceApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CordovaResourceApi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CordovaWebView.java" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CordovaWebView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CordovaWebViewEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CordovaWebViewEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CoreAndroid.java" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/CoreAndroid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/ExposedJsApi.java" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/ExposedJsApi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/ICordovaClientCertRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/ICordovaClientCertRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/ICordovaCookieManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/ICordovaCookieManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/ICordovaHttpAuthHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/ICordovaHttpAuthHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/engine/SystemCookieManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/CordovaLib/src/org/apache/cordova/engine/SystemCookieManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android.json" beforeDir="false" afterPath="$PROJECT_DIR$/android.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/build-info/debug/build-info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/build-info/debug/build-info.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/de/appplant/cordova/plugin/localnotification/LocalNotification.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/de/appplant/cordova/plugin/localnotification/LocalNotification.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/CordovaPlugin.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/CordovaPlugin.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/CordovaResourceApi$OpenForReadResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/CordovaResourceApi$OpenForReadResult.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/CordovaResourceApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/CordovaResourceApi.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/CoreAndroid.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/CoreAndroid.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/device/Device.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/device/Device.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/engine/SystemCookieManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/engine/SystemCookieManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/geolocation/Geolocation.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/geolocation/Geolocation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/splashscreen/SplashScreen.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental-verifier/debug/org/apache/cordova/splashscreen/SplashScreen.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_dep/debug/package_dependencies/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_dep/debug/package_dependencies/dex-renamer-state.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/package_slice_0/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/package_slice_0/dex-renamer-state.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/package_slice_1/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/ir_slices/debug/package_slice_1/dex-renamer-state.txt" afterDir="false" />
@@ -69,64 +137,42 @@
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/incremental/processInstantRunDebugResourcesApk/package_resources-debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/incremental/processInstantRunDebugResourcesApk/package_resources-debug/dex-renamer-state.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/instant-run-apk/debug/app-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/instant-run-apk/debug/app-debug.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/instant_run_app_info_output_file/debug/generateDebugInstantRunAppInfo/instant-run-bootstrap.jar" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/instant_run_app_info_output_file/debug/generateDebugInstantRunAppInfo/instant-run-bootstrap.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/de/appplant/cordova/plugin/localnotification/LocalNotification.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/de/appplant/cordova/plugin/localnotification/LocalNotification.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/device/Device.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/device/Device.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/geolocation/Geolocation.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/geolocation/Geolocation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/splashscreen/SplashScreen.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/apache/cordova/splashscreen/SplashScreen.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/xml_config.xml.flat" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/res/merged/debug/xml_config.xml.flat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/resources/instant-run/debug/resources-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/resources/instant-run/debug/resources-debug.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/dep/dependencies.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/dep/dependencies.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_0.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_0.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_2.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_2.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_4.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_4.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_1.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_1.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_3.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_3.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_5.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_5.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_6.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_6.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_7.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_7.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_8.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_8.apk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_9.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/split-apk/debug/slices/slice_9.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/18/org/apache/cordova/device/Device.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/18/org/apache/cordova/device/Device.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/19/org/apache/cordova/splashscreen/SplashScreen.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/19/org/apache/cordova/splashscreen/SplashScreen.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/20/de/appplant/cordova/plugin/localnotification/LocalNotification.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/20/de/appplant/cordova/plugin/localnotification/LocalNotification.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/20/org/apache/cordova/CordovaPlugin.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/20/org/apache/cordova/CordovaPlugin.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/20/org/apache/cordova/CordovaResourceApi$OpenForReadResult.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/20/org/apache/cordova/CordovaResourceApi$OpenForReadResult.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/20/org/apache/cordova/CordovaResourceApi.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/20/org/apache/cordova/CordovaResourceApi.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/20/org/apache/cordova/CoreAndroid.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/20/org/apache/cordova/CoreAndroid.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/20/org/apache/cordova/geolocation/Geolocation.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/20/org/apache/cordova/geolocation/Geolocation.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/22/org/apache/cordova/engine/SystemCookieManager.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexBuilder/debug/22/org/apache/cordova/engine/SystemCookieManager.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dexMerger/debug/5/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexMerger/debug/5/classes.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dexMerger/debug/6/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexMerger/debug/6/classes.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dexMerger/debug/7/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexMerger/debug/7/classes.dex" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/dexMerger/debug/9/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/dexMerger/debug/9/classes.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/extractJars/debug/0/org/apache/cordova/CordovaPlugin.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/extractJars/debug/0/org/apache/cordova/CordovaPlugin.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/extractJars/debug/0/org/apache/cordova/CordovaResourceApi$OpenForReadResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/extractJars/debug/0/org/apache/cordova/CordovaResourceApi$OpenForReadResult.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/extractJars/debug/0/org/apache/cordova/CordovaResourceApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/extractJars/debug/0/org/apache/cordova/CordovaResourceApi.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/extractJars/debug/0/org/apache/cordova/CoreAndroid.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/extractJars/debug/0/org/apache/cordova/CoreAndroid.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/extractJars/debug/0/org/apache/cordova/engine/SystemCookieManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/extractJars/debug/0/org/apache/cordova/engine/SystemCookieManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/de/appplant/cordova/plugin/localnotification/LocalNotification.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/de/appplant/cordova/plugin/localnotification/LocalNotification.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/CordovaPlugin.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/CordovaPlugin.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/CordovaResourceApi$OpenForReadResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/CordovaResourceApi$OpenForReadResult.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/CordovaResourceApi.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/CordovaResourceApi.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/CoreAndroid.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/CoreAndroid.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/device/Device.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/device/Device.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/engine/SystemCookieManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/engine/SystemCookieManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/geolocation/Geolocation.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/geolocation/Geolocation.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/splashscreen/SplashScreen.class" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/instantRun/debug/0/org/apache/cordova/splashscreen/SplashScreen.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/intermediates/transforms/mergeJavaRes/debug/0.jar" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/intermediates/transforms/mergeJavaRes/debug/0.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/build/outputs/apk/debug/app-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/app/build/outputs/apk/debug/app-debug.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/www/cordova_plugins.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/www/cordova_plugins.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/assets/www/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/www/css/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/www/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/www/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/assets/www/pages/feedback.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/www/pages/feedback.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/de/appplant/cordova/plugin/localnotification/LocalNotification.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/de/appplant/cordova/plugin/localnotification/LocalNotification.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/apache/cordova/device/Device.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/apache/cordova/device/Device.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/apache/cordova/geolocation/Geolocation.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/apache/cordova/geolocation/Geolocation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/apache/cordova/splashscreen/SplashScreen.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/apache/cordova/splashscreen/SplashScreen.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/assets/www/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/assets/www/js/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/xml/config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/xml/config.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/platform_www/cordova_plugins.js" beforeDir="false" afterPath="$PROJECT_DIR$/platform_www/cordova_plugins.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../browser/browser.json" beforeDir="false" afterPath="$PROJECT_DIR$/../browser/browser.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../browser/platform_www/cordova_plugins.js" beforeDir="false" afterPath="$PROJECT_DIR$/../browser/platform_www/cordova_plugins.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../browser/www/cordova_plugins.js" beforeDir="false" afterPath="$PROJECT_DIR$/../browser/www/cordova_plugins.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../browser/www/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../browser/www/css/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../browser/www/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../browser/www/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../browser/www/pages/feedback.html" beforeDir="false" afterPath="$PROJECT_DIR$/../browser/www/pages/feedback.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../browser/www/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../browser/www/js/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ios/ClimApp.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/ClimApp.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ios/ClimApp/config.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/ClimApp/config.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ios/frameworks.json" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/frameworks.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ios/ios.json" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/ios.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ios/platform_www/cordova_plugins.js" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/platform_www/cordova_plugins.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ios/www/cordova_plugins.js" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/www/cordova_plugins.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../ios/www/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/www/css/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ios/www/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/www/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ios/www/pages/feedback.html" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/www/pages/feedback.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../ios/www/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../ios/www/js/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plugins/android.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../plugins/android.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plugins/browser.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../plugins/browser.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plugins/fetch.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../plugins/fetch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../plugins/ios.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../plugins/ios.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../www/css/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../www/css/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../www/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../www/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../www/pages/feedback.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../www/pages/feedback.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../www/js/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../../www/js/index.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -145,13 +191,14 @@
     <session id="-401192540">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="4" />
+          <entry key="project.closed" value="5" />
           <entry key="project.open.time.2" value="1" />
           <entry key="project.open.time.23" value="1" />
           <entry key="project.open.time.24" value="1" />
           <entry key="project.open.time.27" value="1" />
+          <entry key="project.open.time.30" value="1" />
           <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="5" />
+          <entry key="project.opened" value="6" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -183,8 +230,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="269">
-              <caret line="283" column="5" selection-start-line="283" selection-start-column="5" selection-end-line="283" selection-end-column="5" />
+            <state relative-caret-position="1510">
+              <caret line="230" column="49" selection-start-line="230" selection-start-column="49" selection-end-line="230" selection-end-column="49" />
               <folding>
                 <element signature="e#0#858#0" expanded="true" />
               </folding>
@@ -260,6 +307,7 @@
       <find>defaultc</find>
       <find>configuration</find>
       <find>com</find>
+      <find>res:</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -290,7 +338,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="ProjectPane" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -302,8 +351,7 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
+      <pane id="ProjectPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -448,7 +496,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="1" />
@@ -459,14 +506,14 @@
       <window_info active="true" content_ui="combo" id="Project" order="6" visible="true" weight="0.18603411" />
       <window_info id="Image Layers" order="7" />
       <window_info id="Structure" order="8" side_tool="true" />
-      <window_info anchor="bottom" id="Build" order="0" visible="true" weight="0.32925472" />
+      <window_info anchor="bottom" id="Build" order="0" weight="0.32925472" />
       <window_info anchor="bottom" id="Android Profiler" order="1" />
       <window_info anchor="bottom" id="Event Log" order="2" side_tool="true" />
       <window_info anchor="bottom" id="TODO" order="3" />
-      <window_info anchor="bottom" id="Logcat" order="4" />
+      <window_info anchor="bottom" id="Logcat" order="4" weight="0.32925472" />
       <window_info anchor="bottom" id="Version Control" order="5" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="6" />
-      <window_info anchor="bottom" id="Run" order="7" weight="0.32925472" />
+      <window_info anchor="bottom" id="Terminal" order="6" weight="0.32925472" />
+      <window_info anchor="bottom" id="Run" order="7" visible="true" weight="0.32925472" />
       <window_info anchor="bottom" id="Find" order="8" weight="0.32925472" />
       <window_info anchor="bottom" id="Debug" order="9" />
       <window_info anchor="right" id="Fabric" order="0" />
@@ -490,8 +537,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="269">
-          <caret line="283" column="5" selection-start-line="283" selection-start-column="5" selection-end-line="283" selection-end-column="5" />
+        <state relative-caret-position="1510">
+          <caret line="230" column="49" selection-start-line="230" selection-start-column="49" selection-end-line="230" selection-end-column="49" />
           <folding>
             <element signature="e#0#858#0" expanded="true" />
           </folding>

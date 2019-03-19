@@ -107,6 +107,9 @@ var app = {
 			}
 			// reset values
 			$('#feedback_text').val("");
+
+			// Load settings page
+			self.loadUI('settings');
 			
 			// send values to database
 			self.sendFeedbackToDatabase(feedback);
@@ -341,9 +344,9 @@ var app = {
 		// functionality will be extended to handle more complex scenarios - only when not in browser
 		if(device.platform != 'browser') {
 			var threshold = 0;
-			if(self.knowledgeBase.weather.wbgt > threshold) {
-				self.scheduleDefaultNotification();
-				console.log("Notification scheduled");
+			console.log('wbgt ' + self.knowledgeBase.weather.wbgt);
+			if(self.knowledgeBase.weather.wbgt < threshold) {
+				// self.scheduleDefaultNotification();
 			}
 		}
 	},
@@ -490,28 +493,43 @@ var app = {
 			fontNumbersSize: fontsize,
 		}).draw();
 	}, 
+	/*
+	 * Methods related to feedback module and database
+	 */
 	scheduleDefaultNotification: function() {
-		// Scheduling a notification 1 minute from time it opens
-		cordova.plugins.notification.local.schedule({
-			title: 'Feedback',
-			text: 'How was your day?',
-			trigger: { in: 1, unit: 'minute' },
-			actions: [
-				{ id: 'positive', title: 'Yes' },
-				{ id: 'negative',  title: 'No' }
-			]
-		});	
+		// If no notifications are already scheduled
+		this.getAllNotifications();
+
+		// Used for testing purposes
+		//console.log(this.cancelAllNotifications());
+
+		// Set notification time and date today @ 5PM
+		// NOT WORKING PROPERLY YET
+		var today = new Date();
+		today.setDate(today.getDate());
+		today.setHours(16);
+		today.setMinutes(0);
+		today.setSeconds(0);
+		var today_at_4_pm = new Date(today);
+
+		if(this.knowledgeBase.weather.wbgt < 1) {
+			// Notification which is triggered 16.30 every weekday
+			cordova.plugins.notification.local.schedule({
+				title: 'Feedback',
+				text: 'How was your day?',
+				every: "day",
+				at: today_at_4_pm.getTime()
+			});	
+		}
 	},
 	sendFeedbackToDatabase: function(feedback){
 		// TODO: implement logic to add to database
-		console.log(this.knowledgeBase.user_info.firstLogin);
 		if(this.knowledgeBase.user_info.firstLogin) {
 			this.createUserRecord();
 			this.knowledgeBase.user_info.firstLogin = false;
 		} else {
 		console.log('data for database: ' + Object.keys(feedback));
 		}
-		console.log(this.knowledgeBase.user_info.firstLogin);
 	}, 
 	showSubmitSucceedToast: function(){
 		if(device.platform != 'browser') {
@@ -521,14 +539,22 @@ var app = {
 				duration: "short", // 2000 ms
 				position: "bottom",
 				addPixelsY: -40  // giving a margin at the bottom by moving text up
-			},
-			onSuccess, // optional
-			onError    // optional
-			);
+			});
 		}
 	},
 	createUserRecord: function(){
 		console.log("User information for database: " + Object.keys(this.knowledgeBase.settings));
+	},
+	getAllNotifications: function() {
+		window.plugin.notification.local.getScheduledIds(function (scheduledIds) {
+			console.log(scheduledIds.length);
+			console.log("Scheduled IDs: " + scheduledIds.join(", "));
+		});
+	},
+	cancelAllNotifications: function() {
+		window.plugin.notification.local.cancelAll(function () {
+			console.log('All notifications canceled');
+		});
 	}
 };
 

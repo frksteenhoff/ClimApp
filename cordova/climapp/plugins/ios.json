@@ -24,6 +24,9 @@
     },
     "de.appplant.cordova.plugin.local-notification": {
       "PACKAGE_NAME": "com.climapp.app"
+    },
+    "cordova-plugin-x-toast": {
+      "PACKAGE_NAME": "com.climapp.app"
     }
   },
   "dependent_plugins": {

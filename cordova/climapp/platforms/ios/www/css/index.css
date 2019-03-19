@@ -100,6 +100,7 @@ body {
 
 p {
     margin-left: 0.5em;
+    margin-right: 0.5em;
 }
 
 button p {
@@ -198,7 +199,7 @@ p.rating_text {
     margin-top: 1.5em;
     position: absolute;
     border: 0;
-    font-size: 200%;
+    font-size: 160%;
     padding: 0;
     left: 50%;
     transform: translate(-50%, -50%);
