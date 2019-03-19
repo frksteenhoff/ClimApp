@@ -492,7 +492,7 @@ var app = {
 		// Scheduling a notification 1 minute from time it opens
 		cordova.plugins.notification.local.schedule({
 			title: 'Feedback',
-			text: 'Ready to give some feedback?',
+			text: 'How was your day?',
 			trigger: { in: 1, unit: 'minute' },
 			actions: [
 				{ id: 'positive', title: 'Yes' },

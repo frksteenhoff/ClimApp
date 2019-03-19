@@ -1,24 +1,11 @@
 {
+  "background_color": "#FFF",
+  "display": "standalone",
   "name": "ClimApp",
   "short_name": "ClimApp",
-  "description": "Description of your app from template",
-  "start_url": "index.html",
-  "scope": "index.html",
-  "icons": [
-    {
-      "src": "img/logo.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "img/splash.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ],
-  "default_locale": "en",
-  "display": "standalone",
-  "background_color": "#FFF",
-  "theme_color": "#000",
-  "orientation": "landscape"
+  "version": "com.climapp.app",
+  "description": "A sample Apache Cordova application that responds to the deviceready event.",
+  "author": "Climapp team",
+  "icons": [],
+  "start_url": "index.html"
 }
