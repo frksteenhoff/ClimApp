@@ -164,12 +164,11 @@ p.center{
  * Feedback styling
  * ----------------------------------- */
 .feedbackpanel{
-    display: block;
+    display: inline-block;
     justify-content: center;
     align-items: center;
-	width: 95%;
-	padding: 0.1em 0.5em;
-	margin: 0.5em auto;
+	width: 100%;
+    margin: 0.5em auto;
 }
 
 p.strongtext {
@@ -177,8 +176,9 @@ p.strongtext {
 	color: #000000;
 	font-size: 1em;
     font-weight: bold;
+    margin:0;
 }
-    
+
 p.rating_text {
     text-align: center;
 	color: #939393;
@@ -186,11 +186,15 @@ p.rating_text {
     font-style: italic;
     margin-bottom: 1em;
     margin-top: 6em;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
 }
 
 /* Rating - https://jsfiddle.net/leaverou/CGP87/https://codepen.io/jamesbarnett/pen/vlpkh?editors=1100 */
 
 .rating {
+    display: inline-block;
     margin-top: 1.5em;
     position: absolute;
     border: 0;
@@ -202,7 +206,6 @@ p.rating_text {
 
 .rating:not(:checked) > label:before {
     font-family: "Font Awesome 5 Free";
-    display: inlinemblock;
     content: "\f111";
 }
 
@@ -211,7 +214,6 @@ p.rating_text {
     margin: 5px;
     font-size: 1.25em;
     font-family: "Font Awesome 5 Free";
-    display: inline-block;
     content: "\f111";
   }
   

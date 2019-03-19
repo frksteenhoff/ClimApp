@@ -29,9 +29,9 @@ String doEnsureValueExists(filePath, props, key) {
 
 String doGetProjectTarget() {
     def props = new Properties()
-    def propertiesFile = 'project.properties';
+    def propertiesFile = 'project.properties'
     if(!(file(propertiesFile).exists())) {
-      propertiesFile = '../project.properties';
+      propertiesFile = '../project.properties'
     }
     file(propertiesFile).withReader { reader ->
         props.load(reader)
@@ -149,8 +149,8 @@ def doPromptForPassword(msg) {
                     label(text: msg)
                     def input = passwordField()
                     button(defaultButton: true, text: 'OK', actionPerformed: {
-                        ret = input.password;
-                        dispose();
+                        ret = input.password
+                        dispose()
                     })
                 }
             }
@@ -160,7 +160,7 @@ def doPromptForPassword(msg) {
         }
         return new String(ret)
     } else {
-        return System.console().readPassword('\n' + msg);
+        return System.console().readPassword('\n' + msg)
     }
 }
 

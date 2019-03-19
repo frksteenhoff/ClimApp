@@ -71,7 +71,7 @@ public class CoreAndroid extends CordovaPlugin {
      * @param callbackContext   The callback context from which we were invoked.
      * @return                  A PluginResult object with a status and message.
      */
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
         PluginResult.Status status = PluginResult.Status.OK;
         String result = "";
 
@@ -178,13 +178,13 @@ public class CoreAndroid extends CordovaPlugin {
 
                     }
                     else if (value.getClass().equals(String.class)) {
-                        params.put(key, (String)value);
+                        params.put(key, value);
                     }
                     else if (value.getClass().equals(Boolean.class)) {
-                        params.put(key, (Boolean)value);
+                        params.put(key, value);
                     }
                     else if (value.getClass().equals(Integer.class)) {
-                        params.put(key, (Integer)value);
+                        params.put(key, value);
                     }
                 }
             }

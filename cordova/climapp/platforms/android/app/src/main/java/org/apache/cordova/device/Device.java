@@ -160,10 +160,7 @@ public class Device extends CordovaPlugin {
      * @return
      */
     public boolean isAmazonDevice() {
-        if (android.os.Build.MANUFACTURER.equals(AMAZON_DEVICE)) {
-            return true;
-        }
-        return false;
+        return android.os.Build.MANUFACTURER.equals(AMAZON_DEVICE);
     }
 
     public boolean isVirtual() {

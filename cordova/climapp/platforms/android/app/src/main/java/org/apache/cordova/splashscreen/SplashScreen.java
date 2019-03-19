@@ -159,7 +159,7 @@ public class SplashScreen extends CordovaPlugin {
     }
 
     @Override
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
         if (action.equals("hide")) {
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {

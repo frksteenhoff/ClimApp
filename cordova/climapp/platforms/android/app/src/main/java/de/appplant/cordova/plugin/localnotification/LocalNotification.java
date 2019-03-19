@@ -129,7 +129,7 @@ public class LocalNotification extends CordovaPlugin {
      */
     @Override
     public boolean execute (final String action, final JSONArray args,
-                            final CallbackContext command) throws JSONException {
+                            final CallbackContext command) {
 
         Notification.setDefaultTriggerReceiver(TriggerReceiver.class);
 

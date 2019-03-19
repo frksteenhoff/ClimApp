@@ -6,7 +6,7 @@
     density="420dpi"
     format="10"
     plugin-version="3.3.2"
-    timestamp="1552981053334"
+    timestamp="1552994329884"
     token="-3987594719385681975"
     verifier="FULL_BUILD_REQUESTED" >
 
@@ -18,14 +18,17 @@
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="0" />
+        duration="2464" />
     <task
         name="verifier"
-        duration="0" />
+        duration="1840" />
 
     <artifact
-        location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\instant-run-apk\debug\app-debug.apk"
-        type="SPLIT_MAIN" />
+        location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\resources\instant-run\debug\resources-debug.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
+        type="SPLIT" />
     <artifact
         location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_0.apk"
         type="SPLIT" />
@@ -34,6 +37,15 @@
         type="SPLIT" />
     <artifact
         location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_2.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_4.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_3.apk"
         type="SPLIT" />
     <artifact
         location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_5.apk"
@@ -48,28 +60,19 @@
         location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_6.apk"
         type="SPLIT" />
     <artifact
-        location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
-        type="SPLIT" />
-    <artifact
-        location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\resources\instant-run\debug\resources-debug.apk"
-        type="SPLIT" />
-    <artifact
-        location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_4.apk"
-        type="SPLIT" />
-    <artifact
-        location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_3.apk"
-        type="SPLIT" />
-    <artifact
-        location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
-        type="SPLIT" />
+        location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\instant-run-apk\debug\app-debug.apk"
+        type="SPLIT_MAIN" />
 
     <build
         build-mode="FULL"
-        timestamp="1552981053334"
+        timestamp="1552994329884"
         verifier="FULL_BUILD_REQUESTED" >
         <artifact
-            location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\instant-run-apk\debug\app-debug.apk"
-            type="SPLIT_MAIN" />
+            location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\resources\instant-run\debug\resources-debug.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
+            type="SPLIT" />
         <artifact
             location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_0.apk"
             type="SPLIT" />
@@ -78,6 +81,15 @@
             type="SPLIT" />
         <artifact
             location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_2.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_4.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_3.apk"
             type="SPLIT" />
         <artifact
             location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_5.apk"
@@ -92,20 +104,8 @@
             location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_6.apk"
             type="SPLIT" />
         <artifact
-            location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_9.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\resources\instant-run\debug\resources-debug.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_4.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\slices\slice_3.apk"
-            type="SPLIT" />
-        <artifact
-            location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\split-apk\debug\dep\dependencies.apk"
-            type="SPLIT" />
+            location="C:\Users\frksteenhoff\Documents\GitHub\ClimApp\cordova\climapp\platforms\android\app\build\intermediates\instant-run-apk\debug\app-debug.apk"
+            type="SPLIT_MAIN" />
     </build>
 
 </instant-run>
