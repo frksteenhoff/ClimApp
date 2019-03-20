@@ -26,19 +26,6 @@ var app = {
     // Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-		
-		/*
-		heatindex.PHS.sim_init();
-		for( var i=1;i<=480;i++){
-			var res = heatindex.PHS.time_step();
-			console.log(res);
-		}
-		console.log( heatindex.PHS.current_result() );
-		*/
-		
-	
-		
-		//console.log( heatindex.IREQ.current_result() );
 		//this.onDeviceReady(); //call this to run on browser, as browser does not fire the event by itself.
     },
 
@@ -52,7 +39,6 @@ var app = {
 
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-		this.initListeners();
 		this.loadSettings();
 		if( this.knowledgeBase.isFirstUse ){//onboarding
 			this.loadUI( "onboarding" );
@@ -61,23 +47,19 @@ var app = {
 		}
 		this.updateLocation();
     },
-	initListeners: function(){
+	initNavbarListeners: function(){
 		// navigation menu
 		var self = this;
-		$("div[data-listener='navbar']").on("click", function(){
+		$("div[data-listener='navbar']").off();
+		$("div[data-listener='navbar']").on("touchstart", function(){
 			let target = $( this ).attr("data-target");
 			self.loadUI( target );
 		});
-		/*
-		$("#sync-toggle").on('click', function () {
-			$("#sync-toggle").toggleClass('fa-spin');
-		});
-		*/
 	},
 	initSettingsListeners: function(){
 		var self = this;
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='wheel']").on("click", function(){
+		$("div[data-listener='wheel']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
 			let title_ = self.knowledgeBase.settings[target].title;
 			var items_ = self.getSelectables( target );
@@ -102,14 +84,14 @@ var app = {
 	initGeolocationListeners: function(){
 		var self = this;
 		$("div[data-listener='geolocation']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='geolocation']").on("click", function(){
+		$("div[data-listener='geolocation']").on("touchstart", function(){
 			self.updateLocation();
 		});		
 	},
 	initActivityListeners: function(){
 		var self = this;
 		$("div[data-listener='activity']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='activity']").on("click", function(){
+		$("div[data-listener='activity']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
 			self.knowledgeBase.activity.selected = target;
 			
@@ -464,7 +446,11 @@ var app = {
 	},
 	updateUI: function(){
 		// context dependent filling of content
-		if( this.currentPageID == "dashboard" ){
+		this.initNavbarListeners();
+		
+		if( this.currentPageID == "onboarding"){
+		}
+		else if( this.currentPageID == "dashboard" ){
 			if( 'weather' in this.knowledgeBase && this.knowledgeBase.weather.station !== "" ){
 				let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
 				let local_date = new Date( this.knowledgeBase.weather.utc[0] ); //
