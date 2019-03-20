@@ -108,6 +108,12 @@ public class SetAgeActivity extends AppCompatActivity {
         HashMap<String, String> params;
         int requestCode;
 
+        /**
+         * Requesting network access to update user information in database
+         * @param url - API call for updating user age
+         * @param params - the new age to be added to the database
+         * @param requestCode - the type of request (POST/GET)
+         */
         PerformNetworkRequest(String url, HashMap<String, String> params, int requestCode) {
             this.url = url;
             this.params = params;

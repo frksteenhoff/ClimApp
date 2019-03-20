@@ -26,6 +26,19 @@ var app = {
     // Application Constructor
     initialize: function() {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+		
+		/*
+		heatindex.PHS.sim_init();
+		for( var i=1;i<=480;i++){
+			var res = heatindex.PHS.time_step();
+			console.log(res);
+		}
+		console.log( heatindex.PHS.current_result() );
+		*/
+		heatindex.IREQ.sim_init();
+	
+		
+		console.log( heatindex.IREQ.current_result() );
 		//this.onDeviceReady(); //call this to run on browser, as browser does not fire the event by itself.
     },
 
@@ -41,6 +54,7 @@ var app = {
     receivedEvent: function(id) {
 		this.initListeners();
 		this.loadSettings();
+		//this.loadFeedbackQuestions();
 		this.loadUI( "dashboard" );
 		
 		this.updateLocation();
@@ -60,6 +74,47 @@ var app = {
 			$("#sync-toggle").toggleClass('fa-spin');
 		});
 		*/
+	},
+	initFeedbackListeners: function() {
+		var self = this;
+		// When user rates the feedback questions
+		$("input[data-listener='feedback']").off(); //prevent multiple instances of listeners on same object
+		$("input[data-listener='feedback']").on("click", function(){
+			var target = $(this).attr("data-target");
+			
+			// Updating rating bar using first char in ID
+			var rating_id = $(this).attr("id")[0];
+
+			if(rating_id === '1') {
+				self.knowledgeBase.feedback.question1.rating = target;
+			} else if(rating_id === '2') {
+				self.knowledgeBase.feedback.question2.rating = target;
+			} else {
+				self.knowledgeBase.feedback.question3.rating = target;
+			}
+			$( "input[data-listener='feedback']" ).removeClass( "checked" );
+			self.updateUI();
+		});
+		
+		// When user submits feedback, add to object to send to db + reset values
+		$("button[data-listener='submit']").on("click", function(){
+			var target = $("#feedback_text").val();
+			var feedback = {
+				rating1: self.knowledgeBase.feedback.question1.rating,
+				rating2: self.knowledgeBase.feedback.question1.rating,
+				rating3: self.knowledgeBase.feedback.question1.rating,
+				comment: target
+			}
+			// reset values
+			$('#feedback_text').val("");
+
+			// Load settings page
+			self.loadUI('settings');
+			
+			// send values to database
+			self.sendFeedbackToDatabase(feedback);
+			self.showSubmitSucceedToast();
+		});
 	},
 	initSettingsListeners: function(){
 		var self = this;
@@ -83,8 +138,12 @@ var app = {
 			}, function() {
 			    console.log('Canceled');
 			});
-			
 		});		
+
+		$("div[data-listener='feedback_page']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='feedback_page']").on("click", function(){
+			self.loadUI('feedback');
+		});
 	},
 	initActivityListeners: function(){
 		var self = this;
@@ -99,7 +158,8 @@ var app = {
 	},
 	loadSettings: function(){
 		this.pageMap = { "dashboard": "./pages/dashboard.html",
-						 "settings": "./pages/settings.html" };
+						 "settings": "./pages/settings.html",
+						 "feedback": "./pages/feedback.html" };
 		
 		//if ( localStorage.getItem("knowledgebase") !== null) {
 		//	this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
@@ -141,10 +201,65 @@ var app = {
 															"HIGH+": 500
 												},	
 												"selected": "LOW",	
-											}				
+											},
+									"feedback": { "question1": { 
+													"text": "How were your drinking needs?",
+													"rating": 3, 
+													"ratingtype": "ratingbar",
+													"ratingtext": {
+														"1": "Much lower than expected",
+            											"2": "Lower than expected",
+      												    "3": "Normal",
+    											        "4": "Higher than expected",
+   												        "5": "Much higher than expected"
+													},
+													"comment": "",
+												}, 
+												"question2": {
+													"text": "Did you take more breaks today than you expected?",
+													"rating": 3, 
+													"ratingtype": "ratingbar",
+													"ratingtext": {
+														"1": "Not exhausted at all",
+														"2": "Less exhausted than usual",
+														"3": "Normal",
+														"4": "More exhausted than usual",
+														"5": "A lot more exhausted than usual"
+													},
+													"comment": "",
+												},
+												"question3": {
+													"text": "How would you evaluate the amount of clothing you wore today?",
+													"rating": 3, 
+													"ratingtype": "ratingbar",
+													"ratingtext": {
+														"1": "Much less than needed",
+														"2": "Less than needed",
+														"3": "I wore the right amount of clothing",
+														"4": "A little too much clothing",
+														"5": "A lot more than needed"
+													},
+													"comment": "",
+												}
+										},
+									"user_info": {
+										"firstLogin": true
+									}	
 								  };
 		//}
 	},
+	/* In the future this should be used to fetch the needed question from the database
+	   Currently working with static content, just for proof of concept. */
+	/*loadFeedbackQuestions: function() {
+		feedback = $.getJSON("../data/feedbackQuestions.json", function(result){
+		result = JSON.parse(result);
+			self.knowledgeBase.feedback.question1.text = result.question1.text;
+			self.knowledgeBase.feedback.question2.text = result.question2.text;
+			self.knowledgeBase.feedback.question3.text = result.question3.text;
+		});
+		var uuid = device.uuid;
+		// Implement logic to handle different types of rating bars
+	},*/
 	getSelectables: function( key ){
 		var obj_array = [];
 		if( key === "age" ){
@@ -225,6 +340,15 @@ var app = {
 	   				   self.updateUI();
 			});
 		}
+		// Schedule a notification if weather conditions are out of the ordinary
+		// functionality will be extended to handle more complex scenarios - only when not in browser
+		if(device.platform != 'browser') {
+			var threshold = 0;
+			console.log('wbgt ' + self.knowledgeBase.weather.wbgt);
+			if(self.knowledgeBase.weather.wbgt < threshold) {
+				// self.scheduleDefaultNotification();
+			}
+		}
 	},
 	loadUI: function( pageid ){
 		var self = this;
@@ -270,6 +394,23 @@ var app = {
 			$("#height").html( this.knowledgeBase.settings.height.value );
 			$("#weight").html( this.knowledgeBase.settings.weight.value );
 			$("#gender").html( this.knowledgeBase.settings.gender.value );	
+		}
+		else if( this.currentPageID == "feedback" ){
+			this.initFeedbackListeners();
+			// Question text
+			$("#question1").html( this.knowledgeBase.feedback.question1.text );
+			$("#question2").html( this.knowledgeBase.feedback.question2.text );
+			$("#question3").html( this.knowledgeBase.feedback.question3.text );
+
+			// Rating bar values -- still not setting the default color..
+			$("input[id='1star"+this.knowledgeBase.feedback.question1.rating+"']").addClass("checked");
+			$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").addClass("checked");
+			$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").addClass("checked");
+			
+			// Rating text 
+			$("#ratingtext1").html( this.knowledgeBase.feedback.question1.ratingtext[this.knowledgeBase.feedback.question1.rating] );
+			$("#ratingtext2").html( this.knowledgeBase.feedback.question2.ratingtext[this.knowledgeBase.feedback.question2.rating] );
+			$("#ratingtext3").html( this.knowledgeBase.feedback.question3.ratingtext[this.knowledgeBase.feedback.question3.rating] );
 		}
 	},
 	drawGauge: function( id, width, value, fontsize ){
@@ -351,9 +492,70 @@ var app = {
 		    valueBox: false,
 			fontNumbersSize: fontsize,
 		}).draw();
+	}, 
+	/*
+	 * Methods related to feedback module and database
+	 */
+	scheduleDefaultNotification: function() {
+		// If no notifications are already scheduled
+		this.getAllNotifications();
+
+		// Used for testing purposes
+		//console.log(this.cancelAllNotifications());
+
+		// Set notification time and date today @ 5PM
+		// NOT WORKING PROPERLY YET
+		var today = new Date();
+		today.setDate(today.getDate());
+		today.setHours(16);
+		today.setMinutes(0);
+		today.setSeconds(0);
+		var today_at_4_pm = new Date(today);
+
+		if(this.knowledgeBase.weather.wbgt < 1) {
+			// Notification which is triggered 16.30 every weekday
+			cordova.plugins.notification.local.schedule({
+				title: 'Feedback',
+				text: 'How was your day?',
+				every: "day",
+				at: today_at_4_pm.getTime()
+			});	
+		}
+	},
+	sendFeedbackToDatabase: function(feedback){
+		// TODO: implement logic to add to database
+		if(this.knowledgeBase.user_info.firstLogin) {
+			this.createUserRecord();
+			this.knowledgeBase.user_info.firstLogin = false;
+		} else {
+		console.log('data for database: ' + Object.keys(feedback));
+		}
+	}, 
+	showSubmitSucceedToast: function(){
+		if(device.platform != 'browser') {
+			window.plugins.toast.showWithOptions(
+			{
+				message: "Feedback submitted!",
+				duration: "short", // 2000 ms
+				position: "bottom",
+				addPixelsY: -40  // giving a margin at the bottom by moving text up
+			});
+		}
+	},
+	createUserRecord: function(){
+		console.log("User information for database: " + Object.keys(this.knowledgeBase.settings));
+	},
+	getAllNotifications: function() {
+		window.plugin.notification.local.getScheduledIds(function (scheduledIds) {
+			console.log(scheduledIds.length);
+			console.log("Scheduled IDs: " + scheduledIds.join(", "));
+		});
+	},
+	cancelAllNotifications: function() {
+		window.plugin.notification.local.cancelAll(function () {
+			console.log('All notifications canceled');
+		});
 	}
-	
-	
 };
 
 app.initialize();

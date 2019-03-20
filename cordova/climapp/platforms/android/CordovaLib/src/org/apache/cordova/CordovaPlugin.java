@@ -131,7 +131,7 @@ public class CordovaPlugin {
      * @param callbackContext The callback context used when calling back into JavaScript.
      * @return                Whether the action was valid.
      */
-    public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+    public boolean execute(String action, CordovaArgs args, CallbackContext callbackContext) {
         return false;
     }
 

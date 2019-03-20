@@ -32,6 +32,13 @@
     <feature name="SelectorCordovaPlugin">
         <param name="ios-package" onload="true" value="SelectorCordovaPlugin" />
     </feature>
+    <feature name="LocalNotification">
+        <param name="ios-package" onload="true" value="APPLocalNotification" />
+        <param name="onload" value="true" />
+    </feature>
+    <feature name="Toast">
+        <param name="ios-package" value="Toast" />
+    </feature>
     <name>ClimApp</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.

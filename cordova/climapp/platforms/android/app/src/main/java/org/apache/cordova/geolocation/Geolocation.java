@@ -41,7 +41,7 @@ public class Geolocation extends CordovaPlugin {
     String [] permissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION };
 
 
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
         LOG.d(TAG, "We are entering execute");
         context = callbackContext;
         if(action.equals("getPermission"))
@@ -62,8 +62,7 @@ public class Geolocation extends CordovaPlugin {
 
 
     public void onRequestPermissionResult(int requestCode, String[] permissions,
-                                          int[] grantResults) throws JSONException
-    {
+                                          int[] grantResults) {
         PluginResult result;
         //This is important if we're using Cordova without using Cordova, but we have the geolocation plugin installed
         if(context != null) {

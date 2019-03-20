@@ -18,6 +18,12 @@
         <param name="android-package" value="com.wellseek.cordova.SelectorCordovaPlugin" />
         <param name="onload" value="true" />
     </feature>
+    <feature name="LocalNotification">
+        <param name="android-package" value="de.appplant.cordova.plugin.localnotification.LocalNotification" />
+    </feature>
+    <feature name="Toast">
+        <param name="android-package" value="nl.xservices.plugins.Toast" />
+    </feature>
     <name>ClimApp</name>
     <description>
         A sample Apache Cordova application that responds to the deviceready event.
