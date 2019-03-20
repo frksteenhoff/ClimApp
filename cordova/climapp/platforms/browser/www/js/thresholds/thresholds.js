@@ -3,34 +3,34 @@ var thresholds = {
 	// Values based only on model calculations
 	default: {
 		wbgt: {
-			"RAL": 
+			"RAL": 0
 		},
 		phs: {
-			"sweat_threshold": ,
-			"dlim_threshold":
+			"sweat_threshold": 0,
+			"dlim_threshold": 0
 
 		},
 		ireq: {
-			"dlim_threshold": ,
-			"icl_threshold":
+			"dlim_threshold": 0,
+			"icl_threshold": 0
 		}
 	},
 
 	// Values updated based on user feedback
 	personal: {
 		wbgt: {
-			"RAL": 
+			"RAL": 0
 		},
 		phs: {
-			"sweat_threshold": ,
-			"dlim_threshold":
+			"sweat_threshold": 0,
+			"dlim_threshold": 0
 
 		},
 		ireq: {
-			"dlim_threshold": ,
-			"icl_threshold":
+			"dlim_threshold": 0,
+			"icl_threshold": 0
 		}
 	},
 	// User's deviation from model
-	delta: [];
+	delta: []
 }

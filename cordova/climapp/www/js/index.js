@@ -55,6 +55,7 @@ var app = {
 		$("div[data-listener='navbar']").off();
 		$("div[data-listener='navbar']").on("touchstart", function(){
 			let target = $( this ).attr("data-target");
+			console.log("target:" + target);
 			self.knowledgeBase.user_info.firstLogin = false;
 			self.loadUI( target );
 		});
@@ -128,6 +129,16 @@ var app = {
 		$("div[data-listener='feedback_page']").on("click", function(){
 			self.loadUI('feedback');
 		});
+
+		$("div[data-listener='disclaimer_page']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='disclaimer_page']").on("click", function(){
+			self.loadUI('disclaimer');
+		});
+
+		$("div[data-listener='about_page']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='about_page']").on("click", function(){
+			self.loadUI('about');
+		});
 	},
 	initGeolocationListeners: function(){
 		var self = this;
@@ -152,7 +163,9 @@ var app = {
 		this.pageMap = { "dashboard": "./pages/dashboard.html",
 						 "settings": "./pages/settings.html",
 						 "feedback": "./pages/feedback.html",
-		 				 "onboarding": "./pages/onboarding.html"};
+		 				 "onboarding": "./pages/onboarding.html",
+		 				 "disclaimer": "./pages/disclaimer.html",
+		 				 "about": "./pages/about.html"};
 		
 		localStorage.clear();
 		if ( localStorage.getItem("knowledgebase") !== null ) {
