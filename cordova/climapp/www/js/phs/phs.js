@@ -14,9 +14,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 Copyright (c) 2019, Boris Kingma, The Netherlands, Kopenhagen University and TNO the Netherlands. All rights reserved.
 
-
-
-
 */
 
 "use strict;";
@@ -72,6 +69,26 @@ heatindex.PHS = ( function ( options ) {
     //         = 4 as 2 and modified core_temp_pred
     var sim_mod = params.sim.mod;
     var sim_time;
+	
+	function set_options( options_ ){
+		params = options_;
+	    air = params.air;
+	    body = params.body;
+	    cloth = params.cloth;
+	    core =  {};
+	    heatex = {};
+	    limit = {};
+	    move = params.move;
+	    skin = {};
+	    sweat = {};
+	  	// sim_mod = 0 default,
+	    //         = 1 iso7933 ver. 1,
+	    //         = 2 iso7933 ver. 2,
+	    //         = 3 as 1 and modified core_temp_pred,
+	    //         = 4 as 2 and modified core_temp_pred
+	    sim_mod = params.sim.mod;
+	    sim_time = 0;
+	}
 
     function var_reset(){
 		air.v_air = NaN;
@@ -630,6 +647,7 @@ heatindex.PHS = ( function ( options ) {
     return{
         reset : reset,
         sim_init : sim_init,
+		set_options: set_options,
         state : state,
         time_step : time_step,
         current_result : current_result,
