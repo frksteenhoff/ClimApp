@@ -193,6 +193,26 @@ img.small{
     vertical-align: middle; /* | top | bottom */
 }
 
+.gallery{
+	width: 100%;
+	height: auto;
+	margin: auto;
+	display:block;
+
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+
+    -webkit-overflow-scrolling: touch;
+}
+.gallery div{
+	width: 15%;
+	display:inline-block;
+}
+.gallery div span{
+	font-size: 0.5em;
+}
+
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
     .app {

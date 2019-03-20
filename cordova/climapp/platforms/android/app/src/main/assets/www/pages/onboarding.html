@@ -1,22 +1,18 @@
 <div class="panel">
 	<p class="label" id="onboarding_welcome">Welcome!</p>
 	<p id="onboarding_justification">In order for the app to personalize the feedback provided to you,
-        we recommend that you input your personal information. If you don\'t feel like doing so, the app will
-        use predefined values instead.</p>	
-	<div data-target="age" data-listener="wheel">
-		<p>Age<br><span class="settings" id="age"></span> <span class="settings">years</span></p>
+        we recommend that you input your personal information. Tap 'Settings' to proceed. </p>
+	<div class="onboarding">
+		<div data-target="settings" data-listener="navbar"> 
+			<p class="center"><i class="fas fa-cog fa-2x" ></i> Settings</p>
+		</div>
 	</div>
-	<div data-target="height" data-listener="wheel">
-		<p>Height<br><span class="settings" id="height"></span> <span class="settings">cm</span></p>
+	<p>If you do not feel like doing so, no problem, the app will
+        use predefined values instead. Tap 'Dashboard' to proceed.</p>
+	<div class="onboarding">
+		<div data-target="dashboard" data-listener="navbar">
+			<p class="center"><i class="fas fa-tachometer-alt fa-2x"></i> Dashboard</p>
+		</div>
 	</div>
-	<div data-target="weight" data-listener="wheel">
-		<p>Weight<br><span class="settings" id="weight"></span> <span class="settings">kg</span></p>
-	</div>
-	<div data-target="gender" data-listener="wheel">
-		<p>Gender<br><span class="settings" id="gender"></span></p>
-	</div>
-	<div>
-		
-	</div>
+	<p>&nbsp;</p>
 </div>
-

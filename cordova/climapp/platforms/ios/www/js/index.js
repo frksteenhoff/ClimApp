@@ -104,11 +104,11 @@ var app = {
 		this.pageMap = { "dashboard": "./pages/dashboard.html",
 						 "settings": "./pages/settings.html",
 		 				 "onboarding": "./pages/onboarding.html"};
-		
-		//if ( localStorage.getItem("knowledgebase") !== null) {
-		//	this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
-		//}
-		//else{
+		localStorage.clear();
+		if ( localStorage.getItem("knowledgebase") !== null ) {
+			this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
+		}
+		else{
 			var self = this;
 			this.knowledgeBase = { "isFirstUse": true,
 								   "position": { "lat": 0, 
@@ -162,17 +162,19 @@ var app = {
 												"selected": "LOW",	
 									},
 									"thermalindices":	{ 
-												"ireq":[{ 	"ICLminimal":0.0,//array of objects
+												"ireq":[
+													{ 	"ICLminimal":0.0,//array of objects
 							  						    	"ICLneutral": 0.0,
 									 				    	"DLEneutral": 0.0,
 															"DLEminimal": 0.0,
 															"utc":"2019/12/31 00:00:00",
-												}],
-											  	"phs": [{ "D_Tre" : 0.0,//array of objects
+													}],
+											  	"phs": [
+													{ "D_Tre" : 0.0,//array of objects
 													   	 "Dwl50": 0.0,
 													   	 "SWtotg": 0.0,
 													     "utc":"2019/12/31 00:00:00",
-											  	}],
+											  		}],
 												"wbgt": { "RAL" : function(){
 																		let M = self.knowledgeBase.settings.M(); //W/m2
 																		let BSA = self.knowledgeBase.settings.BSA(); //m2
@@ -266,7 +268,7 @@ var app = {
 										"duration": 240, //minutes (required for PHS)
 									}
 								  };
-		//}
+		}
 	},
 	getSelectables: function( key ){
 		var obj_array = [];
@@ -381,57 +383,62 @@ var app = {
 	calcThermalIndices: function( ){
 		this.knowledgeBase.thermalindices.ireq = [];
 		this.knowledgeBase.thermalindices.phs = [];
-			var index = 0; //
-			//ireq
-			var options =  {	air:{
-											"Tair": this.knowledgeBase.weather.temperature[index], 	//C
-											"rh": 	this.knowledgeBase.weather.humidity[index], 	//% relative humidity
-											"Pw_air": this.knowledgeBase.weather.watervapourpressure[index],   //kPa partial water vapour pressure
-											"Trad": this.knowledgeBase.weather.globetemperature[index], 	//C mean radiant temperature
-											"v_air": this.knowledgeBase.weather.windspeed[index], 	//m/s air velocity at ground level
-									},
-									body:{
-											"M": this.knowledgeBase.settings.M(), 	//W/m2 
-											"work": 	0,		//W/m2 external work 
-											"posture": 	2,		//1= sitting, 2= standing, 3= crouching
-											"weight":   this.knowledgeBase.settings.weight.value,		//kg  
-											"height": 	this.knowledgeBase.settings.height.value / 100,	//m
-											"drink": 	0,	// may drink freely
-											"accl": 	0		//% acclimatisation state either 0 or 100						
-									},
-									cloth:{
-											"Icl": 		0.8, 	//clo
-											"p": 		50, 	// Air permeability (low < 5, medium 50, high > 100 l/m2s)
-											"im_st": 	0.38, 	// static moisture permeability index
-											"fAref": 	0.54,	// Fraction covered by reflective clothing
-											"Fr": 		0.97,	// Emissivity reflective clothing
-									},
-									move:{
-											"walk_dir":	NaN, 	//degree walk direction
-											"v_walk": 	0,	//m/s walking speed
-									},
-									sim: {
-											"mod": 0
-									}
-							};
+		/*
+			use sorting after calculations
+			
+		*/
 		
+		var options =  {	air:{},
+							body:{
+									"M": this.knowledgeBase.settings.M(), 	//W/m2 
+									"work": 	0,		//W/m2 external work 
+									"posture": 	2,		//1= sitting, 2= standing, 3= crouching
+									"weight":   this.knowledgeBase.settings.weight.value,		//kg  
+									"height": 	this.knowledgeBase.settings.height.value / 100,	//m
+									"drink": 	0,	// may drink freely
+									"accl": 	0		//% acclimatisation state either 0 or 100						
+							},
+							cloth:{
+									"Icl": 		0.8, 	//clo
+									"p": 		50, 	// Air permeability (low < 5, medium 50, high > 100 l/m2s)
+									"im_st": 	0.38, 	// static moisture permeability index
+									"fAref": 	0.54,	// Fraction covered by reflective clothing
+									"Fr": 		0.97,	// Emissivity reflective clothing
+							},
+							move:{
+									"walk_dir":	NaN, 	//degree walk direction
+									"v_walk": 	0,	//m/s walking speed
+							},
+							sim: {
+									"mod": 0
+							}
+						};	
+		var self = this;
+		$.each( this.knowledgeBase.weather.temperature, function(index, val ){
+			options.air = {
+							"Tair": self.knowledgeBase.weather.temperature[index], 	//C
+							"rh": 	self.knowledgeBase.weather.humidity[index], 	//% relative humidity
+							"Pw_air": self.knowledgeBase.weather.watervapourpressure[index],   //kPa partial water vapour pressure
+							"Trad": self.knowledgeBase.weather.globetemperature[index], 	//C mean radiant temperature
+							"v_air": self.knowledgeBase.weather.windspeed[index], 	//m/s air velocity at ground level
+			};
 			heatindex.IREQ.set_options( options );
 			heatindex.IREQ.sim_run();
-		
+
 			var ireq = heatindex.IREQ.current_result();
 			var ireq_object = {
 				"ICLminimal": ireq.ICLminimal,
 				"DLEminimal": ireq.DLEminimal,
 				"ICLneutral": ireq.ICLneutral,
 				"DLEneutral": ireq.DLEneutral,
-				"utc": this.knowledgeBase.weather.utc[index],
+				"utc": self.knowledgeBase.weather.utc[index],
 			};
-			this.knowledgeBase.thermalindices.ireq.push( ireq_object );
-			
+			self.knowledgeBase.thermalindices.ireq.push( ireq_object );
+
 			heatindex.PHS.set_options( options );
 			heatindex.PHS.sim_init();
-			
-			let simduration = this.knowledgeBase.sim.duration;
+
+			let simduration = self.knowledgeBase.sim.duration;
 			for( var i=1;i<=simduration;i++){
 				var res = heatindex.PHS.time_step();
 			}
@@ -440,9 +447,18 @@ var app = {
 				"D_Tre": phs.D_Tre,
 				"Dwl50": phs.Dwl50,
 				"SWtotg": phs.SWtotg,
-				"utc": this.knowledgeBase.weather.utc[index],
+				"utc": self.knowledgeBase.weather.utc[index],
 			};
-			this.knowledgeBase.thermalindices.phs.push( phs_object );
+			self.knowledgeBase.thermalindices.phs.push( phs_object );	
+		});
+		
+		this.knowledgeBase.thermalindices.ireq.sort(function(a,b){
+			return new Date(b.utc) - new Date(a.utc);
+		});
+		this.knowledgeBase.thermalindices.phs.sort(function(a,b){
+			return new Date(b.utc) - new Date(a.utc);
+		});
+			
 	},
 	updateUI: function(){
 		// context dependent filling of content
@@ -453,9 +469,12 @@ var app = {
 		else if( this.currentPageID == "dashboard" ){
 			if( 'weather' in this.knowledgeBase && this.knowledgeBase.weather.station !== "" ){
 				let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
-				let local_date = new Date( this.knowledgeBase.weather.utc[0] ); //
-				
-				$("#current_time").html( local_date.toLocaleString() );
+				let utc_date = new Date( this.knowledgeBase.weather.utc[0] ); //
+				let local_time = utc_date.toLocaleTimeString(navigator.language, { //language specific setting
+						hour: '2-digit',
+					    minute:'2-digit'
+				});
+				$("#current_time").html( local_time );
 				$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
 				$("#temperature").html( parseFloat( this.knowledgeBase.weather.temperature[0] ).toFixed(0) );
 				$("#windspeed").html( parseFloat( this.knowledgeBase.weather.windspeed[0] ).toFixed(0) );
@@ -497,14 +516,6 @@ var app = {
 				//this.drawGauge( 'main_gauge', width, icl_min , "cold stress level" );
 				tip_html += "<p><span class='score'>"+dle_min+"</span> minutes before low body temperature.</p>";
 			}
-			/* 
-			// requires phs to be calculated with ireqmin
-			if( icl_min > icl_min_threshold 
-				&& 
-				( d_tre < duration_threshold || d_sw < duration_threshold ) ){
-				tip_html += "<p class='label'>Implication when adjusting clothing appropriatly to cold.</p>";
-			}
-			*/
 			if( d_tre < duration_threshold ){
 				//this.drawGauge( 'main_gauge', width, icl_min , "heat stress level" );
 				tip_html += "<p><span class='score'>"+d_tre+"</span> minutes before high body temperature.</p>";
@@ -531,6 +542,19 @@ var app = {
 			else if( draw_heat_gauge ){
 				this.drawGauge( 'main_gauge', width, heat_index , "heat" );
 			}
+			
+			var forecasts = "";
+			$.each( this.knowledgeBase.thermalindices.ireq, function(index, obj ){
+				let utc = new Date( obj.utc ); //
+				let lt = utc.toLocaleTimeString(navigator.language, { //language specific setting
+						hour: '2-digit',
+					    minute:'2-digit'
+				});
+				forecasts += "<div class='item'>"+obj.ICLminimal.toFixed(1)+ "<br>";
+				forecasts += "<span>" + lt + "</span>"; 
+				forecasts += "</div>";
+			});
+			$("#forecasts").html( forecasts );
 			
 			$("#tips").html( tip_html );
 			
