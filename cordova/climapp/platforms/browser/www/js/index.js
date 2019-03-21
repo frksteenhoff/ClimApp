@@ -395,7 +395,7 @@ var app = {
 		var obj_array = [];
 		if( key === "age" ){
 			for( var i=0; i<100; i++){
-				obj_array.push({description: (i+12) + " year", value: (i+12) });
+				obj_array.push({description: (i+12) + " years", value: (i+12) });
 			}
 		}
 		else if( key === "height" ){

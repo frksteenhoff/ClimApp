@@ -168,7 +168,7 @@ img.small{
 /* BEGIN navigation bar style*/
 .navigation {
   margin: 0; 
-  background: rgba(255,255,255,0.9);
+  background: rgba(192,192,192,0.9);
   /*background: #7EBFE5; /* Old browsers */
   /*background: -moz-linear-gradient(top, #52A5D5 0%, #A1D4F2 100%); /* FF3.6-15 */
   /*background: -webkit-linear-gradient(top, #52A5D5 0%,#A1D4F2 100%); /* Chrome10-25,Safari5.1-6 */
@@ -330,7 +330,7 @@ input#feedback_text {
     border: 1px solid rgba(0, 0, 0, 0.2);
     box-shadow: 2px 2px rgba(0, 0, 0, 0.2);
     color: #ffffff;
-    margin-top: 4em;
+    margin-top: 4.5em;
 }
 
 .button:active {
