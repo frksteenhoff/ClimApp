@@ -40,7 +40,7 @@ var app = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
 		this.loadSettings();
-
+		
 		if( this.knowledgeBase.user_info.firstLogin ){//onboarding
 			this.loadUI( "onboarding" );
 		}
@@ -53,7 +53,7 @@ var app = {
 		// navigation menu
 		var self = this;
 		$("div[data-listener='navbar']").off();
-		$("div[data-listener='navbar']").on("touchstart", function(){
+		$("div[data-listener='navbar']").on("click", function(){
 			let target = $( this ).attr("data-target");
 			console.log("target:" + target);
 			self.knowledgeBase.user_info.firstLogin = false;
@@ -104,7 +104,7 @@ var app = {
 	initSettingsListeners: function(){
 		var self = this;
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='wheel']").on("touchstart", function(){
+		$("div[data-listener='wheel']").on("click", function(){
 			var target = $(this).attr("data-target");
 			let title_ = self.knowledgeBase.settings[target].title;
 			var items_ = self.getSelectables( target );
@@ -143,14 +143,14 @@ var app = {
 	initGeolocationListeners: function(){
 		var self = this;
 		$("div[data-listener='geolocation']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='geolocation']").on("touchstart", function(){
+		$("div[data-listener='geolocation']").on("click", function(){
 			self.updateLocation();
 		});		
 	},
 	initActivityListeners: function(){
 		var self = this;
 		$("div[data-listener='activity']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='activity']").on("touchstart", function(){
+		$("div[data-listener='activity']").on("click", function(){
 			var target = $(this).attr("data-target");
 			self.knowledgeBase.activity.selected = target;
 			
@@ -265,7 +265,7 @@ var app = {
 										}
 									},
 									"user_info": {
-										"firstLogin": true,
+										"firstLogin": false,
 										"deviceid": device.uuid,
 										"hasExternalDBRecord": false
 									},
@@ -491,6 +491,7 @@ var app = {
 					   }
 			});
 		}
+
 		// Schedule a notification if weather conditions are out of the ordinary
 		// functionality will be extended to handle more complex scenarios - only when not in browser
 		if(device.platform != 'browser') {
@@ -503,6 +504,7 @@ var app = {
 	},
 	loadUI: function( pageid ){
 		var self = this;
+		console.log(this.pageMap[pageid]);
 		$.get( this.pageMap[ pageid ], function( content ){
 			console.log( "loaded: " + pageid);
 			self.currentPageID = pageid;
@@ -595,6 +597,7 @@ var app = {
 		this.initNavbarListeners();
 		
 		if( this.currentPageID == "onboarding"){
+			console.log("first time login: true");
 		}
 		else if( this.currentPageID == "dashboard" ){
 			if( 'weather' in this.knowledgeBase && this.knowledgeBase.weather.station !== "" ){
