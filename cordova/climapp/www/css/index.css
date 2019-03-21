@@ -123,6 +123,10 @@ p {
     margin-right: 0.5em;
 }
 
+p.morelinespacing {
+    line-height: 1.5em;
+}
+
 button p {
     margin: 0;
 }
