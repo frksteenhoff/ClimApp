@@ -4,7 +4,7 @@
             "outputFile": "C:\\Users\\frksteenhoff\\Documents\\GitHub\\ClimApp\\cordova\\climapp\\platforms\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-ne\\values-ne.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\frksteenhoff\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-27.1.0.aar\\3b7fbaaed2fa31d9b5d07e183e9acb44\\res\\values-ne\\values-ne.xml",
+                    "source": "C:\\Users\\frksteenhoff\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\d1b6ae2103e6c5f480a1b9d77b854454\\res\\values-ne\\values-ne.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

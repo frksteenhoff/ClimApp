@@ -41,6 +41,9 @@
         },
         "cordova-plugin-x-toast": {
             "PACKAGE_NAME": "com.climapp.app"
+        },
+        "cordova-plugin-browsersync": {
+            "PACKAGE_NAME": "com.climapp.app"
         }
     },
     "dependent_plugins": {},
@@ -117,6 +120,7 @@
         "cordova-wheel-selector-plugin": "1.0.0",
         "de.appplant.cordova.plugin.local-notification": "0.8.5",
         "cordova-plugin-app-event": "1.2.1",
-        "cordova-plugin-x-toast": "2.7.2"
+        "cordova-plugin-x-toast": "2.7.2",
+        "cordova-plugin-browsersync": "0.1.7"
     }
 }

@@ -57,6 +57,24 @@ heatindex.IREQ = ( function( options ){
     var sweat = {};
 	
 	
+	function set_options( options_ ){
+		params = options_;
+	    air = params.air;
+	    body = params.body;
+	    cloth = params.cloth;
+	    core =  {};
+	    heatex = {};
+	    limit = { IREQminimal: -1,
+				  ICLminimal: -1,
+				  IREQneutral: -1,
+				  ICLneutral: -1,
+				  DLEminimal: -1,
+			 	  DLEneutral: -1};
+	    move = params.move;
+	    skin = {};
+	    sweat = {};
+	}
+	
 	var M,Ta,Tr,p,w,v,rh,Tsk,wetness,Tex,Pex,
 	Psks,fcl,W,vp,Icl,Iclr,Pa,Tcl,hc,hr,
 	IREQ,Ia,Rt,factor,Balance,R,C,Hres,
@@ -191,7 +209,8 @@ heatindex.IREQ = ( function( options ){
     // Reveal public pointers to 
     // private functions and properties
     return{
-        sim_init : calcIREQ,
+		set_options: set_options,
+        sim_run : calcIREQ,
         current_result : current_result,
     };
 })();
