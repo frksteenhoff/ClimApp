@@ -491,6 +491,13 @@ var app = {
 					   }
 			});
 		}
+		if(!this.knowledgeBase.user_info.hasExternalDBRecord) {
+			this.createUserRecord();
+			this.knowledgeBase.user_info.hasExternalDBRecord = true;
+		} else {
+			this.addWeatherDataToDB();
+			console.log('data for database, weather: ' + Object.keys(feedback));
+		}
 
 		// Schedule a notification if weather conditions are out of the ordinary
 		// functionality will be extended to handle more complex scenarios - only when not in browser
@@ -763,11 +770,12 @@ var app = {
 	},
 	sendFeedbackToDatabase: function(feedback){
 		// TODO: implement logic to add to database
-		if(this.knowledgeBase.user_info.hasExternalDBRecord) {
+		if(!this.knowledgeBase.user_info.hasExternalDBRecord) {
 			this.createUserRecord();
 			this.knowledgeBase.user_info.hasExternalDBRecord = true;
 		} else {
-		console.log('data for database: ' + Object.keys(feedback));
+			this.addFeedbackToDB();
+			console.log('data for database, feedback: ' + Object.keys(feedback));
 		}
 	}, 
 	showSubmitSucceedToast: function(){
@@ -782,7 +790,59 @@ var app = {
 		}
 	},
 	createUserRecord: function(){
-		console.log("User information for database: " + Object.keys(this.knowledgeBase.settings));
+		let ip = "http://192.38.64.244";
+		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createUserRecord";
+		let user_data = {"_id": "cordovatest",
+						 "age": this.knowledgeBase.settings.age,
+						 "gender": this.knowledgeBase.settings.gender, 
+						 "height": this.knowledgeBase.settings.height,
+						 "weight": this.knowledgeBase.settings.weight, 
+						 "unit": 0}  
+		$.post(url, user_data).done(function(data, status, xhr){
+			if(status === "success") {
+				console.log("Database update, user: " + data.message);
+			}
+		});
+	},
+	addWeatherDataToDb: function(){
+		let ip = "http://192.38.64.244";
+		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createWeatherRecord";
+		let user_data = {
+					"_id": "cordovatest",
+					"longitude": this.knowledgeBase.settings.age,
+					"latitude": this.knowledgeBase.settings.gender, 
+					"city": this.knowledgeBase.weather.station,
+					"temperature": this.knowledgeBase.weather.temperature, 
+					"wind_speed": this.knowledgeBase.weather.windspeed, 
+					"humidity": this.knowledgeBase.weather.humidity, 
+					"cloudiness": this.knowledgeBase.weather.cloudiness,
+					"activity_level": this.knowledgeBase.activity.selected,
+					"acclimatization": 0, // currently not retrieved from sensationsmaps
+					"temp_min": 0, // currently not retrieved from sensationsmaps
+					"temp_max": 0 // currently not retrieved from sensationsmaps
+				}  
+		$.post(url, user_data).done(function(data, status, xhr){
+			if(status === "success") {
+				console.log("Database update, weather: " + data.message);
+			}
+		});
+	},
+	addFeedbackToDB: function(){
+		let ip = "http://192.38.64.244";
+		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createFeedbackRecord";
+		let user_data = {
+					"_id": "cordovatest",
+					"question_combo_id": 1, // will be changed when more sophisticaed solution is implemented
+					"rating1": this.knowledgeBase.feedback.question1.rating, 
+					"rating2": this.knowledgeBase.feedback.question2.rating,
+					"rating3": this.knowledgeBase.feedback.question3.rating, 
+					"txt": this.knowledgeBase.feedback.comment				
+				}  
+		$.post(url, user_data).done(function(data, status, xhr){
+			if(status === "success") {
+				console.log("Database update, feedback: " + data.message);
+			}
+		});
 	},
 	getAllNotifications: function() {
 		window.plugin.notification.local.getScheduledIds(function (scheduledIds) {
