@@ -53,7 +53,7 @@ var app = {
 		// navigation menu
 		var self = this;
 		$("div[data-listener='navbar']").off();
-		$("div[data-listener='navbar']").on("click", function(){
+		$("div[data-listener='navbar']").on("touchstart", function(){
 			let target = $( this ).attr("data-target");
 			console.log("target:" + target);
 			self.knowledgeBase.user_info.firstLogin = false;
@@ -64,7 +64,7 @@ var app = {
 		var self = this;
 		// When user rates the feedback questions
 		$("input[data-listener='feedback']").off(); //prevent multiple instances of listeners on same object
-		$("input[data-listener='feedback']").on("click", function(){
+		$("input[data-listener='feedback']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
 			
 			// Updating rating bar using first char in ID
@@ -82,7 +82,7 @@ var app = {
 		});
 		
 		// When user submits feedback, add to object to send to db + reset values
-		$("button[data-listener='submit']").on("click", function(){
+		$("button[data-listener='submit']").on("touchstart", function(){
 			var target = $("#feedback_text").val();
 			var feedback = {
 				rating1: self.knowledgeBase.feedback.question1.rating,
@@ -104,7 +104,7 @@ var app = {
 	initSettingsListeners: function(){
 		var self = this;
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='wheel']").on("click", function(){
+		$("div[data-listener='wheel']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
 			let title_ = self.knowledgeBase.settings[target].title;
 			var items_ = self.getSelectables( target );
@@ -126,31 +126,31 @@ var app = {
 		});		
 
 		$("div[data-listener='feedback_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='feedback_page']").on("click", function(){
+		$("div[data-listener='feedback_page']").on("touchstart", function(){
 			self.loadUI('feedback');
 		});
 
 		$("div[data-listener='disclaimer_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='disclaimer_page']").on("click", function(){
+		$("div[data-listener='disclaimer_page']").on("touchstart", function(){
 			self.loadUI('disclaimer');
 		});
 
 		$("div[data-listener='about_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='about_page']").on("click", function(){
+		$("div[data-listener='about_page']").on("touchstart", function(){
 			self.loadUI('about');
 		});
 	},
 	initGeolocationListeners: function(){
 		var self = this;
 		$("div[data-listener='geolocation']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='geolocation']").on("click", function(){
+		$("div[data-listener='geolocation']").on("touchstart", function(){
 			self.updateLocation();
 		});		
 	},
 	initActivityListeners: function(){
 		var self = this;
 		$("div[data-listener='activity']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='activity']").on("click", function(){
+		$("div[data-listener='activity']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
 			self.knowledgeBase.activity.selected = target;
 			
@@ -491,6 +491,13 @@ var app = {
 					   }
 			});
 		}
+		if(!this.knowledgeBase.user_info.hasExternalDBRecord) {
+			this.createUserRecord();
+			this.knowledgeBase.user_info.hasExternalDBRecord = true;
+		} else {
+			this.addWeatherDataToDB();
+			console.log('data for database, weather: ' + Object.keys(feedback));
+		}
 
 		// Schedule a notification if weather conditions are out of the ordinary
 		// functionality will be extended to handle more complex scenarios - only when not in browser
@@ -763,11 +770,12 @@ var app = {
 	},
 	sendFeedbackToDatabase: function(feedback){
 		// TODO: implement logic to add to database
-		if(this.knowledgeBase.user_info.hasExternalDBRecord) {
+		if(!this.knowledgeBase.user_info.hasExternalDBRecord) {
 			this.createUserRecord();
 			this.knowledgeBase.user_info.hasExternalDBRecord = true;
 		} else {
-		console.log('data for database: ' + Object.keys(feedback));
+			this.addFeedbackToDB();
+			console.log('data for database, feedback: ' + Object.keys(feedback));
 		}
 	}, 
 	showSubmitSucceedToast: function(){
@@ -782,7 +790,59 @@ var app = {
 		}
 	},
 	createUserRecord: function(){
-		console.log("User information for database: " + Object.keys(this.knowledgeBase.settings));
+		let ip = "http://192.38.64.244";
+		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createUserRecord";
+		let user_data = {"_id": "cordovatest",
+						 "age": this.knowledgeBase.settings.age,
+						 "gender": this.knowledgeBase.settings.gender, 
+						 "height": this.knowledgeBase.settings.height,
+						 "weight": this.knowledgeBase.settings.weight, 
+						 "unit": 0}  
+		$.post(url, user_data).done(function(data, status, xhr){
+			if(status === "success") {
+				console.log("Database update, user: " + data.message);
+			}
+		});
+	},
+	addWeatherDataToDb: function(){
+		let ip = "http://192.38.64.244";
+		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createWeatherRecord";
+		let user_data = {
+					"_id": "cordovatest",
+					"longitude": this.knowledgeBase.settings.age,
+					"latitude": this.knowledgeBase.settings.gender, 
+					"city": this.knowledgeBase.weather.station,
+					"temperature": this.knowledgeBase.weather.temperature, 
+					"wind_speed": this.knowledgeBase.weather.windspeed, 
+					"humidity": this.knowledgeBase.weather.humidity, 
+					"cloudiness": this.knowledgeBase.weather.cloudiness,
+					"activity_level": this.knowledgeBase.activity.selected,
+					"acclimatization": 0, // currently not retrieved from sensationsmaps
+					"temp_min": 0, // currently not retrieved from sensationsmaps
+					"temp_max": 0 // currently not retrieved from sensationsmaps
+				}  
+		$.post(url, user_data).done(function(data, status, xhr){
+			if(status === "success") {
+				console.log("Database update, weather: " + data.message);
+			}
+		});
+	},
+	addFeedbackToDB: function(){
+		let ip = "http://192.38.64.244";
+		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createFeedbackRecord";
+		let user_data = {
+					"_id": "cordovatest",
+					"question_combo_id": 1, // will be changed when more sophisticaed solution is implemented
+					"rating1": this.knowledgeBase.feedback.question1.rating, 
+					"rating2": this.knowledgeBase.feedback.question2.rating,
+					"rating3": this.knowledgeBase.feedback.question3.rating, 
+					"txt": this.knowledgeBase.feedback.comment				
+				}  
+		$.post(url, user_data).done(function(data, status, xhr){
+			if(status === "success") {
+				console.log("Database update, feedback: " + data.message);
+			}
+		});
 	},
 	getAllNotifications: function() {
 		window.plugin.notification.local.getScheduledIds(function (scheduledIds) {
