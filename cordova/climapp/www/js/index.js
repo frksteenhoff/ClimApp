@@ -64,7 +64,7 @@ var app = {
 		var self = this;
 		// When user rates the feedback questions
 		$("input[data-listener='feedback']").off(); //prevent multiple instances of listeners on same object
-		$("input[data-listener='feedback']").on("touchstart", function(){
+		$("input[data-listener='feedback']").on("click", function(){
 			var target = $(this).attr("data-target");
 			
 			// Updating rating bar using first char in ID
