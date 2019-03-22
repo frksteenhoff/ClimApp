@@ -53,7 +53,7 @@ var app = {
 		// navigation menu
 		var self = this;
 		$("div[data-listener='navbar']").off();
-		$("div[data-listener='navbar']").on("click", function(){
+		$("div[data-listener='navbar']").on("touchstart", function(){
 			let target = $( this ).attr("data-target");
 			console.log("target:" + target);
 			self.knowledgeBase.user_info.firstLogin = false;
@@ -64,7 +64,7 @@ var app = {
 		var self = this;
 		// When user rates the feedback questions
 		$("input[data-listener='feedback']").off(); //prevent multiple instances of listeners on same object
-		$("input[data-listener='feedback']").on("click", function(){
+		$("input[data-listener='feedback']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
 			
 			// Updating rating bar using first char in ID
@@ -82,7 +82,7 @@ var app = {
 		});
 		
 		// When user submits feedback, add to object to send to db + reset values
-		$("button[data-listener='submit']").on("click", function(){
+		$("button[data-listener='submit']").on("touchstart", function(){
 			var target = $("#feedback_text").val();
 			var feedback = {
 				rating1: self.knowledgeBase.feedback.question1.rating,
@@ -104,7 +104,7 @@ var app = {
 	initSettingsListeners: function(){
 		var self = this;
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='wheel']").on("click", function(){
+		$("div[data-listener='wheel']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
 			let title_ = self.knowledgeBase.settings[target].title;
 			var items_ = self.getSelectables( target );
@@ -126,31 +126,31 @@ var app = {
 		});		
 
 		$("div[data-listener='feedback_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='feedback_page']").on("click", function(){
+		$("div[data-listener='feedback_page']").on("touchstart", function(){
 			self.loadUI('feedback');
 		});
 
 		$("div[data-listener='disclaimer_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='disclaimer_page']").on("click", function(){
+		$("div[data-listener='disclaimer_page']").on("touchstart", function(){
 			self.loadUI('disclaimer');
 		});
 
 		$("div[data-listener='about_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='about_page']").on("click", function(){
+		$("div[data-listener='about_page']").on("touchstart", function(){
 			self.loadUI('about');
 		});
 	},
 	initGeolocationListeners: function(){
 		var self = this;
 		$("div[data-listener='geolocation']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='geolocation']").on("click", function(){
+		$("div[data-listener='geolocation']").on("touchstart", function(){
 			self.updateLocation();
 		});		
 	},
 	initActivityListeners: function(){
 		var self = this;
 		$("div[data-listener='activity']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='activity']").on("click", function(){
+		$("div[data-listener='activity']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
 			self.knowledgeBase.activity.selected = target;
 			
