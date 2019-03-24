@@ -593,10 +593,10 @@ var app = {
 		});
 		
 		this.knowledgeBase.thermalindices.ireq.sort(function(a,b){
-			return new Date(b.utc) - new Date(a.utc);
+			return new Date(a.utc) - new Date(b.utc);
 		});
 		this.knowledgeBase.thermalindices.phs.sort(function(a,b){
-			return new Date(b.utc) - new Date(a.utc);
+			return new Date(a.utc) - new Date(b.utc);
 		});
 			
 	},
@@ -692,10 +692,10 @@ var app = {
 					    minute:'2-digit'
 				});
 				let ld = utc.toLocaleDateString(navigator.language, { //language specific setting
-						month:"2-digit",
+						month:"short",
 					    day:"2-digit"
 				});
-				forecasts += "<div class='item'>"+obj.ICLminimal.toFixed(1);
+				forecasts += "<div class='item'>"+obj.ICLminimal;
 				forecasts += "<br><span>" + lt + "</span>";
 				forecasts += "<br><span>" + ld + "</span>"; 
 				forecasts += "</div>";

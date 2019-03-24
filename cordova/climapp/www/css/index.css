@@ -48,6 +48,9 @@ body {
 div{
 	/*border: 1px solid rgba(0, 0, 0, 0.5);/*layout helper*/
 }
+div.item{
+	text-align:center;
+}
 canvas{
 	/*vertical-align:middle;*/
 }
@@ -125,8 +128,9 @@ canvas{
 }
 
 p {
-    margin-left: 0.5em;
-    margin-right: 0.5em;
+    /* commented out, this functionality should not be in root p. 
+	margin-left: 0.5em;
+    margin-right: 0.5em;*/
 }
 
 p.morelinespacing {
