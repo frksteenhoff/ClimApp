@@ -819,8 +819,9 @@ var app = {
 
 	// Using local-notification
 	scheduleDefaultNotification: function() {
+		var self = this;
 		// If no notifications are already scheduled
-		this.getAllNotifications();
+		self.getAllNotifications();
 
 		// Used for testing purposes
 		//console.log(this.cancelAllNotifications());
@@ -829,30 +830,32 @@ var app = {
 		// NOT WORKING PROPERLY YET
 		var today = new Date();
 		today.setDate(today.getDate());
-		today.setHours(16);
-		today.setMinutes(30);
+		today.setHours(18);
+		today.setMinutes(42);
 		today.setSeconds(0);
 		var today_at_4_30_pm = new Date(today);
 
 		// TODO: Decide criteria for sending notification!
-		if(this.knowledgeBase.weather.wbgt < 1) {
+		if(self.knowledgeBase.weather.wbgt < 1) {
 			// Notification which is triggered 16.30 every weekday
 			cordova.plugins.notification.local.schedule({
 				title: 'Feedback',
 				text: 'How was your day?',
+				smallIcon: 'res://icon-stencil',
+				icon: 'res://icon',
 				trigger: {
 					type: "fix",
 					at: today_at_4_30_pm.getTime()
 			},
 			actions: [
-				{ id: 'yes', title: 'Open' },
-				{ id: 'no',  title: 'Dismiss' }
+				{ id: 'feedback_yes', title: 'Open'},
+				{ id: 'no',  title: 'Dismiss'}
 			]
 			});	
-
-			// When user clicks "oepn" the feedback screen is opened
-			cordova.plugins.notification.local.on('yes', function (notification, eopts) { 
-				this.loadUI('feedback');
+			
+			// When user clicks "open" the feedback screen is opened
+			cordova.plugins.notification.local.on('feedback_yes', function (notification, eopts) { 
+				self.loadUI('feedback');
 			 });
 		}
 	},
