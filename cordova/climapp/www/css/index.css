@@ -33,6 +33,11 @@ body {
     padding:0px;
     width:100%;
 	text-align: justify;
+	
+	/*required for IOS*/
+	padding-top: constant(safe-area-inset-top); 
+	padding-top: env(safe-area-inset-top);
+	/*end required for IOS*/
 }
 
 /* Portrait layout (default) */
