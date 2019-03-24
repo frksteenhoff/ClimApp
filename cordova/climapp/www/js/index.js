@@ -691,8 +691,13 @@ var app = {
 						hour: '2-digit',
 					    minute:'2-digit'
 				});
-				forecasts += "<div class='item'>"+obj.ICLminimal.toFixed(1)+ "<br>";
-				forecasts += "<span>" + lt + "</span>"; 
+				let ld = utc.toLocaleDateString(navigator.language, { //language specific setting
+						month:"2-digit",
+					    day:"2-digit"
+				});
+				forecasts += "<div class='item'>"+obj.ICLminimal.toFixed(1);
+				forecasts += "<br><span>" + lt + "</span>";
+				forecasts += "<br><span>" + ld + "</span>"; 
 				forecasts += "</div>";
 			});
 			$("#forecasts").html( forecasts );
