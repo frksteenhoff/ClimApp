@@ -64,7 +64,7 @@ var app = {
 		var self = this;
 		// When user rates the feedback questions
 		$("input[data-listener='feedback']").off(); //prevent multiple instances of listeners on same object
-		$("input[data-listener='feedback']").on("touchstart", function(){
+		$("input[data-listener='feedback']").on("click", function(){
 			var target = $(this).attr("data-target");
 			
 			// Updating rating bar using first char in ID
@@ -506,7 +506,7 @@ var app = {
 			var threshold = 0;
 			console.log('wbgt ' + self.knowledgeBase.weather.wbgt);
 			if(self.knowledgeBase.weather.wbgt < threshold) {
-				// self.scheduleDefaultNotification();
+				self.scheduleDefaultNotification();
 			}
 		}
 	},
@@ -743,43 +743,6 @@ var app = {
 	/*
 	 * Methods related to feedback module and database
 	 */
-	scheduleDefaultNotification: function() {
-		// If no notifications are already scheduled
-		this.getAllNotifications();
-
-		// Used for testing purposes
-		//console.log(this.cancelAllNotifications());
-
-		// Set notification time and date today @ 5PM
-		// NOT WORKING PROPERLY YET
-		var today = new Date();
-		today.setDate(today.getDate());
-		today.setHours(16);
-		today.setMinutes(0);
-		today.setSeconds(0);
-		var today_at_4_pm = new Date(today);
-
-		if(this.knowledgeBase.weather.wbgt < 1) {
-			// Notification which is triggered 16.30 every weekday
-			cordova.plugins.notification.local.schedule({
-				title: 'Feedback',
-				text: 'How was your day?',
-				every: "day",
-				at: today_at_4_pm.getTime()
-			});	
-		}
-	},
-	showSubmitSucceedToast: function(){
-		if(device.platform != 'browser') {
-			window.plugins.toast.showWithOptions(
-			{
-				message: "Feedback submitted!",
-				duration: "short", // 2000 ms
-				position: "bottom",
-				addPixelsY: -40  // giving a margin at the bottom by moving text up
-			});
-		}
-	},
 	createUserRecord: function(){
 		let self = this;
 		let ip = "http://192.38.64.244";
@@ -838,18 +801,72 @@ var app = {
 			}
 		});
 	},
+		// Toast 
+		showSubmitSucceedToast: function(){
+			if(device.platform != 'browser') {
+				window.plugins.toast.showWithOptions(
+				{
+					message: "Feedback submitted!",
+					duration: "short", // 2000 ms
+					position: "bottom",
+					addPixelsY: -40  // giving a margin at the bottom by moving text up
+				});
+			}
+		},	
+	/* 
+	 * Scheduling notifications
+	 */
+
+	// Using local-notification
+	scheduleDefaultNotification: function() {
+		// If no notifications are already scheduled
+		this.getAllNotifications();
+
+		// Used for testing purposes
+		//console.log(this.cancelAllNotifications());
+
+		// Set notification time and date today @ 5PM
+		// NOT WORKING PROPERLY YET
+		var today = new Date();
+		today.setDate(today.getDate());
+		today.setHours(16);
+		today.setMinutes(30);
+		today.setSeconds(0);
+		var today_at_4_30_pm = new Date(today);
+
+		// TODO: Decide criteria for sending notification!
+		if(this.knowledgeBase.weather.wbgt < 1) {
+			// Notification which is triggered 16.30 every weekday
+			cordova.plugins.notification.local.schedule({
+				title: 'Feedback',
+				text: 'How was your day?',
+				trigger: {
+					type: "fix",
+					at: today_at_4_30_pm.getTime()
+			},
+			actions: [
+				{ id: 'yes', title: 'Open' },
+				{ id: 'no',  title: 'Dismiss' }
+			]
+			});	
+
+			// When user clicks "oepn" the feedback screen is opened
+			cordova.plugins.notification.local.on('yes', function (notification, eopts) { 
+				this.loadUI('feedback');
+			 });
+		}
+	},
 	getAllNotifications: function() {
-		window.plugin.notification.local.getScheduledIds(function (scheduledIds) {
+		cordova.plugins.notification.local.getScheduledIds(function (scheduledIds) {
 			console.log(scheduledIds.length);
 			console.log("Scheduled IDs: " + scheduledIds.join(", "));
 		});
 	},
 	cancelAllNotifications: function() {
-		window.plugin.notification.local.cancelAll(function () {
+		cordova.plugins.notification.local.cancelAll(function () {
 			console.log('All notifications canceled');
 		});
 	}
-	
 };
 
 app.initialize();

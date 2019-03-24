@@ -4,7 +4,7 @@
             "outputFile": "C:\\Users\\frksteenhoff\\Documents\\GitHub\\ClimApp\\cordova\\climapp\\platforms\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-v21\\values-v21.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\frksteenhoff\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\d1b6ae2103e6c5f480a1b9d77b854454\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\frksteenhoff\\.gradle\\caches\\transforms-1\\files-1.1\\support-compat-26.1.0.aar\\484561d2dd5c8765ffb55fa78a4f686c\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,13",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4",
@@ -23,7 +23,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\frksteenhoff\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-26.1.0.aar\\481f60ee5a9eed23677fd0924f55366f\\res\\values-v21\\values-v21.xml",
+                    "source": "C:\\Users\\frksteenhoff\\.gradle\\caches\\transforms-1\\files-1.1\\support-media-compat-26.1.0.aar\\0e03665602a5deced55fb0106e183b3f\\res\\values-v21\\values-v21.xml",
                     "from": {
                         "startLines": "2,5,8,11",
                         "startColumns": "4,4,4,4",

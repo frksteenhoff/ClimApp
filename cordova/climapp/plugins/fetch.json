@@ -39,14 +39,6 @@
     "is_top_level": true,
     "variables": {}
   },
-  "de.appplant.cordova.plugin.local-notification": {
-    "source": {
-      "type": "registry",
-      "id": "de.appplant.cordova.plugin.local-notification@^0.8.5"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
   "cordova-plugin-app-event": {
     "source": {
       "type": "registry",
@@ -67,6 +59,14 @@
     "source": {
       "type": "registry",
       "id": "cordova-plugin-browsersync@^1.1.0"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-local-notification": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-local-notification"
     },
     "is_top_level": true,
     "variables": {}

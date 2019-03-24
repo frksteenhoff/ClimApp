@@ -7,10 +7,17 @@
     "files": {}
   },
   "installed_plugins": {
+    "cordova-plugin-browsersync": {
+      "PACKAGE_NAME": "com.climapp.app"
+    },
     "cordova-plugin-device": {
       "PACKAGE_NAME": "com.climapp.app"
     },
     "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "com.climapp.app"
+    },
+    "cordova-plugin-local-notification": {
+      "ANDROID_SUPPORT_V4_VERSION": "26.+",
       "PACKAGE_NAME": "com.climapp.app"
     },
     "cordova-plugin-splashscreen": {
@@ -24,20 +31,10 @@
     },
     "cordova-wheel-selector-plugin": {
       "PACKAGE_NAME": "com.climapp.app"
-    },
-    "cordova-plugin-browsersync": {
-      "PACKAGE_NAME": "com.climapp.app"
     }
   },
   "dependent_plugins": {
-    "cordova-plugin-app-event": {
-      "PACKAGE_NAME": "com.climapp.app"
-    },
     "cordova-plugin-badge": {
-      "PACKAGE_NAME": "com.climapp.app"
-    },
-    "cordova-plugin-local-notification": {
-      "ANDROID_SUPPORT_V4_VERSION": "26.+",
       "PACKAGE_NAME": "com.climapp.app"
     }
   }

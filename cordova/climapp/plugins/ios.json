@@ -28,18 +28,12 @@
     "cordova-wheel-selector-plugin": {
       "PACKAGE_NAME": "com.climapp.app"
     },
-    "de.appplant.cordova.plugin.local-notification": {
+    "cordova-plugin-local-notification": {
       "PACKAGE_NAME": "com.climapp.app"
     }
   },
   "dependent_plugins": {
-    "cordova-plugin-app-event": {
-      "PACKAGE_NAME": "com.climapp.app"
-    },
     "cordova-plugin-badge": {
-      "PACKAGE_NAME": "com.climapp.app"
-    },
-    "cordova-plugin-local-notification": {
       "PACKAGE_NAME": "com.climapp.app"
     }
   }
