@@ -29,33 +29,6 @@ module.exports = [
         "runs": true
     },
     {
-        "file": "plugins/de.appplant.cordova.plugin.local-notification/www/local-notification.js",
-        "id": "de.appplant.cordova.plugin.local-notification.LocalNotification",
-        "pluginId": "de.appplant.cordova.plugin.local-notification",
-        "clobbers": [
-            "cordova.plugins.notification.local",
-            "plugin.notification.local"
-        ]
-    },
-    {
-        "file": "plugins/de.appplant.cordova.plugin.local-notification/www/local-notification-core.js",
-        "id": "de.appplant.cordova.plugin.local-notification.LocalNotification.Core",
-        "pluginId": "de.appplant.cordova.plugin.local-notification",
-        "clobbers": [
-            "cordova.plugins.notification.local.core",
-            "plugin.notification.local.core"
-        ]
-    },
-    {
-        "file": "plugins/de.appplant.cordova.plugin.local-notification/www/local-notification-util.js",
-        "id": "de.appplant.cordova.plugin.local-notification.LocalNotification.Util",
-        "pluginId": "de.appplant.cordova.plugin.local-notification",
-        "merges": [
-            "cordova.plugins.notification.local.core",
-            "plugin.notification.local.core"
-        ]
-    },
-    {
         "file": "plugins/cordova-plugin-x-toast/www/Toast.js",
         "id": "cordova-plugin-x-toast.Toast",
         "pluginId": "cordova-plugin-x-toast",
@@ -72,10 +45,7 @@ module.exports.metadata =
     "cordova-plugin-splashscreen": "5.0.2",
     "cordova-plugin-whitelist": "1.3.3",
     "cordova-wheel-selector-plugin": "1.0.0",
-    "de.appplant.cordova.plugin.local-notification": "0.8.5",
-    "cordova-plugin-app-event": "1.2.1",
-    "cordova-plugin-x-toast": "2.7.2",
-    "cordova-plugin-browsersync": "0.1.7"
+    "cordova-plugin-x-toast": "2.7.2"
 }
 // BOTTOM OF METADATA
 });

@@ -12,11 +12,9 @@
     "dependencies": {
         "browser-sync": "^2.26.3",
         "cheerio": "^0.19.0",
-        "cordova-android": "^7.1.4",
+        "cordova-android": "^8.0.0",
         "cordova-browser": "6.0.0",
-        "cordova-ios": "^4.5.5",
-        "cordova-plugin-app-event": "^1.2.1",
-        "cordova-plugin-browsersync": "^1.1.0",
+        "cordova-ios": "^5.0.0",
         "cordova-plugin-device": "^2.0.2",
         "cordova-plugin-geolocation": "^4.0.1",
         "cordova-plugin-splashscreen": "^5.0.2",
@@ -24,7 +22,6 @@
         "cordova-plugin-x-toast": "^2.7.2",
         "cordova-wheel-selector-plugin": "^1.1.2",
         "csp-parse": "0.0.2",
-        "de.appplant.cordova.plugin.local-notification": "^0.8.5",
         "elementtree": "^0.1.7",
         "glob": "^5.0.15",
         "npm": "^2.15.12",
@@ -38,12 +35,12 @@
             "cordova-plugin-device": {},
             "cordova-plugin-splashscreen": {},
             "cordova-wheel-selector-plugin": {},
-            "de.appplant.cordova.plugin.local-notification": {},
             "cordova-plugin-x-toast": {}
         },
         "platforms": [
             "browser",
-            "ios"
+            "ios",
+            "android"
         ]
     }
 }
