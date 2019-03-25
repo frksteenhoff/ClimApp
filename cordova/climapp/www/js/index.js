@@ -53,7 +53,7 @@ var app = {
 		// navigation menu
 		var self = this;
 		$("div[data-listener='navbar']").off();
-		$("div[data-listener='navbar']").on("touchstart", function(){
+		$("div[data-listener='navbar']").on("click", function(){
 			let target = $( this ).attr("data-target");
 			console.log("target:" + target);
 			self.knowledgeBase.user_info.firstLogin = false;
@@ -93,7 +93,7 @@ var app = {
 			} 
 			// Add feedback to database
 			self.addFeedbackToDB();
-			self.showSubmitSucceedToast();
+			self.showShortToast("Submit succeeded!");
 						
 			// reset values
 			$('#feedback_text').val("");
@@ -125,6 +125,17 @@ var app = {
 			    console.log('Canceled');
 			});
 		});		
+
+		$("input[data-listener='notification_switch']").off(); //prevent multiple instances of listeners on same object
+		$("input[data-listener='notification_switch']").on("click", function(){
+			var isChecked = $(this).is(":checked");
+			self.knowledgeBase.user_info.receivesNotifications = isChecked;
+
+			// Inform user about choice in toast
+			var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
+			self.showShortToast(notificationText);
+		});
+
 
 		$("div[data-listener='feedback_page']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='feedback_page']").on("touchstart", function(){
@@ -267,7 +278,7 @@ var app = {
 										"firstLogin": false,
 										"deviceid": device.uuid,
 										"hasExternalDBRecord": true,
-										"receivesNotifications": false // true until user opts out
+										"receivesNotifications": true // true until user opts out
 									},
 									"thermalindices":{ 
 												"ireq":[//array of objects
@@ -378,6 +389,7 @@ var app = {
 									}
 								  };
 		}
+
 	},
 	/* In the future this should be used to fetch the needed question from the database
 	   Currently working with static content, just for proof of concept. */
@@ -709,7 +721,8 @@ var app = {
 			$("#age").html( this.knowledgeBase.settings.age.value );
 			$("#height").html( this.knowledgeBase.settings.height.value );
 			$("#weight").html( this.knowledgeBase.settings.weight.value );
-			$("#gender").html( this.knowledgeBase.settings.gender.value );	
+			$("#gender").html( this.knowledgeBase.settings.gender.value );
+			$("#notification_checkbox").attr("checked", this.knowledgeBase.user_info.receivesNotifications);
 		}
 		else if( this.currentPageID == "feedback" ){
 			this.initFeedbackListeners();
@@ -806,17 +819,17 @@ var app = {
 		});
 	},
 	// Toast 
-	showSubmitSucceedToast: function(){
+	showShortToast: function(textToShow){
 		if(device.platform != 'browser') {
 			window.plugins.toast.showWithOptions(
 			{
-				message: "Feedback submitted!",
+				message: textToShow,
 				duration: "short", // 2000 ms
 				position: "bottom",
 				addPixelsY: -40  // giving a margin at the bottom by moving text up
 			});
 		}
-	},	
+	}	
 	/* 
 	 * Scheduling notifications
 	 

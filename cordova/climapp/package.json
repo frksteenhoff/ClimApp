@@ -36,11 +36,13 @@
             "cordova-plugin-device": {},
             "cordova-plugin-splashscreen": {},
             "cordova-wheel-selector-plugin": {},
-            "cordova-plugin-x-toast": {}
+            "cordova-plugin-x-toast": {},
+            "cordova-plugin-browsersync": {}
         },
         "platforms": [
             "browser",
-            "ios"
+            "ios",
+            "android"
         ]
     }
 }
