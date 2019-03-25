@@ -49,9 +49,6 @@ div{
 	/*border: 1px solid rgba(0, 0, 0, 0.5);/*layout helper*/
 }
 
-#forecast_now{
-	font-weight: bold;
-}
 
 canvas{
 	/*vertical-align:middle;*/
@@ -227,7 +224,7 @@ img.small{
 
 .gallery div.item{
 	padding-top: 0.2em;
-	border-left: 1px solid rgba(0, 0, 0, 0.2);
+	border-right: 1px solid rgba(0, 0, 0, 0.2);
 	text-align:center;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
@@ -245,6 +242,12 @@ img.small{
 .gallery div.heat{
 	background: rgba(200,100,0,0.4);
 }
+.gallery div.focus{
+	font-size: 1.3em;
+	font-weight: bold;
+	border-right: 2px solid rgba(250, 215, 0, 0.7);
+}
+
 
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
@@ -325,7 +328,7 @@ div.inputcontainer{
 	width: 80%;
 }
 
-div.button {
+div.inputcontainer div.button {
 	width: 50%;
 	margin: 2em auto;
 	text-align: center;

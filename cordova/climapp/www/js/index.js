@@ -161,6 +161,24 @@ var app = {
 			self.updateLocation();
 		});		
 	},
+	initForecastListeners: function(){
+		var self = this;
+		$("div[data-listener='forecast']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='forecast']").on("click", function(){
+			$("div[data-listener='forecast']").removeClass("focus");
+			$(this).addClass("focus");
+			let windowsize = $(window).width();
+			$("#forecasts").scrollLeft( 0 );
+			var offset_scroll = $(this).offset().left - ( 0.5*windowsize) + 0.075*windowsize; //CENTERING
+			
+			let index = $(this).attr("data-index");
+			
+			self.updateInfo( index );
+			$("#forecasts").animate({
+				scrollLeft: offset_scroll
+			}, 500);
+		});		
+	},
 	initActivityListeners: function(){
 		var self = this;
 		$("div[data-listener='activity']").off(); //prevent multiple instances of listeners on same object
@@ -329,11 +347,11 @@ var app = {
 									},
 									"gauge":{
 										"cold":{
-											"title": { 0: "Good",
-													  1: "Cool",
-													  2: "Cold",
-													  3: "Very cold",
-													  4: "Extremely cold!"},
+											"title": { 0: "No thermal stress",
+													  1: "It is cool",
+													  2: "It is cold",
+													  3: "It is very cold",
+													  4: "It is extremely cold!"},
 											"sectors":[{
 												          color : "#22f522",
 													      lo : 0,
@@ -353,11 +371,11 @@ var app = {
 												        } ],
 											},
 										"heat":{
-											"title":{ 0: "Good",
-													  1: "Warm",
-													  2: "Hot",
-													  3: "Very hot",
-													  4: "Extremely hot!"},
+											"title":{ 0: "No thermal stress",
+													  1: "It is warm",
+													  2: "It is hot",
+													  3: "It is very hot",
+													  4: "It is extremely hot!"},
 											"sectors":[{
 										          color : "#22f522",
 											      lo : 0,
@@ -612,6 +630,10 @@ var app = {
 				"DLEminimal": ireq.DLEminimal,
 				"ICLneutral": ireq.ICLneutral,
 				"DLEneutral": ireq.DLEneutral,
+				"Tair": options.air.Tair,
+				"rh": options.air.rh,
+				"v_air": options.air.v_air,
+				"Trad":options.air.Trad,
 				"utc": self.knowledgeBase.weather.utc[index],
 			};
 			self.knowledgeBase.thermalindices.ireq.push( ireq_object );
@@ -628,6 +650,10 @@ var app = {
 				"D_Tre": phs.D_Tre,
 				"Dwl50": phs.Dwl50,
 				"SWtotg": phs.SWtotg,
+				"Tair": options.air.Tair,
+				"rh": options.air.rh,
+				"v_air": options.air.v_air,
+				"Trad":options.air.Trad,
 				"utc": self.knowledgeBase.weather.utc[index],
 			};
 			self.knowledgeBase.thermalindices.phs.push( phs_object );	
@@ -649,20 +675,7 @@ var app = {
 			console.log("first time login: true");
 		}
 		else if( this.currentPageID == "dashboard" ){
-			if( 'weather' in this.knowledgeBase && this.knowledgeBase.weather.station !== "" ){
-				let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
-				let utc_date = new Date( this.knowledgeBase.weather.utc[0] ); //
-				let local_time = utc_date.toLocaleTimeString(navigator.language, { //language specific setting
-						hour: '2-digit',
-					    minute:'2-digit'
-				});
-				$("#current_time").html( local_time );
-				$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
-				$("#temperature").html( parseFloat( this.knowledgeBase.weather.temperature[0] ).toFixed(0) );
-				$("#windspeed").html( parseFloat( this.knowledgeBase.weather.windspeed[0] ).toFixed(0) );
-				$("#humidity").html( parseFloat( this.knowledgeBase.weather.humidity[0] ).toFixed(0) );
-				
-			}
+			
 			this.initGeolocationListeners();
 			this.initActivityListeners();
 			let selected = this.knowledgeBase.activity.selected;
@@ -695,20 +708,17 @@ var app = {
 				let hrisk = self.knowledgeBase.thermalindices.wbgt.risk( wbgt );
 				var val = Math.max(obj.ICLminimal, hrisk ).toFixed(1);
 				let corh = obj.ICLminimal > hrisk ? "cold" : "heat";
-			
-				let sector = self.knowledgeBase.gauge[corh].sectors.filter( function( s ){
-					return ( val >= s.lo && val <= s.hi );
-				});
-				if ( val < 1 ) {
+
+				if ( val <= 1 ) {
 					corh="neutral";
 				}
 				
-				if ( currentindex == -1 && Math.abs(dif) < 2 ){
+				if ( currentindex === -1 && Math.abs(dif) < 2 ){
 					currentindex = index;
-					forecasts += "<div class='item "+corh+"' id='forecast_now'>";
+					forecasts += "<div data-listener='forecast' class='item "+corh+" focus' data-index='"+index+"'>";
 				}
 				else{
-					forecasts += "<div class='item "+corh+"'>";
+					forecasts += "<div data-listener='forecast' class='item "+corh+"' data-index='"+index+"'>";
 				}
 				forecasts += "<div class='clothingicon'><img src='"+src+"'/></div>";
 				forecasts += "<p>" + val+ "";
@@ -717,66 +727,14 @@ var app = {
 				forecasts += "</div>";				
 			});
 			$("#forecasts").html( forecasts );
+			
 			let windowsize = $( window ).width();
 			$("#forecasts").scrollLeft(0).animate({
-				scrollLeft: $("#forecast_now").offset().left - ( 0.5*windowsize) + 0.075*windowsize //CENTERING
+				scrollLeft: $("div[data-listener='forecast'][data-index='"+currentindex+"']").offset().left - ( 0.5*windowsize) + 0.075*windowsize //CENTERING
 			}, 500);
 			
-			let icl_min = this.knowledgeBase.thermalindices.ireq[currentindex].ICLminimal;
-			let dle_min = 60 * this.knowledgeBase.thermalindices.ireq[currentindex].DLEminimal;
-			dle_min = dle_min.toFixed(0);
-			let d_tre = this.knowledgeBase.thermalindices.phs[currentindex].D_Tre;
-			let d_sw = this.knowledgeBase.thermalindices.phs[currentindex].Dwl50;
-			let sw_tot_per_hour = 0.001 * 60 * this.knowledgeBase.thermalindices.phs[currentindex].SWtotg / 
-			(this.knowledgeBase.sim.duration ); //liter per hour
-			sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
-			
-			
-			let cold_index = icl_min;
-			let heat_index = this.knowledgeBase.thermalindices.wbgt.risk( this.knowledgeBase.weather.wbgt[currentindex] );
-			
-			let draw_cold_gauge = cold_index > heat_index;
-			let draw_heat_gauge = !draw_cold_gauge;
-			
-			let icl_min_threshold = this.knowledgeBase.thresholds.ireq.icl;
-			let duration_threshold = this.knowledgeBase.thresholds.phs.duration;
-			let sweat_threshold = this.knowledgeBase.thresholds.phs.sweat;
-			
-			let tip_html = "";
-			
-			if( icl_min > icl_min_threshold ){
-				//this.drawGauge( 'main_gauge', width, icl_min , "cold stress level" );
-				tip_html += "<p><span class='score'>"+dle_min+"</span> minutes before low body temperature.</p>";
-			}
-			if( d_tre < duration_threshold ){
-				//this.drawGauge( 'main_gauge', width, icl_min , "heat stress level" );
-				tip_html += "<p><span class='score'>"+d_tre+"</span> minutes before high body temperature.</p>";
-			}
-			if( d_sw < duration_threshold ){
-				//this.drawGauge( 'main_gauge', width, icl_min , "heat stress level" );
-				tip_html += "<p>Risk for severe dehydration in <span class='score'>"+d_sw+"</span> minutes.</p>";
-			}
-			if( sw_tot_per_hour >= sweat_threshold ){
-				//
-				tip_html += "<p><span class='score'>"+sw_tot_per_hour+"</span> liter sweat loss per hour.</p>";
-			}
-			
-			if( tip_html === ""){
-				tip_html += "<p>No significant thermal stress expected.</p>";
-			}
-			let width = windowsize / 1.67;
-			$("#main_gauge").width( width );
-			$("#main_gauge").html("");//clear gauge
-			
-			if( draw_cold_gauge ){
-				this.drawGauge( 'main_gauge', width, cold_index , "cold" );
-			}
-			else if( draw_heat_gauge ){
-				this.drawGauge( 'main_gauge', width, heat_index , "heat" );
-			}
-			
-			$("#tips").html( tip_html );
-			
+			this.initForecastListeners();
+			this.updateInfo( currentindex );	
 		}
 		else if( this.currentPageID == "settings" ){
 			this.initSettingsListeners();
@@ -798,6 +756,82 @@ var app = {
 			$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").attr("checked", true);
 			$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").attr("checked", true);
 		}
+	},
+	updateInfo: function( index ){
+		
+		if( 'weather' in this.knowledgeBase && this.knowledgeBase.weather.station !== "" ){
+			let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
+			let utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ index].utc ); //
+			let local_time = utc_date.toLocaleTimeString(navigator.language, { //language specific setting
+					hour: '2-digit',
+				    minute:'2-digit'
+			});
+			$("#current_time").html( local_time );
+			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
+			$("#temperature").html( this.knowledgeBase.thermalindices.ireq[ index].Tair.toFixed(0) );
+			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[ index].v_air.toFixed(0) );
+			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[ index].rh.toFixed(0) );
+			
+		
+			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
+			let dle_min = 60 * this.knowledgeBase.thermalindices.ireq[ index].DLEminimal;
+			dle_min = dle_min.toFixed(0);
+			let d_tre = this.knowledgeBase.thermalindices.phs[ index].D_Tre;
+			let d_sw = this.knowledgeBase.thermalindices.phs[ index].Dwl50;
+			let sw_tot_per_hour = 0.001 * 60 * this.knowledgeBase.thermalindices.phs[ index].SWtotg / 
+			(this.knowledgeBase.sim.duration ); //liter per hour
+			sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
+		
+		
+			let cold_index = icl_min;
+			let heat_index = this.knowledgeBase.thermalindices.wbgt.risk( this.knowledgeBase.weather.wbgt[ index] );
+		
+			let draw_cold_gauge = cold_index > heat_index;
+			let draw_heat_gauge = !draw_cold_gauge;
+		
+			let icl_min_threshold = this.knowledgeBase.thresholds.ireq.icl;
+			let duration_threshold = this.knowledgeBase.thresholds.phs.duration;
+			let sweat_threshold = this.knowledgeBase.thresholds.phs.sweat;
+		
+			let tip_html = "";
+		
+			if( icl_min > icl_min_threshold ){
+				//this.drawGauge( 'main_gauge', width, icl_min , "cold stress level" );
+				tip_html += "<p><span class='score'>"+dle_min+"</span> minutes before low body temperature.</p>";
+			}
+			if( d_tre < duration_threshold ){
+				//this.drawGauge( 'main_gauge', width, icl_min , "heat stress level" );
+				tip_html += "<p><span class='score'>"+d_tre+"</span> minutes before high body temperature.</p>";
+			}
+			if( d_sw < duration_threshold ){
+				//this.drawGauge( 'main_gauge', width, icl_min , "heat stress level" );
+				tip_html += "<p>Risk for severe dehydration in <span class='score'>"+d_sw+"</span> minutes.</p>";
+			}
+			if( sw_tot_per_hour >= sweat_threshold ){
+				//
+				tip_html += "<p><span class='score'>"+sw_tot_per_hour+"</span> liter sweat loss per hour.</p>";
+			}
+		
+			if( tip_html === ""){
+				tip_html += "<p>No significant thermal stress expected.</p>";
+			}
+		
+			let windowsize = $( window ).width();
+			let width = windowsize / 1.67;
+			$("#main_gauge").width( width );
+			$("#main_gauge").html("");//clear gauge
+		
+			if( draw_cold_gauge ){
+				this.drawGauge( 'main_gauge', width, cold_index , "cold" );
+			}
+			else if( draw_heat_gauge ){
+				this.drawGauge( 'main_gauge', width, heat_index , "heat" );
+			}
+		
+			$("#tips").html( tip_html );
+		}
+		
+		
 	},
 	drawGauge: function( id, width, value, key ){
 		var title = this.knowledgeBase.gauge[key].title[ Math.floor( value ) ];
