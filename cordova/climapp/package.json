@@ -12,9 +12,7 @@
     "dependencies": {
         "browser-sync": "^2.26.3",
         "cheerio": "^0.19.0",
-        "cordova-android": "^7.1.4",
         "cordova-browser": "6.0.0",
-        "cordova-ios": "^4.5.5",
         "cordova-plugin-device": "^2.0.2",
         "cordova-plugin-geolocation": "^4.0.1",
         "cordova-plugin-splashscreen": "^5.0.2",
@@ -38,9 +36,7 @@
             "cordova-plugin-whitelist": {}
         },
         "platforms": [
-            "browser",
-            "ios",
-            "android"
+            "browser"
         ]
     }
 }
