@@ -277,8 +277,9 @@ var app = {
 										"comment": ""
 									},
 									"user_info": {
+
 										"firstLogin": true,
-										"deviceid": device.uuid,
+										"deviceid": function(){ return device.uuid },
 										"hasExternalDBRecord": false,
 										"receivesNotifications": false // false as notifications are not part of the app
 									},
@@ -334,7 +335,7 @@ var app = {
 													  3: "Very cold",
 													  4: "Extremely cold!"},
 											"sectors":[{
-												          color : "#00ff00",
+												          color : "#22f522",
 													      lo : 0,
 												          hi : 1
 												        },{
@@ -358,7 +359,7 @@ var app = {
 													  3: "Very hot",
 													  4: "Extremely hot!"},
 											"sectors":[{
-										          color : "#00ff00",
+										          color : "#22f522",
 											      lo : 0,
 										          hi : 1
 										        },{
@@ -376,6 +377,34 @@ var app = {
 										        } ]
 											}
 										
+									},
+									"clothingicons":{
+										"icon": function( clo ){
+											if( clo > 2.5 ){
+												return "./img/clothing/3.0clo.png";
+											}
+											else if( clo > 2.0 ){
+												return "./img/clothing/2.0clo.png";
+											}
+											else if( clo > 1.0 ){
+												return "./img/clothing/1.5clo.png";
+											}
+											else if( clo > 0.9 ){
+												return "./img/clothing/1.0clo.png";
+											}
+											else if( clo > 0.8 ){
+												return "./img/clothing/0.9clo.png";
+											}
+											else if( clo > 0.6 ){
+												return "./img/clothing/0.8clo.png";
+											}
+											else if( clo > 0.4){
+												return "./img/clothing/0.5clo.png";
+											}
+											else{
+												return "./img/clothing/0.4clo.png";
+											}
+										}
 									},
 									"thresholds":{
 										"ireq":{
@@ -642,19 +671,69 @@ var app = {
 			let caption_ = this.knowledgeBase.activity.label[ selected ];
 			$("#activityCaption").html( caption_ );
 			
+			var forecasts = "";
+			var currentindex = -1;
+			var self = this;
+			$.each( this.knowledgeBase.thermalindices.ireq, function(index, obj ){
+				let utc = new Date( obj.utc ); //
+				let lt = utc.toLocaleTimeString(navigator.language, { //language specific setting
+						hour: '2-digit',
+					    minute:'2-digit'
+				});
+				let ld = utc.toLocaleDateString(navigator.language, { //language specific setting
+						month:"short",
+					    day:"2-digit"
+				});
+				
+				//check if forecast is within 3 hours
+				let localtime = new Date();
+				let localutc = new Date( localtime.toISOString() );
+				let dif = (utc - localutc) / (1000*60*60);
+				
+				let src =  self.knowledgeBase.clothingicons.icon( obj.ICLminimal );
+				let wbgt = self.knowledgeBase.weather.wbgt[index];
+				let hrisk = self.knowledgeBase.thermalindices.wbgt.risk( wbgt );
+				var val = Math.max(obj.ICLminimal, hrisk ).toFixed(1);
+				let corh = obj.ICLminimal > hrisk ? "cold" : "heat";
 			
-			let icl_min = this.knowledgeBase.thermalindices.ireq[0].ICLminimal;
-			let dle_min = 60 * this.knowledgeBase.thermalindices.ireq[0].DLEminimal;
+				let sector = self.knowledgeBase.gauge[corh].sectors.filter( function( s ){
+					return ( val >= s.lo && val <= s.hi );
+				});
+				if ( val < 1 ) {
+					corh="neutral";
+				}
+				
+				if ( currentindex == -1 && Math.abs(dif) < 2 ){
+					currentindex = index;
+					forecasts += "<div class='item "+corh+"' id='forecast_now'>";
+				}
+				else{
+					forecasts += "<div class='item "+corh+"'>";
+				}
+				forecasts += "<div class='clothingicon'><img src='"+src+"'/></div>";
+				forecasts += "<p>" + val+ "";
+				forecasts += "<br><span>" + lt + "</span>";
+				forecasts += "<br><span>" + ld + "</span></p>"; 
+				forecasts += "</div>";				
+			});
+			$("#forecasts").html( forecasts );
+			let windowsize = $( window ).width();
+			$("#forecasts").scrollLeft(0).animate({
+				scrollLeft: $("#forecast_now").offset().left - ( 0.5*windowsize) + 0.075*windowsize //CENTERING
+			}, 500);
+			
+			let icl_min = this.knowledgeBase.thermalindices.ireq[currentindex].ICLminimal;
+			let dle_min = 60 * this.knowledgeBase.thermalindices.ireq[currentindex].DLEminimal;
 			dle_min = dle_min.toFixed(0);
-			let d_tre = this.knowledgeBase.thermalindices.phs[0].D_Tre;
-			let d_sw = this.knowledgeBase.thermalindices.phs[0].Dwl50;
-			let sw_tot_per_hour = 0.001 * 60 * this.knowledgeBase.thermalindices.phs[0].SWtotg / 
+			let d_tre = this.knowledgeBase.thermalindices.phs[currentindex].D_Tre;
+			let d_sw = this.knowledgeBase.thermalindices.phs[currentindex].Dwl50;
+			let sw_tot_per_hour = 0.001 * 60 * this.knowledgeBase.thermalindices.phs[currentindex].SWtotg / 
 			(this.knowledgeBase.sim.duration ); //liter per hour
 			sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
 			
 			
 			let cold_index = icl_min;
-			let heat_index = this.knowledgeBase.thermalindices.wbgt.risk( this.knowledgeBase.weather.wbgt[0] );
+			let heat_index = this.knowledgeBase.thermalindices.wbgt.risk( this.knowledgeBase.weather.wbgt[currentindex] );
 			
 			let draw_cold_gauge = cold_index > heat_index;
 			let draw_heat_gauge = !draw_cold_gauge;
@@ -685,7 +764,7 @@ var app = {
 			if( tip_html === ""){
 				tip_html += "<p>No significant thermal stress expected.</p>";
 			}
-			let width = $( window ).width() / 1.67;
+			let width = windowsize / 1.67;
 			$("#main_gauge").width( width );
 			$("#main_gauge").html("");//clear gauge
 			
@@ -695,24 +774,6 @@ var app = {
 			else if( draw_heat_gauge ){
 				this.drawGauge( 'main_gauge', width, heat_index , "heat" );
 			}
-			
-			var forecasts = "";
-			$.each( this.knowledgeBase.thermalindices.ireq, function(index, obj ){
-				let utc = new Date( obj.utc ); //
-				let lt = utc.toLocaleTimeString(navigator.language, { //language specific setting
-						hour: '2-digit',
-					    minute:'2-digit'
-				});
-				let ld = utc.toLocaleDateString(navigator.language, { //language specific setting
-						month:"short",
-					    day:"2-digit"
-				});
-				forecasts += "<div class='item'>"+obj.ICLminimal;
-				forecasts += "<br><span>" + lt + "</span>";
-				forecasts += "<br><span>" + ld + "</span>"; 
-				forecasts += "</div>";
-			});
-			$("#forecasts").html( forecasts );
 			
 			$("#tips").html( tip_html );
 			

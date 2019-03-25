@@ -49,8 +49,28 @@ div{
 	/*border: 1px solid rgba(0, 0, 0, 0.5);/*layout helper*/
 }
 div.item{
+	border-left: 1px solid rgba(0, 0, 0, 0.2);
 	text-align:center;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
 }
+div.item .clothingicon{
+	width: 100%;
+}
+div.cold{
+	background: rgba(0,100,200,0.4);
+}
+div.neutral{
+	background: rgba(0,200,0,0.4);
+}
+div.heat{
+	background: rgba(200,100,0,0.4);
+}
+#forecast_now{
+	font-size: 1.2em;
+}
+
 canvas{
 	/*vertical-align:middle;*/
 }
@@ -110,22 +130,8 @@ canvas{
     background: #7EBFE5; /* Old browsers */
 }
 
-.cold{
-	color: #203864;
-}
-.cool{
-	color: #4F71BE;
-}
 
-.neutral{
-	color: #5E823E;
-}
-.warm{
-	color: #F5C343;
-}
-.hot{
-	color: #B02318;
-}
+
 
 p {
     /* commented out, this functionality should not be in root p. 
