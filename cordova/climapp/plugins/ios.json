@@ -16,9 +16,6 @@
     "cordova-plugin-splashscreen": {
       "PACKAGE_NAME": "com.climapp.app"
     },
-    "cordova-plugin-whitelist": {
-      "PACKAGE_NAME": "com.climapp.app"
-    },
     "cordova-wheel-selector-plugin": {
       "PACKAGE_NAME": "com.climapp.app"
     },
@@ -26,6 +23,9 @@
       "PACKAGE_NAME": "com.climapp.app"
     },
     "cordova-plugin-x-toast": {
+      "PACKAGE_NAME": "com.climapp.app"
+    },
+    "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.climapp.app"
     }
   },
