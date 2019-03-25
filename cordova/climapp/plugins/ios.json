@@ -19,13 +19,13 @@
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.climapp.app"
     },
-    "cordova-plugin-x-toast": {
-      "PACKAGE_NAME": "com.climapp.app"
-    },
     "cordova-wheel-selector-plugin": {
       "PACKAGE_NAME": "com.climapp.app"
     },
     "cordova-plugin-browsersync": {
+      "PACKAGE_NAME": "com.climapp.app"
+    },
+    "cordova-plugin-x-toast": {
       "PACKAGE_NAME": "com.climapp.app"
     }
   },
