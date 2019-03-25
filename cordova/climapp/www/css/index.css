@@ -258,7 +258,7 @@ img.small{
 .feedbackpanel{
     
 	width: 100%;
-    margin: 0.5em auto;
+    margin: 3em auto;
 }
 
 p.strongtext {
@@ -285,19 +285,19 @@ p.rating_text {
     display: -webkit-flex;
     display: flex;
   
-    -webkit-flex-flow: row wrap;
+    -webkit-flex-flow: row-reverse wrap;
     justify-content: center;
 }
 
 .rating:not(:checked) > label:before {
+	font-size: 2em;
     font-family: "Font Awesome 5 Free";
     content: "\f111";
 }
 
 .rating > input { display: none; } 
 .rating > label:before { 
-    margin: 5px;
-    font-size: 1.25em;
+	font-size: 2em;
     font-family: "Font Awesome 5 Free";
     content: "\f111";
   }
@@ -318,28 +318,28 @@ p.rating_text {
 .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
 .rating > input:checked ~ label:hover ~ label { color: #FFED85;  } 
 
-input#feedback_text {
-   
+div.inputcontainer{
+	text-align:center;
 }
-.submit_button div {
-    width: 100%;
-}
-
-.submit_button .button {
-    
-    padding-top: 1em;
-    padding-bottom: 1em;
-    width: 40%;
-    font-size: 100%;
-	background: #7EBFE5;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
-    color: #ffffff;
+#feedback_text{
+	width: 80%;
 }
 
-.button:active {
-	background: #4F71BE;
+div.button {
+	width: 50%;
+	margin: 2em auto;
+	text-align: center;
+    background: #7EBFE5;
+	color:#fff;
+    padding: 0.5em;
+	border-radius: 2px;
+	border: 1px solid rgba(200, 200, 200, 0.5);
+	box-shadow: 2px 2px rgba(155, 155, 155, 0.2);
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box; 
 }
+
 
 /* Notification switch */
 /* box around the slider */
