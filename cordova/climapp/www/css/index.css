@@ -48,27 +48,9 @@ body {
 div{
 	/*border: 1px solid rgba(0, 0, 0, 0.5);/*layout helper*/
 }
-div.item{
-	border-left: 1px solid rgba(0, 0, 0, 0.2);
-	text-align:center;
-	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
-    box-sizing: border-box;         /* Opera/IE 8+ */
-}
-div.item .clothingicon{
-	width: 100%;
-}
-div.cold{
-	background: rgba(0,100,200,0.4);
-}
-div.neutral{
-	background: rgba(0,200,0,0.4);
-}
-div.heat{
-	background: rgba(200,100,0,0.4);
-}
+
 #forecast_now{
-	font-size: 1.2em;
+	font-weight: bold;
 }
 
 canvas{
@@ -236,11 +218,32 @@ img.small{
     -webkit-overflow-scrolling: touch;
 }
 .gallery div{
-	width: 15%;
+	width: 20%;
 	display:inline-block;
 }
 .gallery div span{
-	font-size: 0.5em;
+	font-size: 0.7em;
+}
+
+.gallery div.item{
+	padding-top: 0.2em;
+	border-left: 1px solid rgba(0, 0, 0, 0.2);
+	text-align:center;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+}
+.gallery div.item .clothingicon{
+	width: 100%;
+}
+.gallery div.cold{
+	background: rgba(0,100,200,0.4);
+}
+.gallery div.neutral{
+	background: rgba(0,200,0,0.4);
+}
+.gallery div.heat{
+	background: rgba(200,100,0,0.4);
 }
 
 /* Landscape layout (with min-width) */
@@ -253,9 +256,7 @@ img.small{
  * Feedback styling
  * ----------------------------------- */
 .feedbackpanel{
-    display: inline-block;
-    justify-content: center;
-    align-items: center;
+    
 	width: 100%;
     margin: 0.5em auto;
 }
@@ -273,24 +274,19 @@ p.rating_text {
 	color: #939393;
 	font-size: 1em;
     font-style: italic;
-    margin-bottom: 1em;
-    margin-top: 6em;
-    margin-left: 0;
-    margin-right: 0;
-    padding-left: 0;
 }
 
-/* Rating - https://jsfiddle.net/leaverou/CGP87/https://codepen.io/jamesbarnett/pen/vlpkh?editors=1100 */
+/* Rating - https://jsfiddle.net/leaverou/CGP87/ https://codepen.io/jamesbarnett/pen/vlpkh?editors=1100 */
 
 .rating {
-    display: inline-block;
-    margin-top: 1.5em;
-    position: absolute;
-    border: 0;
-    font-size: 140%;
-    padding: 0;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+  
+    -webkit-flex-flow: row wrap;
+    justify-content: center;
 }
 
 .rating:not(:checked) > label:before {
@@ -323,34 +319,22 @@ p.rating_text {
 .rating > input:checked ~ label:hover ~ label { color: #FFED85;  } 
 
 input#feedback_text {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    margin-top: 1em;
-    margin-bottom: 1em;
-    width: 70%;
-    border: 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-    font-size: 100%;
-    padding: 0.2em;
+   
 }
 .submit_button div {
     width: 100%;
 }
 
 .submit_button .button {
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    
     padding-top: 1em;
     padding-bottom: 1em;
     width: 40%;
     font-size: 100%;
 	background: #7EBFE5;
     border: 1px solid rgba(0, 0, 0, 0.2);
-    box-shadow: 2px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 1px 1px rgba(0, 0, 0, 0.2);
     color: #ffffff;
-    margin-top: 4.5em;
 }
 
 .button:active {
