@@ -50,6 +50,6 @@
     <plugin name="cordova-wheel-selector-plugin" spec="~1.0.0" />
     <plugin name="cordova-plugin-x-toast" spec="~2.7.2" />
     <engine name="browser" spec="6.0.0" />
-    <engine name="android" spec="^7.1.4" />
     <engine name="ios" spec="^4.5.5" />
+    <engine name="android" spec="^7.1.4" />
 </widget>

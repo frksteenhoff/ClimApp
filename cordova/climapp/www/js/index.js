@@ -64,7 +64,7 @@ var app = {
 		var self = this;
 		// When user rates the feedback questions
 		$("input[data-listener='feedback']").off(); //prevent multiple instances of listeners on same object
-		$("input[data-listener='feedback']").on("touchstart", function(){
+		$("input[data-listener='feedback']").on("click", function(){
 			var target = $(this).attr("data-target");
 			
 			// Updating rating bar using first char in ID
@@ -78,11 +78,11 @@ var app = {
 				self.knowledgeBase.feedback.question3.rating = target;
 			}
 			$( "input[data-listener='feedback']" ).removeClass( "checked" );
-			self.updateUI();
 		});
 		
 		// When user submits feedback, add to object to send to db + reset values
-		$("button[data-listener='submit']").on("touchstart", function(){
+		$("button[data-listener='submit']").off();
+		$("button[data-listener='submit']").on("click", function(){
 			var target = $("#feedback_text").val();
 			self.knowledgeBase.feedback.comment = target;
 			
