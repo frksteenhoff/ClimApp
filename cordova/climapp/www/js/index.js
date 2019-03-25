@@ -69,13 +69,16 @@ var app = {
 			
 			// Updating rating bar using first char in ID
 			var rating_id = $(this).attr("id")[0];
-
+			
 			if(rating_id === '1') {
 				self.knowledgeBase.feedback.question1.rating = target;
+				$("#ratingtext1").html( self.knowledgeBase.feedback.question1.ratingtext[self.knowledgeBase.feedback.question1.rating] );
 			} else if(rating_id === '2') {
 				self.knowledgeBase.feedback.question2.rating = target;
+				$("#ratingtext2").html( self.knowledgeBase.feedback.question2.ratingtext[self.knowledgeBase.feedback.question2.rating] );
 			} else {
 				self.knowledgeBase.feedback.question3.rating = target;
+				$("#ratingtext3").html( self.knowledgeBase.feedback.question3.ratingtext[self.knowledgeBase.feedback.question3.rating] );
 			}
 			$( "input[data-listener='feedback']" ).removeClass( "checked" );
 		});
@@ -93,7 +96,6 @@ var app = {
 			} 
 			// Add feedback to database
 			self.addFeedbackToDB();
-			self.showShortToast("Submit succeeded!");
 						
 			// reset values
 			$('#feedback_text').val("");
@@ -275,9 +277,9 @@ var app = {
 										"comment": ""
 									},
 									"user_info": {
-										"firstLogin": false,
+										"firstLogin": true,
 										"deviceid": device.uuid,
-										"hasExternalDBRecord": true,
+										"hasExternalDBRecord": false,
 										"receivesNotifications": false // false as notifications are not part of the app
 									},
 									"thermalindices":{ 
@@ -503,7 +505,6 @@ var app = {
 								self.createUserRecord();
 								self.knowledgeBase.user_info.hasExternalDBRecord = true;
 							}
-							console.log(self.knowledgeBase.weather.temperature[0] + "  " + self.knowledgeBase.weather.windspeed[0]);
 							self.addWeatherDataToDB();
 					   }
 					   catch( error ){
@@ -732,14 +733,9 @@ var app = {
 			$("#question3").html( this.knowledgeBase.feedback.question3.text );
 
 			// Rating bar values -- still not setting the default color..
-			$("input[id='1star"+this.knowledgeBase.feedback.question1.rating+"']").addClass("checked");
-			$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").addClass("checked");
-			$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").addClass("checked");
-			
-			// Rating text 
-			$("#ratingtext1").html( this.knowledgeBase.feedback.question1.ratingtext[this.knowledgeBase.feedback.question1.rating] );
-			$("#ratingtext2").html( this.knowledgeBase.feedback.question2.ratingtext[this.knowledgeBase.feedback.question2.rating] );
-			$("#ratingtext3").html( this.knowledgeBase.feedback.question3.ratingtext[this.knowledgeBase.feedback.question3.rating] );
+			$("input[id='1star"+this.knowledgeBase.feedback.question1.rating+"']").attr("checked", true);
+			$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").attr("checked", true);
+			$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").attr("checked", true);
 		}
 	},
 	drawGauge: function( id, width, value, key ){
@@ -764,7 +760,7 @@ var app = {
 		let self = this;
 		let ip = "http://192.38.64.244";
 		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createUserRecord";
-		let user_data = {"_id": "cordovatest",
+		let user_data = {"_id": self.knowledgeBase.user_info.deviceid,
 						 "age": self.knowledgeBase.settings.age.value,
 						 "gender": (self.knowledgeBase.settings.gender.value === 'Male' ? 0 : 1), 
 						 "height": (self.knowledgeBase.settings.height.value/100), // unit is meter in database (SI)
@@ -810,11 +806,12 @@ var app = {
 					"rating1": self.knowledgeBase.feedback.question1.rating, 
 					"rating2": self.knowledgeBase.feedback.question2.rating,
 					"rating3": self.knowledgeBase.feedback.question3.rating, 
-					"txt": self.knowledgeBase.feedback.comment				
+					"txt": self.knowledgeBase.feedback.comment === "" ? "_" : self.knowledgeBase.feedback.comment 				
 				}  
 		$.post(url, user_data).done(function(data, status, xhr){
 			if(status === "success") {
 				console.log("Database update, feedback: " + data);
+				self.showShortToast("Feedback submitted!");
 			}
 		});
 	},
