@@ -50,4 +50,4 @@ Temporary Items
 *.xcuserstate
 /cordova/climapp/node_modules/*
 **/platforms/*
-cordova/climapp/*/plugins/*
+**/cordova/climapp/plugins/*
