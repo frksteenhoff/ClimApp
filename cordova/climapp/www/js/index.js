@@ -100,7 +100,6 @@ var app = {
 
 			// Load settings page
 			self.loadUI('settings');
-			
 		});
 	},
 	initSettingsListeners: function(){
@@ -268,7 +267,7 @@ var app = {
 										"firstLogin": false,
 										"deviceid": device.uuid,
 										"hasExternalDBRecord": true,
-										"receivesNotifications": true // true until user opts out
+										"receivesNotifications": false // true until user opts out
 									},
 									"thermalindices":{ 
 												"ireq":[//array of objects
@@ -505,9 +504,8 @@ var app = {
 		// functionality will be extended to handle more complex scenarios - only when not in browser
 		if(device.platform != 'browser') {
 			var threshold = 0;
-			console.log('wbgt ' + self.knowledgeBase.weather.wbgt);
 			if(self.knowledgeBase.weather.wbgt < threshold) {
-				self.scheduleDefaultNotification();
+				//self.scheduleDefaultNotification();
 			}
 		}
 	},
@@ -821,7 +819,7 @@ var app = {
 	},	
 	/* 
 	 * Scheduling notifications
-	 */
+	 
 
 	// Using local-notification
 	scheduleDefaultNotification: function() {
@@ -875,7 +873,7 @@ var app = {
 		cordova.plugins.notification.local.cancelAll(function () {
 			console.log('All notifications canceled');
 		});
-	}
+	}*/
 };
 
 app.initialize();
