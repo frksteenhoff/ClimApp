@@ -48,5 +48,5 @@ Temporary Items
 
 # Folders
 *.xcuserstate
-node_modules
-platforms
+**/node_modules/*
+**/platforms/*
