@@ -53,7 +53,7 @@ var app = {
 		// navigation menu
 		var self = this;
 		$("div[data-listener='navbar']").off();
-		$("div[data-listener='navbar']").on("touchstart", function(){
+		$("div[data-listener='navbar']").on("click", function(){
 			let target = $( this ).attr("data-target");
 			console.log("target:" + target);
 			self.knowledgeBase.user_info.firstLogin = false;
@@ -69,13 +69,16 @@ var app = {
 			
 			// Updating rating bar using first char in ID
 			var rating_id = $(this).attr("id")[0];
-
+			
 			if(rating_id === '1') {
 				self.knowledgeBase.feedback.question1.rating = target;
+				$("#ratingtext1").html( self.knowledgeBase.feedback.question1.ratingtext[self.knowledgeBase.feedback.question1.rating] );
 			} else if(rating_id === '2') {
 				self.knowledgeBase.feedback.question2.rating = target;
+				$("#ratingtext2").html( self.knowledgeBase.feedback.question2.ratingtext[self.knowledgeBase.feedback.question2.rating] );
 			} else {
 				self.knowledgeBase.feedback.question3.rating = target;
+				$("#ratingtext3").html( self.knowledgeBase.feedback.question3.ratingtext[self.knowledgeBase.feedback.question3.rating] );
 			}
 			$( "input[data-listener='feedback']" ).removeClass( "checked" );
 		});
@@ -93,14 +96,12 @@ var app = {
 			} 
 			// Add feedback to database
 			self.addFeedbackToDB();
-			self.showSubmitSucceedToast();
 						
 			// reset values
 			$('#feedback_text').val("");
 
 			// Load settings page
 			self.loadUI('settings');
-			
 		});
 	},
 	initSettingsListeners: function(){
@@ -126,6 +127,17 @@ var app = {
 			    console.log('Canceled');
 			});
 		});		
+
+		$("input[data-listener='notification_switch']").off(); //prevent multiple instances of listeners on same object
+		$("input[data-listener='notification_switch']").on("click", function(){
+			var isChecked = $(this).is(":checked");
+			self.knowledgeBase.user_info.receivesNotifications = isChecked;
+
+			// Inform user about choice in toast
+			var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
+			self.showShortToast(notificationText);
+		});
+
 
 		$("div[data-listener='feedback_page']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='feedback_page']").on("touchstart", function(){
@@ -265,9 +277,10 @@ var app = {
 										"comment": ""
 									},
 									"user_info": {
-										"firstLogin": false,
+										"firstLogin": true,
 										"deviceid": device.uuid,
-										"hasExternalDBRecord": true
+										"hasExternalDBRecord": false,
+										"receivesNotifications": false // false as notifications are not part of the app
 									},
 									"thermalindices":{ 
 												"ireq":[//array of objects
@@ -378,6 +391,7 @@ var app = {
 									}
 								  };
 		}
+
 	},
 	/* In the future this should be used to fetch the needed question from the database
 	   Currently working with static content, just for proof of concept. */
@@ -491,7 +505,6 @@ var app = {
 								self.createUserRecord();
 								self.knowledgeBase.user_info.hasExternalDBRecord = true;
 							}
-							console.log(self.knowledgeBase.weather.temperature[0] + "  " + self.knowledgeBase.weather.windspeed[0]);
 							self.addWeatherDataToDB();
 					   }
 					   catch( error ){
@@ -504,9 +517,8 @@ var app = {
 		// functionality will be extended to handle more complex scenarios - only when not in browser
 		if(device.platform != 'browser') {
 			var threshold = 0;
-			console.log('wbgt ' + self.knowledgeBase.weather.wbgt);
 			if(self.knowledgeBase.weather.wbgt < threshold) {
-				// self.scheduleDefaultNotification();
+				//self.scheduleDefaultNotification();
 			}
 		}
 	},
@@ -710,7 +722,8 @@ var app = {
 			$("#age").html( this.knowledgeBase.settings.age.value );
 			$("#height").html( this.knowledgeBase.settings.height.value );
 			$("#weight").html( this.knowledgeBase.settings.weight.value );
-			$("#gender").html( this.knowledgeBase.settings.gender.value );	
+			$("#gender").html( this.knowledgeBase.settings.gender.value );
+			$("#notification_checkbox").attr("checked", this.knowledgeBase.user_info.receivesNotifications);
 		}
 		else if( this.currentPageID == "feedback" ){
 			this.initFeedbackListeners();
@@ -720,14 +733,9 @@ var app = {
 			$("#question3").html( this.knowledgeBase.feedback.question3.text );
 
 			// Rating bar values -- still not setting the default color..
-			$("input[id='1star"+this.knowledgeBase.feedback.question1.rating+"']").addClass("checked");
-			$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").addClass("checked");
-			$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").addClass("checked");
-			
-			// Rating text 
-			$("#ratingtext1").html( this.knowledgeBase.feedback.question1.ratingtext[this.knowledgeBase.feedback.question1.rating] );
-			$("#ratingtext2").html( this.knowledgeBase.feedback.question2.ratingtext[this.knowledgeBase.feedback.question2.rating] );
-			$("#ratingtext3").html( this.knowledgeBase.feedback.question3.ratingtext[this.knowledgeBase.feedback.question3.rating] );
+			$("input[id='1star"+this.knowledgeBase.feedback.question1.rating+"']").attr("checked", true);
+			$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").attr("checked", true);
+			$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").attr("checked", true);
 		}
 	},
 	drawGauge: function( id, width, value, key ){
@@ -746,50 +754,13 @@ var app = {
 	    });
 	}, 
 	/*
-	 * Methods related to feedback module and database
+	 * Methods related to database 
 	 */
-	scheduleDefaultNotification: function() {
-		// If no notifications are already scheduled
-		this.getAllNotifications();
-
-		// Used for testing purposes
-		//console.log(this.cancelAllNotifications());
-
-		// Set notification time and date today @ 5PM
-		// NOT WORKING PROPERLY YET
-		var today = new Date();
-		today.setDate(today.getDate());
-		today.setHours(16);
-		today.setMinutes(0);
-		today.setSeconds(0);
-		var today_at_4_pm = new Date(today);
-
-		if(this.knowledgeBase.weather.wbgt < 1) {
-			// Notification which is triggered 16.30 every weekday
-			cordova.plugins.notification.local.schedule({
-				title: 'Feedback',
-				text: 'How was your day?',
-				every: "day",
-				at: today_at_4_pm.getTime()
-			});	
-		}
-	},
-	showSubmitSucceedToast: function(){
-		if(device.platform != 'browser') {
-			window.plugins.toast.showWithOptions(
-			{
-				message: "Feedback submitted!",
-				duration: "short", // 2000 ms
-				position: "bottom",
-				addPixelsY: -40  // giving a margin at the bottom by moving text up
-			});
-		}
-	},
 	createUserRecord: function(){
 		let self = this;
 		let ip = "http://192.38.64.244";
 		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createUserRecord";
-		let user_data = {"_id": "cordovatest",
+		let user_data = {"_id": self.knowledgeBase.user_info.deviceid,
 						 "age": self.knowledgeBase.settings.age.value,
 						 "gender": (self.knowledgeBase.settings.gender.value === 'Male' ? 0 : 1), 
 						 "height": (self.knowledgeBase.settings.height.value/100), // unit is meter in database (SI)
@@ -806,7 +777,7 @@ var app = {
 		let ip = "http://192.38.64.244";
 		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createWeatherRecord";
 		let user_data = {
-					"_id": "cordovatest",
+					"_id": self.knowledgeBase.user_info.deviceid,
 					"longitude": self.knowledgeBase.weather.lat,
 					"latitude": self.knowledgeBase.weather.lng, 
 					"city": self.knowledgeBase.weather.station,
@@ -830,31 +801,89 @@ var app = {
 		let ip = "http://192.38.64.244";
 		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createFeedbackRecord";
 		let user_data = {
-					"user_id": "cordovatest",
+					"user_id": self.knowledgeBase.user_info.deviceid,
 					"question_combo_id": 1, // will be changed when more sophisticaed solution is implemented
 					"rating1": self.knowledgeBase.feedback.question1.rating, 
 					"rating2": self.knowledgeBase.feedback.question2.rating,
 					"rating3": self.knowledgeBase.feedback.question3.rating, 
-					"txt": self.knowledgeBase.feedback.comment				
+					"txt": self.knowledgeBase.feedback.comment === "" ? "_" : self.knowledgeBase.feedback.comment 				
 				}  
 		$.post(url, user_data).done(function(data, status, xhr){
 			if(status === "success") {
 				console.log("Database update, feedback: " + data);
+				self.showShortToast("Feedback submitted!");
 			}
 		});
 	},
+	// Toast 
+	showShortToast: function(textToShow){
+		if(device.platform != 'browser') {
+			window.plugins.toast.showWithOptions(
+			{
+				message: textToShow,
+				duration: "short", // 2000 ms
+				position: "bottom",
+				addPixelsY: -40  // giving a margin at the bottom by moving text up
+			});
+		}
+	}	
+	/* 
+	 * Scheduling notifications
+	 
+
+	// Using local-notification
+	scheduleDefaultNotification: function() {
+		var self = this;
+		// If no notifications are already scheduled
+		self.getAllNotifications();
+
+		// Used for testing purposes
+		//console.log(this.cancelAllNotifications());
+
+		// TODO: Decide criteria for sending notification!
+		// Only if user wants notification (have not chosen to opt out)
+		if(self.knowledgeBase.weather.wbgt < 1 && self.knowledgeBase.user_info.receivesNotifications) {
+			// Set notification time and date today @ 4.30PM
+			var today = new Date();
+			today.setDate(today.getDate());
+			today.setHours(16);
+			today.setMinutes(30);
+			today.setSeconds(0);
+			var today_at_4_30_pm = new Date(today);
+
+			// Notification which is triggered 16.30 every weekday
+			cordova.plugins.notification.local.schedule({
+				title: 'Feedback',
+				text: 'How was your day?',
+				smallIcon: 'res://icon-stencil',
+				icon: 'res://icon',
+				trigger: {
+					type: "fix",
+					at: today_at_4_30_pm.getTime()
+			},
+			actions: [
+				{ id: 'feedback_yes', title: 'Open'},
+				{ id: 'no',  title: 'Dismiss'}
+			]
+			});	
+			
+			// When user clicks "open" the feedback screen is opened
+			cordova.plugins.notification.local.on('feedback_yes', function (notification, eopts) { 
+				self.loadUI('feedback');
+			 });
+		}
+	},
 	getAllNotifications: function() {
-		window.plugin.notification.local.getScheduledIds(function (scheduledIds) {
+		cordova.plugins.notification.local.getScheduledIds(function (scheduledIds) {
 			console.log(scheduledIds.length);
 			console.log("Scheduled IDs: " + scheduledIds.join(", "));
 		});
 	},
 	cancelAllNotifications: function() {
-		window.plugin.notification.local.cancelAll(function () {
+		cordova.plugins.notification.local.cancelAll(function () {
 			console.log('All notifications canceled');
 		});
-	}
-	
+	}*/
 };
 
 app.initialize();
