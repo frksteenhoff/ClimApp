@@ -278,7 +278,7 @@ var app = {
 										"firstLogin": false,
 										"deviceid": device.uuid,
 										"hasExternalDBRecord": true,
-										"receivesNotifications": true // true until user opts out
+										"receivesNotifications": false // false as notifications are not part of the app
 									},
 									"thermalindices":{ 
 												"ireq":[//array of objects
@@ -781,7 +781,7 @@ var app = {
 		let ip = "http://192.38.64.244";
 		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createWeatherRecord";
 		let user_data = {
-					"_id": "cordovatest",
+					"_id": self.knowledgeBase.user_info.deviceid,
 					"longitude": self.knowledgeBase.weather.lat,
 					"latitude": self.knowledgeBase.weather.lng, 
 					"city": self.knowledgeBase.weather.station,
@@ -805,7 +805,7 @@ var app = {
 		let ip = "http://192.38.64.244";
 		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createFeedbackRecord";
 		let user_data = {
-					"user_id": "cordovatest",
+					"user_id": self.knowledgeBase.user_info.deviceid,
 					"question_combo_id": 1, // will be changed when more sophisticaed solution is implemented
 					"rating1": self.knowledgeBase.feedback.question1.rating, 
 					"rating2": self.knowledgeBase.feedback.question2.rating,
