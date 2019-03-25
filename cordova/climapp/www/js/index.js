@@ -267,7 +267,8 @@ var app = {
 									"user_info": {
 										"firstLogin": false,
 										"deviceid": device.uuid,
-										"hasExternalDBRecord": true
+										"hasExternalDBRecord": true,
+										"receivesNotifications": true // true until user opts out
 									},
 									"thermalindices":{ 
 												"ireq":[//array of objects
@@ -746,7 +747,7 @@ var app = {
 	    });
 	}, 
 	/*
-	 * Methods related to feedback module and database
+	 * Methods related to database 
 	 */
 	createUserRecord: function(){
 		let self = this;
@@ -806,18 +807,18 @@ var app = {
 			}
 		});
 	},
-		// Toast 
-		showSubmitSucceedToast: function(){
-			if(device.platform != 'browser') {
-				window.plugins.toast.showWithOptions(
-				{
-					message: "Feedback submitted!",
-					duration: "short", // 2000 ms
-					position: "bottom",
-					addPixelsY: -40  // giving a margin at the bottom by moving text up
-				});
-			}
-		},	
+	// Toast 
+	showSubmitSucceedToast: function(){
+		if(device.platform != 'browser') {
+			window.plugins.toast.showWithOptions(
+			{
+				message: "Feedback submitted!",
+				duration: "short", // 2000 ms
+				position: "bottom",
+				addPixelsY: -40  // giving a margin at the bottom by moving text up
+			});
+		}
+	},	
 	/* 
 	 * Scheduling notifications
 	 */
@@ -831,17 +832,17 @@ var app = {
 		// Used for testing purposes
 		//console.log(this.cancelAllNotifications());
 
-		// Set notification time and date today @ 5PM
-		// NOT WORKING PROPERLY YET
-		var today = new Date();
-		today.setDate(today.getDate());
-		today.setHours(18);
-		today.setMinutes(42);
-		today.setSeconds(0);
-		var today_at_4_30_pm = new Date(today);
-
 		// TODO: Decide criteria for sending notification!
-		if(self.knowledgeBase.weather.wbgt < 1) {
+		// Only if user wants notification (have not chosen to opt out)
+		if(self.knowledgeBase.weather.wbgt < 1 && self.knowledgeBase.user_info.receivesNotifications) {
+			// Set notification time and date today @ 4.30PM
+			var today = new Date();
+			today.setDate(today.getDate());
+			today.setHours(16);
+			today.setMinutes(30);
+			today.setSeconds(0);
+			var today_at_4_30_pm = new Date(today);
+
 			// Notification which is triggered 16.30 every weekday
 			cordova.plugins.notification.local.schedule({
 				title: 'Feedback',
