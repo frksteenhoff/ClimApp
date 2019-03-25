@@ -18,7 +18,7 @@
   "cordova-plugin-device": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-device"
+      "id": "cordova-plugin-device@^2.0.2"
     },
     "is_top_level": true,
     "variables": {}
@@ -55,12 +55,12 @@
     "is_top_level": true,
     "variables": {}
   },
-  "cordova-plugin-browsersync": {
+  "cordova-plugin-badge": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-browsersync@^1.1.0"
+      "id": "cordova-plugin-badge@>=0.8.5"
     },
-    "is_top_level": true,
+    "is_top_level": false,
     "variables": {}
   }
 }

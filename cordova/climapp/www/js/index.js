@@ -78,11 +78,11 @@ var app = {
 				self.knowledgeBase.feedback.question3.rating = target;
 			}
 			$( "input[data-listener='feedback']" ).removeClass( "checked" );
-			self.updateUI();
 		});
 		
 		// When user submits feedback, add to object to send to db + reset values
-		$("button[data-listener='submit']").on("touchstart", function(){
+		$("button[data-listener='submit']").off();
+		$("button[data-listener='submit']").on("click", function(){
 			var target = $("#feedback_text").val();
 			self.knowledgeBase.feedback.comment = target;
 			
@@ -593,10 +593,10 @@ var app = {
 		});
 		
 		this.knowledgeBase.thermalindices.ireq.sort(function(a,b){
-			return new Date(b.utc) - new Date(a.utc);
+			return new Date(a.utc) - new Date(b.utc);
 		});
 		this.knowledgeBase.thermalindices.phs.sort(function(a,b){
-			return new Date(b.utc) - new Date(a.utc);
+			return new Date(a.utc) - new Date(b.utc);
 		});
 			
 	},
@@ -691,8 +691,13 @@ var app = {
 						hour: '2-digit',
 					    minute:'2-digit'
 				});
-				forecasts += "<div class='item'>"+obj.ICLminimal.toFixed(1)+ "<br>";
-				forecasts += "<span>" + lt + "</span>"; 
+				let ld = utc.toLocaleDateString(navigator.language, { //language specific setting
+						month:"short",
+					    day:"2-digit"
+				});
+				forecasts += "<div class='item'>"+obj.ICLminimal;
+				forecasts += "<br><span>" + lt + "</span>";
+				forecasts += "<br><span>" + ld + "</span>"; 
 				forecasts += "</div>";
 			});
 			$("#forecasts").html( forecasts );

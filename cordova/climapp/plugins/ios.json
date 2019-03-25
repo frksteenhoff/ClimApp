@@ -7,9 +7,6 @@
     "files": {}
   },
   "installed_plugins": {
-    "cordova-plugin-browsersync": {
-      "PACKAGE_NAME": "com.climapp.app"
-    },
     "cordova-plugin-device": {
       "PACKAGE_NAME": "com.climapp.app"
     },
