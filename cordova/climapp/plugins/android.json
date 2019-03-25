@@ -16,10 +16,6 @@
     "cordova-plugin-geolocation": {
       "PACKAGE_NAME": "com.climapp.app"
     },
-    "cordova-plugin-local-notification": {
-      "ANDROID_SUPPORT_V4_VERSION": "26.+",
-      "PACKAGE_NAME": "com.climapp.app"
-    },
     "cordova-plugin-splashscreen": {
       "PACKAGE_NAME": "com.climapp.app"
     },
@@ -33,9 +29,5 @@
       "PACKAGE_NAME": "com.climapp.app"
     }
   },
-  "dependent_plugins": {
-    "cordova-plugin-badge": {
-      "PACKAGE_NAME": "com.climapp.app"
-    }
-  }
+  "dependent_plugins": {}
 }

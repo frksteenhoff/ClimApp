@@ -27,8 +27,7 @@
         "glob": "^5.0.15",
         "npm": "^2.15.12",
         "plist": "^1.2.0",
-        "q": "^1.5.1",
-        "cordova-plugin-local-notification": "~0.9.0-beta.3"
+        "q": "^1.5.1"
     },
     "cordova": {
         "plugins": {
@@ -37,8 +36,7 @@
             "cordova-plugin-device": {},
             "cordova-plugin-splashscreen": {},
             "cordova-wheel-selector-plugin": {},
-            "cordova-plugin-x-toast": {},
-            "cordova-plugin-local-notification": {}
+            "cordova-plugin-x-toast": {}
         },
         "platforms": [
             "browser",
