@@ -720,7 +720,7 @@ var app = {
 				else{
 					forecasts += "<div data-listener='forecast' class='item "+corh+"' data-index='"+index+"'>";
 				}
-				forecasts += "<div class='clothingicon'><img src='"+src+"'/></div>";
+				//forecasts += "<div class='clothingicon'><img src='"+src+"'/></div>";
 				forecasts += "<p>" + val+ "";
 				forecasts += "<br><span>" + lt + "</span>";
 				forecasts += "<br><span>" + ld + "</span></p>"; 
