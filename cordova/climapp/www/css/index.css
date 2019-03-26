@@ -209,7 +209,7 @@ img.small{
 	display:block;
 
     overflow-x: scroll;
-    overflow-y: hidden;
+	overflow-y: hidden;
     white-space: nowrap;
 
     -webkit-overflow-scrolling: touch;
@@ -220,12 +220,16 @@ img.small{
 }
 .gallery div span{
 	font-size: 0.7em;
+	display: block;
+	white-space:normal;
+	/*word-wrap: break-word;*/
 }
 
 .gallery div.item{
 	padding-top: 0.2em;
 	border-right: 1px solid rgba(0, 0, 0, 0.2);
 	text-align:center;
+	overflow:hidden;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
@@ -233,19 +237,33 @@ img.small{
 .gallery div.item .clothingicon{
 	width: 100%;
 }
+/*
+//thermal colors also in knowledgebase.gauge.higlights, keep consistent
+*/
+.gallery div.verycold{
+	background: rgba(0,0,180,.9);
+}
 .gallery div.cold{
-	background: rgba(0,100,200,0.4);
+	background: rgba(0,100,255,.9);
+}
+.gallery div.cool{
+	background: rgba(0,180,180,.9);
 }
 .gallery div.neutral{
-	background: rgba(0,200,0,0.4);
+	background: rgba(0,180,0,.9);
 }
-.gallery div.heat{
-	background: rgba(200,100,0,0.4);
+.gallery div.warm{
+	background: rgba(180,180,0,.9);
+}
+.gallery div.hot{
+	background: rgba(255,100,0,.9);
+}
+.gallery div.veryhot{
+	background: rgba(180,0,0,.9);
 }
 .gallery div.focus{
-	font-size: 1.1em;
 	font-weight: bold;
-	border-right: 2px solid rgba(250, 215, 0, 0.7);
+	border: 2px solid rgba(250, 215, 0, 0.7);
 }
 
 
