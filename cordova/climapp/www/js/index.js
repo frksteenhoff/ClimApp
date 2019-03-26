@@ -168,12 +168,12 @@ var app = {
 			$("div[data-listener='forecast']").removeClass("focus");
 			$(this).addClass("focus");
 			let windowsize = $(window).width();
-			$("#forecasts").scrollLeft( 0 );
-			var offset_scroll = $(this).offset().left - ( 0.5*windowsize) + 0.075*windowsize; //CENTERING
 			
 			let index = $(this).attr("data-index");
 			
 			self.updateInfo( index );
+			var offset_scroll = $(this).offset().left - ( 0.5*windowsize) + 0.075*windowsize; //CENTERING
+			
 			$("#forecasts").animate({
 				scrollLeft: offset_scroll
 			}, 500);
@@ -348,52 +348,19 @@ var app = {
 									"gauge":{
 										"cold":{
 											"title": { 0: "No thermal stress",
-													  1: "It is cool",
-													  2: "It is cold",
-													  3: "It is very cold",
-													  4: "It is extremely cold!"},
-											"sectors":[{
-												          color : "#22f522",
-													      lo : 0,
-												          hi : 1
-												        },{
-												          color : "#00ffdd",
-												          lo : 1,
-												          hi : 2
-												        },{
-												          color : "#00aaaa",
-												          lo : 2,
-												          hi : 3
-												        },{
-												          color : "#0000ff",
-												          lo : 3,
-												          hi : 4
-												        } ],
-											},
+													  1: "minor cold stress",
+													  2: "significant cold stress",
+													  3: "high cold stress",
+													  4: "extreme cold stress"},
+										 },
 										"heat":{
 											"title":{ 0: "No thermal stress",
-													  1: "It is warm",
-													  2: "It is hot",
-													  3: "It is very hot",
-													  4: "It is extremely hot!"},
-											"sectors":[{
-										          color : "#22f522",
-											      lo : 0,
-										          hi : 1
-										        },{
-										          color : "#ddff00",
-										          lo : 1,
-										          hi : 2
-										        },{
-										          color : "#aaaa00",
-										          lo : 2,
-										          hi : 3
-										        },{
-										          color : "#ff0000",
-										          lo : 3,
-										          hi : 4
-										        } ]
-											}
+													  1: "minor heat stress",
+													  2: "significant heat stress",
+													  3: "high heat stress",
+													  4: "extreme heat stress!"},
+											
+										}
 										
 									},
 									"clothingicons":{
@@ -687,6 +654,15 @@ var app = {
 			var forecasts = "";
 			var currentindex = -1;
 			var self = this;
+			const ms_p_hour=(1000*60*60);
+			const ms_p_day = ms_p_hour * 24;
+			var localdatetime = new Date();
+			var localutc = new Date( localdatetime.toISOString() );
+			var localdate = new Date( localdatetime.toDateString() );
+			var datemap = {"now": "now",
+							"-1": "yesterday",
+						   "0": "today",
+							"1": "tomorrow"};
 			$.each( this.knowledgeBase.thermalindices.ireq, function(index, obj ){
 				let utc = new Date( obj.utc ); //
 				let lt = utc.toLocaleTimeString(navigator.language, { //language specific setting
@@ -699,9 +675,10 @@ var app = {
 				});
 				
 				//check if forecast is within 3 hours
-				let localtime = new Date();
-				let localutc = new Date( localtime.toISOString() );
-				let dif = (utc - localutc) / (1000*60*60);
+				let dif = (utc - localutc) / ms_p_hour;
+				
+				let utcdate = new Date( utc.toDateString() );
+				let daydiff = Math.floor( ( utcdate - localdate ) / ms_p_day );
 				
 				let src =  self.knowledgeBase.clothingicons.icon( obj.ICLminimal );
 				let wbgt = self.knowledgeBase.weather.wbgt[index];
@@ -715,6 +692,7 @@ var app = {
 				
 				if ( currentindex === -1 && Math.abs(dif) < 2 ){
 					currentindex = index;
+					daydiff = "now";
 					forecasts += "<div data-listener='forecast' class='item "+corh+" focus' data-index='"+index+"'>";
 				}
 				else{
@@ -723,7 +701,7 @@ var app = {
 				//forecasts += "<div class='clothingicon'><img src='"+src+"'/></div>";
 				forecasts += "<p>" + val+ "";
 				forecasts += "<br><span>" + lt + "</span>";
-				forecasts += "<br><span>" + ld + "</span></p>"; 
+				forecasts += "<br><span>" + datemap[ daydiff ]+ "</span></p>"; 
 				forecasts += "</div>";				
 			});
 			$("#forecasts").html( forecasts );
@@ -786,8 +764,8 @@ var app = {
 			let cold_index = icl_min;
 			let heat_index = this.knowledgeBase.thermalindices.wbgt.risk( this.knowledgeBase.weather.wbgt[ index] );
 		
-			let draw_cold_gauge = cold_index > heat_index;
-			let draw_heat_gauge = !draw_cold_gauge;
+			let draw_cold_gauge = this.knowledgeBase.thermalindices.ireq[ index].Tair <= 10;
+			let draw_heat_gauge = this.knowledgeBase.weather.wbgt[ index ] >= 20;
 		
 			let icl_min_threshold = this.knowledgeBase.thresholds.ireq.icl;
 			let duration_threshold = this.knowledgeBase.thresholds.phs.duration;
@@ -818,14 +796,15 @@ var app = {
 		
 			let windowsize = $( window ).width();
 			let width = windowsize / 1.67;
-			$("#main_gauge").width( width );
-			$("#main_gauge").html("");//clear gauge
 		
 			if( draw_cold_gauge ){
-				this.drawGauge( 'main_gauge', width, cold_index , "cold" );
+				this.drawGauge( 'main_gauge', width, -cold_index , "cold" );
 			}
 			else if( draw_heat_gauge ){
 				this.drawGauge( 'main_gauge', width, heat_index , "heat" );
+			}
+			else{
+				this.drawGauge( 'main_gauge', width, 0 , "heat" );
 			}
 		
 			$("#tips").html( tip_html );
@@ -834,8 +813,53 @@ var app = {
 		
 	},
 	drawGauge: function( id, width, value, key ){
-		var title = this.knowledgeBase.gauge[key].title[ Math.floor( value ) ];
-	    var g = new JustGage({
+		var c = $("#"+id), 
+        	ctx = c[0].getContext('2d');
+		ctx.canvas.height = width;
+		ctx.canvas.width = width;
+		
+		
+		var title = this.knowledgeBase.gauge[key].title[ Math.floor( Math.abs(value) ) ];
+		var radial = new RadialGauge({
+		    renderTo: id,
+		    width: width,
+		    height: width,
+		    units: ' ',
+		    title: title,
+		    value: value,
+		    minValue: -4,
+		    maxValue: 4,
+			startAngle: 45,
+    		ticksAngle: 270,
+		    majorTicks: [-4,-3,-2,-1,0,1,2,3,4],
+		    minorTicks: 2,
+		    strokeTicks: true,
+		    highlights: [
+		        { from: 3, to: 4, color:  'rgba(180,0,0,.9)'},
+		        { from: 2, to: 3, color: 'rgba(255,100,0,.9)' },
+		        { from: 1, to: 2, color: 'rgba(180,180,0,.9)'},
+		        { from: -1, to: 1, color: 'rgba(0,180,0,.9)' },
+		        { from: -2, to: -1, color:  'rgba(0,180,180,.9)' },
+				{ from: -3, to: -2, color: 'rgba(0,100,255,.9)' },
+				{ from: -4, to: -3, color: 'rgba(0,0,180,.9)' }
+		    ],
+		    colorPlate: '#fff',
+			borderShadowWidth: 0,
+			borders: false,
+		    colorMajorTicks: '#f5f5f5',
+		    colorMinorTicks: '#ddd',
+		    colorTitle: '#000',
+		    colorUnits: '#111',
+		    colorNumbers: '#111',
+		    colorNeedle: 'rgba(0, 0, 0, 1)',
+		    colorNeedleEnd: 'rgba(255, 160, 122, .9)',
+		    valueBox: true,
+		    animationRule: 'bounce',
+		    animationDuration: 500
+		});
+		radial.draw();
+		/*
+		  var g = new JustGage({
 	      id: id,
 	      value: value,
 	      min: 0,
@@ -847,6 +871,7 @@ var app = {
 	      customSectors: this.knowledgeBase.gauge[key].sectors,
 	      counter: true
 	    });
+		*/
 	}, 
 	/*
 	 * Methods related to database 

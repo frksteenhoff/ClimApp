@@ -243,7 +243,7 @@ img.small{
 	background: rgba(200,100,0,0.4);
 }
 .gallery div.focus{
-	font-size: 1.3em;
+	font-size: 1.1em;
 	font-weight: bold;
 	border-right: 2px solid rgba(250, 215, 0, 0.7);
 }
