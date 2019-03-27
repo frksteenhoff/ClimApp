@@ -173,10 +173,12 @@ var app = {
 			let index = $(this).attr("data-index");
 			
 			self.updateInfo( index );
-			var offset_scroll = $(this).offset().left - ( 0.5*windowsize) + 0.075*windowsize; //CENTERING
+			
+			var offset_scroll = ( $(this).offset().left - ( 0.5*windowsize) + 0.075*windowsize) -
+								$("forecasts").scrollLeft(); //CENTERING
 			$("#forecasts").animate({
 				scrollLeft: offset_scroll
-			}, 500);
+			}, 1000);
 			
 		});		
 	},
@@ -359,20 +361,20 @@ var app = {
 										"cold":{
 											"title": function( val ){ 
 												if ( val <= 1 ) return "no thermal stress";
-												else if ( val <= 2 ) return "minor cold stress";
-												else if ( val <= 3 ) return "significant cold stress";
-												else if ( val <= 4 ) return "high cold stress";
-												else if ( val <= 5 ) return "severe cold stress";
+												else if ( val < 2 ) return "minor cold stress";
+												else if ( val < 3 ) return "significant cold stress";
+												else if ( val < 4 ) return "high cold stress";
+												else if ( val < 5 ) return "severe cold stress";
 												else return "extreme cold stress";
 										 	}
 										},
 										"heat":{
 											"title":function( val ){  
-												if ( val <= 1 ) return "no thermal stress";
-												else if ( val <= 2 ) return "minor heat stress";
-												else if ( val <= 3 ) return "significant heat stress";
-												else if ( val <= 4 ) return "high heat stress";
-												else if ( val <= 5 ) return "severe heat stress";
+												if ( val < 1 ) return "no thermal stress";
+												else if ( val < 2 ) return "minor heat stress";
+												else if ( val < 3 ) return "significant heat stress";
+												else if ( val < 4 ) return "high heat stress";
+												else if ( val < 5 ) return "severe heat stress";
 												else return "extreme heat stress";
 											}
 										},
@@ -725,10 +727,10 @@ var app = {
 															currentindex );
 			$.each( forecastarray, function(index, e ){
 				let isFocus = index === currentindex ? "focus" : "";
-				
+				console.log( "each forecast " + e.index );
 				var val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
 				let highlight = self.knowledgeBase.gauge.highlights.filter( function( obj ){
-					return val > obj.from  && val <= obj.to;
+					return val >= obj.from  && val <= obj.to;
 				});
 				let key = val > 0 ? "heat" : "cold";
 				var title = self.knowledgeBase.gauge[key].title( Math.abs(val) );
@@ -894,15 +896,16 @@ var app = {
 		    strokeTicks: true,
 		    highlights: highlights,
 		    colorPlate: '#fff',
-			borderShadowWidth: 0,
-			borders: false,
+			borderShadowWidth: 2,
+			borders: true,
 		    colorMajorTicks: '#f5f5f5',
 		    colorMinorTicks: '#ddd',
 		    colorTitle: '#000',
 		    colorUnits: '#111',
 		    colorNumbers: '#111',
 		    colorNeedle: 'rgba(200, 200, 200, 0.3)',
-		    colorNeedleEnd: 'rgba(255, 160, 122, .7)',
+		    colorNeedleEnd: 'rgba(33, 33, 33, .7)',
+			colorBorderShadow: 'rgba(33, 33, 33, .7)',
 			colorValueText: "#000",
 		    colorValueBoxRect: "#fff",
 		    colorValueBoxRectEnd: "#fff",
@@ -912,7 +915,9 @@ var app = {
 			valueInt: 1,
     		valueDec: 1,
 		    valueBox: true,
-		    animationRule: 'bounce',
+			needleType: "line",
+			needleShadow: true,
+		    animationRule: 'elastic',
 		    animationDuration: 3000
 		});
 		
