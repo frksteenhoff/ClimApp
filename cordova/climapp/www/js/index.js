@@ -297,7 +297,7 @@ var app = {
 									},
 									"user_info": {
 
-										"firstLogin": true,
+										"firstLogin": false,
 										"deviceid": function(){ return device.uuid },
 										"hasExternalDBRecord": false,
 										"receivesNotifications": false // false as notifications are not part of the app
@@ -807,8 +807,9 @@ var app = {
 			});
 			$("#current_time").html( local_time );
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
-			$("#temperature").html( this.knowledgeBase.thermalindices.ireq[ index].Tair.toFixed(0) );
+			$("#temperature").html( this.knowledgeBase.thermalindices.ireq[ index].Tair.toFixed(0) +"&#xb0" );
 			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[ index].v_air.toFixed(0) );
+			$("#temp_unit").html("Celcius"); // Should probavbly be added to knowledgebase
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[ index].rh.toFixed(0) );
 			
 		

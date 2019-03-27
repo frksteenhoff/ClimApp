@@ -67,7 +67,6 @@ canvas{
     box-sizing: border-box;         /* Opera/IE 8+ */
 }
 
-
 .flexbox-5, .flexbox-2{
     display: -webkit-box;
     display: -moz-box;
@@ -78,16 +77,20 @@ canvas{
     -webkit-flex-flow: row wrap;
     justify-content: space-between;
 }
+
 .flexbox-2 div.center{
 	margin: auto;
 }
-.flexbox-2 div.right{
+
+.flexbox-2 div.right {
 	margin: auto;
 	align-self: flex-end;
 }
+
 .flexbox-2 div.wide{
 	flex-basis: 70%;
 }
+
 .flexbox-5 div{
 	margin: auto;
 	flex-basis: 18%;
@@ -108,9 +111,6 @@ canvas{
     color: #ffffff;
     background: #7EBFE5; /* Old browsers */
 }
-
-
-
 
 p {
     /* commented out, this functionality should not be in root p. 
@@ -158,6 +158,19 @@ img{
 img.small{
 	width:50%;
 	margin:auto;
+}
+
+#dashboard_content {
+    align-content: flex-start;
+    margin: 1em;
+}
+
+#temperature {
+    font-size: 7em;
+}
+
+#temp_unit {
+    font-style: italic;
 }
 
 /* BEGIN navigation bar style*/
