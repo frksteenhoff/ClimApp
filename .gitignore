@@ -48,5 +48,6 @@ Temporary Items
 
 # Folders
 *.xcuserstate
-node_modules
-platforms
+/cordova/climapp/node_modules/*
+**/platforms/*
+**/cordova/climapp/plugins/*

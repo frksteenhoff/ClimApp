@@ -22,7 +22,28 @@ Contains the Java code for the app
 Structure of the program files:
 
 ``` 
- ./                                                               <-- Repository
+ cordova/climapp
+ ├── hooks    
+ ├── plugins                                                      <-- installed plugins
+ ├── res                                                          <-- assets
+ ├── www                                                          <-- source code
+      ├── css/                                                    <-- styling
+      ├── data/                                                   <-- additional data
+      ├── img/                                                    <-- assets
+      ├── js/                                                     <-- javascript files
+      │     ├── thresholds/ 
+      │     ├── phs/
+      │     ├── *.js
+      │     └── ..
+      ├── pages/
+      │     ├── *.html                                            <-- app screens
+      │     └── ..
+      ├── webfonts/                                               <-- fonts
+      └── .. 
+ ├── (platforms)                                                  <-- build versions (ignored)
+ ├── (node_modules)                                               <-- modules (ignores)
+ ..
+ ClimApp                                                          <-- Android Repository (old)
  ├── ..
  ├── .idea/                                                                                                                             
  ├── app/release/                                                 <-- Application package (.apk) for Google Play
