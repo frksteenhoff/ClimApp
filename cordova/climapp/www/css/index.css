@@ -162,7 +162,7 @@ img.small{
 
 #dashboard_content {
     align-content: flex-start;
-    margin: 1em;
+    margin: 0.5em;
 }
 
 #temperature {
@@ -229,7 +229,8 @@ img.small{
 }
 .gallery div{
 	width: 20%;
-	display:inline-block;
+    display:inline-block;
+    margin-bottom: 0.5em;
 }
 .gallery div span{
 	font-size: 0.7em;
@@ -375,14 +376,15 @@ div.inputcontainer div.button {
 }
 
 
-/* Notification switch */
+/* Notification switch and unit selector */
 /* box around the slider */
 
 .totheright {
     text-align: right;
 }
 
-div.inlineitems p {
+div.inlineitems p,
+div.select_unit {
     width:48%;
     position: relative;
     display: inline-block;
@@ -390,11 +392,16 @@ div.inlineitems p {
     margin: 0;
 }
 
+div.select_unit {
+    margin-bottom: 1em;
+    margin-top: 1em;
+}
+
 .switch {
     position: relative;
     display: inline-block;
     width: 60px;
-    height: 34px;
+    height: 30px;
   }
   
   /* Hide default HTML checkbox */
@@ -421,8 +428,8 @@ div.inlineitems p {
   .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
+    height: 22px;
+    width: 22px;
     left: 4px;
     bottom: 4px;
     background-color: white;
@@ -446,9 +453,20 @@ div.inlineitems p {
   
   /* Rounded sliders */
   .slider.round {
-    border-radius: 34px;
+    border-radius: 30px;
   }
   
   .slider.round:before {
     border-radius: 50%;
+  }
+
+  /* Styling of unit of measurement seletor */
+  #select_unit {
+    box-shadow: none;
+    border: none;
+    background: #ccc; 
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    font-size: 100%;
+    border-radius: 30px;
   }

@@ -111,7 +111,7 @@ var app = {
 		$("div[data-listener='wheel']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
 			let title_ = self.knowledgeBase.settings[target].title;
-			var items_ = self.getSelectables( target );
+			var items_ = self.getSelectables( target + "_" + self.knowledgeBase.settings.unit);
 			
 			
 			var config = {
@@ -139,7 +139,6 @@ var app = {
 			self.showShortToast(notificationText);
 		});
 
-
 		$("div[data-listener='feedback_page']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='feedback_page']").on("touchstart", function(){
 			self.loadUI('feedback');
@@ -153,6 +152,15 @@ var app = {
 		$("div[data-listener='about_page']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='about_page']").on("touchstart", function(){
 			self.loadUI('about');
+		});
+
+		$("select[data-listener='select_unit']").off();
+		$("select[data-listener='select_unit']").on("change", function() {
+			var optionSelected = $("option_selected", this);
+			var unitChosen = this.value;
+			console.log("UNIT  " + unitChosen);
+			self.knowledgeBase.settings.unit = unitChosen;
+			self.updateUI();
 		});
 	},
 	initGeolocationListeners: function(){
@@ -223,14 +231,54 @@ var app = {
 											    "humidity": [-99],
 												"watervapourpressure": [-99],
 												"windspeed": [-99],
-												"radiation": [-99]
+												"radiation": [-99],
+												"calculated_temperature": function() {
+													let unit = self.knowledgeBase.settings.unit;
+													if(unit === "US") {
+														return self.knowledgeBase.weather.temperature * 9/5 + 32;
+													} else {
+														return self.knowledgeBase.weather.unit;
+													}
+												},
+												"temperature_unit": function() { return self.knowledgeBase.settings.unit === "US" ? "Fahrenheit" : "Celcius"; }
 									},
 								  "settings": { "age": {"title": "What is your age?",
 														"value": 36},
 												 "height": {"title": "What is your height?",
-															"value": 186},
+															"value": 186,
+															"calculated_value": function() {
+																let unit = self.knowledgeBase.settings.unit;
+																if(unit != "SI") { // feet, inches
+																	return Math.round(self.knowledgeBase.settings.height.value / 30.48); 
+																} else { // cm
+																	return self.knowledgeBase.settings.height.value;
+																}
+															},
+															"unit": function() {
+																return self.knowledgeBase.settings.unit === "SI" ? "cm" : "feet";
+															}},
 												 "weight": {"title": "What is your weight?",
-															"value": 82},
+															"value": 82,
+															"calculated_value": function() {
+																let unit = self.knowledgeBase.settings.unit;
+																switch(unit) {
+																	case "US": // pounds
+																		 return Math.round(self.knowledgeBase.settings.weight.value * 2.2046);
+																	case "UK": // stones
+																		return Math.round(self.knowledgeBase.settings.weight.value * 0.1574);
+																	default:
+																		return self.knowledgeBase.settings.weight.value;
+																}
+															},
+															"unit": function() {
+																if(self.knowledgeBase.settings.unit === "SI") {
+																	return "kg";
+																} else if(self.knowledgeBase.settings.unit === "US") {
+																	return "lbs"
+																} else {
+																	return "stones"
+																}
+															}},
 												 "gender": {"title": "What is your gender?",
 															"value": "Male"},
 												 "BSA": function(){ //m2
@@ -242,7 +290,8 @@ var app = {
 													 let ISO_selected = self.knowledgeBase.activity.selected;
 												 	 let ISO_level = self.knowledgeBase.activity.values[ ISO_selected ];
 													 return 50 * (ISO_level);
-												 }
+												 },
+												 "unit": "SI" // default SI units
 								   },
 								  "activity": { "label": {	"LOW-": "Resting, sitting at ease.\nBreathing not challenged.",
 													 		"LOW":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
@@ -446,20 +495,33 @@ var app = {
 		// Implement logic to handle different types of rating bars
 	},*/
 	getSelectables: function( key ){
+		var self = this;
 		var obj_array = [];
-		if( key === "age" ){
+		if( key.slice(0, 3) === "age" ){
 			for( var i=0; i<100; i++){
 				obj_array.push({description: (i+12) + " years", value: (i+12) });
 			}
 		}
-		else if( key === "height" ){
+		else if( key.slice(0, 6) === "height" ){
 			for( var i=0; i<100; i++){
-				obj_array.push({description: (i+120) + " cm", value: (i+120)  } );
+				if(this.knowledgeBase.settings.unit === "SI") {
+					obj_array.push({description: (i+120) + " " + this.knowledgeBase.settings.height.unit(), value: (i+120)  } );
+				} else { // feet, inches (still want to save in cm, not changing value)
+					obj_array.push({description: ((i+120)/30.48).toFixed(1) + " " + this.knowledgeBase.settings.height.unit(), value: (i+120)  } );
+				}
 			}
 		}
-		else if( key === "weight" ){
+		else if( key.slice(0, 6) === "weight" ){
 			for( var i=0; i<100; i++){
-				obj_array.push({description: (i+40) + " kg", value: (i+40) } );
+				if(this.knowledgeBase.settings.unit === "SI") {
+					obj_array.push({description: (i+40) + " " + this.knowledgeBase.settings.weight.unit(), value: (i+40) } );
+				} else if (this.knowledgeBase.settings.unit === "US") {
+					// (still want to save in kg, not changing value)
+					obj_array.push({description: Math.round((i+40) * 2.2046) + " " + this.knowledgeBase.settings.weight.unit(), value: (i+40) } );					
+				} else { // only UK left
+					// (still want to save in kg, not changing value)
+					obj_array.push({description: (6+i*0.1).toFixed(1) + " " + this.knowledgeBase.settings.weight.unit(), value: (i+40) } );					
+				}
 			}
 		}
 		else if( key === "gender" ){
@@ -766,10 +828,11 @@ var app = {
 		else if( this.currentPageID == "settings" ){
 			this.initSettingsListeners();
 			$("#age").html( this.knowledgeBase.settings.age.value );
-			$("#height").html( this.knowledgeBase.settings.height.value );
-			$("#weight").html( this.knowledgeBase.settings.weight.value );
-			$("#gender").html( this.knowledgeBase.settings.gender.value );
+			$("#height").html( this.knowledgeBase.settings.height.calculated_value() + " " + this.knowledgeBase.settings.height.unit());
+			$("#weight").html( this.knowledgeBase.settings.weight.calculated_value() + " " + this.knowledgeBase.settings.weight.unit());
+			$("#gender").html( this.knowledgeBase.settings.gender );
 			$("#notification_checkbox").attr("checked", this.knowledgeBase.user_info.receivesNotifications);
+			$("#select_unit").val(this.knowledgeBase.settings.unit);
 		}
 		else if( this.currentPageID == "feedback" ){
 			this.initFeedbackListeners();
@@ -811,7 +874,7 @@ var app = {
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
 			$("#temperature").html( this.knowledgeBase.thermalindices.ireq[ index].Tair.toFixed(0) +"&#xb0" );
 			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[ index].v_air.toFixed(0) );
-			$("#temp_unit").html("Celcius"); // Should probavbly be added to knowledgebase
+			$("#temp_unit").html(this.knowledgeBase.settings.calculated_temperature); // Should probavbly be added to knowledgebase
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[ index].rh.toFixed(0) );
 			
 		

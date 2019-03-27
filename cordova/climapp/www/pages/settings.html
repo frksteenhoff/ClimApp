@@ -1,13 +1,13 @@
 <div class="panel">
 	<p class="label">Personal settings</p>
 	<div data-target="age" data-listener="wheel">
-		<p>Age<br><span class="settings" id="age"></span> <span class="settings">years</span></p>
+		<p>Age<br><span class="settings" id="age"></span> <span class="settings"></span></p>
 	</div>
 	<div data-target="height" data-listener="wheel">
-		<p>Height<br><span class="settings" id="height"></span> <span class="settings">cm</span></p>
+		<p>Height<br><span class="settings" id="height"></span> <span class="settings"></span></p>
 	</div>
 	<div data-target="weight" data-listener="wheel">
-		<p>Weight<br><span class="settings" id="weight"></span> <span class="settings">kg</span></p>
+		<p>Weight<br><span class="settings" id="weight"></span> <span class="settings"></span></p>
 	</div>
 	<div data-target="gender" data-listener="wheel">
 		<p>Gender<br><span class="settings" id="gender"></span></p>
@@ -15,7 +15,16 @@
 </div>
 <div class="panel">
 	<p class="label">Reset</p>
-	<p>Unit of measurement</p>
+	<div class="inlineitems"> 
+		<p>Unit of measurements</p>
+		<div class="select_unit totheright">
+			<select id="select_unit" data-target="unit_picker" data-listener="select_unit">
+				<option value="SI">SI: kg, cm, m/s, Celcius </option>
+				<option value="US" >US: lbs, inch, m/s, Fahrenheit</option>
+				<option value="UK">UK: stone, inch, m/s, Celcius</option>
+			</select>
+		</div>
+	</div>
 	<div class="inlineitems"> 
 		<p>Notifications</p>
 		<p class="totheright"><label class="switch">
