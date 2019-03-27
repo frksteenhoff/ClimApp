@@ -166,11 +166,26 @@ img.small{
 }
 
 #temperature {
-    font-size: 7em;
+    width: 40%;
+    font-size: 30vw;
 }
 
 #temp_unit {
     font-style: italic;
+}
+
+/* Settings related */
+
+.inlineitems p {
+    margin-bottom: 1em;
+}
+
+.panel.settings p {
+    margin-bottom: 1.5em;
+}
+
+.panel.settings.inlineitems#notify {
+    margin-bottom: 0;
 }
 
 /* BEGIN navigation bar style*/
@@ -378,7 +393,7 @@ div.inputcontainer div.button {
 
 /* Notification switch and unit selector */
 /* box around the slider */
-
+.select_unit.totheright,
 .totheright {
     text-align: right;
 }
@@ -394,7 +409,6 @@ div.select_unit {
 
 div.select_unit {
     margin-bottom: 1em;
-    margin-top: 1em;
 }
 
 .switch {
@@ -446,9 +460,9 @@ div.select_unit {
   }
   
   input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    -webkit-transform: translateX(28px);
+    -ms-transform: translateX(28px);
+    transform: translateX(28px);
   }
   
   /* Rounded sliders */

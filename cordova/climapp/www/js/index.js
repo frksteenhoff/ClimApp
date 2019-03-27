@@ -111,7 +111,7 @@ var app = {
 		$("div[data-listener='wheel']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
 			let title_ = self.knowledgeBase.settings[target].title;
-			var items_ = self.getSelectables( target + "_" + self.knowledgeBase.settings.unit);
+			var items_ = self.getSelectables( target );
 			
 			
 			var config = {
@@ -158,9 +158,23 @@ var app = {
 		$("select[data-listener='select_unit']").on("change", function() {
 			var optionSelected = $("option_selected", this);
 			var unitChosen = this.value;
-			console.log("UNIT  " + unitChosen);
 			self.knowledgeBase.settings.unit = unitChosen;
 			self.updateUI();
+		});
+
+		$("div[data-listener='reset_preferences']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='reset_preferences']").on("touchstart", function(){
+			// Resetting values to default
+			self.knowledgeBase.settings.age.value = 0;
+			self.knowledgeBase.settings.gender.value = "undefined";
+			self.knowledgeBase.settings.height.value = 178;
+			self.knowledgeBase.settings.weight.value = 82;
+			self.knowledgeBase.settings.unit = "SI";
+			self.knowledgeBase.user_info.firstLogin = true;
+
+			// Inform user about event in toast
+			var notificationText = "Personal preferences reset, using default values.";
+			self.showShortToast(notificationText);
 		});
 	},
 	initGeolocationListeners: function(){
@@ -347,7 +361,6 @@ var app = {
 										"comment": ""
 									},
 									"user_info": {
-
 										"firstLogin": false,
 										"deviceid": function(){ return device.uuid },
 										"hasExternalDBRecord": false,
@@ -502,7 +515,7 @@ var app = {
 				obj_array.push({description: (i+12) + " years", value: (i+12) });
 			}
 		}
-		else if( key.slice(0, 6) === "height" ){
+		else if( key === "height" ){
 			for( var i=0; i<100; i++){
 				if(this.knowledgeBase.settings.unit === "SI") {
 					obj_array.push({description: (i+120) + " " + this.knowledgeBase.settings.height.unit(), value: (i+120)  } );
@@ -511,7 +524,7 @@ var app = {
 				}
 			}
 		}
-		else if( key.slice(0, 6) === "weight" ){
+		else if( key === "weight" ){
 			for( var i=0; i<100; i++){
 				if(this.knowledgeBase.settings.unit === "SI") {
 					obj_array.push({description: (i+40) + " " + this.knowledgeBase.settings.weight.unit(), value: (i+40) } );
@@ -830,7 +843,7 @@ var app = {
 			$("#age").html( this.knowledgeBase.settings.age.value );
 			$("#height").html( this.knowledgeBase.settings.height.calculated_value() + " " + this.knowledgeBase.settings.height.unit());
 			$("#weight").html( this.knowledgeBase.settings.weight.calculated_value() + " " + this.knowledgeBase.settings.weight.unit());
-			$("#gender").html( this.knowledgeBase.settings.gender );
+			$("#gender").html( this.knowledgeBase.settings.gender.value );
 			$("#notification_checkbox").attr("checked", this.knowledgeBase.user_info.receivesNotifications);
 			$("#select_unit").val(this.knowledgeBase.settings.unit);
 		}
