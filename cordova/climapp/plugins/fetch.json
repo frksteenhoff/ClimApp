@@ -54,21 +54,5 @@
     },
     "is_top_level": true,
     "variables": {}
-  },
-  "cordova-plugin-browsersync": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-browsersync@^1.1.0"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
-  "cordova-plugin-local-notification": {
-    "source": {
-      "type": "registry",
-      "id": "cordova-plugin-local-notification"
-    },
-    "is_top_level": true,
-    "variables": {}
   }
 }

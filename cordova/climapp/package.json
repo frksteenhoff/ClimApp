@@ -15,7 +15,6 @@
         "cordova-android": "^7.1.4",
         "cordova-browser": "6.0.0",
         "cordova-ios": "^4.5.5",
-        "cordova-plugin-browsersync": "^1.1.0",
         "cordova-plugin-device": "^2.0.2",
         "cordova-plugin-geolocation": "^4.0.1",
         "cordova-plugin-splashscreen": "^5.0.2",
@@ -27,8 +26,7 @@
         "glob": "^5.0.15",
         "npm": "^2.15.12",
         "plist": "^1.2.0",
-        "q": "^1.5.1",
-        "cordova-plugin-local-notification": "~0.9.0-beta.3"
+        "q": "^1.5.1"
     },
     "cordova": {
         "plugins": {
@@ -37,8 +35,7 @@
             "cordova-plugin-device": {},
             "cordova-plugin-splashscreen": {},
             "cordova-wheel-selector-plugin": {},
-            "cordova-plugin-x-toast": {},
-            "cordova-plugin-local-notification": {}
+            "cordova-plugin-x-toast": {}
         },
         "platforms": [
             "browser",
