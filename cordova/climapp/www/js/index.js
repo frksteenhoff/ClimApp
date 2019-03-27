@@ -357,6 +357,7 @@ var app = {
 														else if( windchill < -15 ){
 															return 60;
 														}
+														else return false; //no risk
 													}
 												}
 									},
@@ -384,41 +385,12 @@ var app = {
 										"highlights":[//color also in CSS, keep consistent
 									        { from: 3, to: 4, color:  'rgba(180,0,0,.9)', css:'veryhot'},
 									        { from: 2, to: 3, color: 'rgba(255,100,0,.9)', css:'hot'},
-									        { from: 1, to: 2, color: 'rgba(180,180,0,.9)', css:'warm'},
+									        { from: 1, to: 2, color: 'rgba(220,220,0,.9)', css:'warm'},
 									        { from: -1, to: 1, color: 'rgba(0,180,0,.9)', css:'neutral' },
 									        { from: -2, to: -1, color:  'rgba(0,180,180,.9)', css:'cool' },
 											{ from: -3, to: -2, color: 'rgba(0,100,255,.9)', css:'cold' },
 											{ from: -4, to: -3, color: 'rgba(0,0,180,.9)', css:'verycold' }
 										]
-										
-									},
-									"clothingicons":{
-										"icon": function( clo ){
-											if( clo > 2.5 ){
-												return "./img/clothing/3.0clo.png";
-											}
-											else if( clo > 2.0 ){
-												return "./img/clothing/2.0clo.png";
-											}
-											else if( clo > 1.0 ){
-												return "./img/clothing/1.5clo.png";
-											}
-											else if( clo > 0.9 ){
-												return "./img/clothing/1.0clo.png";
-											}
-											else if( clo > 0.8 ){
-												return "./img/clothing/0.9clo.png";
-											}
-											else if( clo > 0.6 ){
-												return "./img/clothing/0.8clo.png";
-											}
-											else if( clo > 0.4){
-												return "./img/clothing/0.5clo.png";
-											}
-											else{
-												return "./img/clothing/0.4clo.png";
-											}
-										}
 									},
 									"thresholds":{
 										"ireq":{
@@ -428,6 +400,64 @@ var app = {
 											"duration": 120, //duration limit <= "icl-value" -> 
 											"sweat":1.0,     //sweat rate per hour >= "icl-value" ->
 										},
+										"windchill":{
+											"deltaT": 3
+										}	
+									},
+									"tips":{
+										"windchill": function(index){
+											let str = "";
+											let windchill = self.knowledgeBase.thermalindices.ireq[index].windchill;
+											if( windchill <
+												( self.knowledgeBase.thermalindices.ireq[index].Tair -
+													self.knowledgeBase.thresholds.windchill.deltaT )){
+														str += "<p>Winchill is "+windchill.toFixed(0)+"&deg;, you could wear a windstopper to combat cold stress.</p>";
+											}
+											else if(self.knowledgeBase.thermalindices.ireq[index].ICLminimal >
+												 	self.knowledgeBase.thresholds.ireq.icl ){
+												str += "<p>Dress in layers to combat the cold stress.</p>";
+											}
+											let windrisk = self.knowledgeBase.thermalindices.windchill.risk( windchill );
+											if( windrisk ){
+												str += "<p>Due to the windchill "+windchill.toFixed(0)+"&deg; there is a risk for exposed skin to freeze in "+ windrisk +" minutes.</p>";
+											}
+											
+											return str;
+										},
+										"phs": function( index ){
+											let str = "";
+											let d_sw = self.knowledgeBase.thermalindices.phs[ index].Dwl50;
+											let sw_tot_per_hour = 0.001 * 60 * self.knowledgeBase.thermalindices.phs[ index].SWtotg / 
+											(self.knowledgeBase.sim.duration ); //liter per hour
+											sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
+		
+											let duration_threshold = self.knowledgeBase.thresholds.phs.duration;
+											let sweat_threshold = self.knowledgeBase.thresholds.phs.sweat;
+											
+											//hydration
+											if( sw_tot_per_hour >= sweat_threshold ){
+												str += "In these conditions you could need " +sw_tot_per_hour+ " liter water per hour";
+											}
+											
+											let humidity = self.knowledgeBase.thermalindices.phs[ index].rh;
+											let temperature = self.knowledgeBase.thermalindices.phs[ index].Tair;
+											//humidity
+											if( humidity >= 50 && temperature >35 ){
+												str += "A fan will not help in this condition, and can even make things worse!";
+											}
+											
+											//radiation
+											return str;
+										},
+										"neutral": function(){
+											let tips = [ "Enjoy your activity",
+														 "Looks like it's all good",
+														 "An apple a day keeps the doctor at bay",
+														 "French minister names his cat 'Brexit' because: &quot;she meows loudly it wants to go out, but just stands there waiting when I open the door&quot;",
+														 "Two atoms walk into a bar, one says: &quot;I just lost an electron&quot, the other replies: &quot;are you sure?&quot; ... &quot;yes, i'm positive!&quot"]
+											let i = Math.round( Math.random() * tips.length );
+											return tips[i];
+										}
 									},
 									"sim":{
 										"duration": 240, //minutes (required for PHS)
@@ -578,10 +608,6 @@ var app = {
 	calcThermalIndices: function( ){
 		this.knowledgeBase.thermalindices.ireq = [];
 		this.knowledgeBase.thermalindices.phs = [];
-		/*
-			use sorting after calculations
-			
-		*/
 		
 		var options =  {	air:{},
 							body:{
@@ -630,6 +656,8 @@ var app = {
 				"rh": options.air.rh,
 				"v_air": options.air.v_air,
 				"Trad":options.air.Trad,
+				"wbgt": self.knowledgeBase.weather.wbgt[index],
+				"windchill": self.knowledgeBase.weather.windchill[index],
 				"utc": self.knowledgeBase.weather.utc[index],
 			};
 			self.knowledgeBase.thermalindices.ireq.push( ireq_object );
@@ -650,6 +678,8 @@ var app = {
 				"rh": options.air.rh,
 				"v_air": options.air.v_air,
 				"Trad":options.air.Trad,
+				"wbgt": self.knowledgeBase.weather.wbgt[index],
+				"windchill": self.knowledgeBase.weather.windchill[index],
 				"utc": self.knowledgeBase.weather.utc[index],
 			};
 			self.knowledgeBase.thermalindices.phs.push( phs_object );	
@@ -687,7 +717,7 @@ var app = {
 			var localdatetime = new Date();
 			var localutc = new Date( localdatetime.toISOString() );
 			var localdate = new Date( localdatetime.toDateString() );
-			var datemap = {"now": "around now",
+			var datemap = {"now": "current",
 							"-1": "yesterday",
 						   "0": "today",
 							"1": "tomorrow",
@@ -711,10 +741,10 @@ var app = {
 				let wbgt = self.knowledgeBase.weather.wbgt[index];
 				let hrisk = self.knowledgeBase.thermalindices.wbgt.risk( wbgt );
 				let crisk = obj.ICLminimal;
-				
+				let daydiffkey = daydiff;
 				if ( currentindex === -1 && Math.abs(dif) < 2 ){
 					currentindex = index;
-					daydiff = "now";
+					daydiffkey = "now";
 				}
 				
 				var element = {"index": index,
@@ -722,7 +752,7 @@ var app = {
 								"heat": hrisk,
 							   "time": lt,
 							   "daydiff": daydiff,
-							   "day": datemap[daydiff] };
+							   "day": datemap[ daydiffkey ] };
 				forecastarray.push( element );
 			});
 			var forecasts = "";
@@ -730,54 +760,38 @@ var app = {
 															forecastarray[currentindex].heat, 
 															currentindex );
 			
-			var yesterday_val = Math.inf;
+			var yesterday_val = undefined;
+			var yesterday_string = "";
+			
 			$.each( forecastarray, function(index, e ){
-				if( index == ( currentindex - 8 ) ){ //24h before
+				if( e.daydiff==-1 && e.time == forecastarray[currentindex].time ){ //24h before
 					yesterday_val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
-					let percval = (100*((val - base_val)/base_val));
+					let percval = (100*((yesterday_val - base_val)/base_val));
 					let sign = percval >= 0 ? "+" : "";
-					yesterday_val = sign + percval.toFixed(0) + "%";
+					let interpretation = base_val > yesterday_val ? "warmer" : "colder";
+					yesterday_string = sign + percval.toFixed(0) + "% " + interpretation + " than yesterday " + e.time;
+					$("#yesterday").html( yesterday_string );
 				}
-				if( index >= currentindex && e.daydiff < 2){
-					let isFocus = index === currentindex ? "focus" : "";
+				//from current until tomorrow, but not further
+				if( index > currentindex && ( e.daydiff < 2 ) ){
 					var val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
 					let highlight = self.knowledgeBase.gauge.highlights.filter( function( obj ){
-						return val >= obj.from  && val <= obj.to;
+						return ( val > obj.from || (obj.from === -4 && val <= -4) ) && val <= obj.to;
 					});					
 					
-					var title = "";//self.knowledgeBase.gauge[key].title( Math.abs(val) );
-					if( index === currentindex && yesterday_val < Math.inf ){
-						let interpretation = val > yesterday_val ? "hotter" : "colder";
-						title = yesterday_val + " " + interpretation + " than yesterday " + e.time;
-					}
-					else if( index === currentindex ){
-						title = "no data available from yesterday";
-					}
-		
-					let header = ( index === currentindex) ? e.day : e.time;
-					let footer = (e.daydiff > 0 ) ? e.day : "";
-										
-					forecasts += "<div data-listener='forecast' class='item " + highlight[0].css + " " + isFocus +"' data-index='"+index+"'>";
-					forecasts += "<p>";
-					forecasts += "<span>" + header + "</span>";
-					forecasts += val;
-					forecasts += "<span>" + title + "</span>"; //span in class item has display:block property
-					forecasts += "<span>" + footer + "</span>"; 
-					forecasts += "</p>";
+					let header = "Next " + (index-currentindex)*3 + " hours";
+					let footer = (e.daydiff > 0 ) ? e.day : "&nbsp;";
+					
+					/* HTML string appending */		
+					forecasts += "<div data-listener='forecast' data-index='"+index+"'>";
+					forecasts += "<p>" + header + " </p>";
+					forecasts += "<p class='"+ highlight[0].css + "'>" + val + "</p>";
+					forecasts += "<p>" + e.time + "</p>"; 
+					forecasts += "<p>" + footer + "</p>"; 
 					forecasts += "</div>";
 				}
 			});
-			$("#forecasts").html( forecasts );
-			
-			let windowsize = $( window ).width();
-			console.log( currentindex );
-			/*
-			$("#forecasts").scrollLeft(0).animate({
-				scrollLeft: $("div[data-listener='forecast'][data-index='"+currentindex+"']").offset().left - ( 0.5*windowsize) + 0.075*windowsize //CENTERING
-			}, 500);
-			*/
-			
-			
+			$("#forecasts").html( forecasts );			
 			this.initForecastListeners();
 			this.updateInfo( currentindex );
 				
@@ -804,15 +818,17 @@ var app = {
 		}
 	},
 	isDrawColdGauge: function( cold, heat, index ){
- 	   return cold >= heat && 
-				this.knowledgeBase.thermalindices.ireq[ index].Tair <= 15;
+		return cold >= heat;
+				// && 
+				//cold >= this.knowledgeBase.thresholds.ireq &&
+				//this.knowledgeBase.thermalindices.ireq[ index].Tair <= 15;
 	},
 	isDrawHeatGauge: function( cold, heat, index ){
  	   return heat > cold;
 			//&& this.knowledgeBase.weather.wbgt[ index ] >= 20;
 	},
 	determineThermalIndexValue: function( cold, heat, index ){
-		let value = 0;
+		let value = cold > heat ? -cold : heat;
 		value = this.isDrawColdGauge( cold, heat, index ) ? -cold : value;
 		value = this.isDrawHeatGauge( cold, heat, index ) ? heat : value;
 		return Math.max( -4, Math.min( 4, value ) );//value between -4 and +4
@@ -854,7 +870,19 @@ var app = {
 			let sweat_threshold = this.knowledgeBase.thresholds.phs.sweat;
 		
 			let tip_html = "";
+			
 		
+			if( draw_cold_gauge ){
+				tip_html += this.knowledgeBase.tips.windchill( index );
+			}
+			else if( draw_heat_gauge ){
+				tip_html += this.knowledgeBase.tips.phs( index );
+			}
+			if( tip_html.length ==0){
+				tip_html += this.knowledgeBase.tips.neutral();
+			}
+			
+			/* details
 			if( icl_min > icl_min_threshold ){
 				//this.drawGauge( 'main_gauge', width, icl_min , "cold stress level" );
 				tip_html += "<p><span class='score'>"+dle_min+"</span> minutes before low body temperature.</p>";
@@ -875,7 +903,7 @@ var app = {
 			if( tip_html === ""){
 				tip_html += "<p>No significant thermal stress expected.</p>";
 			}
-		
+			*/
 			let windowsize = $( window ).width();
 			let width = windowsize / 2;
 		

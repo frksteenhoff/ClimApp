@@ -18,15 +18,22 @@
 			<p>Wind <span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span>m/s</p>
 			<p>Humidity <span id="humidity"><i class="fas fa-spinner fa-pulse"></i></span>%</p>
 		</div>
-	</div>	
+	</div>
+	<div id="yesterday"><p></p></div>
 	<div id="forecasts" class="gallery">
 	</div>
 </div>
 
 <div class="panel">
-	<p class="label">Tip of the moment</p>
+	<div class="flexbox-2">
+		<div><p class="label">Tip of the moment</p></div>
+		<div data-listener="detailedmode">
+			<p class="right"><i class="fas fa-info-circle"></i> <span>details</span></p>
+		</div>
+	</div>
+	
 	<div id="tips"></div>
-	<div data-listener="detailedmode" data-target="detailedpage" class="button">tap for detailed information (expert mode)</div>
+
 </div>
 
 <div class="panel">
