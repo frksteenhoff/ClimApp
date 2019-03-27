@@ -24,7 +24,7 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    background: url("../img/backgrounds/blue-clouds.jpg");
+    background: url("../img/backgrounds/blue-sky.jpg");
      background-repeat: no-repeat;
      background-size: auto;
     font-family: Arial, sans-serif;
@@ -128,9 +128,8 @@ button p {
 
 p.label{
 	color: #222;/* #52A5D5;*/
-	font-size: 1em;
+	font-size: 0.8em;
     font-weight: bold;
-    font-size: 75%;
 }
 p.caption{
 	font-size: 1em;
@@ -234,61 +233,54 @@ img.small{
 	width: 100%;
 	height: auto;
 	margin: auto;
-	display:block;
-
+	display: block;
+	white-space: nowrap;
     overflow-x: scroll;
 	overflow-y: hidden;
-    white-space: nowrap;
-
     -webkit-overflow-scrolling: touch;
 }
 .gallery div{
-	width: 20%;
-    display:inline-block;
-    margin-bottom: 0.5em;
-}
-.gallery div span{
-	font-size: 0.7em;
-	display: block;
-	white-space:normal;
-	/*word-wrap: break-word;*/
-}
-
-.gallery div.item{
-	padding-top: 0.2em;
+	width: 30%;
+	height: 15vh;
+	display: inline-block;
+	overflow: hidden;
+	white-space: normal;
+	word-wrap: break-word;
 	border-right: 1px solid rgba(0, 0, 0, 0.2);
 	text-align:center;
-	overflow:hidden;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
 }
-.gallery div.item .clothingicon{
-	width: 100%;
+.gallery div p{
+	font-size: 0.9em;
+	/**/
 }
+
+
 /*
 //thermal colors also in knowledgebase.gauge.higlights, keep consistent
 */
-.gallery div.verycold{
-	background: rgba(0,0,180,.9);
+.gallery .verycold{
+	color: rgba(0,0,180,.9);
 }
-.gallery div.cold{
-	background: rgba(0,100,255,.9);
+.gallery .cold{
+	color: rgba(0,100,255,.9);
 }
-.gallery div.cool{
-	background: rgba(0,180,180,.9);
+.gallery .cool{
+	color: rgba(0,180,180,.9);
 }
-.gallery div.neutral{
-	background: rgba(0,180,0,.9);
+.gallery .neutral{
+	color: rgba(0,180,0,.9);
 }
-.gallery div.warm{
-	background: rgba(180,180,0,.9);
+.gallery .warm{
+	color: rgba(180,180,0,.9);
 }
-.gallery div.hot{
-	background: rgba(255,100,0,.9);
+.gallery .hot{
+	color: rgba(255,100,0,.9);
 }
-.gallery div.veryhot{
-	background: rgba(180,0,0,.9);
+.gallery .veryhot{
+	color: rgba(180,0,0,.9);
 }
 .gallery div.focus{
 	font-weight: bold;
