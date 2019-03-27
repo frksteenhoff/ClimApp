@@ -36,6 +36,9 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
+		window.onerror = function(message, url, lineNumber) {
+		        console.log("Error: "+message+" in "+url+" at line "+lineNumber);
+		    }
     },
 
     // Update DOM on a Received Event
@@ -718,6 +721,7 @@ var app = {
 								"cold": crisk,
 								"heat": hrisk,
 							   "time": lt,
+							   "daydiff": daydiff,
 							   "day": datemap[daydiff] };
 				forecastarray.push( element );
 			});
@@ -725,43 +729,58 @@ var app = {
 			var base_val = this.determineThermalIndexValue( forecastarray[currentindex].cold, 
 															forecastarray[currentindex].heat, 
 															currentindex );
+			
+			var yesterday_val = Math.inf;
 			$.each( forecastarray, function(index, e ){
-				let isFocus = index === currentindex ? "focus" : "";
-				console.log( "each forecast " + e.index );
-				var val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
-				let highlight = self.knowledgeBase.gauge.highlights.filter( function( obj ){
-					return val >= obj.from  && val <= obj.to;
-				});
-				let key = val > 0 ? "heat" : "cold";
-				var title = self.knowledgeBase.gauge[key].title( Math.abs(val) );
-		
-				
-				//percentage difference from "now"
-				if( index !== currentindex ){
+				if( index == ( currentindex - 8 ) ){ //24h before
+					yesterday_val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
 					let percval = (100*((val - base_val)/base_val));
 					let sign = percval >= 0 ? "+" : "";
-					val = sign + percval.toFixed(0) + "%";
+					yesterday_val = sign + percval.toFixed(0) + "%";
 				}
-				
-				
-				forecasts += "<div data-listener='forecast' class='item " + highlight[0].css + " " + isFocus +"' data-index='"+index+"'>";
-				forecasts += "<p>" + val;
-				forecasts += "<span>" + title + "</span>"; //span in class item has display:block property
-				forecasts += "<span>" + e.time + "</span>";
-				forecasts += "<span>" + e.day + "</span>"; 
-				forecasts += "</p>";
-				forecasts += "</div>";
-				$("#forecasts").append()
+				if( index >= currentindex && e.daydiff < 2){
+					let isFocus = index === currentindex ? "focus" : "";
+					var val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
+					let highlight = self.knowledgeBase.gauge.highlights.filter( function( obj ){
+						return val >= obj.from  && val <= obj.to;
+					});					
+					
+					var title = "";//self.knowledgeBase.gauge[key].title( Math.abs(val) );
+					if( index === currentindex && yesterday_val < Math.inf ){
+						let interpretation = val > yesterday_val ? "hotter" : "colder";
+						title = yesterday_val + " " + interpretation + " than yesterday " + e.time;
+					}
+					else if( index === currentindex ){
+						title = "no data available from yesterday";
+					}
+		
+					let header = ( index === currentindex) ? e.day : e.time;
+					let footer = (e.daydiff > 0 ) ? e.day : "";
+										
+					forecasts += "<div data-listener='forecast' class='item " + highlight[0].css + " " + isFocus +"' data-index='"+index+"'>";
+					forecasts += "<p>";
+					forecasts += "<span>" + header + "</span>";
+					forecasts += val;
+					forecasts += "<span>" + title + "</span>"; //span in class item has display:block property
+					forecasts += "<span>" + footer + "</span>"; 
+					forecasts += "</p>";
+					forecasts += "</div>";
+				}
 			});
 			$("#forecasts").html( forecasts );
 			
 			let windowsize = $( window ).width();
+			console.log( currentindex );
+			/*
 			$("#forecasts").scrollLeft(0).animate({
 				scrollLeft: $("div[data-listener='forecast'][data-index='"+currentindex+"']").offset().left - ( 0.5*windowsize) + 0.075*windowsize //CENTERING
 			}, 500);
+			*/
+			
 			
 			this.initForecastListeners();
-			this.updateInfo( currentindex );	
+			this.updateInfo( currentindex );
+				
 		}
 		else if( this.currentPageID == "settings" ){
 			this.initSettingsListeners();
@@ -858,7 +877,7 @@ var app = {
 			}
 		
 			let windowsize = $( window ).width();
-			let width = windowsize / 1.67;
+			let width = windowsize / 2;
 		
 			let value = this.determineThermalIndexValue( cold_index, heat_index, index );
 			let thermal = draw_cold_gauge ? "cold" : "heat";
@@ -873,7 +892,7 @@ var app = {
 		var c = $("#"+id), 
         	ctx = c[0].getContext('2d');
 		
-		if( ctx.canvas.width !== width ){
+		if( ctx.canvas.width !== width || ctx.canvas.height !== width){
 			ctx.canvas.height = width;
 			ctx.canvas.width = width;
 		}

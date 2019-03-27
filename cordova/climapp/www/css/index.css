@@ -128,9 +128,8 @@ button p {
 
 p.label{
 	color: #222;/* #52A5D5;*/
-	font-size: 1em;
+	font-size: 0.8em;
     font-weight: bold;
-    font-size: 75%;
 }
 p.caption{
 	font-size: 1em;
