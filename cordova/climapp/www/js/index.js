@@ -125,7 +125,10 @@ var app = {
 			};
 			window.SelectorCordovaPlugin.showSelector(config, function(result) {
 				self.knowledgeBase.settings[target].value = items_[result[0].index].value;
-			    self.saveSettings();
+				self.saveSettings();
+				if(["age", "gender", "height", "weight"].includes(target)) {
+					self.updateDBParam(target);
+				}
 				self.updateUI();
 			}, function() {
 			    console.log('Canceled');
@@ -249,14 +252,6 @@ var app = {
 												"watervapourpressure": [-99],
 												"windspeed": [-99],
 												"radiation": [-99],
-												"calculated_temperature": function() {
-													let unit = self.knowledgeBase.settings.unit;
-													if(unit === "US") {
-														return self.knowledgeBase.weather.temperature * 9/5 + 32;
-													} else {
-														return self.knowledgeBase.weather.unit;
-													}
-												},
 												"temperature_unit": function() { return self.knowledgeBase.settings.unit === "US" ? "Fahrenheit" : "Celcius"; }
 									},
 								  "settings": { "age": {"title": "What is your age?",
@@ -920,9 +915,9 @@ var app = {
 			});
 			$("#current_time").html( local_time );
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
-			$("#temperature").html( this.knowledgeBase.thermalindices.ireq[ index].Tair.toFixed(0) +"&#xb0" );
+			$("#temperature").html( this.getTemperatureInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair).toFixed(0) +"&#xb0" );
 			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[ index].v_air.toFixed(0) );
-			$("#temp_unit").html(this.knowledgeBase.settings.calculated_temperature); // Should probavbly be added to knowledgebase
+			$("#temp_unit").html(this.knowledgeBase.weather.temperature_unit()); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[ index].rh.toFixed(0) );
 			
 		
@@ -1061,6 +1056,18 @@ var app = {
 	    });
 		*/
 	}, 
+	getTemperatureInPreferredUnit: function(temp) {
+		let self = this;
+		let unit = self.knowledgeBase.settings.unit;
+		if(unit === "US") {
+			return temp * 9/5 + 32;
+		} else {
+			return temp;
+		}
+	},
+	getGenderAsInteger: function() {
+		return this.knowledgeBase.settings.gender.value === 'Male' ? 1 : 0;
+	},
 	/*
 	 * Methods related to database 
 	 */
@@ -1070,7 +1077,7 @@ var app = {
 		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createUserRecord";
 		let user_data = {"_id": self.knowledgeBase.user_info.deviceid,
 						 "age": self.knowledgeBase.settings.age.value,
-						 "gender": (self.knowledgeBase.settings.gender.value === 'Male' ? 0 : 1), 
+						 "gender": self.getGenderAsInteger(), 
 						 "height": (self.knowledgeBase.settings.height.value/100), // unit is meter in database (SI)
 						 "weight": self.knowledgeBase.settings.weight.value, 
 						 "unit": 0}  
@@ -1120,6 +1127,30 @@ var app = {
 			if(status === "success") {
 				console.log("Database update, feedback: " + data);
 				self.showShortToast("Feedback submitted!");
+			}
+		});
+	},
+	// Updating user parameter in database when/if user should choose to change the value
+	updateDBParam: function(param){
+		let self = this;
+		let ip = "http://192.38.64.244";
+		let urlsuffix = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=updateUser";
+		let fieldToUpdate = param.charAt(0).toUpperCase() + param.slice(1); // Capitalizing to match API requirement		
+		let url = urlsuffix + fieldToUpdate;
+		let user_data = {
+				"_id": self.knowledgeBase.user_info.deviceid,		
+			}
+		// Add value to be updated to data object 
+		if(param === "gender") { 
+			user_data[param] = self.getGenderAsInteger();
+		} else {
+			user_data[param] = self.knowledgeBase.settings[param].value;
+		}
+		$.post(url, user_data).done(function(data, status, xhr){
+			if(status === "success") {
+				console.log("Database update" + param + ": " + 
+				self.knowledgeBase.settings[param].value + ", " + 
+				self.getGenderAsInteger());
 			}
 		});
 	},
