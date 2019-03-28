@@ -252,14 +252,6 @@ var app = {
 												"watervapourpressure": [-99],
 												"windspeed": [-99],
 												"radiation": [-99],
-												"calculated_temperature": function() {
-													let unit = self.knowledgeBase.settings.unit;
-													if(unit === "US") {
-														return self.knowledgeBase.weather.temperature * 9/5 + 32;
-													} else {
-														return self.knowledgeBase.weather.unit;
-													}
-												},
 												"temperature_unit": function() { return self.knowledgeBase.settings.unit === "US" ? "Fahrenheit" : "Celcius"; }
 									},
 								  "settings": { "age": {"title": "What is your age?",
@@ -923,9 +915,9 @@ var app = {
 			});
 			$("#current_time").html( local_time );
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
-			$("#temperature").html( this.knowledgeBase.thermalindices.ireq[ index].Tair.toFixed(0) +"&#xb0" );
+			$("#temperature").html( this.getTemperatureInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair).toFixed(0) +"&#xb0" );
 			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[ index].v_air.toFixed(0) );
-			$("#temp_unit").html(this.knowledgeBase.settings.calculated_temperature); 
+			$("#temp_unit").html(this.knowledgeBase.weather.temperature_unit()); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[ index].rh.toFixed(0) );
 			
 		
@@ -1064,6 +1056,15 @@ var app = {
 	    });
 		*/
 	}, 
+	getTemperatureInPreferredUnit: function(temp) {
+		let self = this;
+		let unit = self.knowledgeBase.settings.unit;
+		if(unit === "US") {
+			return temp * 9/5 + 32;
+		} else {
+			return temp;
+		}
+	},
 	getGenderAsInteger: function() {
 		return this.knowledgeBase.settings.gender.value === 'Male' ? 1 : 0;
 	},
