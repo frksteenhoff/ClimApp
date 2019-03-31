@@ -35,10 +35,11 @@ var app = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-        this.receivedEvent('deviceready');
 		window.onerror = function(message, url, lineNumber) {
 		        console.log("Error: "+message+" in "+url+" at line "+lineNumber);
 		    }
+        this.receivedEvent('deviceready');
+		
     },
 
     // Update DOM on a Received Event
@@ -605,7 +606,9 @@ var app = {
 						 "lat": this.knowledgeBase.position.lat,
 					 	 "lon": this.knowledgeBase.position.lng,
 						 "climapp": appid,
-					 	 "utc": new Date().toJSON() };
+						 "d": 10.0, //
+					 	 "utc": new Date().toUTCString() };
+						 console.log( data );
 			$.get( url, 
 				   data, 
 				   function( output ){//on success
@@ -653,7 +656,9 @@ var app = {
 					   catch( error ){
 						   console.log( error );
 					   }
-			});
+			}).fail(function( e ) {
+					console.log(e);
+  			});
 		}
 
 		// Schedule a notification if weather conditions are out of the ordinary
@@ -826,41 +831,47 @@ var app = {
 				forecastarray.push( element );
 			});
 			var forecasts = "";
-			var base_val = this.determineThermalIndexValue( forecastarray[currentindex].cold, 
-															forecastarray[currentindex].heat, 
-															currentindex );
 			
-			var yesterday_val = undefined;
-			var yesterday_string = "";
+			if (currentindex > -1){
+				var base_val = this.determineThermalIndexValue( forecastarray[currentindex].cold, 
+																forecastarray[currentindex].heat, 
+																currentindex );
 			
-			$.each( forecastarray, function(index, e ){
-				if( e.daydiff==-1 && e.time == forecastarray[currentindex].time ){ //24h before
-					yesterday_val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
-					let percval = (100*((yesterday_val - base_val)/base_val));
-					let sign = percval >= 0 ? "+" : "";
-					let interpretation = base_val > yesterday_val ? "warmer" : "colder";
-					yesterday_string = sign + percval.toFixed(0) + "% " + interpretation + " than yesterday " + e.time;
-					$("#yesterday").html( yesterday_string );
-				}
-				//from current until tomorrow, but not further
-				if( index > currentindex && ( e.daydiff < 2 ) ){
-					var val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
-					let highlight = self.knowledgeBase.gauge.highlights.filter( function( obj ){
-						return ( val > obj.from || (obj.from === -4 && val <= -4) ) && val <= obj.to;
-					});					
+				var yesterday_val = undefined;
+				var yesterday_string = "";
+			
+				$.each( forecastarray, function(index, e ){
+					if( e.daydiff==-1 && e.time == forecastarray[currentindex].time ){ //24h before
+						yesterday_val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
+						let percval = (100*((yesterday_val - base_val)/base_val));
+						let sign = percval >= 0 ? "+" : "";
+						let interpretation = base_val > yesterday_val ? "warmer" : "colder";
+						yesterday_string = sign + percval.toFixed(0) + "% " + interpretation + " than yesterday " + e.time;
+						$("#yesterday").html( yesterday_string );
+					}
+					//from current until tomorrow, but not further
+					if( index > currentindex && ( e.daydiff < 2 ) ){
+						var val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
+						let highlight = self.knowledgeBase.gauge.highlights.filter( function( obj ){
+							return ( val > obj.from || (obj.from === -4 && val <= -4) ) && val <= obj.to;
+						});					
 					
-					let header = "Next " + (index-currentindex)*3 + " hours";
-					let footer = (e.daydiff > 0 ) ? e.day : "&nbsp;";
+						let header = "Next " + (index-currentindex)*3 + " hours";
+						let footer = (e.daydiff > 0 ) ? e.day : "&nbsp;";
 					
-					/* HTML string appending */		
-					forecasts += "<div data-listener='forecast' data-index='"+index+"'>";
-					forecasts += "<p>" + header + " </p>";
-					forecasts += "<p class='"+ highlight[0].css + "'>" + val + "</p>";
-					forecasts += "<p>" + e.time + "</p>"; 
-					forecasts += "<p>" + footer + "</p>"; 
-					forecasts += "</div>";
-				}
-			});
+						/* HTML string appending */		
+						forecasts += "<div data-listener='forecast' data-index='"+index+"'>";
+						forecasts += "<p>" + header + " </p>";
+						forecasts += "<p class='"+ highlight[0].css + "'>" + val + "</p>";
+						forecasts += "<p>" + e.time + "</p>"; 
+						forecasts += "<p>" + footer + "</p>"; 
+						forecasts += "</div>";
+					}
+				});
+			}
+			else{
+				forecasts += "<p>No weather data available</p>";
+			}
 			$("#forecasts").html( forecasts );			
 			this.initForecastListeners();
 			this.updateInfo( currentindex );
@@ -908,7 +919,8 @@ var app = {
 		
 		if( 'weather' in this.knowledgeBase && this.knowledgeBase.weather.station !== "" ){
 			let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
-			let utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ index].utc ); //
+			console.log( "utc: "+ index +" "+ this.knowledgeBase.thermalindices.ireq[ index ].utc );
+			let utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ index ].utc ); //
 			let local_time = utc_date.toLocaleTimeString(navigator.language, { //language specific setting
 					hour: '2-digit',
 				    minute:'2-digit'
