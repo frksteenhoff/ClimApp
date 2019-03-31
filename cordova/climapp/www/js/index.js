@@ -46,7 +46,6 @@ var app = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
 		this.loadSettings();
-		localStorage.clear();
 		if( this.knowledgeBase.user_info.firstLogin ){//onboarding
 			this.loadUI( "onboarding" );
 		}
