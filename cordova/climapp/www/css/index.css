@@ -81,6 +81,10 @@ canvas{
 .flexbox-2 div.center{
 	margin: auto;
 }
+.flexbox-2 div.even{
+	margin: auto;
+	flex-basis:50%;
+}
 
 .flexbox-2 div.right {
 	margin: auto;
@@ -140,7 +144,7 @@ span.settings{
 	font-style: italic;
 }
 span.score{
-	font-size: 1.25em;
+	font-size: 0.9em;
 	font-weight: bold;
 }
 

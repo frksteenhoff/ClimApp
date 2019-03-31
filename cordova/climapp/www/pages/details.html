@@ -1,0 +1,50 @@
+<div class="panel">
+	<p class="label">Details</p>
+	<p>Here we show information that may be useful to the advanced user. (SI units only)</p>
+	<p>
+	   Air temperature <span class="score" id="detail_airtemp"></span>
+	   <br>Humidity <span class="score" id="detail_rh"></span>
+	   <br>Radiation in full sunlight <span class="score" id="detail_rad"></span>
+	   <br>Windspeed <span class="score" id="detail_wind"></span>
+   </p>
+</div>	
+<div class="panel" data-context="heat">
+	<p class="label">Wet Bulb Globe Temperature (WBGT ISO7243)</p>
+	<p>The expected WBGT is <span class="score" id="detail_wbgt"></span>&#xb0; and based on your activity level the Recommended Alert Limit is <span class="score" id="detail_ral"></span>&#xb0;.</p>
+</div>
+<div class="panel" data-context="heat">
+	<p class="label">Heat Strain (PHS ISO7933)</p>
+	<p>This means that the safe exposure limit is <span class="score" id="detail_dle_phs"></span> minutes,
+		and Sweat rate is around <span  class="score" id="detail_sweat"></span> liter per hour if you are dressed in casual office clothing.</p>
+</div>
+
+<div class="panel" data-context="cold">
+	<p class="label">Exposed skin - Windchill (JAG/TI)</p>
+	<p>The Windchill index is <span class="score" id="detail_windchill"></span>&#xb0;, which means that there is <span id="detail_windriskcat"> <span class="score" id="detail_windrisk"></span></p>
+</div>
+<div class="panel" data-context="cold">
+	<p class="label">Body temperature - Cold Stress (IREQ ISO11079)</p>
+	<p>In cold weather it is important to:
+		<ul>
+			<li>keep your clothes dry, wet clothing cools you down faster,</li>
+			<li>do not underdress,</li>
+			<li>do not overdress, sweating can make your clothes wet.</li> 
+		</ul>
+	</p>
+	<p>For your <span class="detail_activity_ireq"></span> activity level, you should aim to keep the clothing level between <span class="score" id="detail_icl_min"></span> clo and <span class="score" id="detail_icl_max"></span> clo</p>
+	<div class="flexbox-2">
+		<div class="center even">
+			<p class="label">minimal clothing level</p>
+			<div id="detail_min_clo"></div>
+		</div>
+		<div class="center even">
+			<p class="label">maximal clothing level</p>
+			<div id="detail_max_clo"></div>
+		</div>
+	</div>
+	<p>With the minimal clothing level the safe exposure limit is <span id="detail_dle_ireq"></span> minutes.</p>
+</div>
+
+<div class="panel" data-context="neutral">
+	<p>Based on your activity level there is no indication for heat or cold stress when you are dressed in casual office clothing.</p>
+</div>
