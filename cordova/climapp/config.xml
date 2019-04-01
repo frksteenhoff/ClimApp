@@ -5,7 +5,7 @@
         A sample Apache Cordova application that responds to the deviceready event.
     </description>
     <author email="boris.kingma@gmail.com" href="http://cordova.io">
-        Climapp team
+        The Climapp Team
     </author>
     <content src="index.html" />
     <access origin="*" />

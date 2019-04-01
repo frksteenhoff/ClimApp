@@ -302,7 +302,8 @@ var app = {
 												 	 let ISO_level = self.knowledgeBase.activity.values[ ISO_selected ];
 													 return 50 * (ISO_level);
 												 },
-												 "unit": { "value": "SI" } // default SI units
+												 "unit": { "title": "Which units of measurements would you prefer?",
+												 			"value": "SI" } // default SI units
 								   },
 								  "activity": { "label": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
 													 		"low":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
@@ -980,12 +981,6 @@ var app = {
 				$("div[data-context='cold'],div[data-context='heat']").hide();
 				$("div[data-context='neutral']").show();
 			}
-						
-			
-			
-		
-		
-		
 		}
 		else if( this.currentPageID == "settings" ){
 			this.initSettingsListeners();
@@ -994,7 +989,6 @@ var app = {
 			$("#weight").html( this.knowledgeBase.settings.weight.calculated_value() + " " + this.knowledgeBase.settings.weight.unit());
 			$("#gender").html( this.knowledgeBase.settings.gender.value );
 			$("#notification_checkbox").attr("checked", this.knowledgeBase.user_info.receivesNotifications);
-			$("#select_unit").val(this.knowledgeBase.settings.unit.value);
 		}
 		else if( this.currentPageID == "feedback" ){
 			this.initFeedbackListeners();
