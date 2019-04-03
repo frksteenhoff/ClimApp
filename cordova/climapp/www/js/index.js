@@ -988,6 +988,7 @@ var app = {
 			$("#height").html( this.knowledgeBase.settings.height.calculated_value() + " " + this.knowledgeBase.settings.height.unit());
 			$("#weight").html( this.knowledgeBase.settings.weight.calculated_value() + " " + this.knowledgeBase.settings.weight.unit());
 			$("#gender").html( this.knowledgeBase.settings.gender.value );
+			$("#unit").html( this.knowledgeBase.settings.unit.value + " units" );
 			$("#notification_checkbox").attr("checked", this.knowledgeBase.user_info.receivesNotifications);
 		}
 		else if( this.currentPageID == "feedback" ){
