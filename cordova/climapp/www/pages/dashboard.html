@@ -1,8 +1,8 @@
 <div class="panel">
 	<div class="flexbox-2">
-		<div><p class="label"><span id="current_time"></span></p></div>
+		<div><p class="label"><span id="current_time"></span> weather report</p></div>
 		<div data-listener="geolocation">
-			<p class="right">
+			<p class="right label">
 				<i class="fas fa-map-marker-alt"></i>
 				<span id="station"><i class="fas fa-spinner fa-pulse"></i></span> 
 				<i class="fas fa-sync-alt"></i>
@@ -10,33 +10,43 @@
 		</div>
 	</div>
 	<div class="flexbox-2">
+		<div id="dashboard_numbers" class="left">
+			<p><span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span><br><span id="temp_unit"></span></p>
+			<p><i class="fas fa-wind"></i> Wind speed <span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span >m/s</p>
+			<p><i class="fas fa-tint"></i> Humidity   <span id="humidity"><i class="fas fa-spinner fa-pulse"></i></span >%</p>
+			<!--<p><i class="fas fa-cloud"></i> <span id="cloudiness"><i class="fas fa-spinner fa-pulse"></i></span> %</p>-->
+		</div>
 		<div class="center">
 			<canvas id="main_gauge"></canvas>
 		</div>
-		<div class="right">
-			<p>Temperature <span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span>&#8451;</p>
-			<p>Wind <span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span>m/s</p>
-			<p>Humidity <span id="humidity"><i class="fas fa-spinner fa-pulse"></i></span>%</p>
-		</div>
+
 	</div>	
+	<div id="yesterday"><p></p></div>
 	<div id="forecasts" class="gallery">
 	</div>
 </div>
 
 <div class="panel">
-	<p class="label">Implication when wearing normal office clothes</p>
+	<div class="flexbox-2">
+		<div><p class="label">Tip of the moment</p></div>
+		<div data-listener="navbar" data-target="details">
+			<p class="right"><i class="fas fa-info-circle"></i> <span>details</span></p>
+		</div>
+	</div>
+	
 	<div id="tips"></div>
+
 </div>
 
 <div class="panel">
 	<p class="label">Activity level</p>
 	<p>What is your activity level?</p>
 	<div class="flexbox-5">
-		<div data-target="LOW-" data-listener="activity" class="button"><img src="img/activities/rest.png" class="small"><br>Rest</div>
-		<div data-target="LOW" data-listener="activity" class="button"><img src="img/activities/office.png" class="small"><br>Low</div>
-		<div data-target="MEDIUM" data-listener="activity" class="button"><img src="img/activities/gardener.png" class="small"><br>Medium</div>
-		<div data-target="HIGH" data-listener="activity" class="button"><img src="img/activities/shovel.png" class="small"><br>High</div>
-		<div data-target="HIGH+" data-listener="activity" class="button"><img src="img/activities/running.png" class="small"><br>Intense</div>	
+		<div data-target="rest" data-listener="activity" class="button"><img src="img/activities/rest.png" class="small"><br>Rest</div>
+		<div data-target="low" data-listener="activity" class="button"><img src="img/activities/office.png" class="small"><br>Low</div>
+		<div data-target="medium" data-listener="activity" class="button"><img src="img/activities/gardener.png" class="small"><br>Medium</div>
+		<div data-target="high" data-listener="activity" class="button"><img src="img/activities/shovel.png" class="small"><br>High</div>
+		<div data-target="intense" data-listener="activity" class="button"><img src="img/activities/running.png" class="small"><br>Intense</div>	
 	</div>
 	<p class="caption" id="activityCaption"></p>
 </div>

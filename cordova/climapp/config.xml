@@ -5,7 +5,7 @@
         A sample Apache Cordova application that responds to the deviceready event.
     </description>
     <author email="boris.kingma@gmail.com" href="http://cordova.io">
-        Climapp team
+        The Climapp Team
     </author>
     <content src="index.html" />
     <access origin="*" />
@@ -49,6 +49,6 @@
     <plugin name="cordova-wheel-selector-plugin" spec="^1.1.2" />
     <plugin name="cordova-plugin-x-toast" spec="^2.7.2" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
-    <engine name="android" spec="^7.1.4" />
     <engine name="ios" spec="^4.5.5" />
+    <engine name="android" spec="^7.1.4" />
 </widget>

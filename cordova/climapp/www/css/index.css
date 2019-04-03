@@ -24,7 +24,7 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    background: url("../img/backgrounds/rain.jpg");
+    background: url("../img/backgrounds/blue-sky.jpg");
      background-repeat: no-repeat;
      background-size: auto;
     font-family: Arial, sans-serif;
@@ -67,7 +67,6 @@ canvas{
     box-sizing: border-box;         /* Opera/IE 8+ */
 }
 
-
 .flexbox-5, .flexbox-2{
     display: -webkit-box;
     display: -moz-box;
@@ -78,16 +77,24 @@ canvas{
     -webkit-flex-flow: row wrap;
     justify-content: space-between;
 }
+
 .flexbox-2 div.center{
 	margin: auto;
 }
-.flexbox-2 div.right{
+.flexbox-2 div.even{
+	margin: auto;
+	flex-basis:50%;
+}
+
+.flexbox-2 div.right {
 	margin: auto;
 	align-self: flex-end;
 }
+
 .flexbox-2 div.wide{
 	flex-basis: 70%;
 }
+
 .flexbox-5 div{
 	margin: auto;
 	flex-basis: 18%;
@@ -109,9 +116,6 @@ canvas{
     background: #7EBFE5; /* Old browsers */
 }
 
-
-
-
 p {
     /* commented out, this functionality should not be in root p. 
 	margin-left: 0.5em;
@@ -128,9 +132,8 @@ button p {
 
 p.label{
 	color: #222;/* #52A5D5;*/
-	font-size: 1em;
+	font-size: 0.8em;
     font-weight: bold;
-    font-size: 75%;
 }
 p.caption{
 	font-size: 1em;
@@ -141,7 +144,7 @@ span.settings{
 	font-style: italic;
 }
 span.score{
-	font-size: 1.25em;
+	font-size: 0.9em;
 	font-weight: bold;
 }
 
@@ -160,10 +163,38 @@ img.small{
 	margin:auto;
 }
 
+#dashboard_content {
+    align-content: flex-start;
+    margin: 0.5em;
+}
+
+#temperature {
+    width: 40%;
+    font-size: 30vw;
+}
+
+#temp_unit {
+    font-style: italic;
+}
+
+/* Settings related */
+
+.inlineitems p {
+    margin-bottom: 1em;
+}
+
+.panel.settings p {
+    margin-bottom: 1.5em;
+}
+
+.panel.settings.inlineitems#notify {
+    margin-bottom: 0;
+}
+
 /* BEGIN navigation bar style*/
 .navigation {
   margin: 0; 
-  background: #7EBFE5;  
+  background: rgba(255,255,255,0.9);  
   /*background: #7EBFE5; /* Old browsers */
   /*background: -moz-linear-gradient(top, #52A5D5 0%, #A1D4F2 100%); /* FF3.6-15 */
   /*background: -webkit-linear-gradient(top, #52A5D5 0%,#A1D4F2 100%); /* Chrome10-25,Safari5.1-6 */
@@ -178,7 +209,7 @@ img.small{
 }
 
 .navigation div{
-	color: #ffffff;
+	color: #000;
 	display: border-box;
 	margin: auto;
 }
@@ -206,60 +237,54 @@ img.small{
 	width: 100%;
 	height: auto;
 	margin: auto;
-	display:block;
-
+	display: block;
+	white-space: nowrap;
     overflow-x: scroll;
 	overflow-y: hidden;
-    white-space: nowrap;
-
     -webkit-overflow-scrolling: touch;
 }
 .gallery div{
-	width: 20%;
-	display:inline-block;
-}
-.gallery div span{
-	font-size: 0.7em;
-	display: block;
-	white-space:normal;
-	/*word-wrap: break-word;*/
-}
-
-.gallery div.item{
-	padding-top: 0.2em;
+	width: 30%;
+	height: 15vh;
+	display: inline-block;
+	overflow: hidden;
+	white-space: normal;
+	word-wrap: break-word;
 	border-right: 1px solid rgba(0, 0, 0, 0.2);
 	text-align:center;
-	overflow:hidden;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
 }
-.gallery div.item .clothingicon{
-	width: 100%;
+.gallery div p{
+	font-size: 0.9em;
+	/**/
 }
+
+
 /*
 //thermal colors also in knowledgebase.gauge.higlights, keep consistent
 */
-.gallery div.verycold{
-	background: rgba(0,0,180,.9);
+.gallery .verycold{
+	color: rgba(0,0,180,.9);
 }
-.gallery div.cold{
-	background: rgba(0,100,255,.9);
+.gallery .cold{
+	color: rgba(0,100,255,.9);
 }
-.gallery div.cool{
-	background: rgba(0,180,180,.9);
+.gallery .cool{
+	color: rgba(0,180,180,.9);
 }
-.gallery div.neutral{
-	background: rgba(0,180,0,.9);
+.gallery .neutral{
+	color: rgba(0,180,0,.9);
 }
-.gallery div.warm{
-	background: rgba(180,180,0,.9);
+.gallery .warm{
+	color: rgba(180,180,0,.9);
 }
-.gallery div.hot{
-	background: rgba(255,100,0,.9);
+.gallery .hot{
+	color: rgba(255,100,0,.9);
 }
-.gallery div.veryhot{
-	background: rgba(180,0,0,.9);
+.gallery .veryhot{
+	color: rgba(180,0,0,.9);
 }
 .gallery div.focus{
 	font-weight: bold;
@@ -362,14 +387,15 @@ div.inputcontainer div.button {
 }
 
 
-/* Notification switch */
+/* Notification switch and unit selector */
 /* box around the slider */
-
+.select_unit.totheright,
 .totheright {
     text-align: right;
 }
 
-div.inlineitems p {
+div.inlineitems p,
+div.select_unit {
     width:48%;
     position: relative;
     display: inline-block;
@@ -377,11 +403,15 @@ div.inlineitems p {
     margin: 0;
 }
 
+div.select_unit {
+    margin-bottom: 1em;
+}
+
 .switch {
     position: relative;
     display: inline-block;
     width: 60px;
-    height: 34px;
+    height: 30px;
   }
   
   /* Hide default HTML checkbox */
@@ -408,8 +438,8 @@ div.inlineitems p {
   .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
+    height: 22px;
+    width: 22px;
     left: 4px;
     bottom: 4px;
     background-color: white;
@@ -426,16 +456,27 @@ div.inlineitems p {
   }
   
   input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    -webkit-transform: translateX(28px);
+    -ms-transform: translateX(28px);
+    transform: translateX(28px);
   }
   
   /* Rounded sliders */
   .slider.round {
-    border-radius: 34px;
+    border-radius: 30px;
   }
   
   .slider.round:before {
     border-radius: 50%;
+  }
+
+  /* Styling of unit of measurement seletor */
+  #select_unit {
+    box-shadow: none;
+    border: none;
+    background: #ccc; 
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    font-size: 100%;
+    border-radius: 30px;
   }
