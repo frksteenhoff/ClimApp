@@ -359,7 +359,7 @@ var app = {
 										"comment": ""
 									},
 									"user_info": {
-										"firstLogin": true,
+										"firstLogin": false,
 										"deviceid": function(){ return device.uuid },
 										"hasExternalDBRecord": false,
 										"receivesNotifications": false // false as notifications are not part of the app
@@ -528,7 +528,7 @@ var app = {
 											else if( clo > 2 ) return "./img/clothing/2.0clo.png";
 											else if( clo > 1.5 ) return "./img/clothing/1.5clo_wind.png";
 											else if( clo > 1.1 ) return "./img/clothing/1.0clo.png";
-											else if( clo > 0.8 ) return "./img/clothing/0.9clo.png";
+											else if( clo >= 0.7 ) return "./img/clothing/0.9clo.png";
 											else return "./img/clothing/0.5clo.png";
 										}
 									}
@@ -603,7 +603,7 @@ var app = {
 				self.knowledgeBase.position.lat = position.coords.latitude;
 				self.knowledgeBase.position.lng = position.coords.longitude;
 				self.knowledgeBase.position.timestamp = new Date( position.timestamp ).toJSON();
-				console.log( "loc found: " + JSON.stringify( position.coords ) );
+				console.log( "loc found: " + position.coords.latitude + "," + position.coords.longitude );
 				self.updateWeather();
 				//setTimeout( function(){ $('i.fa-sync-alt').toggleClass("fa-spin") }, 1000 );
 				
@@ -611,12 +611,11 @@ var app = {
 			function( error ){ //on error
 				console.log( error );
 			},
-			options
+			options // here the timeout is introduced
 		);
 	},
 	updateWeather: function(){
 		var self = this;
-		if( 'position' in this.knowledgeBase ){
 			let appid = "f22065144b2119439a589cbfb9d851d3";
 			let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 			let data = { "action": "helios",
@@ -625,7 +624,6 @@ var app = {
 						 "climapp": appid,
 						 "d": 10.0, //
 					 	 "utc": new Date().toJSON() };
-						 console.log( data );
 			$.get( url, 
 				   data, 
 				   function( output ){//on success
@@ -676,7 +674,6 @@ var app = {
 					
 					console.log("fail in weather "+ e);
   			});
-		}
 
 		// Schedule a notification if weather conditions are out of the ordinary
 		// functionality will be extended to handle more complex scenarios - only when not in browser
@@ -792,10 +789,9 @@ var app = {
 		this.initNavbarListeners();
 		
 		if( this.currentPageID == "onboarding"){
-			console.log("first time login: true");
+
 		}
 		else if( this.currentPageID == "dashboard" ){
-			
 			this.initGeolocationListeners();
 			this.initActivityListeners();
 			let selected = this.knowledgeBase.activity.selected;
@@ -862,7 +858,6 @@ var app = {
 				forecastarray.push( element );
 			});
 			var forecasts = "";
-			
 			if (currentindex > -1){
 				var base_val = this.determineThermalIndexValue( forecastarray[currentindex].cold, 
 																forecastarray[currentindex].heat, 
@@ -901,7 +896,10 @@ var app = {
 				});
 			}
 			else{
-				forecasts += "<p>No weather data available</p>";
+				// THE REASON IS NOT THAT THERE IS NO DATA!
+				$("#main_panel").hide();
+				$("#tip_panel").hide();
+				self.showShortToast("No weather data available");			
 			}
 			$("#forecasts").html( forecasts );
 			if( currentindex > -1 ){
