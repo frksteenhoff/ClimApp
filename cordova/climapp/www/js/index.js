@@ -624,7 +624,6 @@ var app = {
 						 "climapp": appid,
 						 "d": 10.0, //
 					 	 "utc": new Date().toJSON() };
-						 console.log( data );
 			$.get( url, 
 				   data, 
 				   function( output ){//on success
