@@ -21,12 +21,12 @@
     },
     "cordova": {
         "plugins": {
-            "cordova-plugin-geolocation": {},
             "cordova-plugin-device": {},
             "cordova-plugin-splashscreen": {},
             "cordova-wheel-selector-plugin": {},
             "cordova-plugin-x-toast": {},
-            "cordova-plugin-whitelist": {}
+            "cordova-plugin-whitelist": {},
+            "cordova-plugin-geolocation": {}
         },
         "platforms": [
             "ios",
