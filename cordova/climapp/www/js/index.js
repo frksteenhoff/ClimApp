@@ -96,7 +96,6 @@ var app = {
 			// If user not in database, add user to database
 			if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
 				self.createUserRecord();
-				self.knowledgeBase.user_info.hasExternalDBRecord = true;
 			} 
 			// Add feedback to database
 			self.addFeedbackToDB();
@@ -359,7 +358,7 @@ var app = {
 										"comment": ""
 									},
 									"user_info": {
-										"firstLogin": false,
+										"firstLogin": true,
 										"deviceid": function(){ return device.uuid },
 										"hasExternalDBRecord": false,
 										"receivesNotifications": false // false as notifications are not part of the app
@@ -617,64 +616,65 @@ var app = {
 	},
 	updateWeather: function(){
 		var self = this;
-			let appid = "f22065144b2119439a589cbfb9d851d3";
-			let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
-			let data = { "action": "helios",
-						 "lat": this.knowledgeBase.position.lat,
-					 	 "lon": this.knowledgeBase.position.lng,
-						 "climapp": appid,
-						 "d": 10.0, //
-					 	 "utc": new Date().toJSON() };
-			$.get( url, 
-				   data, 
-				   function( output ){//on success
-					   try{
-					       let weather = JSON.parse( output );
-						   self.knowledgeBase.weather.station = weather.station;
-						   self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
-						   self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
-					   	   self.knowledgeBase.weather.utc = self.knowledgeBase.weather.utc.map( function(val){
-							   	let str = val.replace(/-/g,"/");
-								str += " UTC";
-								return str;
-					   	   });
-						   self.knowledgeBase.weather.lat = weather.lat;
-						   self.knowledgeBase.weather.lng = weather.lon;
-						   self.knowledgeBase.weather.wbgt = weather.wbgt_max.map(Number);
-						   self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
-						   self.knowledgeBase.weather.temperature = weather.tair.map(Number);
-						   self.knowledgeBase.weather.globetemperature = weather.tglobe.map(Number);
-						   self.knowledgeBase.weather.humidity = weather.rh.map(Number);
-						   self.knowledgeBase.weather.watervapourpressure = [];
-						   $.each( self.knowledgeBase.weather.humidity,
-							   function( key, val){
-								   let T = self.knowledgeBase.weather.temperature[key];
-								   let wvp = ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
-								   self.knowledgeBase.weather.watervapourpressure.push( wvp );	
-						   }); 
-						   self.knowledgeBase.weather.windspeed = weather.vair.map(Number).map( function( v ){
-							   return Math.pow( v, 0.16 );
-						   } );
+		
+		if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
+			self.createUserRecord();
+		}
+
+		let appid = self.knowledgeBase.user_info.hasExternalDBRecord ? self.getAppIDFromDB() : self.showShortToast("User unable to fetch app ID");
+		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
+		let data = { "action": "helios",
+					 "lat": this.knowledgeBase.position.lat,
+				 	 "lon": this.knowledgeBase.position.lng,
+					 "climapp": appid,
+					 "d": 10.0, //
+				 	 "utc": new Date().toJSON() };
+		$.get( url, 
+			   data, 
+			   function( output ){//on success
+				   try{
+				       let weather = JSON.parse( output );
+					   self.knowledgeBase.weather.station = weather.station;
+					   self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
+					   self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
+				   	   self.knowledgeBase.weather.utc = self.knowledgeBase.weather.utc.map( function(val){
+						   	let str = val.replace(/-/g,"/");
+							str += " UTC";
+							return str;
+				   	   });
+					   self.knowledgeBase.weather.lat = weather.lat;
+					   self.knowledgeBase.weather.lng = weather.lon;
+					   self.knowledgeBase.weather.wbgt = weather.wbgt_max.map(Number);
+					   self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
+					   self.knowledgeBase.weather.temperature = weather.tair.map(Number);
+					   self.knowledgeBase.weather.globetemperature = weather.tglobe.map(Number);
+					   self.knowledgeBase.weather.humidity = weather.rh.map(Number);
+					   self.knowledgeBase.weather.watervapourpressure = [];
+					   $.each( self.knowledgeBase.weather.humidity,
+						   function( key, val){
+							   let T = self.knowledgeBase.weather.temperature[key];
+							   let wvp = ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
+							   self.knowledgeBase.weather.watervapourpressure.push( wvp );	
+					   }); 
+					   self.knowledgeBase.weather.windspeed = weather.vair.map(Number).map( function( v ){
+						   return Math.pow( v, 0.16 );
+					   } );
 						   
-						   self.knowledgeBase.weather.radiation = weather.solar.map(Number);
-		   				   self.saveSettings();
-						   self.calcThermalIndices();
-						   self.updateUI();
+					   self.knowledgeBase.weather.radiation = weather.solar.map(Number);
+					   self.saveSettings();
+					   self.calcThermalIndices();
+					   self.updateUI();
 							  
-						   // Only update when weather data has been received
-						   if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
-								self.createUserRecord();
-								self.knowledgeBase.user_info.hasExternalDBRecord = true;
-							}
-							self.addWeatherDataToDB();
-					   }
-					   catch( error ){
-						   console.log( error );
-					   }
-			}).fail(function( e ) {
-					self.showShortToast("Failed to update weather.");
-					console.log("fail in weather "+ e);
-  			});
+					   // Only update when weather data has been received
+						self.addWeatherDataToDB();
+				   }
+				   catch( error ){
+					   console.log( error );
+				   }
+		}).fail(function( e ) {
+				self.showShortToast("Failed to update weather.");
+				console.log("fail in weather "+ e);
+  		});
 
 		// Schedule a notification if weather conditions are out of the ordinary
 		// functionality will be extended to handle more complex scenarios - only when not in browser
@@ -1153,6 +1153,22 @@ var app = {
 		$.post(url, user_data).done(function(data, status, xhr){
 			if(status === "success") {
 				console.log("Database update, user: " + data);
+				// Only update this value if user has been added to database
+				self.knowledgeBase.user_info.hasExternalDBRecord = true;
+			}
+		});
+	},
+	getAppIDFromDB: function() {
+		let self = this;
+		let ip = "http://192.38.64.244";
+		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=getAppID";
+		let user_data = {
+					"user_id": self.knowledgeBase.user_info.deviceid
+				}  
+		$.post(url, user_data).done(function(data, status, xhr){
+			if(status === "success") {
+				let response = JSON.parse(data);
+				return response.config[0].appid;
 			}
 		});
 	},
