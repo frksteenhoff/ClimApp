@@ -173,6 +173,10 @@ img.small{
     font-size: 30vw;
 }
 
+#tips {
+    margin-bottom: 0.5em;
+}
+
 #temp_unit {
     font-style: italic;
 }
