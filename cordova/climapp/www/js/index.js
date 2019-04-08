@@ -609,6 +609,7 @@ var app = {
 				
 			}, 
 			function( error ){ //on error
+				self.showShortToast("Could not retrieve location.");
 				console.log( error );
 			},
 			options // here the timeout is introduced
@@ -671,7 +672,7 @@ var app = {
 						   console.log( error );
 					   }
 			}).fail(function( e ) {
-					
+					self.showShortToast("Failed to update weather.");
 					console.log("fail in weather "+ e);
   			});
 
