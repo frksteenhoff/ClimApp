@@ -621,7 +621,7 @@ var app = {
 			self.createUserRecord();
 		}
 
-		let appid = self.knowledgeBase.user_info.hasExternalDBRecord ? self.getAppIDFromDB() : self.showShortToast("User unable to fetch app ID");
+		let appid = self.knowledgeBase.user_info.hasExternalDBRecord ? self.getAppIDFromDB() : self.showShortToast("Unable to fetch app ID");
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
 					 "lat": this.knowledgeBase.position.lat,
