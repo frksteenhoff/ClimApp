@@ -629,7 +629,7 @@ var app = {
 				   data, 
 				   function( output ){//on success
 					   try{
-					   	   let weather = JSON.parse( output );
+					       let weather = JSON.parse( output );
 						   self.knowledgeBase.weather.station = weather.station;
 						   self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
 						   self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
@@ -793,6 +793,9 @@ var app = {
 
 		}
 		else if( this.currentPageID == "dashboard" ){
+			$("#main_panel").show();
+			$("#tip_panel").show();
+
 			this.initGeolocationListeners();
 			this.initActivityListeners();
 			let selected = this.knowledgeBase.activity.selected;
@@ -897,7 +900,6 @@ var app = {
 				});
 			}
 			else{
-				// THE REASON IS NOT THAT THERE IS NO DATA!
 				$("#main_panel").hide();
 				$("#tip_panel").hide();
 				self.showShortToast("No weather data available");			
