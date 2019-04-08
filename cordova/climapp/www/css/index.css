@@ -173,8 +173,14 @@ img.small{
     font-size: 30vw;
 }
 
-#tips {
+#tips, 
+#forecasts {
+    margin-top: 0.5em;
     margin-bottom: 0.5em;
+}
+
+#forecasts {
+    background: #fff; 
 }
 
 #temp_unit {
