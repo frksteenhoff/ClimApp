@@ -115,7 +115,6 @@ var app = {
 			let title_ = self.knowledgeBase.settings[target].title;
 			var items_ = self.getSelectables( target );
 			
-			
 			var config = {
 			    title: title_,
 			    items:[ [ items_ ] ],
@@ -224,7 +223,6 @@ var app = {
 						 "details": "./pages/details.html",
 		 				 "about": "./pages/about.html"};
 		
-		localStorage.clear();
 		if ( localStorage.getItem("knowledgebase") !== null ) {
 			this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
 		}
@@ -245,64 +243,24 @@ var app = {
 											    "humidity": [-99],
 												"watervapourpressure": [-99],
 												"windspeed": [-99],
-												"radiation": [-99],
-												"temperature_unit": function() { return self.knowledgeBase.settings.unit.value === "US" ? "Fahrenheit" : "Celcius"; }
+												"radiation": [-99]
 									},
 								  "settings": { "age": {"title": "What is your age?",
 														"value": 36,
-														"unit": function(){
-															return "years";
-														}
+														"unit": "years"
 												 },
 												 "height": {"title": "What is your height?",
-															"value": 186,
-															"calculated_value": function() {
-																let unit = self.knowledgeBase.settings.unit.value;
-																if(unit != "SI") { // feet, inches
-																	return Math.round(self.knowledgeBase.settings.height.value / 30.48); 
-																} else { // cm
-																	return self.knowledgeBase.settings.height.value;
-																}
-															},
-															"unit": function() {
-																return self.knowledgeBase.settings.unit.value === "SI" ? "cm" : "feet";
-															}},
+															"value": 186
+												},
 												 "weight": {"title": "What is your weight?",
-															"value": 82,
-															"calculated_value": function() {
-																let unit = self.knowledgeBase.settings.unit.value;
-																switch(unit) {
-																	case "US": // pounds
-																		 return Math.round(self.knowledgeBase.settings.weight.value * 2.2046);
-																	case "UK": // stones
-																		return Math.round(self.knowledgeBase.settings.weight.value * 0.1574);
-																	default:
-																		return self.knowledgeBase.settings.weight.value;
-																}
-															},
-															"unit": function() {
-																if(self.knowledgeBase.settings.unit.value === "SI") {
-																	return "kg";
-																} else if(self.knowledgeBase.settings.unit.value === "US") {
-																	return "lbs"
-																} else {
-																	return "stones"
-																}
-															}},
+															"value": 82
+												},
 												 "gender": {"title": "What is your gender?",
-															"value": "Male"},
-												 "BSA": function(){ //m2
-													 let w = self.knowledgeBase.settings.weight.value; //kg
-													 let h = self.knowledgeBase.settings.height.value / 100; //m
-													 return ( Math.pow(h, 0.725) * 0.20247 * Math.pow(w, 0.425 ) );//dubois & dubois 
-												 },
-												 "M": function(){ //W/m2
-													 let ISO_selected = self.knowledgeBase.activity.selected;
-												 	 let ISO_level = self.knowledgeBase.activity.values[ ISO_selected ];
-													 return 50 * (ISO_level);
-												 },
+															"value": "Male"
+												},
 												 "unit": { "title": "Which units of measurements would you prefer?",
-												 			"value": "SI" } // default SI units
+															 "value": "SI" 
+														} // default SI units
 								   },
 								  "activity": { "label": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
 													 		"low":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
@@ -359,7 +317,6 @@ var app = {
 									},
 									"user_info": {
 										"firstLogin": true,
-										"deviceid": function(){ return device.uuid },
 										"hasExternalDBRecord": false,
 										"receivesNotifications": false // false as notifications are not part of the app
 									},
@@ -378,66 +335,8 @@ var app = {
 													   	"SWtotg": 0.0,
 													    "utc":"2019/12/31 00:00:00",
 											  		}],
-												"wbgt": { "RAL" : function(){
-																		let M = self.knowledgeBase.settings.M(); //W/m2
-																		let BSA = self.knowledgeBase.settings.BSA(); //m2
-																		let watt = M * BSA;
-																		return 59.9 - 14.1 * Math.log10( watt );
-																	},
-														"risk" : function( wbgt ){ //wbgt from weather report
-																		let RAL = self.knowledgeBase.thermalindices.wbgt.RAL();
-																		let risk = wbgt / RAL; 
-																		if (risk >= 1.2 ){
-																			return 3 * ( risk / 1.2 );
-																		}
-																		else if (risk > 1.0 ){
-																			return 2 * ( risk );
-																		}
-																		else if (risk <= 1.0 ){
-																			return ( risk / 0.8); // scale 0.8 to 1
-																		}
-																		
-																	}
-												},
-												"windchill":{ 
-													"risk": function( windchill ){ //returns time before frostbite in minutes
-														if( windchill <-50 ){
-															return 2;
-														}
-														else if( windchill < -40 ){
-															return 10;
-														}
-														else if( windchill < -20 ){
-															return 30;
-														}
-														else if( windchill < -15 ){
-															return 60;
-														}
-														else return false; //no risk
-													}
-												}
 									},
 									"gauge":{
-										"cold":{
-											"title": function( val ){ 
-												if ( val <= 1 ) return "no thermal stress";
-												else if ( val < 2 ) return "minor cold stress";
-												else if ( val < 3 ) return "significant cold stress";
-												else if ( val < 4 ) return "high cold stress";
-												else if ( val < 5 ) return "severe cold stress";
-												else return "extreme cold stress";
-										 	}
-										},
-										"heat":{
-											"title":function( val ){  
-												if ( val < 1 ) return "no thermal stress";
-												else if ( val < 2 ) return "minor heat stress";
-												else if ( val < 3 ) return "significant heat stress";
-												else if ( val < 4 ) return "high heat stress";
-												else if ( val < 5 ) return "severe heat stress";
-												else return "extreme heat stress";
-											}
-										},
 										"highlights":[//color also in CSS, keep consistent
 									        { from: 3, to: 4, color:  'rgba(180,0,0,.9)', css:'veryhot'},
 									        { from: 2, to: 3, color: 'rgba(255,100,0,.9)', css:'hot'},
@@ -460,78 +359,10 @@ var app = {
 											"deltaT": 3
 										}	
 									},
-									"tips":{
-										"windchill": function(index){
-											let str = "";
-											let windchill = self.knowledgeBase.thermalindices.ireq[index].windchill;
-											if( windchill <
-												( self.knowledgeBase.thermalindices.ireq[index].Tair -
-													self.knowledgeBase.thresholds.windchill.deltaT )){
-														str += "<p>Winchill is "+windchill.toFixed(0)+"&deg;, you could wear a windstopper to combat cold stress.</p>";
-											}
-											else if(self.knowledgeBase.thermalindices.ireq[index].ICLminimal >
-												 	self.knowledgeBase.thresholds.ireq.icl ){
-												str += "<p>Dress in layers to combat the cold stress.</p>";
-											}
-											let windrisk = self.knowledgeBase.thermalindices.windchill.risk( windchill );
-											if( windrisk ){
-												str += "<p>Due to the windchill "+windchill.toFixed(0)+"&deg; there is a risk for exposed skin to freeze in "+ windrisk +" minutes.</p>";
-											}
-											
-											return str;
-										},
-										"phs": function( index ){
-											let str = "";
-											let d_sw = self.knowledgeBase.thermalindices.phs[ index].Dwl50;
-											let sw_tot_per_hour = 0.001 * 60 * self.knowledgeBase.thermalindices.phs[ index].SWtotg / 
-											(self.knowledgeBase.sim.duration ); //liter per hour
-											sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
-		
-											let duration_threshold = self.knowledgeBase.thresholds.phs.duration;
-											let sweat_threshold = self.knowledgeBase.thresholds.phs.sweat;
-											
-											//hydration
-											if( sw_tot_per_hour >= sweat_threshold ){
-												str += "In these conditions you could need " +sw_tot_per_hour+ " liter water per hour";
-											}
-											
-											let humidity = self.knowledgeBase.thermalindices.phs[ index].rh;
-											let temperature = self.knowledgeBase.thermalindices.phs[ index].Tair;
-											//humidity
-											if( humidity >= 50 && temperature >35 ){
-												str += "A fan will not help in this condition, and can even make things worse!";
-											}
-											
-											//radiation
-											return str;
-										},
-										"neutral": function(){
-											let tips = [ "Enjoy your activity",
-														 "Looks like it's all good",
-														 "An apple a day keeps the doctor at bay",
-														 "French minister names his cat 'Brexit' because: &quot;she meows loudly it wants to go out, but just stands there waiting when I open the door&quot;",
-														 "Two atoms walk into a bar, one says: &quot;I just lost an electron&quot, the other replies: &quot;are you sure?&quot; ... &quot;yes, i'm positive!&quot",
-														 "It doesn't matter what temperature the room is, it's always room temperature.",
-														 "If you cannot measure it, you cannot improve it - Lord Kelvin",
-											];
-											let i = Math.floor( Math.random() * tips.length );
-											return tips[i];
-										}
-									},
 									"sim":{
 										"duration": 240, //minutes (required for PHS)
 									},
-									clothing:{
-										icon: function( clo ){
-											if( clo > 3 ) return "./img/clothing/2.0clo.png";
-											else if( clo > 2 ) return "./img/clothing/2.0clo.png";
-											else if( clo > 1.5 ) return "./img/clothing/1.5clo_wind.png";
-											else if( clo > 1.1 ) return "./img/clothing/1.0clo.png";
-											else if( clo >= 0.7 ) return "./img/clothing/0.9clo.png";
-											else return "./img/clothing/0.5clo.png";
-										}
-									}
-								  };
+				};
 		}
 
 	},
@@ -558,22 +389,22 @@ var app = {
 		else if( key === "height" ){
 			for( var i=0; i<100; i++){
 				if(this.knowledgeBase.settings.unit.value === "SI") {
-					obj_array.push({description: (i+120) + " " + this.knowledgeBase.settings.height.unit(), value: (i+120)  } );
+					obj_array.push({description: (i+120) + " " + this.height_unit(), value: (i+120)  } );
 				} else { // feet, inches (still want to save in cm, not changing value)
-					obj_array.push({description: ((i+120)/30.48).toFixed(1) + " " + this.knowledgeBase.settings.height.unit(), value: (i+120)  } );
+					obj_array.push({description: ((i+120)/30.48).toFixed(1) + " " + this.height_unit(), value: (i+120)  } );
 				}
 			}
 		}
 		else if( key === "weight" ){
 			for( var i=0; i<100; i++){
 				if(this.knowledgeBase.settings.unit.value === "SI") {
-					obj_array.push({description: (i+40) + " " + this.knowledgeBase.settings.weight.unit(), value: (i+40) } );
+					obj_array.push({description: (i+40) + " " + this.weight_unit(), value: (i+40) } );
 				} else if (this.knowledgeBase.settings.unit.value === "US") {
 					// (still want to save in kg, not changing value)
-					obj_array.push({description: Math.round((i+40) * 2.2046) + " " + this.knowledgeBase.settings.weight.unit(), value: (i+40) } );					
+					obj_array.push({description: Math.round((i+40) * 2.2046) + " " +this. weight_unit(), value: (i+40) } );					
 				} else { // only UK left
 					// (still want to save in kg, not changing value)
-					obj_array.push({description: (6+i*0.1).toFixed(1) + " " + this.knowledgeBase.settings.weight.unit(), value: (i+40) } );					
+					obj_array.push({description: (6+i*0.1).toFixed(1) + " " + this.weight_unit(), value: (i+40) } );					
 				}
 			}
 		}
@@ -701,7 +532,7 @@ var app = {
 		
 		var options =  {	air:{},
 							body:{
-									"M": this.knowledgeBase.settings.M(), 	//W/m2 
+									"M": 		this.M(), 	//W/m2 
 									"work": 	0,		//W/m2 external work 
 									"posture": 	2,		//1= sitting, 2= standing, 3= crouching
 									"weight":   this.knowledgeBase.settings.weight.value,		//kg  
@@ -836,7 +667,7 @@ var app = {
 				let daydiff = Math.floor( ( utcdate - localdate ) / ms_p_day );
 				
 				let wbgt = self.knowledgeBase.weather.wbgt[index];
-				let hrisk = self.knowledgeBase.thermalindices.wbgt.risk( wbgt );
+				let hrisk = self.WBGTrisk( wbgt );
 				let crisk = obj.ICLminimal;
 				let daydiffkey = daydiff;
 				
@@ -925,7 +756,7 @@ var app = {
 			
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
 			let wbgt = this.knowledgeBase.thermalindices.phs[index].wbgt.toFixed(1);
-			let heat_index = this.knowledgeBase.thermalindices.wbgt.risk( wbgt );
+			let heat_index = this.WBGTrisk( wbgt );
 			
 			let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
 			let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
@@ -935,7 +766,7 @@ var app = {
 				$("div[data-context='cold']").show();
 				
 				let windchill = this.knowledgeBase.thermalindices.ireq[index].windchill.toFixed(1);
-				let windrisk = this.knowledgeBase.thermalindices.windchill.risk( windchill );
+				let windrisk = this.windchillRisk( windchill );
 				let windriskcat = windrisk ? "a risk of frostbite in" : "no risk of frostbite";
 				$("#detail_windchill").html( windchill);
 				$("#detail_windriskcat").html( windriskcat );
@@ -953,8 +784,8 @@ var app = {
 				$("#detail_icl_max").html( icl_max );
 				$("#detail_icl_min").html( icl_min );
 				
-				let minicon = this.knowledgeBase.clothing.icon( icl_min);
-				let maxicon = this.knowledgeBase.clothing.icon( icl_max);
+				let minicon = this.clothingIcon( icl_min);
+				let maxicon = this.clothingIcon( icl_max);
 				
 				$("#detail_min_clo").html("<img src='"+minicon+"' class='small'/>");
 				$("#detail_max_clo").html("<img src='"+maxicon+"' class='small'/>");
@@ -966,7 +797,7 @@ var app = {
 				$("div[data-context='heat']").show();
 				
 				$("#detail_wbgt").html( wbgt );
-				let ral = this.knowledgeBase.thermalindices.wbgt.RAL().toFixed(1);
+				let ral = this.RAL().toFixed(1);
 				$("#detail_ral").html( ral );
 				
 				let d_tre = this.knowledgeBase.thermalindices.phs[ index].D_Tre;
@@ -985,9 +816,9 @@ var app = {
 		}
 		else if( this.currentPageID == "settings" ){
 			this.initSettingsListeners();
-			$("#age").html( this.knowledgeBase.settings.age.value );
-			$("#height").html( this.knowledgeBase.settings.height.calculated_value() + " " + this.knowledgeBase.settings.height.unit());
-			$("#weight").html( this.knowledgeBase.settings.weight.calculated_value() + " " + this.knowledgeBase.settings.weight.unit());
+			$("#age").html( this.knowledgeBase.settings.age.value + " " + this.knowledgeBase.settings.age.unit);
+			$("#height").html( this.calculated_value_height() + " " + this.height_unit());
+			$("#weight").html( this.calculated_value_weight() + " " + this.weight_unit());
 			$("#gender").html( this.knowledgeBase.settings.gender.value );
 			$("#unit").html( this.knowledgeBase.settings.unit.value + " units" );
 			$("#notification_checkbox").attr("checked", this.knowledgeBase.user_info.receivesNotifications);
@@ -1035,13 +866,13 @@ var app = {
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
 			$("#temperature").html( this.getTemperatureInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair).toFixed(0) +"&#xb0" );
 			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[ index].v_air.toFixed(0) );
-			$("#temp_unit").html(this.knowledgeBase.weather.temperature_unit()); 
+			$("#temp_unit").html(this.temperature_unit()); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[ index].rh.toFixed(0) );
 			
 		
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
 			let cold_index = icl_min;
-			let heat_index = this.knowledgeBase.thermalindices.wbgt.risk( this.knowledgeBase.thermalindices.phs[index].wbgt );
+			let heat_index = this.WBGTrisk( this.knowledgeBase.thermalindices.phs[index].wbgt );
 		
 			let draw_cold_gauge = this.isDrawColdGauge( cold_index, heat_index, index );
 			let draw_heat_gauge = this.isDrawHeatGauge( cold_index, heat_index, index );
@@ -1050,13 +881,13 @@ var app = {
 			
 		
 			if( draw_cold_gauge ){
-				tip_html += this.knowledgeBase.tips.windchill( index );
+				tip_html += this.windchillTips( index );
 			}
 			else if( draw_heat_gauge ){
-				tip_html += this.knowledgeBase.tips.phs( index );
+				tip_html += this.phsTips( index );
 			}
 			if( tip_html.length ==0){
-				tip_html += this.knowledgeBase.tips.neutral();
+				tip_html += this.neutralTips();
 			}
 			
 			let windowsize = $( window ).width();
@@ -1080,7 +911,7 @@ var app = {
 			ctx.canvas.width = width;
 		}
 		
-		var title = this.knowledgeBase.gauge[key].title( Math.abs(value) );
+		var title = key === "cold" ? this.gaugeTitleCold( Math.abs(value)) : this.gaugeTitleHeat( Math.abs(value));
 		var highlights =  this.knowledgeBase.gauge.highlights;
 		var gauge = new RadialGauge({
 		    renderTo: id,
@@ -1144,7 +975,7 @@ var app = {
 		let self = this;
 		let ip = "http://192.38.64.244";
 		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createUserRecord";
-		let user_data = {"_id": self.knowledgeBase.user_info.deviceid,
+		let user_data = {"_id": self.deviceID(),
 						 "age": self.knowledgeBase.settings.age.value,
 						 "gender": self.getGenderAsInteger(), 
 						 "height": (self.knowledgeBase.settings.height.value/100), // unit is meter in database (SI)
@@ -1163,7 +994,7 @@ var app = {
 		let ip = "http://192.38.64.244";
 		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=getAppID";
 		let user_data = {
-					"user_id": self.knowledgeBase.user_info.deviceid
+					"user_id": self.deviceID()
 				}  
 		$.post(url, user_data).done(function(data, status, xhr){
 			if(status === "success") {
@@ -1177,7 +1008,7 @@ var app = {
 		let ip = "http://192.38.64.244";
 		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createWeatherRecord";
 		let user_data = {
-					"_id": self.knowledgeBase.user_info.deviceid,
+					"_id": self.deviceID(),
 					"longitude": self.knowledgeBase.weather.lat,
 					"latitude": self.knowledgeBase.weather.lng, 
 					"city": self.knowledgeBase.weather.station,
@@ -1201,7 +1032,7 @@ var app = {
 		let ip = "http://192.38.64.244";
 		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createFeedbackRecord";
 		let user_data = {
-					"user_id": self.knowledgeBase.user_info.deviceid,
+					"user_id": self.deviceID(),
 					"question_combo_id": 1, // will be changed when more sophisticaed solution is implemented
 					"rating1": self.knowledgeBase.feedback.question1.rating, 
 					"rating2": self.knowledgeBase.feedback.question2.rating,
@@ -1223,7 +1054,7 @@ var app = {
 		let fieldToUpdate = param.charAt(0).toUpperCase() + param.slice(1); // Capitalizing to match API requirement		
 		let url = urlsuffix + fieldToUpdate;
 		let user_data = {
-				"_id": self.knowledgeBase.user_info.deviceid,		
+				"_id": self.deviceID(),		
 			}
 		// Add value to be updated to data object 
 		if(param === "gender") { 
@@ -1250,7 +1081,7 @@ var app = {
 				addPixelsY: -40  // giving a margin at the bottom by moving text up
 			});
 		}
-	}	
+	},	
 	/* 
 	 * Scheduling notifications
 	 
@@ -1308,6 +1139,197 @@ var app = {
 			console.log('All notifications canceled');
 		});
 	}*/
+
+	/*
+	ALL FUNCTIONS PREVIOUSLY IN KNOWLEDEBASE 
+	*/
+	/* All functions from weather in knowledgebase */
+
+	temperature_unit: function() {
+    	let self = this;
+    	return self.knowledgeBase.settings.unit.value === "US" ? "Fahrenheit" : "Celcius";
+	},
+
+	calculated_value_height: function() {
+    	let self = this;
+    	let unit = self.knowledgeBase.settings.unit.value;
+		if(unit != "SI") { // feet, inches
+    		return Math.round(self.knowledgeBase.settings.height.value / 30.48); 
+		} else { // cm
+			return self.knowledgeBase.settings.height.value;
+		}
+	},
+
+	height_unit: function() {
+    	let self = this;
+    	return self.knowledgeBase.settings.unit.value === "SI" ? "cm" : "feet";
+	},  
+
+	calculated_value_weight: function() {
+		let self = this;
+    	let unit = self.knowledgeBase.settings.unit.value;
+    	switch(unit) {
+			case "US": // pounds
+				 return Math.round(self.knowledgeBase.settings.weight.value * 2.2046);
+			case "UK": // stones
+				return Math.round(self.knowledgeBase.settings.weight.value * 0.1574);
+			default:
+				return self.knowledgeBase.settings.weight.value;
+		}
+	},
+
+	weight_unit: function() {
+		let self = this;
+		if(self.knowledgeBase.settings.unit.value === "SI") {
+			return "kg";
+		} else if(self.knowledgeBase.settings.unit.value === "US") {
+			return "lbs"
+		} else {
+			return "stones"
+		}   
+	},
+
+	BSA: function() {
+		let self = this;
+		let w = self.knowledgeBase.settings.weight.value; //kg
+		let h = self.knowledgeBase.settings.height.value / 100; //m
+		return ( Math.pow(h, 0.725) * 0.20247 * Math.pow(w, 0.425 ) );//dubois & dubois 
+	},
+
+	M: function() {
+		let self = this;
+		let ISO_selected = self.knowledgeBase.activity.selected;
+		let ISO_level = self.knowledgeBase.activity.values[ ISO_selected ];
+		return 50 * (ISO_level);
+	},
+
+	deviceID: function() {
+		return device.uuid;
+	},
+
+	RAL: function() {
+		let self = this;
+		let M = self.M(); //W/m2
+		let BSA = self.BSA(); //m2
+		let watt = M * BSA;
+		return 59.9 - 14.1 * Math.log10( watt );
+	},
+
+	WBGTrisk: function(wbgt) {
+		let self = this;
+		let RAL = self.RAL();
+		let risk = wbgt / RAL; 
+		if (risk >= 1.2 ){
+			return 3 * ( risk / 1.2 );
+		} else if (risk > 1.0 ){
+			return 2 * ( risk );
+		} else if (risk <= 1.0 ){
+			return ( risk / 0.8); // scale 0.8 to 1
+		}
+	},
+
+	windchillRisk: function(windchill) {
+		if( windchill <-50 ){
+			return 2;
+		}
+		else if( windchill < -40 ){
+			return 10;
+		}
+		else if( windchill < -20 ){
+			return 30;
+		}
+		else if( windchill < -15 ){
+			return 60;
+		}
+		else return false; //no risk
+	},
+
+	gaugeTitleCold: function(val) {
+		if ( val <= 1 ) return "no thermal stress";
+		else if ( val < 2 ) return "minor cold stress";
+		else if ( val < 3 ) return "significant cold stress";
+		else if ( val < 4 ) return "high cold stress";
+		else if ( val < 5 ) return "severe cold stress";
+		else return "extreme cold stress";
+	},
+
+	gaugeTitleHeat: function(val) {
+		if ( val < 1 ) return "no thermal stress";
+		else if ( val < 2 ) return "minor heat stress";
+		else if ( val < 3 ) return "significant heat stress";
+		else if ( val < 4 ) return "high heat stress";
+		else if ( val < 5 ) return "severe heat stress";
+		else return "extreme heat stress"; 
+	},
+
+	windchillTips: function(index) {
+		let self = this;
+		let str = "";
+		let windchill = self.knowledgeBase.thermalindices.ireq[index].windchill;
+		if( windchill <
+			( self.knowledgeBase.thermalindices.ireq[index].Tair -
+				self.knowledgeBase.thresholds.windchill.deltaT )){
+					str += "<p>Winchill is "+windchill.toFixed(0)+"&deg;, you could wear a windstopper to combat cold stress.</p>";
+		}
+		else if(self.knowledgeBase.thermalindices.ireq[index].ICLminimal >
+				self.knowledgeBase.thresholds.ireq.icl ){
+			str += "<p>Dress in layers to combat the cold stress.</p>";
+		}
+		let windrisk = self.windchillRisk( windchill );
+		if( windrisk ){
+			str += "<p>Due to the windchill "+windchill.toFixed(0)+"&deg; there is a risk for exposed skin to freeze in "+ windrisk +" minutes.</p>";
+		}   
+		return str;    
+	},
+
+	phsTips: function(index) {
+		let self = this;
+		let str = "";
+		let d_sw = self.knowledgeBase.thermalindices.phs[ index].Dwl50;
+		let sw_tot_per_hour = 0.001 * 60 * self.knowledgeBase.thermalindices.phs[ index].SWtotg / 
+		(self.knowledgeBase.sim.duration ); //liter per hour
+		sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
+
+		let duration_threshold = self.knowledgeBase.thresholds.phs.duration;
+		let sweat_threshold = self.knowledgeBase.thresholds.phs.sweat;
+		
+		//hydration
+		if( sw_tot_per_hour >= sweat_threshold ){
+			str += "In these conditions you could need " +sw_tot_per_hour+ " liter water per hour";
+		}
+		
+		let humidity = self.knowledgeBase.thermalindices.phs[ index].rh;
+		let temperature = self.knowledgeBase.thermalindices.phs[ index].Tair;
+		//humidity
+		if( humidity >= 50 && temperature >35 ){
+			str += "A fan will not help in this condition, and can even make things worse!";
+		}
+		
+		//radiation
+		return str;    
+	},
+
+	neutralTips: function() {
+		let tips = [ "Enjoy your activity",
+					"Looks like it's all good",
+					"An apple a day keeps the doctor at bay",
+					"French minister names his cat 'Brexit' because: &quot;she meows loudly it wants to go out, but just stands there waiting when I open the door&quot;",
+					"Two atoms walk into a bar, one says: &quot;I just lost an electron&quot, the other replies: &quot;are you sure?&quot; ... &quot;yes, i'm positive!&quot",
+					"It doesn't matter what temperature the room is, it's always room temperature.",
+					"If you cannot measure it, you cannot improve it - Lord Kelvin",
+		];
+		let i = Math.floor( Math.random() * tips.length );
+		return tips[i];
+	},
+
+	clothingIcon: function(clo) {
+		if( clo > 3 ) return "./img/clothing/2.0clo.png";
+		else if( clo > 2 ) return "./img/clothing/2.0clo.png";
+		else if( clo > 1.5 ) return "./img/clothing/1.5clo_wind.png";
+		else if( clo > 1.1 ) return "./img/clothing/1.0clo.png";
+		else if( clo >= 0.7 ) return "./img/clothing/0.9clo.png";
+		else return "./img/clothing/0.5clo.png";
+	}
 };
 
 app.initialize();
