@@ -142,7 +142,7 @@ var app = {
 
 			// Inform user about choice in toast
 			var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
-			self.showShortToast(notificationText);
+			showShortToast(notificationText);
 		});
 
 		$("div[data-listener='feedback_page']").off(); //prevent multiple instances of listeners on same object
@@ -172,7 +172,7 @@ var app = {
 
 			// Inform user about event in toast
 			var notificationText = "Personal preferences reset, using default values.";
-			self.showShortToast(notificationText);
+			showShortToast(notificationText);
 		});
 	},
 	initGeolocationListeners: function(){
@@ -380,6 +380,7 @@ var app = {
 	},*/
 	getSelectables: function( key ){
 		var self = this;
+		let unit = this.knowledgeBase.settings.unit.value;
 		var obj_array = [];
 		if( key.slice(0, 3) === "age" ){
 			for( var i=0; i<100; i++){
@@ -389,22 +390,22 @@ var app = {
 		else if( key === "height" ){
 			for( var i=0; i<100; i++){
 				if(this.knowledgeBase.settings.unit.value === "SI") {
-					obj_array.push({description: (i+120) + " " + this.height_unit(), value: (i+120)  } );
+					obj_array.push({description: (i+120) + " " + getHeightUnit(unit), value: (i+120)  } );
 				} else { // feet, inches (still want to save in cm, not changing value)
-					obj_array.push({description: ((i+120)/30.48).toFixed(1) + " " + this.height_unit(), value: (i+120)  } );
+					obj_array.push({description: ((i+120)/30.48).toFixed(1) + " " + getHeightUnit(unit), value: (i+120)  } );
 				}
 			}
 		}
 		else if( key === "weight" ){
 			for( var i=0; i<100; i++){
 				if(this.knowledgeBase.settings.unit.value === "SI") {
-					obj_array.push({description: (i+40) + " " + this.weight_unit(), value: (i+40) } );
+					obj_array.push({description: (i+40) + " " + getWeightUnit(unit), value: (i+40) } );
 				} else if (this.knowledgeBase.settings.unit.value === "US") {
 					// (still want to save in kg, not changing value)
-					obj_array.push({description: Math.round((i+40) * 2.2046) + " " +this. weight_unit(), value: (i+40) } );					
+					obj_array.push({description: Math.round((i+40) * 2.2046) + " " + getWeightUnit(unit), value: (i+40) } );					
 				} else { // only UK left
 					// (still want to save in kg, not changing value)
-					obj_array.push({description: (6+i*0.1).toFixed(1) + " " + this.weight_unit(), value: (i+40) } );					
+					obj_array.push({description: (6+i*0.1).toFixed(1) + " " + getWeightUnit(unit), value: (i+40) } );					
 				}
 			}
 		}
@@ -439,7 +440,7 @@ var app = {
 				
 			}, 
 			function( error ){ //on error
-				self.showShortToast("Could not retrieve location.");
+				showShortToast("Could not retrieve location.");
 				console.log( error );
 			},
 			options // here the timeout is introduced
@@ -503,7 +504,7 @@ var app = {
 					   console.log( error );
 				   }
 		}).fail(function( e ) {
-				self.showShortToast("Failed to update weather.");
+				showShortToast("Failed to update weather.");
 				console.log("fail in weather "+ e);
   		});
 
@@ -512,7 +513,8 @@ var app = {
 		if(device.platform != 'browser') {
 			var threshold = 0;
 			if(self.knowledgeBase.weather.wbgt < threshold) {
-				//self.scheduleDefaultNotification();
+				//let userWantsNotifications = self.knowledgeBase.user_info.receivesNotifications();
+				//scheduleDefaultNotification(userWantsNotifications);
 			}
 		}
 	},
@@ -733,7 +735,7 @@ var app = {
 			else{
 				$("#main_panel").hide();
 				$("#tip_panel").hide();
-				self.showShortToast("No weather data available");			
+				showShortToast("No weather data available");			
 			}
 			$("#forecasts").html( forecasts );
 			if( currentindex > -1 ){
@@ -766,7 +768,7 @@ var app = {
 				$("div[data-context='cold']").show();
 				
 				let windchill = this.knowledgeBase.thermalindices.ireq[index].windchill.toFixed(1);
-				let windrisk = this.windchillRisk( windchill );
+				let windrisk = windchillRisk( windchill );
 				let windriskcat = windrisk ? "a risk of frostbite in" : "no risk of frostbite";
 				$("#detail_windchill").html( windchill);
 				$("#detail_windriskcat").html( windriskcat );
@@ -784,8 +786,8 @@ var app = {
 				$("#detail_icl_max").html( icl_max );
 				$("#detail_icl_min").html( icl_min );
 				
-				let minicon = this.clothingIcon( icl_min);
-				let maxicon = this.clothingIcon( icl_max);
+				let minicon = clothingIcon( icl_min);
+				let maxicon = clothingIcon( icl_max);
 				
 				$("#detail_min_clo").html("<img src='"+minicon+"' class='small'/>");
 				$("#detail_max_clo").html("<img src='"+maxicon+"' class='small'/>");
@@ -816,9 +818,13 @@ var app = {
 		}
 		else if( this.currentPageID == "settings" ){
 			this.initSettingsListeners();
+			let unit = this.knowledgeBase.settings.unit.value;
+			let height = this.knowledgeBase.settings.height.value;
+			let weight = this.knowledgeBase.settings.weight.value;
+
 			$("#age").html( this.knowledgeBase.settings.age.value + " " + this.knowledgeBase.settings.age.unit);
-			$("#height").html( this.calculated_value_height() + " " + this.height_unit());
-			$("#weight").html( this.calculated_value_weight() + " " + this.weight_unit());
+			$("#height").html( getCalculatedHeightValue(unit, height) + " " + getHeightUnit(unit));
+			$("#weight").html( getCalculatedWeightValue(unit, weight) + " " + getWeightUnit(unit));
 			$("#gender").html( this.knowledgeBase.settings.gender.value );
 			$("#unit").html( this.knowledgeBase.settings.unit.value + " units" );
 			$("#notification_checkbox").attr("checked", this.knowledgeBase.user_info.receivesNotifications);
@@ -865,10 +871,9 @@ var app = {
 			$("#current_time").html( local_time );
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
 			$("#temperature").html( this.getTemperatureInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair).toFixed(0) +"&#xb0" );
-			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[ index].v_air.toFixed(0) );
-			$("#temp_unit").html(this.temperature_unit()); 
-			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[ index].rh.toFixed(0) );
-			
+			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[index].v_air.toFixed(0) );
+			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.settings.unit.value)); 
+			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
 		
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
 			let cold_index = icl_min;
@@ -911,7 +916,7 @@ var app = {
 			ctx.canvas.width = width;
 		}
 		
-		var title = key === "cold" ? this.gaugeTitleCold( Math.abs(value)) : this.gaugeTitleHeat( Math.abs(value));
+		var title = key === "cold" ? gaugeTitleCold( Math.abs(value)) : gaugeTitleHeat( Math.abs(value));
 		var highlights =  this.knowledgeBase.gauge.highlights;
 		var gauge = new RadialGauge({
 		    renderTo: id,
@@ -970,6 +975,7 @@ var app = {
 	},
 	/*
 	 * Methods related to database 
+	 * should all be moved to separate file
 	 */
 	createUserRecord: function(){
 		let self = this;
@@ -1042,7 +1048,7 @@ var app = {
 		$.post(url, user_data).done(function(data, status, xhr){
 			if(status === "success") {
 				console.log("Database update, feedback: " + data);
-				self.showShortToast("Feedback submitted!");
+				showShortToast("Feedback submitted!");
 			}
 		});
 	},
@@ -1070,124 +1076,10 @@ var app = {
 			}
 		});
 	},
-	// Toast 
-	showShortToast: function(textToShow){
-		if(device.platform != 'browser') {
-			window.plugins.toast.showWithOptions(
-			{
-				message: textToShow,
-				duration: "short", // 2000 ms
-				position: "bottom",
-				addPixelsY: -40  // giving a margin at the bottom by moving text up
-			});
-		}
-	},	
-	/* 
-	 * Scheduling notifications
-	 
-
-	// Using local-notification
-	scheduleDefaultNotification: function() {
-		var self = this;
-		// If no notifications are already scheduled
-		self.getAllNotifications();
-
-		// Used for testing purposes
-		//console.log(this.cancelAllNotifications());
-
-		// TODO: Decide criteria for sending notification!
-		// Only if user wants notification (have not chosen to opt out)
-		if(self.knowledgeBase.weather.wbgt < 1 && self.knowledgeBase.user_info.receivesNotifications) {
-			// Set notification time and date today @ 4.30PM
-			var today = new Date();
-			today.setDate(today.getDate());
-			today.setHours(16);
-			today.setMinutes(30);
-			today.setSeconds(0);
-			var today_at_4_30_pm = new Date(today);
-
-			// Notification which is triggered 16.30 every weekday
-			cordova.plugins.notification.local.schedule({
-				title: 'Feedback',
-				text: 'How was your day?',
-				smallIcon: 'res://icon-stencil',
-				icon: 'res://icon',
-				trigger: {
-					type: "fix",
-					at: today_at_4_30_pm.getTime()
-			},
-			actions: [
-				{ id: 'feedback_yes', title: 'Open'},
-				{ id: 'no',  title: 'Dismiss'}
-			]
-			});	
-			
-			// When user clicks "open" the feedback screen is opened
-			cordova.plugins.notification.local.on('feedback_yes', function (notification, eopts) { 
-				self.loadUI('feedback');
-			 });
-		}
-	},
-	getAllNotifications: function() {
-		cordova.plugins.notification.local.getScheduledIds(function (scheduledIds) {
-			console.log(scheduledIds.length);
-			console.log("Scheduled IDs: " + scheduledIds.join(", "));
-		});
-	},
-	cancelAllNotifications: function() {
-		cordova.plugins.notification.local.cancelAll(function () {
-			console.log('All notifications canceled');
-		});
-	}*/
-
 	/*
-	ALL FUNCTIONS PREVIOUSLY IN KNOWLEDEBASE 
+	ALL FUNCTIONS PREVIOUSLY IN KNOWLEDGEBASE (some moved to helper_functions folder)
 	*/
 	/* All functions from weather in knowledgebase */
-
-	temperature_unit: function() {
-    	let self = this;
-    	return self.knowledgeBase.settings.unit.value === "US" ? "Fahrenheit" : "Celcius";
-	},
-
-	calculated_value_height: function() {
-    	let self = this;
-    	let unit = self.knowledgeBase.settings.unit.value;
-		if(unit != "SI") { // feet, inches
-    		return Math.round(self.knowledgeBase.settings.height.value / 30.48); 
-		} else { // cm
-			return self.knowledgeBase.settings.height.value;
-		}
-	},
-
-	height_unit: function() {
-    	let self = this;
-    	return self.knowledgeBase.settings.unit.value === "SI" ? "cm" : "feet";
-	},  
-
-	calculated_value_weight: function() {
-		let self = this;
-    	let unit = self.knowledgeBase.settings.unit.value;
-    	switch(unit) {
-			case "US": // pounds
-				 return Math.round(self.knowledgeBase.settings.weight.value * 2.2046);
-			case "UK": // stones
-				return Math.round(self.knowledgeBase.settings.weight.value * 0.1574);
-			default:
-				return self.knowledgeBase.settings.weight.value;
-		}
-	},
-
-	weight_unit: function() {
-		let self = this;
-		if(self.knowledgeBase.settings.unit.value === "SI") {
-			return "kg";
-		} else if(self.knowledgeBase.settings.unit.value === "US") {
-			return "lbs"
-		} else {
-			return "stones"
-		}   
-	},
 
 	BSA: function() {
 		let self = this;
@@ -1228,40 +1120,7 @@ var app = {
 		}
 	},
 
-	windchillRisk: function(windchill) {
-		if( windchill <-50 ){
-			return 2;
-		}
-		else if( windchill < -40 ){
-			return 10;
-		}
-		else if( windchill < -20 ){
-			return 30;
-		}
-		else if( windchill < -15 ){
-			return 60;
-		}
-		else return false; //no risk
-	},
-
-	gaugeTitleCold: function(val) {
-		if ( val <= 1 ) return "no thermal stress";
-		else if ( val < 2 ) return "minor cold stress";
-		else if ( val < 3 ) return "significant cold stress";
-		else if ( val < 4 ) return "high cold stress";
-		else if ( val < 5 ) return "severe cold stress";
-		else return "extreme cold stress";
-	},
-
-	gaugeTitleHeat: function(val) {
-		if ( val < 1 ) return "no thermal stress";
-		else if ( val < 2 ) return "minor heat stress";
-		else if ( val < 3 ) return "significant heat stress";
-		else if ( val < 4 ) return "high heat stress";
-		else if ( val < 5 ) return "severe heat stress";
-		else return "extreme heat stress"; 
-	},
-
+	// Should be moved to dashboard/expert dashboard
 	windchillTips: function(index) {
 		let self = this;
 		let str = "";
@@ -1275,13 +1134,14 @@ var app = {
 				self.knowledgeBase.thresholds.ireq.icl ){
 			str += "<p>Dress in layers to combat the cold stress.</p>";
 		}
-		let windrisk = self.windchillRisk( windchill );
+		let windrisk = windchillRisk( windchill );
 		if( windrisk ){
 			str += "<p>Due to the windchill "+windchill.toFixed(0)+"&deg; there is a risk for exposed skin to freeze in "+ windrisk +" minutes.</p>";
 		}   
 		return str;    
 	},
 
+	// Should be moved to dashboard/expert dashboard
 	phsTips: function(index) {
 		let self = this;
 		let str = "";
@@ -1309,6 +1169,7 @@ var app = {
 		return str;    
 	},
 
+	// Should be moved to dashboard/expert dashboard
 	neutralTips: function() {
 		let tips = [ "Enjoy your activity",
 					"Looks like it's all good",
@@ -1320,15 +1181,6 @@ var app = {
 		];
 		let i = Math.floor( Math.random() * tips.length );
 		return tips[i];
-	},
-
-	clothingIcon: function(clo) {
-		if( clo > 3 ) return "./img/clothing/2.0clo.png";
-		else if( clo > 2 ) return "./img/clothing/2.0clo.png";
-		else if( clo > 1.5 ) return "./img/clothing/1.5clo_wind.png";
-		else if( clo > 1.1 ) return "./img/clothing/1.0clo.png";
-		else if( clo >= 0.7 ) return "./img/clothing/0.9clo.png";
-		else return "./img/clothing/0.5clo.png";
 	}
 };
 
