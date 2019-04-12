@@ -123,7 +123,6 @@ var app = {
 			};
 			window.SelectorCordovaPlugin.showSelector(config, function(result) {
 				self.knowledgeBase.settings[target].value = items_[result[0].index].value;
-				self.saveSettings();
 				if(["age", "gender", "height", "weight"].includes(target)) {
 					self.updateDBParam(target);
 				}
@@ -208,7 +207,7 @@ var app = {
 		$("div[data-listener='activity']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
 			self.knowledgeBase.activity.selected = target;
-			
+			self.saveSettings();
 			$( "div[data-listener='activity']" ).removeClass( "selected" );
 			self.calcThermalIndices();
 			self.updateUI();
