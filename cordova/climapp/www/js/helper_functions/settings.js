@@ -30,3 +30,11 @@ function getWeightUnit(unit) {
         return "stones"
     }   
 }
+
+function deviceID() {
+    return device.uuid;
+}
+
+function getGenderAsInteger(kb) {
+    return kb.settings.gender.value === 'Male' ? 1 : 0;
+}
