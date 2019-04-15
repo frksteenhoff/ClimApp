@@ -453,7 +453,7 @@ var app = {
 		}
 		const appidFromServer = await self.getAppIDFromDB(); // Making code execution wait for app id retrieval
 
-		if(self.knowledgeBase.user_info.hasExternalDBRecord) { 
+		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
 			showShortToast("Unable to fetch app ID");
@@ -1011,9 +1011,9 @@ var app = {
 			$.get(url, user_data).done(function(data, status, xhr){
 				if(status === "success") {
 					let response = JSON.parse(data);
-					resolve(response.config[0].appid);
+					resolve(response.config[0].appid); 
 				} else {
-					reject(false)
+					reject(false); 
 				}
 			});
 		})
