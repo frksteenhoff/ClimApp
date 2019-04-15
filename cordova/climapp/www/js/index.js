@@ -445,19 +445,24 @@ var app = {
 			options // here the timeout is introduced
 		);
 	},
-	updateWeather: function(){
+	updateWeather: async function(){
 		var self = this;
 		
 		if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
 			self.createUserRecord();
 		}
+		const appidFromServer = await self.getAppIDFromDB(); // Making code execution wait for app id retrieval
 
-		let appid = self.knowledgeBase.user_info.hasExternalDBRecord ? self.getAppIDFromDB() : showShortToast("Unable to fetch app ID");
+		if(self.knowledgeBase.user_info.hasExternalDBRecord) { 
+			console.log("Fetched app ID: " + appidFromServer);
+		} else {
+			showShortToast("Unable to fetch app ID");
+		}
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
 					 "lat": this.knowledgeBase.position.lat,
 				 	 "lon": this.knowledgeBase.position.lng,
-					 "climapp": appid,
+					 "climapp": appidFromServer,
 					 "d": 10.0, //
 				 	 "utc": new Date().toJSON() };
 		$.get( url, 
@@ -994,19 +999,24 @@ var app = {
 			}
 		});
 	},
+
 	getAppIDFromDB: function() {
-		let self = this;
-		let ip = "http://192.38.64.244";
-		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=getAppID";
-		let user_data = {
-					"user_id": self.deviceID()
-				}  
-		$.post(url, user_data).done(function(data, status, xhr){
-			if(status === "success") {
-				let response = JSON.parse(data);
-				return response.config[0].appid;
-			}
-		});
+		return new Promise((resolve, reject) => {
+			let self = this;
+			let ip = "http://192.38.64.244";
+			let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=getAppID";
+			let user_data = {
+						"user_id": self.deviceID()
+					}  
+			$.get(url, user_data).done(function(data, status, xhr){
+				if(status === "success") {
+					let response = JSON.parse(data);
+					resolve(response.config[0].appid);
+				} else {
+					reject(false)
+				}
+			});
+		})
 	},
 	addWeatherDataToDB: function(){
 		let self = this;
