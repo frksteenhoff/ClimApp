@@ -893,13 +893,13 @@ var app = {
 			
 		
 			if( draw_cold_gauge ){
-				tip_html += this.windchillTips( index );
+				tip_html += windchillTips(index, self.knowledgeBase);
 			}
 			else if( draw_heat_gauge ){
-				tip_html += this.phsTips( index );
+				tip_html += phsTips(index, self.knowledgeBase);
 			}
 			if( tip_html.length ==0){
-				tip_html += this.neutralTips();
+				tip_html += neutralTips();
 			}
 			
 			let windowsize = $( window ).width();
@@ -977,74 +977,6 @@ var app = {
 			return temp;
 		}
 	},
-	/*
-	ALL FUNCTIONS PREVIOUSLY IN KNOWLEDGEBASE (some moved to helper_functions folder)
-	*/
-	/* All functions from weather in knowledgebase */
-
-
-	// Should be moved to dashboard/expert dashboard
-	windchillTips: function(index) {
-		let self = this;
-		let str = "";
-		let windchill = self.knowledgeBase.thermalindices.ireq[index].windchill;
-		if( windchill <
-			( self.knowledgeBase.thermalindices.ireq[index].Tair -
-				self.knowledgeBase.thresholds.windchill.deltaT )){
-					str += "<p>Winchill is "+windchill.toFixed(0)+"&deg;, you could wear a windstopper to combat cold stress.</p>";
-		}
-		else if(self.knowledgeBase.thermalindices.ireq[index].ICLminimal >
-				self.knowledgeBase.thresholds.ireq.icl ){
-			str += "<p>Dress in layers to combat the cold stress.</p>";
-		}
-		let windrisk = windchillRisk( windchill );
-		if( windrisk ){
-			str += "<p>Due to the windchill "+windchill.toFixed(0)+"&deg; there is a risk for exposed skin to freeze in "+ windrisk +" minutes.</p>";
-		}   
-		return str;    
-	},
-
-	// Should be moved to dashboard/expert dashboard
-	phsTips: function(index) {
-		let self = this;
-		let str = "";
-		let d_sw = self.knowledgeBase.thermalindices.phs[ index].Dwl50;
-		let sw_tot_per_hour = 0.001 * 60 * self.knowledgeBase.thermalindices.phs[ index].SWtotg / 
-		(self.knowledgeBase.sim.duration ); //liter per hour
-		sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
-
-		let duration_threshold = self.knowledgeBase.thresholds.phs.duration;
-		let sweat_threshold = self.knowledgeBase.thresholds.phs.sweat;
-		
-		//hydration
-		if( sw_tot_per_hour >= sweat_threshold ){
-			str += "In these conditions you could need " +sw_tot_per_hour+ " liter water per hour";
-		}
-		
-		let humidity = self.knowledgeBase.thermalindices.phs[ index].rh;
-		let temperature = self.knowledgeBase.thermalindices.phs[ index].Tair;
-		//humidity
-		if( humidity >= 50 && temperature >35 ){
-			str += "A fan will not help in this condition, and can even make things worse!";
-		}
-		
-		//radiation
-		return str;    
-	},
-
-	// Should be moved to dashboard/expert dashboard
-	neutralTips: function() {
-		let tips = [ "Enjoy your activity",
-					"Looks like it's all good",
-					"An apple a day keeps the doctor at bay",
-					"French minister names his cat 'Brexit' because: &quot;she meows loudly it wants to go out, but just stands there waiting when I open the door&quot;",
-					"Two atoms walk into a bar, one says: &quot;I just lost an electron&quot, the other replies: &quot;are you sure?&quot; ... &quot;yes, i'm positive!&quot",
-					"It doesn't matter what temperature the room is, it's always room temperature.",
-					"If you cannot measure it, you cannot improve it - Lord Kelvin",
-		];
-		let i = Math.floor( Math.random() * tips.length );
-		return tips[i];
-	}
 };
 
 app.initialize();
