@@ -60,6 +60,11 @@ var app = {
 		$("div[data-listener='navbar']").off();
 		$("div[data-listener='navbar']").on("click", function(){
 			let target = $( this ).attr("data-target");
+			
+			if(self.firstTimeLoginWithoutPersonalization(target)) {
+				showShortToast("Using default values in calculations.");
+			}
+			
 			self.knowledgeBase.user_info.firstLogin = false;
 			self.loadUI( target );
 		});
@@ -222,7 +227,7 @@ var app = {
 						 "details": "./pages/details.html",
 		 				 "about": "./pages/about.html"};
 		
-		//localStorage.clear(); // Need to clear local storage when doing the update
+		localStorage.clear(); // Need to clear local storage when doing the update
 		if ( localStorage.getItem("knowledgebase") !== null ) {
 			this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
 		}
@@ -380,6 +385,10 @@ var app = {
 		var uuid = device.uuid;
 		// Implement logic to handle different types of rating bars
 	},*/
+	firstTimeLoginWithoutPersonalization: function(target){
+		var self = this;
+		return self.knowledgeBase.user_info.firstLogin === true && target === 'dashboard';
+	},
 	getSelectables: function( key ){
 		var self = this;
 		let unit = this.knowledgeBase.settings.unit.value;
@@ -630,9 +639,10 @@ var app = {
 		this.initNavbarListeners();
 		
 		if( this.currentPageID == "onboarding"){
-
+			$(".navigation").hide();
 		}
 		else if( this.currentPageID == "dashboard" ){
+			$(".navigation").show();
 			$("#main_panel").show();
 			$("#tip_panel").show();
 
@@ -752,6 +762,7 @@ var app = {
 				
 		}
 		else if( this.currentPageID == "details"){
+			$(".navigation").show();
 			var index = this.selectedWeatherID;
 			
 			let tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
@@ -824,6 +835,7 @@ var app = {
 			}
 		}
 		else if( this.currentPageID == "settings" ){
+			$(".navigation").show();
 			this.initSettingsListeners();
 			let unit = this.knowledgeBase.settings.unit.value;
 			let height = this.knowledgeBase.settings.height.value;
@@ -837,6 +849,7 @@ var app = {
 			$("#notification_checkbox").attr("checked", this.knowledgeBase.user_info.receivesNotifications);
 		}
 		else if( this.currentPageID == "feedback" ){
+			$(".navigation").show();
 			this.initFeedbackListeners();
 			// Question text
 			$("#question1").html( this.knowledgeBase.feedback.question1.text );
