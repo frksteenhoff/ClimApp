@@ -541,7 +541,7 @@ var app = {
 		
 		var options =  {	air:{},
 							body:{
-									"M": 		this.M(), 	//W/m2 
+									"M": 		M(this.knowledgeBase), 	//W/m2 
 									"work": 	0,		//W/m2 external work 
 									"posture": 	2,		//1= sitting, 2= standing, 3= crouching
 									"weight":   this.knowledgeBase.settings.weight.value,		//kg  
@@ -676,7 +676,7 @@ var app = {
 				let daydiff = Math.floor( ( utcdate - localdate ) / ms_p_day );
 				
 				let wbgt = self.knowledgeBase.weather.wbgt[index];
-				let hrisk = self.WBGTrisk( wbgt );
+				let hrisk = WBGTrisk( wbgt, self.knowledgeBase );
 				let crisk = obj.ICLminimal;
 				let daydiffkey = daydiff;
 				
@@ -765,7 +765,7 @@ var app = {
 			
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
 			let wbgt = this.knowledgeBase.thermalindices.phs[index].wbgt.toFixed(1);
-			let heat_index = this.WBGTrisk( wbgt );
+			let heat_index = WBGTrisk( wbgt, self.knowledgeBase );
 			
 			let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
 			let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
@@ -806,7 +806,7 @@ var app = {
 				$("div[data-context='heat']").show();
 				
 				$("#detail_wbgt").html( wbgt );
-				let ral = this.RAL().toFixed(1);
+				let ral = RAL(this.knowledgeBase).toFixed(1);
 				$("#detail_ral").html( ral );
 				
 				let d_tre = this.knowledgeBase.thermalindices.phs[ index].D_Tre;
@@ -884,7 +884,7 @@ var app = {
 		
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
 			let cold_index = icl_min;
-			let heat_index = this.WBGTrisk( this.knowledgeBase.thermalindices.phs[index].wbgt );
+			let heat_index = WBGTrisk( this.knowledgeBase.thermalindices.phs[index].wbgt, self.knowledgeBase );
 		
 			let draw_cold_gauge = this.isDrawColdGauge( cold_index, heat_index, index );
 			let draw_heat_gauge = this.isDrawHeatGauge( cold_index, heat_index, index );
@@ -982,40 +982,6 @@ var app = {
 	*/
 	/* All functions from weather in knowledgebase */
 
-	BSA: function() {
-		let self = this;
-		let w = self.knowledgeBase.settings.weight.value; //kg
-		let h = self.knowledgeBase.settings.height.value / 100; //m
-		return ( Math.pow(h, 0.725) * 0.20247 * Math.pow(w, 0.425 ) );//dubois & dubois 
-	},
-
-	M: function() {
-		let self = this;
-		let ISO_selected = self.knowledgeBase.activity.selected;
-		let ISO_level = self.knowledgeBase.activity.values[ ISO_selected ];
-		return 50 * (ISO_level);
-	},
-
-	RAL: function() {
-		let self = this;
-		let M = self.M(); //W/m2
-		let BSA = self.BSA(); //m2
-		let watt = M * BSA;
-		return 59.9 - 14.1 * Math.log10( watt );
-	},
-
-	WBGTrisk: function(wbgt) {
-		let self = this;
-		let RAL = self.RAL();
-		let risk = wbgt / RAL; 
-		if (risk >= 1.2 ){
-			return 3 * ( risk / 1.2 );
-		} else if (risk > 1.0 ){
-			return 2 * ( risk );
-		} else if (risk <= 1.0 ){
-			return ( risk / 0.8); // scale 0.8 to 1
-		}
-	},
 
 	// Should be moved to dashboard/expert dashboard
 	windchillTips: function(index) {

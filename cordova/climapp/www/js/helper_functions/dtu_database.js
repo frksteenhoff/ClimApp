@@ -100,7 +100,6 @@ function getAppIDFromDB(kb) {
 	return new Promise((resolve, reject) => {
 		let apicall = "getAppID";
         let url = kb.user_info.dtu_ip + kb.user_info.dtu_api_base_url + apicall;
-        console.log("URL                     " + url + " " + kb.user_info.dtu_api_base_url + " " + kb.user_info.dtu_ip);
 		let user_data = {
 					"user_id": deviceID()
 				}  
