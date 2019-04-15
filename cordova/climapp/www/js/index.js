@@ -227,7 +227,7 @@ var app = {
 						 "details": "./pages/details.html",
 		 				 "about": "./pages/about.html"};
 		
-		localStorage.clear(); // Need to clear local storage when doing the update
+		//localStorage.clear(); // Need to clear local storage when doing the update
 		if ( localStorage.getItem("knowledgebase") !== null ) {
 			this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
 		}
@@ -387,7 +387,7 @@ var app = {
 	},*/
 	firstTimeLoginWithoutPersonalization: function(target){
 		var self = this;
-		return self.knowledgeBase.user_info.firstLogin === true && target === 'dashboard';
+		return self.knowledgeBase.user_info.firstLogin && target === 'dashboard';
 	},
 	getSelectables: function( key ){
 		var self = this;
