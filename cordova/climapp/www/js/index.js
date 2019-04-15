@@ -95,7 +95,7 @@ var app = {
 			
 			// If user not in database, add user to database
 			if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
-				self.createUserRecord();
+				createUserRecord(self.knowledgeBase);
 			} 
 			// Add feedback to database
 			addFeedbackToDB(self.knowledgeBase.feedback);
@@ -124,7 +124,7 @@ var app = {
 			window.SelectorCordovaPlugin.showSelector(config, function(result) {
 				self.knowledgeBase.settings[target].value = items_[result[0].index].value;
 				if(["age", "gender", "height", "weight"].includes(target)) {
-					self.updateDBParam(target);
+					updateDBParam(self.knowledgeBase, target);
 				}
 				console.log( target + ": " + items_[result[0].index].value);
 				self.saveSettings(); 
@@ -222,6 +222,7 @@ var app = {
 						 "details": "./pages/details.html",
 		 				 "about": "./pages/about.html"};
 		
+		//localStorage.clear(); // Need to clear local storage when doing the update
 		if ( localStorage.getItem("knowledgebase") !== null ) {
 			this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
 		}
@@ -317,7 +318,9 @@ var app = {
 									"user_info": {
 										"firstLogin": true,
 										"hasExternalDBRecord": false,
-										"receivesNotifications": false // false as notifications are not part of the app
+										"receivesNotifications": false, // false as notifications are not part of the app
+										"dtu_ip": "http://192.38.64.244",
+										"dtu_api_base_url": "/ClimAppAPI/v1/ClimAppApi.php?apicall="
 									},
 									"thermalindices":{ 
 												"ireq":[//array of objects
@@ -449,9 +452,9 @@ var app = {
 		var self = this;
 		
 		if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
-			self.createUserRecord();
+			createUserRecord(self.knowledgeBase);
 		}
-		const appidFromServer = await self.getAppIDFromDB(); // Making code execution wait for app id retrieval
+		const appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
 
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
@@ -502,7 +505,7 @@ var app = {
 					   self.updateUI();
 							  
 					   // Only update when weather data has been received
-						self.addWeatherDataToDB();
+						addWeatherDataToDB(self.knowledgeBase);
 				   }
 				   catch( error ){
 					   console.log( error );
@@ -973,98 +976,6 @@ var app = {
 		} else {
 			return temp;
 		}
-	},
-	getGenderAsInteger: function() {
-		return this.knowledgeBase.settings.gender.value === 'Male' ? 1 : 0;
-	},
-	/*
-	 * Methods related to database 
-	 * should all be moved to separate file
-	 */
-	createUserRecord: function(){
-		let self = this;
-		let ip = "http://192.38.64.244";
-		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createUserRecord";
-		let user_data = {"_id": deviceID(),
-						 "age": self.knowledgeBase.settings.age.value,
-						 "gender": self.getGenderAsInteger(), 
-						 "height": (self.knowledgeBase.settings.height.value/100), // unit is meter in database (SI)
-						 "weight": self.knowledgeBase.settings.weight.value, 
-						 "unit": 0}  
-		$.post(url, user_data).done(function(data, status, xhr){
-			if(status === "success") {
-				console.log("Database update, user: " + data);
-				// Only update this value if user has been added to database
-				self.knowledgeBase.user_info.hasExternalDBRecord = true;
-			}
-		});
-	},
-
-	getAppIDFromDB: function() {
-		return new Promise((resolve, reject) => {
-			let self = this;
-			let ip = "http://192.38.64.244";
-			let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=getAppID";
-			let user_data = {
-						"user_id": deviceID()
-					}  
-			$.get(url, user_data).done(function(data, status, xhr){
-				if(status === "success") {
-					let response = JSON.parse(data);
-					resolve(response.config[0].appid); 
-				} else {
-					reject(false); 
-				}
-			});
-		})
-	},
-	addWeatherDataToDB: function(){
-		let self = this;
-		let ip = "http://192.38.64.244";
-		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createWeatherRecord";
-		let user_data = {
-					"_id": deviceID(),
-					"longitude": self.knowledgeBase.weather.lat,
-					"latitude": self.knowledgeBase.weather.lng, 
-					"city": self.knowledgeBase.weather.station,
-					"temperature": self.knowledgeBase.weather.temperature[0], 
-					"wind_speed": self.knowledgeBase.weather.windspeed[0], 
-					"humidity": self.knowledgeBase.weather.humidity[0]/100, 
-					"cloudiness": 0, // Not in knowledgebase?
-					"activity_level": self.knowledgeBase.activity.selected,
-					"acclimatization": 0, // currently not retrieved from sensationsmaps
-					"temp_min": 0, // currently not retrieved from sensationsmaps
-					"temp_max": 0 // currently not retrieved from sensationsmaps
-				}  
-		$.post(url, user_data).done(function(data, status, xhr){
-			if(status === "success") {
-				console.log("Database update, weather: " + data);
-			}
-		});
-	},
-	// Updating user parameter in database when/if user should choose to change the value
-	updateDBParam: function(param){
-		let self = this;
-		let ip = "http://192.38.64.244";
-		let urlsuffix = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=updateUser";
-		let fieldToUpdate = param.charAt(0).toUpperCase() + param.slice(1); // Capitalizing to match API requirement		
-		let url = urlsuffix + fieldToUpdate;
-		let user_data = {
-				"_id": deviceID(),		
-			}
-		// Add value to be updated to data object 
-		if(param === "gender") { 
-			user_data[param] = self.getGenderAsInteger();
-		} else {
-			user_data[param] = self.knowledgeBase.settings[param].value;
-		}
-		$.post(url, user_data).done(function(data, status, xhr){
-			if(status === "success") {
-				console.log("Database update" + param + ": " + 
-				self.knowledgeBase.settings[param].value + ", " + 
-				self.getGenderAsInteger());
-			}
-		});
 	},
 	/*
 	ALL FUNCTIONS PREVIOUSLY IN KNOWLEDGEBASE (some moved to helper_functions folder)
