@@ -88,8 +88,8 @@ var app = {
 		});
 		
 		// When user submits feedback, add to object to send to db + reset values
-		$("button[data-listener='submit']").off();
-		$("button[data-listener='submit']").on("click", function(){
+		$("div[data-listener='submit']").off();
+		$("div[data-listener='submit']").on("touchstart", function(){
 			var target = $("#feedback_text").val();
 			self.knowledgeBase.feedback.comment = target;
 			
@@ -98,7 +98,7 @@ var app = {
 				self.createUserRecord();
 			} 
 			// Add feedback to database
-			self.addFeedbackToDB();
+			addFeedbackToDB(self.knowledgeBase.feedback);
 						
 			// reset values
 			$('#feedback_text').val("");
@@ -985,7 +985,7 @@ var app = {
 		let self = this;
 		let ip = "http://192.38.64.244";
 		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createUserRecord";
-		let user_data = {"_id": self.deviceID(),
+		let user_data = {"_id": deviceID(),
 						 "age": self.knowledgeBase.settings.age.value,
 						 "gender": self.getGenderAsInteger(), 
 						 "height": (self.knowledgeBase.settings.height.value/100), // unit is meter in database (SI)
@@ -1006,7 +1006,7 @@ var app = {
 			let ip = "http://192.38.64.244";
 			let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=getAppID";
 			let user_data = {
-						"user_id": self.deviceID()
+						"user_id": deviceID()
 					}  
 			$.get(url, user_data).done(function(data, status, xhr){
 				if(status === "success") {
@@ -1023,7 +1023,7 @@ var app = {
 		let ip = "http://192.38.64.244";
 		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createWeatherRecord";
 		let user_data = {
-					"_id": self.deviceID(),
+					"_id": deviceID(),
 					"longitude": self.knowledgeBase.weather.lat,
 					"latitude": self.knowledgeBase.weather.lng, 
 					"city": self.knowledgeBase.weather.station,
@@ -1042,25 +1042,6 @@ var app = {
 			}
 		});
 	},
-	addFeedbackToDB: function(){
-		let self = this;
-		let ip = "http://192.38.64.244";
-		let url = ip + "/ClimAppAPI/v1/ClimAppApi.php?apicall=createFeedbackRecord";
-		let user_data = {
-					"user_id": self.deviceID(),
-					"question_combo_id": 1, // will be changed when more sophisticaed solution is implemented
-					"rating1": self.knowledgeBase.feedback.question1.rating, 
-					"rating2": self.knowledgeBase.feedback.question2.rating,
-					"rating3": self.knowledgeBase.feedback.question3.rating, 
-					"txt": self.knowledgeBase.feedback.comment === "" ? "_" : self.knowledgeBase.feedback.comment 				
-				}  
-		$.post(url, user_data).done(function(data, status, xhr){
-			if(status === "success") {
-				console.log("Database update, feedback: " + data);
-				showShortToast("Feedback submitted!");
-			}
-		});
-	},
 	// Updating user parameter in database when/if user should choose to change the value
 	updateDBParam: function(param){
 		let self = this;
@@ -1069,7 +1050,7 @@ var app = {
 		let fieldToUpdate = param.charAt(0).toUpperCase() + param.slice(1); // Capitalizing to match API requirement		
 		let url = urlsuffix + fieldToUpdate;
 		let user_data = {
-				"_id": self.deviceID(),		
+				"_id": deviceID(),		
 			}
 		// Add value to be updated to data object 
 		if(param === "gender") { 
@@ -1102,10 +1083,6 @@ var app = {
 		let ISO_selected = self.knowledgeBase.activity.selected;
 		let ISO_level = self.knowledgeBase.activity.values[ ISO_selected ];
 		return 50 * (ISO_level);
-	},
-
-	deviceID: function() {
-		return device.uuid;
 	},
 
 	RAL: function() {
