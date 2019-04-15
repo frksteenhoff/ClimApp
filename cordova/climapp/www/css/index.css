@@ -194,7 +194,11 @@ img.small{
 }
 
 .panel.settings p {
-    margin-bottom: 1.5em;
+    margin-bottom: 2em;
+}
+
+.panel.settings_other p {
+    margin-bottom: 2.5em;
 }
 
 .panel.settings.inlineitems#notify {
@@ -230,10 +234,12 @@ img.small{
 
 /* END navigation bar style */
 
+/* ONBOARDING */
 .onboarding div{
 	display: border-box;
 	margin: auto;
 }
+
 .onboarding i{
     vertical-align: middle; /* | top | bottom */
 }
@@ -242,6 +248,28 @@ img.small{
     padding: 0.5em;
     background: #C0C0C0;
 }
+
+#onboarding_settings, 
+#onboarding_dashboard {
+    font-size: 1.2em;
+}
+
+#onboarding_welcome {
+    font-size: 4em;
+    text-align: center;
+    font-weight: normal;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+/* END onboarding */
 
 .gallery{
 	width: 100%;
