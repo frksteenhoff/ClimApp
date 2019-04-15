@@ -218,6 +218,146 @@ var app = {
 			self.updateUI();
 		});	
 	},
+	initKnowledgeBase: function(){
+		this.knowledgeBase = {  "version": 1.0,
+						"position": { "lat": 0, 
+									 "lng": 0, 
+									 "timestamp": "" },
+					   "weather": {	"station": "",
+									"lat": 0,
+									"lng": 0,
+								    "distance": -1,
+									"utc": [""],
+									"wbgt": [-99],
+									"windchill": [-99],
+ 									"temperature": [-99],
+									"globetemperature": [-99],
+								    "humidity": [-99],
+									"watervapourpressure": [-99],
+									"windspeed": [-99],
+									"radiation": [-99]
+						},
+					  "settings": { "age": {"title": "What is your age?",
+											"value": 36,
+											"unit": "years"
+									 },
+									 "height": {"title": "What is your height?",
+												"value": 186
+									},
+									 "weight": {"title": "What is your weight?",
+												"value": 82
+									},
+									 "gender": {"title": "What is your gender?",
+												"value": "Male"
+									},
+									 "unit": { "title": "Which units of measurements would you prefer?",
+												 "value": "SI" 
+											} // default SI units
+					   },
+					  "activity": { "label": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
+										 		"low":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
+										 		"medium":"Walking 2.5 - 5.5km/h. Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.",
+											 	"high":"Intense arm and trunk work: carrying heavy material, shovelling, sawing, hand mowing, concrete block laying.",
+												"intense":"Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs, running on level surface." 
+									},
+									"values": { "rest": 1, //ISO 8896
+												"low": 2,
+												"medium": 3,
+												"high": 4,
+												"intense": 5
+									},	
+									"selected": "low",	
+								},
+						"feedback": { 
+							"question1": { 
+								"text": "How were your drinking needs?",
+								"rating": 3, 
+								"ratingtype": "ratingbar",
+								"ratingtext": {
+									"1": "Much lower than expected",
+									"2": "Lower than expected",
+								    "3": "Normal",
+							        "4": "Higher than expected",
+							        "5": "Much higher than expected"
+								},
+							}, 
+							"question2": {
+								"text": "Did you take more breaks today than you expected?",
+								"rating": 3, 
+								"ratingtype": "ratingbar",
+								"ratingtext": {
+									"1": "Not exhausted at all",
+									"2": "Less exhausted than usual",
+									"3": "Normal",
+									"4": "More exhausted than usual",
+									"5": "A lot more exhausted than usual"
+								},
+							},
+							"question3": {
+								"text": "How would you evaluate the amount of clothing you wore today?",
+								"rating": 3, 
+								"ratingtype": "ratingbar",
+								"ratingtext": {
+									"1": "Much less than needed",
+									"2": "Less than needed",
+									"3": "I wore the right amount of clothing",
+									"4": "A little too much clothing",
+									"5": "A lot more than needed"
+								},
+							},
+							"comment": ""
+						},
+						"user_info": {
+							"firstLogin": true,
+							"hasExternalDBRecord": false,
+							"receivesNotifications": false, // false as notifications are not part of the app
+							"dtu_ip": "http://192.38.64.244",
+							"dtu_api_base_url": "/ClimAppAPI/v1/ClimAppApi.php?apicall="
+						},
+						"thermalindices":{ 
+									"ireq":[//array of objects
+										{ 	"ICLminimal":0.0,
+				  						    "ICLneutral": 0.0,
+						 				    "DLEneutral": 0.0,
+											"DLEminimal": 0.0,
+											"utc":"2019/12/31 00:00:00",
+										}],
+								  	"phs": [//array of objects
+										{ 
+											"D_Tre" : 0.0,
+										   	"Dwl50": 0.0,
+										   	"SWtotg": 0.0,
+										    "utc":"2019/12/31 00:00:00",
+								  		}],
+						},
+						"gauge":{
+							"highlights":[//color also in CSS, keep consistent
+						        { from: 3, to: 4, color:  'rgba(180,0,0,.9)', css:'veryhot'},
+						        { from: 2, to: 3, color: 'rgba(255,100,0,.9)', css:'hot'},
+						        { from: 1, to: 2, color: 'rgba(220,220,0,.9)', css:'warm'},
+						        { from: -1, to: 1, color: 'rgba(0,180,0,.9)', css:'neutral' },
+						        { from: -2, to: -1, color:  'rgba(0,180,180,.9)', css:'cool' },
+								{ from: -3, to: -2, color: 'rgba(0,100,255,.9)', css:'cold' },
+								{ from: -4, to: -3, color: 'rgba(0,0,180,.9)', css:'verycold' }
+							]
+						},
+						"thresholds":{
+							"ireq":{
+								"icl": 1.0 //ireq > "icl-value" -> 
+							},
+							"phs":{
+								"duration": 120, //duration limit <= "icl-value" -> 
+								"sweat":1.0,     //sweat rate per hour >= "icl-value" ->
+							},
+							"windchill":{
+								"deltaT": 3
+							}	
+						},
+						"sim":{
+							"duration": 240, //minutes (required for PHS)
+						},
+					};
+	},
 	loadSettings: function(){
 		this.pageMap = { "dashboard": "./pages/dashboard.html",
 						 "settings": "./pages/settings.html",
@@ -230,146 +370,10 @@ var app = {
 		//localStorage.clear(); // Need to clear local storage when doing the update
 		if ( localStorage.getItem("knowledgebase") !== null ) {
 			this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
+			//TODO check knowledgebase version with server... if outdated, initKnowledgeBase()
 		}
 		else{
-			var self = this;
-			this.knowledgeBase = {  "position": { "lat": 0, 
-												 "lng": 0, 
-												 "timestamp": "" },
-								   "weather": {	"station": "",
-												"lat": 0,
-												"lng": 0,
-											    "distance": -1,
-												"utc": [""],
-												"wbgt": [-99],
-												"windchill": [-99],
-			 									"temperature": [-99],
-												"globetemperature": [-99],
-											    "humidity": [-99],
-												"watervapourpressure": [-99],
-												"windspeed": [-99],
-												"radiation": [-99]
-									},
-								  "settings": { "age": {"title": "What is your age?",
-														"value": 36,
-														"unit": "years"
-												 },
-												 "height": {"title": "What is your height?",
-															"value": 186
-												},
-												 "weight": {"title": "What is your weight?",
-															"value": 82
-												},
-												 "gender": {"title": "What is your gender?",
-															"value": "Male"
-												},
-												 "unit": { "title": "Which units of measurements would you prefer?",
-															 "value": "SI" 
-														} // default SI units
-								   },
-								  "activity": { "label": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
-													 		"low":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
-													 		"medium":"Walking 2.5 - 5.5km/h. Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.",
-														 	"high":"Intense arm and trunk work: carrying heavy material, shovelling, sawing, hand mowing, concrete block laying.",
-															"intense":"Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs, running on level surface." 
-												},
-												"values": { "rest": 1, //ISO 8896
-															"low": 2,
-															"medium": 3,
-															"high": 4,
-															"intense": 5
-												},	
-												"selected": "low",	
-											},
-									"feedback": { 
-										"question1": { 
-											"text": "How were your drinking needs?",
-											"rating": 3, 
-											"ratingtype": "ratingbar",
-											"ratingtext": {
-												"1": "Much lower than expected",
-    											"2": "Lower than expected",
-											    "3": "Normal",
-										        "4": "Higher than expected",
-										        "5": "Much higher than expected"
-											},
-										}, 
-										"question2": {
-											"text": "Did you take more breaks today than you expected?",
-											"rating": 3, 
-											"ratingtype": "ratingbar",
-											"ratingtext": {
-												"1": "Not exhausted at all",
-												"2": "Less exhausted than usual",
-												"3": "Normal",
-												"4": "More exhausted than usual",
-												"5": "A lot more exhausted than usual"
-											},
-										},
-										"question3": {
-											"text": "How would you evaluate the amount of clothing you wore today?",
-											"rating": 3, 
-											"ratingtype": "ratingbar",
-											"ratingtext": {
-												"1": "Much less than needed",
-												"2": "Less than needed",
-												"3": "I wore the right amount of clothing",
-												"4": "A little too much clothing",
-												"5": "A lot more than needed"
-											},
-										},
-										"comment": ""
-									},
-									"user_info": {
-										"firstLogin": true,
-										"hasExternalDBRecord": false,
-										"receivesNotifications": false, // false as notifications are not part of the app
-										"dtu_ip": "http://192.38.64.244",
-										"dtu_api_base_url": "/ClimAppAPI/v1/ClimAppApi.php?apicall="
-									},
-									"thermalindices":{ 
-												"ireq":[//array of objects
-													{ 	"ICLminimal":0.0,
-							  						    "ICLneutral": 0.0,
-									 				    "DLEneutral": 0.0,
-														"DLEminimal": 0.0,
-														"utc":"2019/12/31 00:00:00",
-													}],
-											  	"phs": [//array of objects
-													{ 
-														"D_Tre" : 0.0,
-													   	"Dwl50": 0.0,
-													   	"SWtotg": 0.0,
-													    "utc":"2019/12/31 00:00:00",
-											  		}],
-									},
-									"gauge":{
-										"highlights":[//color also in CSS, keep consistent
-									        { from: 3, to: 4, color:  'rgba(180,0,0,.9)', css:'veryhot'},
-									        { from: 2, to: 3, color: 'rgba(255,100,0,.9)', css:'hot'},
-									        { from: 1, to: 2, color: 'rgba(220,220,0,.9)', css:'warm'},
-									        { from: -1, to: 1, color: 'rgba(0,180,0,.9)', css:'neutral' },
-									        { from: -2, to: -1, color:  'rgba(0,180,180,.9)', css:'cool' },
-											{ from: -3, to: -2, color: 'rgba(0,100,255,.9)', css:'cold' },
-											{ from: -4, to: -3, color: 'rgba(0,0,180,.9)', css:'verycold' }
-										]
-									},
-									"thresholds":{
-										"ireq":{
-											"icl": 1.0 //ireq > "icl-value" -> 
-										},
-										"phs":{
-											"duration": 120, //duration limit <= "icl-value" -> 
-											"sweat":1.0,     //sweat rate per hour >= "icl-value" ->
-										},
-										"windchill":{
-											"deltaT": 3
-										}	
-									},
-									"sim":{
-										"duration": 240, //minutes (required for PHS)
-									},
-				};
+			this.initKnowledgeBase();			
 		}
 
 	},
