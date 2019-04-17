@@ -29,8 +29,8 @@ body {
      background-size: auto;
     font-family: Arial, sans-serif;
     height:100%;
-    margin:0px;
-    padding:0px;
+    margin:0;
+    padding:0;
     width:100%;
 	text-align: justify;
 	
@@ -38,6 +38,10 @@ body {
 	padding-top: constant(safe-area-inset-top); 
 	padding-top: env(safe-area-inset-top);
 	/*end required for IOS*/
+}
+
+.spacer{
+	font-size:2em;
 }
 
 /* Portrait layout (default) */
@@ -58,7 +62,6 @@ canvas{
 	background: rgba(255,255,255,0.9);
 	width: 100%;
     padding: 0.1em 0.5em;
-    margin-top: 3em;
 	margin: 0.5em auto;
 	/*border: 1px solid rgba(0, 0, 0, 0.5);
 	/*box-shadow: 2px 2px rgba(0, 0, 0, 0.2);*/
@@ -193,12 +196,12 @@ img.small{
     margin-bottom: 1em;
 }
 
-.panel.settings p {
-    margin-bottom: 2em;
+.panel.settings div {
+    margin-bottom: 1em;
 }
 
-.panel.settings_other p {
-    margin-bottom: 2.5em;
+.panel.settings_other div {
+    margin-bottom: 1em;
 }
 
 .panel.settings.inlineitems#notify {
@@ -207,6 +210,8 @@ img.small{
 
 /* BEGIN navigation bar style*/
 .navigation {
+  position: fixed;
+  width:100%;
   margin: 0; 
   background: rgba(255,255,255,0.9);  
   /*background: #7EBFE5; /* Old browsers */
@@ -251,23 +256,15 @@ img.small{
 
 #onboarding_settings, 
 #onboarding_dashboard {
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 
 #onboarding_welcome {
-    font-size: 4em;
+    font-size: 3em;
     text-align: center;
     font-weight: normal;
 }
 
-hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
-    padding: 0;
-}
 
 /* END onboarding */
 

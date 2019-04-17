@@ -66,6 +66,7 @@ var app = {
 			}
 			
 			self.knowledgeBase.user_info.firstLogin = false;
+		    self.saveSettings();
 			self.loadUI( target );
 		});
 	},
@@ -90,6 +91,8 @@ var app = {
 				$("#ratingtext3").html( self.knowledgeBase.feedback.question3.ratingtext[self.knowledgeBase.feedback.question3.rating] );
 			}
 			$( "input[data-listener='feedback']" ).removeClass( "checked" );
+		    self.saveSettings();
+			
 		});
 		
 		// When user submits feedback, add to object to send to db + reset values
@@ -219,7 +222,7 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-		this.knowledgeBase = {  "version": 1.0,
+		return {  "version": 1.1,
 						"position": { "lat": 0, 
 									 "lng": 0, 
 									 "timestamp": "" },
@@ -368,13 +371,27 @@ var app = {
 		 				 "about": "./pages/about.html"};
 		
 		//localStorage.clear(); // Need to clear local storage when doing the update
+		var shadowKB = this.initKnowledgeBase();
 		if ( localStorage.getItem("knowledgebase") !== null ) {
+			
 			this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
-			//TODO check knowledgebase version with server... if outdated, initKnowledgeBase()
+			if ( 'version' in this.knowledgeBase && this.knowledgeBase.version < shadowKB.version ){
+				this.knowledgeBase = this.initKnowledgeBase();
+				console.log("knowledgebase updated to version : " + shadowKB.version );
+				
+			}
+			else{
+				this.knowledgeBase = this.initKnowledgeBase();
+				console.log("loaded knowledgebase version : " + shadowKB.version );
+				
+			}
 		}
 		else{
-			this.initKnowledgeBase();			
+			this.knowledgeBase =this.initKnowledgeBase();	
+			console.log("created knowledgebase version : " + shadowKB.version );
+					
 		}
+		this.saveSettings();
 
 	},
 	/* In the future this should be used to fetch the needed question from the database
@@ -436,6 +453,7 @@ var app = {
 		return obj_array;
 	},
 	saveSettings: function(){
+		localStorage.clear();
 		let jsonData = JSON.stringify( this.knowledgeBase );
 		localStorage.setItem("knowledgebase", jsonData );
 	},
@@ -473,7 +491,8 @@ var app = {
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
-			showShortToast("Unable to fetch app ID");
+			showShortToast("Unable to fetch app ID...contact Henriette on this item");
+			appidFromServer = "f22065144b2119439a589cbfb9d851d3";//until db thing is fixed;
 		}
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
@@ -510,10 +529,7 @@ var app = {
 							   let wvp = ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
 							   self.knowledgeBase.weather.watervapourpressure.push( wvp );	
 					   }); 
-					   self.knowledgeBase.weather.windspeed = weather.vair.map(Number).map( function( v ){
-						   return Math.pow( v, 0.16 );
-					   } );
-						   
+					   self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
 					   self.knowledgeBase.weather.radiation = weather.solar.map(Number);
 					   self.saveSettings();
 					   self.calcThermalIndices();
@@ -782,7 +798,7 @@ var app = {
 			
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
 			let wbgt = this.knowledgeBase.thermalindices.phs[index].wbgt.toFixed(1);
-			let heat_index = WBGTrisk( wbgt, self.knowledgeBase );
+			let heat_index = WBGTrisk( wbgt, this.knowledgeBase );
 			
 			let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
 			let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
