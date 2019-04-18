@@ -174,6 +174,9 @@ var app = {
 			self.knowledgeBase.settings.unit.value = "SI";
 			self.knowledgeBase.user_info.firstLogin = true;
 
+			self.saveSettings();
+			self.updateUI();
+
 			// Inform user about event in toast
 			var notificationText = "Personal preferences reset, using default values.";
 			showShortToast(notificationText);
