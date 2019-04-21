@@ -493,7 +493,8 @@ var app = {
 		} else {
 			showShortToast("Unable to fetch app ID.. if this persists contact Henriette");
 			appidFromServer = "f22065144b2119439a589cbfb9d851d3";//until db thing is fixed;
-			// this is not a problemm -- the app ID is fetched, there seems to be sometimes where this does not happen but the implementation is correct,
+			// Henriette: this is not a problemm -- the app ID is fetched, there seems to be sometimes where this does not happen but the implementation is correct,
+			//Boris: yes, the implementation is correct, but some dependencies are probably violated, otherwise it should work always. Let's learn what bug causing dependency is. 
 		}
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
@@ -886,14 +887,14 @@ var app = {
 		}
 	},
 	isDrawColdGauge: function( cold, heat, index ){
-		return cold >= heat;
-				// && 
-				//cold >= this.knowledgeBase.thresholds.ireq &&
-				//this.knowledgeBase.thermalindices.ireq[ index].Tair <= 15;
+		return cold >= heat
+			   && 
+			   cold >= this.knowledgeBase.thresholds.ireq &&
+			   this.knowledgeBase.thermalindices.ireq[ index].Tair <= 15;
 	},
 	isDrawHeatGauge: function( cold, heat, index ){
- 	   return heat > cold;
-			//&& this.knowledgeBase.weather.wbgt[ index ] >= 20;
+ 	   return heat > cold
+		      && this.knowledgeBase.weather.wbgt[ index ] > 15;
 	},
 	determineThermalIndexValue: function( cold, heat, index ){
 		let value = cold > heat ? -cold : heat;
