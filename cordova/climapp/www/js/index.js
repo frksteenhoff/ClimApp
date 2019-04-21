@@ -494,7 +494,7 @@ var app = {
 			showShortToast("Unable to fetch app ID.. if this persists contact Henriette");
 			appidFromServer = "f22065144b2119439a589cbfb9d851d3";//until db thing is fixed;
 			// Henriette: this is not a problemm -- the app ID is fetched, there seems to be sometimes where this does not happen but the implementation is correct,
-			//Boris: yes, the implementation is correct, but some dependencies are probably violated, otherwise it should work always. Let's learn what bug causing dependency is. 
+			//Boris: yes, the implementation is correct, but some dependencies are probably violated, otherwise it should work always. Let's learn what bug causing dependency is. For instance, is it the " self.knowledgeBase.user_info.hasExternalDBRecord ?"
 		}
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
@@ -599,12 +599,21 @@ var app = {
 						};	
 		var self = this;
 		$.each( this.knowledgeBase.weather.temperature, function(index, val ){
+			
+			var Tg= self.knowledgeBase.weather.globetemperature[index];
+			var Ta = self.knowledgeBase.weather.temperature[index];
+			var va = self.knowledgeBase.weather.windspeed[index];
+			var D = 0.15; //diameter black globe 
+			var eps_g = 0.95; //standard emmisivity black bulb
+			var Tmrt_mid = (1.1 * Math.pow(10,8) * Math.pow( va, 0.6 ) ) / (eps_g * Math.pow(D,0.4));
+			
+			var Tmrt = Math.pow( Math.pow((Tg+273.0), 4) + Tmrt_mid * (Tg-Ta), 0.25 ) - 273.0;
 			options.air = {
 							"Tair": self.knowledgeBase.weather.temperature[index], 	//C
 							"rh": 	self.knowledgeBase.weather.humidity[index], 	//% relative humidity
 							"Pw_air": self.knowledgeBase.weather.watervapourpressure[index],   //kPa partial water vapour pressure
-							"Trad": self.knowledgeBase.weather.globetemperature[index], 	//C mean radiant temperature
-							"v_air": self.knowledgeBase.weather.windspeed[index], 	//m/s air velocity at ground level
+							"Trad": Tmrt, 	//C mean radiant temperature
+							"v_air": self.knowledgeBase.weather.windspeed[index], 	//m/s air velocity at 10m.
 			};
 			heatindex.IREQ.set_options( options );
 			heatindex.IREQ.sim_run();
