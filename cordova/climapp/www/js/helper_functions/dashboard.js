@@ -86,7 +86,7 @@ function windchillTips(index, kb) {
 	if( windchill <
 		( kb.thermalindices.ireq[index].Tair -
 			kb.thresholds.windchill.deltaT )){
-                str += "<p>Winchill is " + windchill.toFixed(0) + 
+                str += "<p>Windchill is " + windchill.toFixed(0) + 
                 "&deg;, you could wear a windstopper to combat cold stress.</p>";
 	}
 	else if(kb.thermalindices.ireq[index].ICLminimal >
