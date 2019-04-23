@@ -485,7 +485,7 @@ var app = {
 		if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
 			createUserRecord(self.knowledgeBase);
 		}
-		const appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
+		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
 
 
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
@@ -913,7 +913,7 @@ var app = {
 			});
 			$("#current_time").html( local_time );
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
-			$("#temperature").html( this.getTemperatureInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair).toFixed(0) +"&#xb0" );
+			$("#temperature").html( getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair, this.knowledgeBase.settings.unit.value).toFixed(0) +"&#xb0");
 			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[index].v_air.toFixed(0) );
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.settings.unit.value)); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
@@ -1003,15 +1003,6 @@ var app = {
 		});
 		
 		gauge.draw();
-	}, 
-	getTemperatureInPreferredUnit: function(temp) {
-		let self = this;
-		let unit = self.knowledgeBase.settings.unit.value;
-		if(unit === "US") {
-			return temp * 9/5 + 32;
-		} else {
-			return temp;
-		}
 	},
 };
 

@@ -22,6 +22,14 @@ function getTemperatureUnit(unit) {
     return unit === "US" ? "Fahrenheit" : "Celcius";
 }
 
+function getTemperatureValueInPreferredUnit(temp, unit) {
+	if(unit === "US") {
+		return temp * 9/5 + 32;
+	} else {
+		return temp;
+	}
+}
+
 function windchillRisk(windchill) {
     if( windchill <-50 ){
         return 2;
@@ -134,3 +142,4 @@ function neutralTips() {
 	return tips[i];
 }
 
+module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, windchillTips, phsTips, neutralTips};

@@ -7,7 +7,11 @@ function getCalculatedHeightValue(unit, height) {
 }
 
 function getHeightUnit(unit) {
-    return unit === "SI" ? "cm" : "feet";
+    if(["SI", "UK", "US"].includes(unit)) {
+        return unit === "SI" ? "cm" : "feet";
+    } else {
+        return "Wrong unit";
+    }
 }
 
 function getCalculatedWeightValue(unit, weight) {
@@ -38,3 +42,5 @@ function deviceID() {
 function getGenderAsInteger(kb) {
     return kb.settings.gender.value === 'Male' ? 1 : 0;
 }
+
+module.exports = { getCalculatedHeightValue, getHeightUnit, getCalculatedWeightValue, getWeightUnit, deviceID, getGenderAsInteger };
