@@ -38,6 +38,7 @@ var app = {
     onDeviceReady: function() {
 		window.onerror = function(message, url, lineNumber) {
 		        console.log("Error: "+message+" in "+url+" at line "+lineNumber);
+				showShortToast("Whoops... something went wrong at: " + lineNumber);
 		    }
         this.receivedEvent('deviceready');
 		
@@ -46,13 +47,14 @@ var app = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
 		this.loadSettings();
-		if( this.knowledgeBase.user_info.firstLogin ){//onboarding
+		if( this.knowledgeBase.user_info.isFirstLogin ){//onboarding
 			this.loadUI( "onboarding" );
 		}
 		else{
 			this.loadUI( "dashboard" );
 		}
 		this.updateLocation();
+		this.saveSettings();
     },
 	initNavbarListeners: function(){
 		// navigation menu
@@ -60,13 +62,11 @@ var app = {
 		$("div[data-listener='navbar']").off();
 		$("div[data-listener='navbar']").on("click", function(){
 			let target = $( this ).attr("data-target");
-			
+			self.knowledgeBase.user_info.isFirstLogin = 0;
+		    self.saveSettings();
 			if(self.firstTimeLoginWithoutPersonalization(target)) {
 				showShortToast("Using default values in calculations.");
 			}
-			
-			self.knowledgeBase.user_info.firstLogin = false;
-		    self.saveSettings();
 			self.loadUI( target );
 		});
 	},
@@ -175,7 +175,7 @@ var app = {
 			self.knowledgeBase.settings.height.value = 178;
 			self.knowledgeBase.settings.weight.value = 82;
 			self.knowledgeBase.settings.unit.value = "SI";
-			self.knowledgeBase.user_info.firstLogin = true;
+			//self.knowledgeBase.user_info.isFirstLogin = true;
 
 			// Inform user about event in toast
 			var notificationText = "Personal preferences reset, using default values.";
@@ -222,11 +222,19 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-		return {  "version": 1.1,
-						"position": { "lat": 0, 
+			return {"version": 1.3,
+					"user_info": {
+							"isFirstLogin": 1,
+							"hasExternalDBRecord": 0,
+							"receivesNotifications": 0, // false as notifications are not part of the app
+							"dtu_ip": "http://192.38.64.244",
+							"dtu_api_base_url": "/ClimAppAPI/v1/ClimAppApi.php?apicall="
+					},
+					"position": { "lat": 0, 
 									 "lng": 0, 
-									 "timestamp": "" },
-					   "weather": {	"station": "",
+									 "timestamp": "" 
+				    },
+					"weather": {	"station": "",
 									"lat": 0,
 									"lng": 0,
 								    "distance": -1,
@@ -310,13 +318,6 @@ var app = {
 							},
 							"comment": ""
 						},
-						"user_info": {
-							"firstLogin": true,
-							"hasExternalDBRecord": false,
-							"receivesNotifications": false, // false as notifications are not part of the app
-							"dtu_ip": "http://192.38.64.244",
-							"dtu_api_base_url": "/ClimAppAPI/v1/ClimAppApi.php?apicall="
-						},
 						"thermalindices":{ 
 									"ireq":[//array of objects
 										{ 	"ICLminimal":0.0,
@@ -377,18 +378,19 @@ var app = {
 			this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
 			if ( 'version' in this.knowledgeBase && this.knowledgeBase.version < shadowKB.version ){
 				this.knowledgeBase = this.initKnowledgeBase();
-				console.log("knowledgebase updated to version : " + shadowKB.version );
+				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
+				showShortToast("knowledgebase updated to version : " + this.knowledgeBase.version);
 				
 			}
 			else{
-				this.knowledgeBase = this.initKnowledgeBase();
-				console.log("loaded knowledgebase version : " + shadowKB.version );
-				
+				console.log("loaded knowledgebase version : " + this.knowledgeBase.version );
+				showShortToast("loaded knowledgebase version : " + this.knowledgeBase.version);
 			}
 		}
 		else{
 			this.knowledgeBase =this.initKnowledgeBase();	
-			console.log("created knowledgebase version : " + shadowKB.version );
+			console.log("created knowledgebase version : " + this.knowledgeBase.version );
+			showShortToast("created knowledgebase version : " + this.knowledgeBase.version );
 					
 		}
 		this.saveSettings();
@@ -408,7 +410,7 @@ var app = {
 	},*/
 	firstTimeLoginWithoutPersonalization: function(target){
 		var self = this;
-		return self.knowledgeBase.user_info.firstLogin && target === 'dashboard';
+		return self.knowledgeBase.user_info.isFirstLogin && target === 'dashboard';
 	},
 	getSelectables: function( key ){
 		var self = this;
@@ -453,9 +455,10 @@ var app = {
 		return obj_array;
 	},
 	saveSettings: function(){
-		localStorage.clear();
 		let jsonData = JSON.stringify( this.knowledgeBase );
 		localStorage.setItem("knowledgebase", jsonData );
+		//showShortToast("saved settings: " + jsonData );
+		$("#content").append( typeof this.knowledgeBase.user_info.isFirstLogin + " " +  this.knowledgeBase.user_info.isFirstLogin);	
 	},
 	updateLocation: function(){
 		//$('i.fa-sync-alt').toggleClass("fa-spin");
@@ -491,9 +494,12 @@ var app = {
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
-			showShortToast("Unable to fetch app ID.. if this persists contact Henriette");
-			appidFromServer = "f22065144b2119439a589cbfb9d851d3";//until db thing is fixed;
-			// this is not a problemm -- the app ID is fetched, there seems to be sometimes where this does not happen but the implementation is correct,
+			
+			showShortToast(appidFromServer + " id received, yet no hasExternalDBRecord");
+			
+			//appidFromServer = "f22065144b2119439a589cbfb9d851d3";//until db thing is fixed;
+			// Henriette: this is not a problemm -- the app ID is fetched, there seems to be sometimes where this does not happen but the implementation is correct,
+			//Boris: yes, the implementation is correct, but some dependencies are probably violated, otherwise it should work always. Let's learn what bug causing dependency is. For instance, is it the " self.knowledgeBase.user_info.hasExternalDBRecord ?"
 		}
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
@@ -536,8 +542,15 @@ var app = {
 					   self.calcThermalIndices();
 					   self.updateUI();
 							  
-					   // Only update when weather data has been received
-						addWeatherDataToDB(self.knowledgeBase);
+					   // Only update when weather data has been received - and when external DB record is present.
+					   if( self.knowledgeBase.user_info.hasExternalDBRecord ){
+					   		addWeatherDataToDB(self.knowledgeBase);
+					   }
+					   else{
+			   			showShortToast("cannot store weather on ClimApp server");
+					   		
+					   }
+						
 				   }
 				   catch( error ){
 					   console.log( error );
@@ -598,12 +611,21 @@ var app = {
 						};	
 		var self = this;
 		$.each( this.knowledgeBase.weather.temperature, function(index, val ){
+			
+			var Tg= self.knowledgeBase.weather.globetemperature[index];
+			var Ta = self.knowledgeBase.weather.temperature[index];
+			var va = self.knowledgeBase.weather.windspeed[index];
+			var D = 0.15; //diameter black globe 
+			var eps_g = 0.95; //standard emmisivity black bulb
+			var Tmrt_mid = (1.1 * Math.pow(10,8) * Math.pow( va, 0.6 ) ) / (eps_g * Math.pow(D,0.4));
+			
+			var Tmrt = Math.pow( Math.pow((Tg+273.0), 4) + Tmrt_mid * (Tg-Ta), 0.25 ) - 273.0;
 			options.air = {
 							"Tair": self.knowledgeBase.weather.temperature[index], 	//C
 							"rh": 	self.knowledgeBase.weather.humidity[index], 	//% relative humidity
 							"Pw_air": self.knowledgeBase.weather.watervapourpressure[index],   //kPa partial water vapour pressure
-							"Trad": self.knowledgeBase.weather.globetemperature[index], 	//C mean radiant temperature
-							"v_air": self.knowledgeBase.weather.windspeed[index], 	//m/s air velocity at ground level
+							"Trad": Tmrt, 	//C mean radiant temperature
+							"v_air": self.knowledgeBase.weather.windspeed[index], 	//m/s air velocity at 10m.
 			};
 			heatindex.IREQ.set_options( options );
 			heatindex.IREQ.sim_run();
@@ -886,14 +908,14 @@ var app = {
 		}
 	},
 	isDrawColdGauge: function( cold, heat, index ){
-		return cold >= heat;
-				// && 
-				//cold >= this.knowledgeBase.thresholds.ireq &&
-				//this.knowledgeBase.thermalindices.ireq[ index].Tair <= 15;
+		return cold >= heat
+			   && 
+			   cold >= this.knowledgeBase.thresholds.ireq &&
+			   this.knowledgeBase.thermalindices.ireq[ index].Tair <= 15;
 	},
 	isDrawHeatGauge: function( cold, heat, index ){
- 	   return heat > cold;
-			//&& this.knowledgeBase.weather.wbgt[ index ] >= 20;
+ 	   return heat > cold
+		      && this.knowledgeBase.weather.wbgt[ index ] > 15;
 	},
 	determineThermalIndexValue: function( cold, heat, index ){
 		let value = cold > heat ? -cold : heat;
