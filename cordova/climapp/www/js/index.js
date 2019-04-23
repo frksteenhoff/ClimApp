@@ -900,6 +900,11 @@ var app = {
 			$("#question2").html( this.knowledgeBase.feedback.question2.text );
 			$("#question3").html( this.knowledgeBase.feedback.question3.text );
 
+			// Set rating bar text (under feedback buttons) using last given feedback
+			$("#ratingtext1").html( this.knowledgeBase.feedback.question1.ratingtext[this.knowledgeBase.feedback.question1.rating] );
+			$("#ratingtext2").html( this.knowledgeBase.feedback.question2.ratingtext[this.knowledgeBase.feedback.question2.rating] );
+			$("#ratingtext3").html( this.knowledgeBase.feedback.question3.ratingtext[this.knowledgeBase.feedback.question3.rating] );
+
 			// Rating bar values -- still not setting the default color..
 			$("input[id='1star"+this.knowledgeBase.feedback.question1.rating+"']").attr("checked", true);
 			$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").attr("checked", true);
