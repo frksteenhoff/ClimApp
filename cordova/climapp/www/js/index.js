@@ -103,7 +103,7 @@ var app = {
 			
 			// If user not in database, add user to database
 			if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
-				createUserRecord(self.knowledgeBase);
+				knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
 			} 
 			// Add feedback to database
 			addFeedbackToDB(self.knowledgeBase.feedback);
@@ -379,18 +379,18 @@ var app = {
 			if ( 'version' in this.knowledgeBase && this.knowledgeBase.version < shadowKB.version ){
 				this.knowledgeBase = this.initKnowledgeBase();
 				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
-				showShortToast("knowledgebase updated to version : " + this.knowledgeBase.version);
+				//showShortToast("knowledgebase updated to version : " + this.knowledgeBase.version);
 				
 			}
 			else{
 				console.log("loaded knowledgebase version : " + this.knowledgeBase.version );
-				showShortToast("loaded knowledgebase version : " + this.knowledgeBase.version);
+				//showShortToast("loaded knowledgebase version : " + this.knowledgeBase.version);
 			}
 		}
 		else{
 			this.knowledgeBase =this.initKnowledgeBase();	
 			console.log("created knowledgebase version : " + this.knowledgeBase.version );
-			showShortToast("created knowledgebase version : " + this.knowledgeBase.version );
+			//showShortToast("created knowledgebase version : " + this.knowledgeBase.version );
 					
 		}
 		this.saveSettings();
@@ -486,7 +486,7 @@ var app = {
 		var self = this;
 		
 		if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
-			createUserRecord(self.knowledgeBase);
+			self.knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
 		}
 		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
 
@@ -494,8 +494,7 @@ var app = {
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
-			
-			showShortToast(appidFromServer + " id received, yet no hasExternalDBRecord");
+			showShortToast(appidFromServer + " id received, yet no hasExternalDBRecord or couldn't fetch appid");
 			
 			//appidFromServer = "f22065144b2119439a589cbfb9d851d3";//until db thing is fixed;
 			// Henriette: this is not a problemm -- the app ID is fetched, there seems to be sometimes where this does not happen but the implementation is correct,
@@ -942,7 +941,7 @@ var app = {
 		
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
 			let cold_index = icl_min;
-			let heat_index = WBGTrisk( this.knowledgeBase.thermalindices.phs[index].wbgt, self.knowledgeBase );
+			let heat_index = WBGTrisk( this.knowledgeBase.thermalindices.phs[index].wbgt, this.knowledgeBase );
 		
 			let draw_cold_gauge = this.isDrawColdGauge( cold_index, heat_index, index );
 			let draw_heat_gauge = this.isDrawHeatGauge( cold_index, heat_index, index );
@@ -962,7 +961,6 @@ var app = {
 			
 			let windowsize = $( window ).width();
 			let width = windowsize / 2;
-		
 			let value = this.determineThermalIndexValue( cold_index, heat_index, index );
 			let thermal = draw_cold_gauge ? "cold" : "heat";
 			this.drawGauge( 'main_gauge', width, value , thermal );
@@ -980,7 +978,6 @@ var app = {
 			ctx.canvas.height = width;
 			ctx.canvas.width = width;
 		}
-		
 		var title = key === "cold" ? gaugeTitleCold( Math.abs(value)) : gaugeTitleHeat( Math.abs(value));
 		var highlights =  this.knowledgeBase.gauge.highlights;
 		var gauge = new RadialGauge({

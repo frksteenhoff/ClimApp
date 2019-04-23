@@ -178,7 +178,7 @@ img.small{
 
 #tips, 
 #forecasts {
-    margin-top: 0.5em;
+    margin-top: 0.1em;
     margin-bottom: 0.5em;
 }
 
@@ -349,6 +349,7 @@ p.strongtext {
 	font-size: 1em;
     font-weight: bold;
     margin:0;
+    margin-bottom: 1em;
 }
 
 p.rating_text {
@@ -404,11 +405,13 @@ div.inputcontainer{
 	text-align:center;
 }
 #feedback_text{
-	width: 80%;
+    width: 80%;
+    font-size: 1em;
 }
 
 div.inputcontainer div.button {
-	width: 50%;
+    width: 50%;
+    font-size: 1em;
 	margin: 2em auto;
 	text-align: center;
     background: #7EBFE5;

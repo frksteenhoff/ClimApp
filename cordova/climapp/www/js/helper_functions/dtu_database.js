@@ -38,7 +38,9 @@ function createUserRecord(kb){
         if(status === "success") {
             console.log("Database update, user: " + data);
             // Only update this value if user has been added to database
-            kb.user_info.hasExternalDBRecord = true;
+            return true;
+        } else {
+            return false;
         }
     });
 }
