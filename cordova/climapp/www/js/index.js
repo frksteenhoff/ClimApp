@@ -498,7 +498,7 @@ var app = {
 			   data, 
 			   function( output ){//on success
 				   try{
-					   console.log( JSON.stringify( output ) );
+					   //returns current weather by default in key "weather.currentweather"
 				       let weather = JSON.parse( output );
 					   self.knowledgeBase.weather.station = weather.station;
 					   self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
