@@ -222,7 +222,7 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.3,
+			return {"version": 1.5,
 					"user_info": {
 							"isFirstLogin": 1,
 							"hasExternalDBRecord": 0,
@@ -319,20 +319,8 @@ var app = {
 							"comment": ""
 						},
 						"thermalindices":{ 
-									"ireq":[//array of objects
-										{ 	"ICLminimal":0.0,
-				  						    "ICLneutral": 0.0,
-						 				    "DLEneutral": 0.0,
-											"DLEminimal": 0.0,
-											"utc":"2019/12/31 00:00:00",
-										}],
-								  	"phs": [//array of objects
-										{ 
-											"D_Tre" : 0.0,
-										   	"Dwl50": 0.0,
-										   	"SWtotg": 0.0,
-										    "utc":"2019/12/31 00:00:00",
-								  		}],
+									"ireq":[],
+								  	"phs": [],
 						},
 						"gauge":{
 							"highlights":[//color also in CSS, keep consistent
@@ -382,9 +370,14 @@ var app = {
 				showShortToast("knowledgebase updated to version : " + this.knowledgeBase.version);
 				
 			}
-			else{
+			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
 				console.log("loaded knowledgebase version : " + this.knowledgeBase.version );
 				showShortToast("loaded knowledgebase version : " + this.knowledgeBase.version);
+			}
+			else{ //old version does not have version key
+				this.knowledgeBase = this.initKnowledgeBase();
+				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
+				showShortToast("knowledgebase updated to version : " + this.knowledgeBase.version);
 			}
 		}
 		else{
@@ -457,8 +450,6 @@ var app = {
 	saveSettings: function(){
 		let jsonData = JSON.stringify( this.knowledgeBase );
 		localStorage.setItem("knowledgebase", jsonData );
-		//showShortToast("saved settings: " + jsonData );
-		//$("#content").append( typeof this.knowledgeBase.user_info.isFirstLogin + " " +  this.knowledgeBase.user_info.isFirstLogin);	
 	},
 	updateLocation: function(){
 		//$('i.fa-sync-alt').toggleClass("fa-spin");
@@ -494,12 +485,7 @@ var app = {
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
-			
-			showShortToast(appidFromServer + " id received, yet no hasExternalDBRecord");
-			
-			//appidFromServer = "f22065144b2119439a589cbfb9d851d3";//until db thing is fixed;
-			// Henriette: this is not a problemm -- the app ID is fetched, there seems to be sometimes where this does not happen but the implementation is correct,
-			//Boris: yes, the implementation is correct, but some dependencies are probably violated, otherwise it should work always. Let's learn what bug causing dependency is. For instance, is it the " self.knowledgeBase.user_info.hasExternalDBRecord ?"
+			showShortToast(appidFromServer + " id received, yet no hasExternalDBRecord");			
 		}
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
@@ -925,9 +911,9 @@ var app = {
 	},
 	updateInfo: function( index ){
 		this.selectedWeatherID = index;
-		if( 'weather' in this.knowledgeBase && this.knowledgeBase.weather.station !== "" ){
+		if( this.knowledgeBase.thermalindices.ireq.length > 0 ){
 			let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
-			console.log( "utc: "+ index );
+			console.log( "ireq: "+ JSON.stringify( this.knowledgeBase.thermalindices.ireq[index]) );
 			let utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ index ].utc ); //
 			let local_time = utc_date.toLocaleTimeString(navigator.language, { //language specific setting
 					hour: '2-digit',
