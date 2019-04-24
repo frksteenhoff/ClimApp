@@ -458,7 +458,7 @@ var app = {
 		let jsonData = JSON.stringify( this.knowledgeBase );
 		localStorage.setItem("knowledgebase", jsonData );
 		//showShortToast("saved settings: " + jsonData );
-		$("#content").append( typeof this.knowledgeBase.user_info.isFirstLogin + " " +  this.knowledgeBase.user_info.isFirstLogin);	
+		//$("#content").append( typeof this.knowledgeBase.user_info.isFirstLogin + " " +  this.knowledgeBase.user_info.isFirstLogin);	
 	},
 	updateLocation: function(){
 		//$('i.fa-sync-alt').toggleClass("fa-spin");
