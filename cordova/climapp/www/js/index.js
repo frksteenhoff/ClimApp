@@ -850,7 +850,6 @@ var app = {
 			
 			let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
 			let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
-			let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 			let tip_html = "";
 			if( draw_cold_gauge || ( isNeutral && icl_min > heat_index ) ) {
 				tip_html += coldLevelTips( index, 2, this.knowledgeBase );
