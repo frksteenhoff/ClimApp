@@ -38,6 +38,7 @@ var app = {
     onDeviceReady: function() {
 		window.onerror = function(message, url, lineNumber) {
 		        console.log("Error: "+message+" in "+url+" at line "+lineNumber);
+				showShortToast("Whoops... something went wrong at: " + lineNumber);
 		    }
         this.receivedEvent('deviceready');
 		
@@ -46,13 +47,14 @@ var app = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
 		this.loadSettings();
-		if( this.knowledgeBase.user_info.firstLogin ){//onboarding
+		if( this.knowledgeBase.user_info.isFirstLogin ){//onboarding
 			this.loadUI( "onboarding" );
 		}
 		else{
 			this.loadUI( "dashboard" );
 		}
 		this.updateLocation();
+		this.saveSettings();
     },
 	initNavbarListeners: function(){
 		// navigation menu
@@ -60,12 +62,11 @@ var app = {
 		$("div[data-listener='navbar']").off();
 		$("div[data-listener='navbar']").on("click", function(){
 			let target = $( this ).attr("data-target");
-			
+			self.knowledgeBase.user_info.isFirstLogin = 0;
+		    self.saveSettings();
 			if(self.firstTimeLoginWithoutPersonalization(target)) {
 				showShortToast("Using default values in calculations.");
 			}
-			
-			self.knowledgeBase.user_info.firstLogin = false;
 			self.loadUI( target );
 		});
 	},
@@ -90,6 +91,8 @@ var app = {
 				$("#ratingtext3").html( self.knowledgeBase.feedback.question3.ratingtext[self.knowledgeBase.feedback.question3.rating] );
 			}
 			$( "input[data-listener='feedback']" ).removeClass( "checked" );
+		    self.saveSettings();
+			
 		});
 		
 		// When user submits feedback, add to object to send to db + reset values
@@ -100,7 +103,7 @@ var app = {
 			
 			// If user not in database, add user to database
 			if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
-				createUserRecord(self.knowledgeBase);
+				knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
 			} 
 			// Add feedback to database
 			addFeedbackToDB(self.knowledgeBase.feedback);
@@ -115,7 +118,7 @@ var app = {
 	initSettingsListeners: function(){
 		var self = this;
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='wheel']").on("touchstart", function(){
+		$("div[data-listener='wheel']").on("click", function(){
 			var target = $(this).attr("data-target");
 			let title_ = self.knowledgeBase.settings[target].title;
 			var items_ = self.getSelectables( target );
@@ -138,45 +141,43 @@ var app = {
 			    console.log('Canceled');
 			});
 		});		
-
-		$("input[data-listener='notification_switch']").off(); //prevent multiple instances of listeners on same object
-		$("input[data-listener='notification_switch']").on("click", function(){
-			var isChecked = $(this).is(":checked");
-			self.knowledgeBase.user_info.receivesNotifications = isChecked;
-
-			// Inform user about choice in toast
-			var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
-			showShortToast(notificationText);
+		$("div[data-listener='wheel']").on("swipeleft", function(){
+			window.SelectorCordovaPlugin.hideSelector(); // hide selector so that it is not shown in dashboard (only working on iOS)
+			self.loadUI("dashboard");
 		});
 
-		$("div[data-listener='feedback_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='feedback_page']").on("touchstart", function(){
-			self.loadUI('feedback');
+		$("div[data-listener='tab']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='tab']").on("click", function(){
+			var target = $(this).attr("data-target");
+			
+			if(target === "reset") {
+				// Resetting values to default
+				self.knowledgeBase.settings.age.value = 30;
+				self.knowledgeBase.settings.gender.value = "undefined";
+				self.knowledgeBase.settings.height.value = 178;
+				self.knowledgeBase.settings.weight.value = 82;
+				self.knowledgeBase.settings.unit.value = "SI";
+
+				// Inform user about event in toast
+				var notificationText = "Personal preferences reset, using default values.";
+				showShortToast(notificationText);
+
+			} else if(target === "notification_switch") {
+				var isChecked = $(this).is(":checked");
+				self.knowledgeBase.user_info.receivesNotifications = isChecked;
+
+				// Inform user about choice in toast
+				var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
+				showShortToast(notificationText);
+
+			} else {
+				self.loadUI(target);
+			}
 		});
-
-		$("div[data-listener='disclaimer_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='disclaimer_page']").on("touchstart", function(){
-			self.loadUI('disclaimer');
-		});
-
-		$("div[data-listener='about_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='about_page']").on("touchstart", function(){
-			self.loadUI('about');
-		});
-
-		$("div[data-listener='reset_preferences']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='reset_preferences']").on("touchstart", function(){
-			// Resetting values to default
-			self.knowledgeBase.settings.age.value = 30;
-			self.knowledgeBase.settings.gender.value = "undefined";
-			self.knowledgeBase.settings.height.value = 178;
-			self.knowledgeBase.settings.weight.value = 82;
-			self.knowledgeBase.settings.unit.value = "SI";
-			self.knowledgeBase.user_info.firstLogin = true;
-
-			// Inform user about event in toast
-			var notificationText = "Personal preferences reset, using default values.";
-			showShortToast(notificationText);
+		// Always add ability to swipe
+		$("div[data-listener='tab']").on("swipeleft", function(){
+			window.SelectorCordovaPlugin.hideSelector(); // hide selector so that it is not shown in dashboard
+			self.loadUI("dashboard");
 		});
 	},
 	initGeolocationListeners: function(){
@@ -206,6 +207,14 @@ var app = {
 			
 		});		
 	},
+	initDashboardSwipeListeners: function() {
+		var self = this;
+		$("div[data-listener='panel']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='panel']").on("swiperight", function(){
+			var target = $(this).attr("data-target");
+			self.loadUI(target);
+		});
+	},
 	initActivityListeners: function(){
 		var self = this;
 		$("div[data-listener='activity']").off(); //prevent multiple instances of listeners on same object
@@ -218,6 +227,140 @@ var app = {
 			self.updateUI();
 		});	
 	},
+	initKnowledgeBase: function(){
+<<<<<<< HEAD
+			return {"version": 1.4,
+					"app_version": "beta",
+=======
+			return {"version": 1.6,
+>>>>>>> dev_boris
+					"user_info": {
+							"isFirstLogin": 1,
+							"hasExternalDBRecord": 0,
+							"receivesNotifications": 0, // false as notifications are not part of the app
+							"dtu_ip": "http://192.38.64.244",
+							"dtu_api_base_url": "/ClimAppAPI/v1/ClimAppApi.php?apicall="
+					},
+					"position": { "lat": 0, 
+									 "lng": 0, 
+									 "timestamp": "" 
+				    },
+					"weather": {	"station": "",
+									"lat": 0,
+									"lng": 0,
+								    "distance": -1,
+									"utc": [""],
+									"wbgt": [-99],
+									"windchill": [-99],
+ 									"temperature": [-99],
+									"globetemperature": [-99],
+								    "humidity": [-99],
+									"watervapourpressure": [-99],
+									"windspeed": [-99],
+									"radiation": [-99]
+						},
+					  "settings": { "age": {"title": "What is your age?",
+											"value": 36,
+											"unit": "years"
+									 },
+									 "height": {"title": "What is your height?",
+												"value": 186
+									},
+									 "weight": {"title": "What is your weight?",
+												"value": 82
+									},
+									 "gender": {"title": "What is your gender?",
+												"value": "Male"
+									},
+									 "unit": { "title": "Which units of measurements would you prefer?",
+												 "value": "SI" 
+											} // default SI units
+					   },
+					  "activity": { "label": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
+										 		"low":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
+										 		"medium":"Walking 2.5 - 5.5km/h. Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.",
+											 	"high":"Intense arm and trunk work: carrying heavy material, shovelling, sawing, hand mowing, concrete block laying.",
+												"intense":"Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs, running on level surface." 
+									},
+									"values": { "rest": 1, //ISO 8896
+												"low": 2,
+												"medium": 3,
+												"high": 4,
+												"intense": 5
+									},	
+									"selected": "low",	
+								},
+						"feedback": { 
+							"question1": { 
+								"text": "How were your drinking needs?",
+								"rating": 3, 
+								"ratingtype": "ratingbar",
+								"ratingtext": {
+									"1": "Much lower than expected",
+									"2": "Lower than expected",
+								    "3": "Normal",
+							        "4": "Higher than expected",
+							        "5": "Much higher than expected"
+								},
+							}, 
+							"question2": {
+								"text": "Did you take more breaks today than you expected?",
+								"rating": 3, 
+								"ratingtype": "ratingbar",
+								"ratingtext": {
+									"1": "Not exhausted at all",
+									"2": "Less exhausted than usual",
+									"3": "Normal",
+									"4": "More exhausted than usual",
+									"5": "A lot more exhausted than usual"
+								},
+							},
+							"question3": {
+								"text": "How would you evaluate the amount of clothing you wore today?",
+								"rating": 3, 
+								"ratingtype": "ratingbar",
+								"ratingtext": {
+									"1": "Much less than needed",
+									"2": "Less than needed",
+									"3": "I wore the right amount of clothing",
+									"4": "A little too much clothing",
+									"5": "A lot more than needed"
+								},
+							},
+							"comment": ""
+						},
+						"thermalindices":{ 
+									"ireq":[],
+								  	"phs": [],
+						},
+						"gauge":{
+							"highlights":[//color also in CSS, keep consistent
+						        { from: 3, to: 4, color:  'rgba(180,0,0,.9)', css:'veryhot'},
+						        { from: 2, to: 3, color: 'rgba(255,100,0,.9)', css:'hot'},
+						        { from: 1, to: 2, color: 'rgba(220,220,0,.9)', css:'warm'},
+						        { from: -1, to: 1, color: 'rgba(0,180,0,.9)', css:'neutral' },
+						        { from: -2, to: -1, color:  'rgba(0,180,180,.9)', css:'cool' },
+								{ from: -3, to: -2, color: 'rgba(0,100,255,.9)', css:'cold' },
+								{ from: -4, to: -3, color: 'rgba(0,0,180,.9)', css:'verycold' }
+							]
+						},
+						"thresholds":{
+							"ireq":{
+								"icl": 1.0 //ireq > "icl-value" -> 
+							},
+							"phs":{
+								"duration": 120, //duration limit <= "icl-value" -> 
+								"sweat":1.0,     //sweat rate per hour >= "icl-value" ->
+							},
+							"windchill":{
+								"deltaT": 5
+							}	
+						},
+						"sim":{
+							"duration": 240, //minutes (required for PHS)
+						},
+					};
+	},
 	loadSettings: function(){
 		this.pageMap = { "dashboard": "./pages/dashboard.html",
 						 "settings": "./pages/settings.html",
@@ -228,149 +371,33 @@ var app = {
 		 				 "about": "./pages/about.html"};
 		
 		//localStorage.clear(); // Need to clear local storage when doing the update
+		var shadowKB = this.initKnowledgeBase();
 		if ( localStorage.getItem("knowledgebase") !== null ) {
+			
 			this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
+			if ( 'version' in this.knowledgeBase && this.knowledgeBase.version < shadowKB.version ){
+				this.knowledgeBase = this.initKnowledgeBase();
+				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
+				//showShortToast("knowledgebase updated to version : " + this.knowledgeBase.version);
+				
+			}
+			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
+				console.log("loaded knowledgebase version : " + this.knowledgeBase.version );
+				//showShortToast("loaded knowledgebase version : " + this.knowledgeBase.version);
+			}
+			else{ //old version does not have version key
+				this.knowledgeBase = this.initKnowledgeBase();
+				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
+				showShortToast("knowledgebase updated to version : " + this.knowledgeBase.version);
+			}
 		}
 		else{
-			var self = this;
-			this.knowledgeBase = {  "position": { "lat": 0, 
-												 "lng": 0, 
-												 "timestamp": "" },
-								   "weather": {	"station": "",
-												"lat": 0,
-												"lng": 0,
-											    "distance": -1,
-												"utc": [""],
-												"wbgt": [-99],
-												"windchill": [-99],
-			 									"temperature": [-99],
-												"globetemperature": [-99],
-											    "humidity": [-99],
-												"watervapourpressure": [-99],
-												"windspeed": [-99],
-												"radiation": [-99]
-									},
-								  "settings": { "age": {"title": "What is your age?",
-														"value": 36,
-														"unit": "years"
-												 },
-												 "height": {"title": "What is your height?",
-															"value": 186
-												},
-												 "weight": {"title": "What is your weight?",
-															"value": 82
-												},
-												 "gender": {"title": "What is your gender?",
-															"value": "Male"
-												},
-												 "unit": { "title": "Which units of measurements would you prefer?",
-															 "value": "SI" 
-														} // default SI units
-								   },
-								  "activity": { "label": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
-													 		"low":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
-													 		"medium":"Walking 2.5 - 5.5km/h. Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.",
-														 	"high":"Intense arm and trunk work: carrying heavy material, shovelling, sawing, hand mowing, concrete block laying.",
-															"intense":"Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs, running on level surface." 
-												},
-												"values": { "rest": 1, //ISO 8896
-															"low": 2,
-															"medium": 3,
-															"high": 4,
-															"intense": 5
-												},	
-												"selected": "low",	
-											},
-									"feedback": { 
-										"question1": { 
-											"text": "How were your drinking needs?",
-											"rating": 3, 
-											"ratingtype": "ratingbar",
-											"ratingtext": {
-												"1": "Much lower than expected",
-    											"2": "Lower than expected",
-											    "3": "Normal",
-										        "4": "Higher than expected",
-										        "5": "Much higher than expected"
-											},
-										}, 
-										"question2": {
-											"text": "Did you take more breaks today than you expected?",
-											"rating": 3, 
-											"ratingtype": "ratingbar",
-											"ratingtext": {
-												"1": "Not exhausted at all",
-												"2": "Less exhausted than usual",
-												"3": "Normal",
-												"4": "More exhausted than usual",
-												"5": "A lot more exhausted than usual"
-											},
-										},
-										"question3": {
-											"text": "How would you evaluate the amount of clothing you wore today?",
-											"rating": 3, 
-											"ratingtype": "ratingbar",
-											"ratingtext": {
-												"1": "Much less than needed",
-												"2": "Less than needed",
-												"3": "I wore the right amount of clothing",
-												"4": "A little too much clothing",
-												"5": "A lot more than needed"
-											},
-										},
-										"comment": ""
-									},
-									"user_info": {
-										"firstLogin": true,
-										"hasExternalDBRecord": false,
-										"receivesNotifications": false, // false as notifications are not part of the app
-										"dtu_ip": "http://192.38.64.244",
-										"dtu_api_base_url": "/ClimAppAPI/v1/ClimAppApi.php?apicall="
-									},
-									"thermalindices":{ 
-												"ireq":[//array of objects
-													{ 	"ICLminimal":0.0,
-							  						    "ICLneutral": 0.0,
-									 				    "DLEneutral": 0.0,
-														"DLEminimal": 0.0,
-														"utc":"2019/12/31 00:00:00",
-													}],
-											  	"phs": [//array of objects
-													{ 
-														"D_Tre" : 0.0,
-													   	"Dwl50": 0.0,
-													   	"SWtotg": 0.0,
-													    "utc":"2019/12/31 00:00:00",
-											  		}],
-									},
-									"gauge":{
-										"highlights":[//color also in CSS, keep consistent
-									        { from: 3, to: 4, color:  'rgba(180,0,0,.9)', css:'veryhot'},
-									        { from: 2, to: 3, color: 'rgba(255,100,0,.9)', css:'hot'},
-									        { from: 1, to: 2, color: 'rgba(220,220,0,.9)', css:'warm'},
-									        { from: -1, to: 1, color: 'rgba(0,180,0,.9)', css:'neutral' },
-									        { from: -2, to: -1, color:  'rgba(0,180,180,.9)', css:'cool' },
-											{ from: -3, to: -2, color: 'rgba(0,100,255,.9)', css:'cold' },
-											{ from: -4, to: -3, color: 'rgba(0,0,180,.9)', css:'verycold' }
-										]
-									},
-									"thresholds":{
-										"ireq":{
-											"icl": 1.0 //ireq > "icl-value" -> 
-										},
-										"phs":{
-											"duration": 120, //duration limit <= "icl-value" -> 
-											"sweat":1.0,     //sweat rate per hour >= "icl-value" ->
-										},
-										"windchill":{
-											"deltaT": 3
-										}	
-									},
-									"sim":{
-										"duration": 240, //minutes (required for PHS)
-									},
-				};
+			this.knowledgeBase =this.initKnowledgeBase();	
+			console.log("created knowledgebase version : " + this.knowledgeBase.version );
+			//showShortToast("created knowledgebase version : " + this.knowledgeBase.version );
+					
 		}
+		this.saveSettings();
 
 	},
 	/* In the future this should be used to fetch the needed question from the database
@@ -387,7 +414,7 @@ var app = {
 	},*/
 	firstTimeLoginWithoutPersonalization: function(target){
 		var self = this;
-		return self.knowledgeBase.user_info.firstLogin && target === 'dashboard';
+		return self.knowledgeBase.user_info.isFirstLogin && target === 'dashboard';
 	},
 	getSelectables: function( key ){
 		var self = this;
@@ -461,42 +488,85 @@ var app = {
 		var self = this;
 		
 		if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
-			createUserRecord(self.knowledgeBase);
+			self.knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
 		}
-		const appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
+		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
+
 
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
-			showShortToast("Unable to fetch app ID");
+<<<<<<< HEAD
+			showShortToast(appidFromServer + " id received, yet no hasExternalDBRecord or couldn't fetch appid");
+			
+			//appidFromServer = "f22065144b2119439a589cbfb9d851d3";//until db thing is fixed;
+			// Henriette: this is not a problemm -- the app ID is fetched, there seems to be sometimes where this does not happen but the implementation is correct,
+			//Boris: yes, the implementation is correct, but some dependencies are probably violated, otherwise it should work always. Let's learn what bug causing dependency is. For instance, is it the " self.knowledgeBase.user_info.hasExternalDBRecord ?"
+=======
+			showShortToast(appidFromServer + " id received, yet no hasExternalDBRecord");			
+>>>>>>> dev_boris
 		}
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
 					 "lat": this.knowledgeBase.position.lat,
 				 	 "lon": this.knowledgeBase.position.lng,
 					 "climapp": appidFromServer,
-					 "d": 10.0, //
+					 "d": 1.0, //
 				 	 "utc": new Date().toJSON() };
 		$.get( url, 
 			   data, 
 			   function( output ){//on success
 				   try{
 				       let weather = JSON.parse( output );
+					   console.log( output );
 					   self.knowledgeBase.weather.station = weather.station;
 					   self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
 					   self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
+					   
+					   //returns current weather by default in key "weather.currentweather"
+					   //prepend to array.
+					   self.knowledgeBase.weather.utc.unshift( weather.currentweather.dt );
+					   
 				   	   self.knowledgeBase.weather.utc = self.knowledgeBase.weather.utc.map( function(val){
 						   	let str = val.replace(/-/g,"/");
 							str += " UTC";
 							return str;
 				   	   });
+					   
+					   
 					   self.knowledgeBase.weather.lat = weather.lat;
 					   self.knowledgeBase.weather.lng = weather.lon;
+					   
+					   
+					   
 					   self.knowledgeBase.weather.wbgt = weather.wbgt_max.map(Number);
+					   self.knowledgeBase.weather.wbgt.unshift( Number( weather.currentweather.wbgt_max ) );
+					   
+					   
 					   self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
+					   self.knowledgeBase.weather.windchill.unshift( Number( weather.currentweather.windchill ) );
+					   
+					   
 					   self.knowledgeBase.weather.temperature = weather.tair.map(Number);
+					   self.knowledgeBase.weather.temperature.unshift( Number( weather.currentweather.tair ) );
+					   
+					   
 					   self.knowledgeBase.weather.globetemperature = weather.tglobe.map(Number);
+					   self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe ) );
+					   
+					   
 					   self.knowledgeBase.weather.humidity = weather.rh.map(Number);
+					   self.knowledgeBase.weather.humidity.unshift( Number( weather.currentweather.rh ) );
+					   
+					   
+					   self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
+					   self.knowledgeBase.weather.windspeed.unshift( Number( weather.currentweather.vair ) );
+					    
+					   
+					   self.knowledgeBase.weather.radiation = weather.solar.map(Number);
+					   self.knowledgeBase.weather.radiation.unshift( Number( weather.currentweather.solar ) );
+					   
+					   
 					   self.knowledgeBase.weather.watervapourpressure = [];
 					   $.each( self.knowledgeBase.weather.humidity,
 						   function( key, val){
@@ -504,17 +574,19 @@ var app = {
 							   let wvp = ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
 							   self.knowledgeBase.weather.watervapourpressure.push( wvp );	
 					   }); 
-					   self.knowledgeBase.weather.windspeed = weather.vair.map(Number).map( function( v ){
-						   return Math.pow( v, 0.16 );
-					   } );
-						   
-					   self.knowledgeBase.weather.radiation = weather.solar.map(Number);
+					   
 					   self.saveSettings();
 					   self.calcThermalIndices();
 					   self.updateUI();
 							  
-					   // Only update when weather data has been received
-						addWeatherDataToDB(self.knowledgeBase);
+					   // Only update when weather data has been received - and when external DB record is present.
+					   if( self.knowledgeBase.user_info.hasExternalDBRecord ){
+					   		addWeatherDataToDB(self.knowledgeBase);
+					   }
+					   else{
+			   				showShortToast("cannot store weather on ClimApp server");
+					   }
+						
 				   }
 				   catch( error ){
 					   console.log( error );
@@ -575,12 +647,21 @@ var app = {
 						};	
 		var self = this;
 		$.each( this.knowledgeBase.weather.temperature, function(index, val ){
+			
+			var Tg= self.knowledgeBase.weather.globetemperature[index];
+			var Ta = self.knowledgeBase.weather.temperature[index];
+			var va = self.knowledgeBase.weather.windspeed[index];
+			var D = 0.15; //diameter black globe 
+			var eps_g = 0.95; //standard emmisivity black bulb
+			var Tmrt_mid = (1.1 * Math.pow(10,8) * Math.pow( va, 0.6 ) ) / (eps_g * Math.pow(D,0.4));
+			
+			var Tmrt = Math.pow( Math.pow((Tg+273.0), 4) + Tmrt_mid * (Tg-Ta), 0.25 ) - 273.0;
 			options.air = {
 							"Tair": self.knowledgeBase.weather.temperature[index], 	//C
 							"rh": 	self.knowledgeBase.weather.humidity[index], 	//% relative humidity
 							"Pw_air": self.knowledgeBase.weather.watervapourpressure[index],   //kPa partial water vapour pressure
-							"Trad": self.knowledgeBase.weather.globetemperature[index], 	//C mean radiant temperature
-							"v_air": self.knowledgeBase.weather.windspeed[index], 	//m/s air velocity at ground level
+							"Trad": Tmrt, 	//C mean radiant temperature
+							"v_air": self.knowledgeBase.weather.windspeed[index], 	//m/s air velocity at 10m.
 			};
 			heatindex.IREQ.set_options( options );
 			heatindex.IREQ.sim_run();
@@ -625,13 +706,14 @@ var app = {
 			};
 			self.knowledgeBase.thermalindices.phs.push( phs_object );	
 		});
-		
+		/*
 		this.knowledgeBase.thermalindices.ireq.sort(function(a,b){
 			return new Date(a.utc) - new Date(b.utc);
 		});
 		this.knowledgeBase.thermalindices.phs.sort(function(a,b){
 			return new Date(a.utc) - new Date(b.utc);
 		});
+		*/
 			
 	},
 	updateUI: function(){
@@ -646,6 +728,7 @@ var app = {
 			$("#main_panel").show();
 			$("#tip_panel").show();
 
+			this.initDashboardSwipeListeners();
 			this.initGeolocationListeners();
 			this.initActivityListeners();
 			let selected = this.knowledgeBase.activity.selected;
@@ -654,6 +737,7 @@ var app = {
 			let caption_ = this.knowledgeBase.activity.label[ selected ];
 			$("#activityCaption").html( caption_ );
 			
+			/*
 			var currentindex = -1;
 			var self = this;
 			const ms_p_hour=(1000*60*60);
@@ -692,9 +776,7 @@ var app = {
 				
 				self.knowledgeBase.thermalindices.ireq[index].isnow = false;
 				self.knowledgeBase.thermalindices.phs[index].isnow = false;
-				if ( ( currentindex === -1 && Math.abs(dif) < 2 ) || //current timebox
-					 ( index ===0 && dif > 0 ) //first timebox is already in future...
-					){
+				if ( index == 0 ){
 					currentindex = index;
 					daydiffkey = "now";
 					self.knowledgeBase.thermalindices.ireq.isnow = true;
@@ -712,7 +794,7 @@ var app = {
 				forecastarray.push( element );
 			});
 			var forecasts = "";
-			if (currentindex > -1){
+			if ( currentindex > -1){
 				var base_val = this.determineThermalIndexValue( forecastarray[currentindex].cold, 
 																forecastarray[currentindex].heat, 
 																currentindex );
@@ -720,6 +802,7 @@ var app = {
 				var yesterday_val = undefined;
 				var yesterday_string = "";
 			
+			    /*
 				$.each( forecastarray, function(index, e ){
 					if( e.daydiff==-1 && e.time == forecastarray[currentindex].time ){ //24h before
 						yesterday_val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
@@ -727,8 +810,11 @@ var app = {
 						let sign = percval >= 0 ? "+" : "";
 						let interpretation = base_val > yesterday_val ? "warmer" : "colder";
 						yesterday_string = sign + percval.toFixed(0) + "% " + interpretation + " than yesterday " + e.time;
+						
+						
 						$("#yesterday").html( yesterday_string );
 					}
+					
 					//from current until tomorrow, but not further
 					if( index > currentindex && ( e.daydiff < 2 ) ){
 						var val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
@@ -739,7 +825,8 @@ var app = {
 						let header = "Next " + (index-currentindex)*3 + " hours";
 						let footer = (e.daydiff > 0 ) ? e.day : "&nbsp;";
 					
-						/* HTML string appending */		
+						/* HTML string appending */	
+					/*	
 						forecasts += "<div data-listener='forecast' data-index='"+index+"'>";
 						forecasts += "<p>" + header + " </p>";
 						forecasts += "<p class='"+ highlight[0].css + "'>" + val + "</p>";
@@ -747,6 +834,7 @@ var app = {
 						forecasts += "<p>" + footer + "</p>"; 
 						forecasts += "</div>";
 					}
+					
 				});
 			}
 			else{
@@ -754,12 +842,14 @@ var app = {
 				$("#tip_panel").hide();
 				showShortToast("No weather data available");			
 			}
-			$("#forecasts").html( forecasts );
+			//$("#forecasts").html( forecasts );
 			if( currentindex > -1 ){
-				this.initForecastListeners();
+				//this.initForecastListeners();
+				console.log( currentindex );
 				this.updateInfo( currentindex );
 			}			
-				
+		    */
+			this.updateInfo( 0 );
 		}
 		else if( this.currentPageID == "details"){
 			$(".navigation").show();
@@ -776,11 +866,18 @@ var app = {
 			
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
 			let wbgt = this.knowledgeBase.thermalindices.phs[index].wbgt.toFixed(1);
-			let heat_index = WBGTrisk( wbgt, self.knowledgeBase );
+			let heat_index = WBGTrisk( wbgt, this.knowledgeBase );
 			
 			let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
 			let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
-		
+			let tip_html = "";
+			if( draw_cold_gauge || ( isNeutral && icl_min > heat_index ) ) {
+				tip_html += coldLevelTips( index, 2, this.knowledgeBase );
+			}
+			else{
+				tip_html += heatLevelTips( index, 2, this.knowledgeBase );
+			}
+			$("#moreinformation").html( tip_html );
 			if( draw_cold_gauge ){
 				$("div[data-context='heat'],div[data-context='neutral']").hide();
 				$("div[data-context='cold']").show();
@@ -831,7 +928,7 @@ var app = {
 			}
 			else{
 				$("div[data-context='cold'],div[data-context='heat']").hide();
-				$("div[data-context='neutral']").show();
+				$("div[data-context='neutral']").hide();
 			}
 		}
 		else if( this.currentPageID == "settings" ){
@@ -856,21 +953,30 @@ var app = {
 			$("#question2").html( this.knowledgeBase.feedback.question2.text );
 			$("#question3").html( this.knowledgeBase.feedback.question3.text );
 
+			// Set rating bar text (under feedback buttons) using last given feedback
+			$("#ratingtext1").html( this.knowledgeBase.feedback.question1.ratingtext[this.knowledgeBase.feedback.question1.rating] );
+			$("#ratingtext2").html( this.knowledgeBase.feedback.question2.ratingtext[this.knowledgeBase.feedback.question2.rating] );
+			$("#ratingtext3").html( this.knowledgeBase.feedback.question3.ratingtext[this.knowledgeBase.feedback.question3.rating] );
+
 			// Rating bar values -- still not setting the default color..
 			$("input[id='1star"+this.knowledgeBase.feedback.question1.rating+"']").attr("checked", true);
 			$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").attr("checked", true);
 			$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").attr("checked", true);
+		} 
+		else if(this.currentPageID == "about") {
+			$("#app_version").html("App version: " + this.knowledgeBase.app_version);
+			$("#kb_version").html("Knowledgebase version: " + this.knowledgeBase.version);
 		}
 	},
 	isDrawColdGauge: function( cold, heat, index ){
-		return cold >= heat;
-				// && 
-				//cold >= this.knowledgeBase.thresholds.ireq &&
-				//this.knowledgeBase.thermalindices.ireq[ index].Tair <= 15;
+		return cold >= heat
+			   && 
+			   cold >= this.knowledgeBase.thresholds.ireq &&
+			   this.knowledgeBase.thermalindices.ireq[ index].Tair <= 15;
 	},
 	isDrawHeatGauge: function( cold, heat, index ){
- 	   return heat > cold;
-			//&& this.knowledgeBase.weather.wbgt[ index ] >= 20;
+ 	   return heat > cold
+		      && this.knowledgeBase.weather.wbgt[ index ] > 15;
 	},
 	determineThermalIndexValue: function( cold, heat, index ){
 		let value = cold > heat ? -cold : heat;
@@ -880,9 +986,8 @@ var app = {
 	},
 	updateInfo: function( index ){
 		this.selectedWeatherID = index;
-		if( 'weather' in this.knowledgeBase && this.knowledgeBase.weather.station !== "" ){
+		if( this.knowledgeBase.thermalindices.ireq.length > 0 ){
 			let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
-			console.log( "utc: "+ index );
 			let utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ index ].utc ); //
 			let local_time = utc_date.toLocaleTimeString(navigator.language, { //language specific setting
 					hour: '2-digit',
@@ -890,36 +995,33 @@ var app = {
 			});
 			$("#current_time").html( local_time );
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
-			$("#temperature").html( this.getTemperatureInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair).toFixed(0) +"&#xb0" );
+			$("#temperature").html( getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair, this.knowledgeBase.settings.unit.value).toFixed(0) +"&#xb0");
 			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[index].v_air.toFixed(0) );
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.settings.unit.value)); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
 		
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
 			let cold_index = icl_min;
-			let heat_index = WBGTrisk( this.knowledgeBase.thermalindices.phs[index].wbgt, self.knowledgeBase );
+			let heat_index = WBGTrisk( this.knowledgeBase.thermalindices.phs[index].wbgt, this.knowledgeBase );
 		
 			let draw_cold_gauge = this.isDrawColdGauge( cold_index, heat_index, index );
 			let draw_heat_gauge = this.isDrawHeatGauge( cold_index, heat_index, index );
-		
+		    let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 			let tip_html = "";
+			if( draw_cold_gauge || ( isNeutral && cold_index > heat_index ) ) {
+				tip_html += coldLevelTips( index, 1, this.knowledgeBase );
+			}
+			else{
+				tip_html += heatLevelTips( index, 1, this.knowledgeBase );
+			}
 			
-		
-			if( draw_cold_gauge ){
-				tip_html += windchillTips(index, self.knowledgeBase);
-			}
-			else if( draw_heat_gauge ){
-				tip_html += phsTips(index, self.knowledgeBase);
-			}
-			if( tip_html.length ==0){
-				tip_html += neutralTips();
-			}
 			
 			let windowsize = $( window ).width();
 			let width = windowsize / 2;
-		
 			let value = this.determineThermalIndexValue( cold_index, heat_index, index );
 			let thermal = draw_cold_gauge ? "cold" : "heat";
+			
+			console.log( "ci: " + cold_index + " hi: " + heat_index + " i: " + index);
 			this.drawGauge( 'main_gauge', width, value , thermal );
 		
 			$("#tips").html( tip_html );
@@ -935,7 +1037,6 @@ var app = {
 			ctx.canvas.height = width;
 			ctx.canvas.width = width;
 		}
-		
 		var title = key === "cold" ? gaugeTitleCold( Math.abs(value)) : gaugeTitleHeat( Math.abs(value));
 		var highlights =  this.knowledgeBase.gauge.highlights;
 		var gauge = new RadialGauge({
@@ -980,15 +1081,6 @@ var app = {
 		});
 		
 		gauge.draw();
-	}, 
-	getTemperatureInPreferredUnit: function(temp) {
-		let self = this;
-		let unit = self.knowledgeBase.settings.unit.value;
-		if(unit === "US") {
-			return temp * 9/5 + 32;
-		} else {
-			return temp;
-		}
 	},
 };
 

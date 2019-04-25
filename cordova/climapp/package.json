@@ -5,7 +5,7 @@
     "description": "A sample Apache Cordova application that responds to the deviceready event.",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "jest   "
     },
     "author": "Apache Cordova Team",
     "license": "Apache-2.0",
@@ -17,9 +17,11 @@
         "cordova-plugin-geolocation": "^4.0.1",
         "cordova-plugin-local-notification": "^0.9.0-beta.2",
         "cordova-plugin-splashscreen": "^5.0.2",
+        "cordova-plugin-statusbar": "^2.4.2",
         "cordova-plugin-whitelist": "^1.3.3",
         "cordova-plugin-x-toast": "^2.7.2",
-        "cordova-wheel-selector-plugin": "^1.1.2"
+        "cordova-wheel-selector-plugin": "^1.1.2",
+        "tocca": "^2.0.4"
     },
     "cordova": {
         "plugins": {
@@ -29,11 +31,15 @@
             "cordova-plugin-x-toast": {},
             "cordova-plugin-whitelist": {},
             "cordova-plugin-geolocation": {},
-            "cordova-plugin-local-notification": {}
+            "cordova-plugin-local-notification": {},
+            "cordova-plugin-statusbar": {}
         },
         "platforms": [
             "ios",
             "android"
         ]
+    },
+    "devDependencies": {
+        "jest": "^24.7.1"
     }
 }
