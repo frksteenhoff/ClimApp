@@ -118,7 +118,7 @@ var app = {
 	initSettingsListeners: function(){
 		var self = this;
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='wheel']").on("touchstart", function(){
+		$("div[data-listener='wheel']").on("click", function(){
 			var target = $(this).attr("data-target");
 			let title_ = self.knowledgeBase.settings[target].title;
 			var items_ = self.getSelectables( target );
@@ -168,7 +168,7 @@ var app = {
 		});
 
 		$("div[data-listener='reset_preferences']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='reset_preferences']").on("touchstart", function(){
+		$("div[data-listener='reset_preferences']").on("click", function(){
 			// Resetting values to default
 			self.knowledgeBase.settings.age.value = 30;
 			self.knowledgeBase.settings.gender.value = "undefined";
@@ -367,23 +367,23 @@ var app = {
 			if ( 'version' in this.knowledgeBase && this.knowledgeBase.version < shadowKB.version ){
 				this.knowledgeBase = this.initKnowledgeBase();
 				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
-				showShortToast("knowledgebase updated to version : " + this.knowledgeBase.version);
+				showShortToast("database updated to version : " + this.knowledgeBase.version);
 				
 			}
 			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
 				console.log("loaded knowledgebase version : " + this.knowledgeBase.version );
-				showShortToast("loaded knowledgebase version : " + this.knowledgeBase.version);
+				showShortToast("loaded database version : " + this.knowledgeBase.version);
 			}
 			else{ //old version does not have version key
 				this.knowledgeBase = this.initKnowledgeBase();
 				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
-				showShortToast("knowledgebase updated to version : " + this.knowledgeBase.version);
+				showShortToast("database updated to version : " + this.knowledgeBase.version);
 			}
 		}
 		else{
 			this.knowledgeBase =this.initKnowledgeBase();	
 			console.log("created knowledgebase version : " + this.knowledgeBase.version );
-			showShortToast("created knowledgebase version : " + this.knowledgeBase.version );
+			showShortToast("created database version : " + this.knowledgeBase.version );
 					
 		}
 		this.saveSettings();
@@ -485,7 +485,7 @@ var app = {
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
-			showShortToast(appidFromServer + " id received, yet no hasExternalDBRecord");			
+			showShortToast(appidFromServer + "no external DB record found");			
 		}
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
@@ -499,7 +499,7 @@ var app = {
 			   function( output ){//on success
 				   try{
 				       let weather = JSON.parse( output );
-					   console.log( output );
+					   console.log( weather );
 					   self.knowledgeBase.weather.station = weather.station;
 					   self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
 					   self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
@@ -517,8 +517,6 @@ var app = {
 					   
 					   self.knowledgeBase.weather.lat = weather.lat;
 					   self.knowledgeBase.weather.lng = weather.lon;
-					   
-					   
 					   
 					   self.knowledgeBase.weather.wbgt = weather.wbgt_max.map(Number);
 					   self.knowledgeBase.weather.wbgt.unshift( Number( weather.currentweather.wbgt_max ) );
@@ -625,7 +623,7 @@ var app = {
 							sim: {
 									"mod": 0
 							}
-						};	
+						};
 		var self = this;
 		$.each( this.knowledgeBase.weather.temperature, function(index, val ){
 			
@@ -642,8 +640,12 @@ var app = {
 							"rh": 	self.knowledgeBase.weather.humidity[index], 	//% relative humidity
 							"Pw_air": self.knowledgeBase.weather.watervapourpressure[index],   //kPa partial water vapour pressure
 							"Trad": Tmrt, 	//C mean radiant temperature
+							"Tglobe": Tg,
 							"v_air": self.knowledgeBase.weather.windspeed[index], 	//m/s air velocity at 10m.
 			};
+			if( index === 0 ){
+				console.log( JSON.stringify( options ));
+			}
 			heatindex.IREQ.set_options( options );
 			heatindex.IREQ.sim_run();
 
@@ -850,6 +852,8 @@ var app = {
 			
 			let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
 			let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
+		    let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
+			
 			let tip_html = "";
 			if( draw_cold_gauge || ( isNeutral && icl_min > heat_index ) ) {
 				tip_html += coldLevelTips( index, 2, this.knowledgeBase );
@@ -986,14 +990,13 @@ var app = {
 				tip_html += heatLevelTips( index, 1, this.knowledgeBase );
 			}
 			
-			
 			let windowsize = $( window ).width();
 			let width = windowsize / 2;
 		
 			let value = this.determineThermalIndexValue( cold_index, heat_index, index );
 			let thermal = draw_cold_gauge ? "cold" : "heat";
 			
-			console.log( "ci: " + cold_index + " hi: " + heat_index + " i: " + index);
+			console.log( "ci: " + cold_index + " hi: " + heat_index + " i: " + index + " value: " + value);
 			this.drawGauge( 'main_gauge', width, value , thermal );
 		
 			$("#tips").html( tip_html );
