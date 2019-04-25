@@ -103,7 +103,7 @@ var app = {
 			
 			// If user not in database, add user to database
 			if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
-				createUserRecord(self.knowledgeBase);
+				knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
 			} 
 			// Add feedback to database
 			addFeedbackToDB(self.knowledgeBase.feedback);
@@ -141,45 +141,41 @@ var app = {
 			    console.log('Canceled');
 			});
 		});		
-
-		$("input[data-listener='notification_switch']").off(); //prevent multiple instances of listeners on same object
-		$("input[data-listener='notification_switch']").on("click", function(){
-			var isChecked = $(this).is(":checked");
-			self.knowledgeBase.user_info.receivesNotifications = isChecked;
-
-			// Inform user about choice in toast
-			var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
-			showShortToast(notificationText);
+		$("div[data-listener='wheel']").on("swipeleft", function(){
+			window.SelectorCordovaPlugin.hideSelector(); // hide selector so that it is not shown in dashboard (only working on iOS)
+			self.loadUI("dashboard");
 		});
 
-		$("div[data-listener='feedback_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='feedback_page']").on("touchstart", function(){
-			self.loadUI('feedback');
+		$("div[data-listener='tab']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='tab']").on("click", function(){
+			var target = $(this).attr("data-target");
+			
+			if(target === "reset") {
+				// Resetting values to default
+				self.knowledgeBase.settings.age.value = 30;
+				self.knowledgeBase.settings.gender.value = "undefined";
+				self.knowledgeBase.settings.height.value = 178;
+				self.knowledgeBase.settings.weight.value = 82;
+				self.knowledgeBase.settings.unit.value = "SI";
+
+				// Inform user about event in toast
+				var notificationText = "Personal preferences reset, using default values.";
+				showShortToast(notificationText);
+
+			} else if(target === "notification_switch") {
+				var isChecked = $(this).is(":checked");
+				self.knowledgeBase.user_info.receivesNotifications = isChecked;
+				// Inform user about choice in toast
+				var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
+				showShortToast(notificationText);
+			} else {
+				self.loadUI(target);
+			}
 		});
-
-		$("div[data-listener='disclaimer_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='disclaimer_page']").on("touchstart", function(){
-			self.loadUI('disclaimer');
-		});
-
-		$("div[data-listener='about_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='about_page']").on("touchstart", function(){
-			self.loadUI('about');
-		});
-
-		$("div[data-listener='reset_preferences']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='reset_preferences']").on("click", function(){
-			// Resetting values to default
-			self.knowledgeBase.settings.age.value = 30;
-			self.knowledgeBase.settings.gender.value = "undefined";
-			self.knowledgeBase.settings.height.value = 178;
-			self.knowledgeBase.settings.weight.value = 82;
-			self.knowledgeBase.settings.unit.value = "SI";
-			//self.knowledgeBase.user_info.isFirstLogin = true;
-
-			// Inform user about event in toast
-			var notificationText = "Personal preferences reset, using default values.";
-			showShortToast(notificationText);
+		// Always add ability to swipe
+		$("div[data-listener='tab']").on("swipeleft", function(){
+			window.SelectorCordovaPlugin.hideSelector(); // hide selector so that it is not shown in dashboard
+			self.loadUI("dashboard");
 		});
 	},
 	initGeolocationListeners: function(){
@@ -209,6 +205,14 @@ var app = {
 			
 		});		
 	},
+	initDashboardSwipeListeners: function() {
+		var self = this;
+		$("div[data-listener='panel']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='panel']").on("swiperight", function(){
+			var target = $(this).attr("data-target");
+			self.loadUI(target);
+		});
+	},
 	initActivityListeners: function(){
 		var self = this;
 		$("div[data-listener='activity']").off(); //prevent multiple instances of listeners on same object
@@ -222,7 +226,8 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.6,
+			return {"version": 1.4,
+					"app_version": "beta",
 					"user_info": {
 							"isFirstLogin": 1,
 							"hasExternalDBRecord": 0,
@@ -368,11 +373,13 @@ var app = {
 				this.knowledgeBase = this.initKnowledgeBase();
 				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
 				showShortToast("database updated to version : " + this.knowledgeBase.version);
+
 				
 			}
 			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
 				console.log("loaded knowledgebase version : " + this.knowledgeBase.version );
 				showShortToast("loaded database version : " + this.knowledgeBase.version);
+
 			}
 			else{ //old version does not have version key
 				this.knowledgeBase = this.initKnowledgeBase();
@@ -384,7 +391,6 @@ var app = {
 			this.knowledgeBase =this.initKnowledgeBase();	
 			console.log("created knowledgebase version : " + this.knowledgeBase.version );
 			showShortToast("created database version : " + this.knowledgeBase.version );
-					
 		}
 		this.saveSettings();
 
@@ -477,9 +483,9 @@ var app = {
 		var self = this;
 		
 		if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
-			createUserRecord(self.knowledgeBase);
+			self.knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
 		}
-		const appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
+		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
 
 
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
@@ -711,6 +717,7 @@ var app = {
 			$("#main_panel").show();
 			$("#tip_panel").show();
 
+			this.initDashboardSwipeListeners();
 			this.initGeolocationListeners();
 			this.initActivityListeners();
 			let selected = this.knowledgeBase.activity.selected;
@@ -937,10 +944,19 @@ var app = {
 			$("#question2").html( this.knowledgeBase.feedback.question2.text );
 			$("#question3").html( this.knowledgeBase.feedback.question3.text );
 
+			// Set rating bar text (under feedback buttons) using last given feedback
+			$("#ratingtext1").html( this.knowledgeBase.feedback.question1.ratingtext[this.knowledgeBase.feedback.question1.rating] );
+			$("#ratingtext2").html( this.knowledgeBase.feedback.question2.ratingtext[this.knowledgeBase.feedback.question2.rating] );
+			$("#ratingtext3").html( this.knowledgeBase.feedback.question3.ratingtext[this.knowledgeBase.feedback.question3.rating] );
+
 			// Rating bar values -- still not setting the default color..
 			$("input[id='1star"+this.knowledgeBase.feedback.question1.rating+"']").attr("checked", true);
 			$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").attr("checked", true);
 			$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").attr("checked", true);
+		} 
+		else if(this.currentPageID == "about") {
+			$("#app_version").html("App version: " + this.knowledgeBase.app_version);
+			$("#kb_version").html("Knowledgebase version: " + this.knowledgeBase.version);
 		}
 	},
 	isDrawColdGauge: function( cold, heat, index ){
@@ -970,7 +986,7 @@ var app = {
 			});
 			$("#current_time").html( local_time );
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
-			$("#temperature").html( this.getTemperatureInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair).toFixed(0) +"&#xb0" );
+			$("#temperature").html( getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair, this.knowledgeBase.settings.unit.value).toFixed(0) +"&#xb0");
 			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[index].v_air.toFixed(0) );
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.settings.unit.value)); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
@@ -992,7 +1008,6 @@ var app = {
 			
 			let windowsize = $( window ).width();
 			let width = windowsize / 2;
-		
 			let value = this.determineThermalIndexValue( cold_index, heat_index, index );
 			let thermal = draw_cold_gauge ? "cold" : "heat";
 			
@@ -1012,7 +1027,6 @@ var app = {
 			ctx.canvas.height = width;
 			ctx.canvas.width = width;
 		}
-		
 		var title = key === "cold" ? gaugeTitleCold( Math.abs(value)) : gaugeTitleHeat( Math.abs(value));
 		var highlights =  this.knowledgeBase.gauge.highlights;
 		var gauge = new RadialGauge({
@@ -1057,15 +1071,6 @@ var app = {
 		});
 		
 		gauge.draw();
-	}, 
-	getTemperatureInPreferredUnit: function(temp) {
-		let self = this;
-		let unit = self.knowledgeBase.settings.unit.value;
-		if(unit === "US") {
-			return temp * 9/5 + 32;
-		} else {
-			return temp;
-		}
 	},
 };
 

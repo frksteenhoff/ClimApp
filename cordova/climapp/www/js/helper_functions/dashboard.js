@@ -22,6 +22,14 @@ function getTemperatureUnit(unit) {
     return unit === "US" ? "Fahrenheit" : "Celcius";
 }
 
+function getTemperatureValueInPreferredUnit(temp, unit) {
+	if(unit === "US") {
+		return temp * 9/5 + 32;
+	} else {
+		return temp;
+	}
+}
+
 function windchillRisk(windchill) {
     if( windchill <-50 ){
         return 2;
@@ -78,7 +86,7 @@ function windchillTips(index, kb) {
 	if( windchill <
 		( kb.thermalindices.ireq[index].Tair -
 			kb.thresholds.windchill.deltaT )){
-                str += "<p>Winchill is " + windchill.toFixed(0) + 
+                str += "<p>Windchill is " + windchill.toFixed(0) + 
                 "&deg;, you could wear a windstopper to combat cold stress.</p>";
 	}
 	else if(kb.thermalindices.ireq[index].ICLminimal >
@@ -135,7 +143,7 @@ function neutralTips() {
 }
 
 function heatLevelTips( index, level, kb ){
-	let str = "";
+    let str = "";
 	
 	let heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb );
 	
@@ -143,38 +151,38 @@ function heatLevelTips( index, level, kb ){
     let sw_tot_per_hour = 0.001 * 60 * kb.thermalindices.phs[ index].SWtotg / 
     (kb.sim.duration ); //liter per hour
     sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
-
+    
 	
 	if( level === 1 ){ //beginner, early usre
 		if( heat_index <= 1 ){
 			str += "The green level means that low thermal stress is forecasted - no special precautions are required unless you work/excercise in special settings (indoor) or with resticted ability to release heat. ";
 		}
 		else if( heat_index <= 2 ){
-			str += "The yellow level means that moderate heat stress is expected - You should be able to maintain normal activities. You may experience higher thermal strain and more sweating than normal. Consider clothing adjustments + drink more than normal; especially when the score approaches +2 (the RED heat stress level).";
+            str += "The yellow level means that moderate heat stress is expected - You should be able to maintain normal activities. You may experience higher thermal strain and more sweating than normal. Consider clothing adjustments + drink more than normal; especially when the score approaches +2 (the RED heat stress level).";
 		}
 		else if( heat_index <= 3 ){
-			str += "The red level means that high heat stress is expected - pay special attention to drinking sufficient during the first days with this heat stress. Consider adjusting activities (heavy physical tasks during periods of the day with lowest heat) and allow time to adapt.";
+            str += "The red level means that high heat stress is expected - pay special attention to drinking sufficient during the first days with this heat stress. Consider adjusting activities (heavy physical tasks during periods of the day with lowest heat) and allow time to adapt.";
 		}
 		else if( heat_index > 3){
-			str += "This level is associated with severe heat stress - your estimated sweat rate surpasses "+ sw_tot_per_hour+" Liter per hour, so additional drinking is required and the heat will impact your physical performance - adjusting activities and allowing sufficient breaks will benefit your overall daily ability to cope with the heat.";
+            str += "This level is associated with severe heat stress - your estimated sweat rate surpasses "+ sw_tot_per_hour+" Liter per hour, so additional drinking is required and the heat will impact your physical performance - adjusting activities and allowing sufficient breaks will benefit your overall daily ability to cope with the heat.";
 		}
 	}
 	else if( level === 2 ){ //experienced user // or more info requested
 		if( heat_index <= 2 ){
-			str += "The personalized heat stress indicator depends on the weather report as well as your personal input - the score will increase towards higher warning levels if the weather agravates, your activity level increases or your clothing level increases.";
+            str += "The personalized heat stress indicator depends on the weather report as well as your personal input - the score will increase towards higher warning levels if the weather agravates, your activity level increases or your clothing level increases.";
 		}
 		else if( heat_index <= 3 ){
-			str += "Be aware that thirst is usually not a sufficient indicator when losses are high. Remember to drink/rehydrate with your meals. ";
+            str += "Be aware that thirst is usually not a sufficient indicator when losses are high. Remember to drink/rehydrate with your meals. ";
 		}
 		else if( heat_index > 3){
-			str += "This level is associated with severe heat stress - your estimated sweat rate surpass (choose from PHS-estimate ½ liter - 3/4 liter - 1 liter) so additional drinking is required and the heat will impacts your physical performmance - adjusting activities and allowing sufficient breaks will benefit your overall daily ability to cope with the heat.";
+            str += "This level is associated with severe heat stress - your estimated sweat rate surpass (choose from PHS-estimate ½ liter - 3/4 liter - 1 liter) so additional drinking is required and the heat will impacts your physical performmance - adjusting activities and allowing sufficient breaks will benefit your overall daily ability to cope with the heat.";
 		}
 	}
 	return str;
 }
 
 function coldLevelTips( index, level, kb ){
-	let str = "";
+    let str = "";
 	
 	let icl_min = kb.thermalindices.ireq[ index ].ICLminimal;
 	let cold_index = icl_min;
@@ -190,21 +198,21 @@ function coldLevelTips( index, level, kb ){
 	
 	if( level === 1 ){ //beginner, early usre
 		if( cold_index <= 1 ){
-			str += "The green level means that low thermal stress is forecasted - no special precautions are required unless you work/excercise in special settings (indoor) or with resticted ability to maintain heat.";
+            str += "The green level means that low thermal stress is forecasted - no special precautions are required unless you work/excercise in special settings (indoor) or with resticted ability to maintain heat.";
 		}
 		else if( cold_index <= 2 ){
-			str += "The cyan level means that moderate cold stress is expected - you should be able to maintain normal activities - but appropriate/adjusted behavior is required. Adjust your activity level, increase clothing insulation or apply a wind stopper.";
+            str += "The cyan level means that moderate cold stress is expected - you should be able to maintain normal activities - but appropriate/adjusted behavior is required. Adjust your activity level, increase clothing insulation or apply a wind stopper.";
 		}
 		else if( cold_index <= 3 ){
-			str += "The blue level means that high cold stress is expected - at this level you are recommentded to pay extra attention to appropriate behavior and match clothing to the cold level and protect exposed skin. Be aware not to overdress, because sweating will cool you down.";
+            str += "The blue level means that high cold stress is expected - at this level you are recommentded to pay extra attention to appropriate behavior and match clothing to the cold level and protect exposed skin. Be aware not to overdress, because sweating will cool you down.";
 		}
 		else if( cold_index > 3){
-			str += "This level is associated with severe cold stress - high precaution required: due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.";
+            str += "This level is associated with severe cold stress - high precaution required: due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.";
 		}
 	}
 	else if( level === 2 ){ //experienced user // or more info requested
 		if( cold_index <= 1 ){
-			str += "The personalized cold stress indicator depends on the weather report as well as your personal input - the score will increase towards higher warning levels if the weather agravates, your activity level decreases or your clothing level decreases.";
+            str += "The personalized cold stress indicator depends on the weather report as well as your personal input - the score will increase towards higher warning levels if the weather agravates, your activity level decreases or your clothing level decreases.";
 		}
 		else if( cold_index <= 2 && isWindstopperUseful ){
 			str += "There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.";
@@ -213,12 +221,12 @@ function coldLevelTips( index, level, kb ){
 			str += "You should consider to increase insulation from clothing by adding layers or choosing warmer/thicker clothing.";
 		}
 		else if( cold_index > 2 ){
-			if( isWindstopperUseful ){
-				str += "There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.";
+            if( isWindstopperUseful ){
+                str += "There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.";
 			}
 			
 			if( windrisk ){
-				str += "Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.";
+                str += "Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.";
 			}
 			
 		}
@@ -226,3 +234,4 @@ function coldLevelTips( index, level, kb ){
 	return str;
 }
 
+module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, windchillTips, phsTips, neutralTips};

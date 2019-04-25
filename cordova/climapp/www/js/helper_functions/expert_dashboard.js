@@ -7,3 +7,4 @@ function clothingIcon(clo) {
     else if( clo >= 0.7 ) return "./img/clothing/0.9clo.png";
     else return "./img/clothing/0.5clo.png";
 }
+module.exports = {clothingIcon};
