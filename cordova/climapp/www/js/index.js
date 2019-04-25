@@ -228,8 +228,12 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
+<<<<<<< HEAD
 			return {"version": 1.4,
 					"app_version": "beta",
+=======
+			return {"version": 1.6,
+>>>>>>> dev_boris
 					"user_info": {
 							"isFirstLogin": 1,
 							"hasExternalDBRecord": 0,
@@ -326,20 +330,8 @@ var app = {
 							"comment": ""
 						},
 						"thermalindices":{ 
-									"ireq":[//array of objects
-										{ 	"ICLminimal":0.0,
-				  						    "ICLneutral": 0.0,
-						 				    "DLEneutral": 0.0,
-											"DLEminimal": 0.0,
-											"utc":"2019/12/31 00:00:00",
-										}],
-								  	"phs": [//array of objects
-										{ 
-											"D_Tre" : 0.0,
-										   	"Dwl50": 0.0,
-										   	"SWtotg": 0.0,
-										    "utc":"2019/12/31 00:00:00",
-								  		}],
+									"ireq":[],
+								  	"phs": [],
 						},
 						"gauge":{
 							"highlights":[//color also in CSS, keep consistent
@@ -361,7 +353,7 @@ var app = {
 								"sweat":1.0,     //sweat rate per hour >= "icl-value" ->
 							},
 							"windchill":{
-								"deltaT": 3
+								"deltaT": 5
 							}	
 						},
 						"sim":{
@@ -389,9 +381,14 @@ var app = {
 				//showShortToast("knowledgebase updated to version : " + this.knowledgeBase.version);
 				
 			}
-			else{
+			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
 				console.log("loaded knowledgebase version : " + this.knowledgeBase.version );
 				//showShortToast("loaded knowledgebase version : " + this.knowledgeBase.version);
+			}
+			else{ //old version does not have version key
+				this.knowledgeBase = this.initKnowledgeBase();
+				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
+				showShortToast("knowledgebase updated to version : " + this.knowledgeBase.version);
 			}
 		}
 		else{
@@ -464,8 +461,6 @@ var app = {
 	saveSettings: function(){
 		let jsonData = JSON.stringify( this.knowledgeBase );
 		localStorage.setItem("knowledgebase", jsonData );
-		//showShortToast("saved settings: " + jsonData );
-		$("#content").append( typeof this.knowledgeBase.user_info.isFirstLogin + " " +  this.knowledgeBase.user_info.isFirstLogin);	
 	},
 	updateLocation: function(){
 		//$('i.fa-sync-alt').toggleClass("fa-spin");
@@ -501,40 +496,77 @@ var app = {
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
+<<<<<<< HEAD
 			showShortToast(appidFromServer + " id received, yet no hasExternalDBRecord or couldn't fetch appid");
 			
 			//appidFromServer = "f22065144b2119439a589cbfb9d851d3";//until db thing is fixed;
 			// Henriette: this is not a problemm -- the app ID is fetched, there seems to be sometimes where this does not happen but the implementation is correct,
 			//Boris: yes, the implementation is correct, but some dependencies are probably violated, otherwise it should work always. Let's learn what bug causing dependency is. For instance, is it the " self.knowledgeBase.user_info.hasExternalDBRecord ?"
+=======
+			showShortToast(appidFromServer + " id received, yet no hasExternalDBRecord");			
+>>>>>>> dev_boris
 		}
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
 					 "lat": this.knowledgeBase.position.lat,
 				 	 "lon": this.knowledgeBase.position.lng,
 					 "climapp": appidFromServer,
-					 "d": 10.0, //
+					 "d": 1.0, //
 				 	 "utc": new Date().toJSON() };
 		$.get( url, 
 			   data, 
 			   function( output ){//on success
 				   try{
-					   console.log( JSON.stringify( output ) );
 				       let weather = JSON.parse( output );
+					   console.log( output );
 					   self.knowledgeBase.weather.station = weather.station;
 					   self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
 					   self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
+					   
+					   //returns current weather by default in key "weather.currentweather"
+					   //prepend to array.
+					   self.knowledgeBase.weather.utc.unshift( weather.currentweather.dt );
+					   
 				   	   self.knowledgeBase.weather.utc = self.knowledgeBase.weather.utc.map( function(val){
 						   	let str = val.replace(/-/g,"/");
 							str += " UTC";
 							return str;
 				   	   });
+					   
+					   
 					   self.knowledgeBase.weather.lat = weather.lat;
 					   self.knowledgeBase.weather.lng = weather.lon;
+					   
+					   
+					   
 					   self.knowledgeBase.weather.wbgt = weather.wbgt_max.map(Number);
+					   self.knowledgeBase.weather.wbgt.unshift( Number( weather.currentweather.wbgt_max ) );
+					   
+					   
 					   self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
+					   self.knowledgeBase.weather.windchill.unshift( Number( weather.currentweather.windchill ) );
+					   
+					   
 					   self.knowledgeBase.weather.temperature = weather.tair.map(Number);
+					   self.knowledgeBase.weather.temperature.unshift( Number( weather.currentweather.tair ) );
+					   
+					   
 					   self.knowledgeBase.weather.globetemperature = weather.tglobe.map(Number);
+					   self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe ) );
+					   
+					   
 					   self.knowledgeBase.weather.humidity = weather.rh.map(Number);
+					   self.knowledgeBase.weather.humidity.unshift( Number( weather.currentweather.rh ) );
+					   
+					   
+					   self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
+					   self.knowledgeBase.weather.windspeed.unshift( Number( weather.currentweather.vair ) );
+					    
+					   
+					   self.knowledgeBase.weather.radiation = weather.solar.map(Number);
+					   self.knowledgeBase.weather.radiation.unshift( Number( weather.currentweather.solar ) );
+					   
+					   
 					   self.knowledgeBase.weather.watervapourpressure = [];
 					   $.each( self.knowledgeBase.weather.humidity,
 						   function( key, val){
@@ -542,8 +574,7 @@ var app = {
 							   let wvp = ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
 							   self.knowledgeBase.weather.watervapourpressure.push( wvp );	
 					   }); 
-					   self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
-					   self.knowledgeBase.weather.radiation = weather.solar.map(Number);
+					   
 					   self.saveSettings();
 					   self.calcThermalIndices();
 					   self.updateUI();
@@ -553,8 +584,7 @@ var app = {
 					   		addWeatherDataToDB(self.knowledgeBase);
 					   }
 					   else{
-			   			showShortToast("cannot store weather on ClimApp server");
-					   		
+			   				showShortToast("cannot store weather on ClimApp server");
 					   }
 						
 				   }
@@ -676,13 +706,14 @@ var app = {
 			};
 			self.knowledgeBase.thermalindices.phs.push( phs_object );	
 		});
-		
+		/*
 		this.knowledgeBase.thermalindices.ireq.sort(function(a,b){
 			return new Date(a.utc) - new Date(b.utc);
 		});
 		this.knowledgeBase.thermalindices.phs.sort(function(a,b){
 			return new Date(a.utc) - new Date(b.utc);
 		});
+		*/
 			
 	},
 	updateUI: function(){
@@ -706,6 +737,7 @@ var app = {
 			let caption_ = this.knowledgeBase.activity.label[ selected ];
 			$("#activityCaption").html( caption_ );
 			
+			/*
 			var currentindex = -1;
 			var self = this;
 			const ms_p_hour=(1000*60*60);
@@ -744,9 +776,7 @@ var app = {
 				
 				self.knowledgeBase.thermalindices.ireq[index].isnow = false;
 				self.knowledgeBase.thermalindices.phs[index].isnow = false;
-				if ( ( currentindex === -1 && Math.abs(dif) < 2 ) || //current timebox
-					 ( index ===0 && dif > 0 ) //first timebox is already in future...
-					){
+				if ( index == 0 ){
 					currentindex = index;
 					daydiffkey = "now";
 					self.knowledgeBase.thermalindices.ireq.isnow = true;
@@ -764,7 +794,7 @@ var app = {
 				forecastarray.push( element );
 			});
 			var forecasts = "";
-			if (currentindex > -1){
+			if ( currentindex > -1){
 				var base_val = this.determineThermalIndexValue( forecastarray[currentindex].cold, 
 																forecastarray[currentindex].heat, 
 																currentindex );
@@ -772,6 +802,7 @@ var app = {
 				var yesterday_val = undefined;
 				var yesterday_string = "";
 			
+			    /*
 				$.each( forecastarray, function(index, e ){
 					if( e.daydiff==-1 && e.time == forecastarray[currentindex].time ){ //24h before
 						yesterday_val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
@@ -779,8 +810,11 @@ var app = {
 						let sign = percval >= 0 ? "+" : "";
 						let interpretation = base_val > yesterday_val ? "warmer" : "colder";
 						yesterday_string = sign + percval.toFixed(0) + "% " + interpretation + " than yesterday " + e.time;
+						
+						
 						$("#yesterday").html( yesterday_string );
 					}
+					
 					//from current until tomorrow, but not further
 					if( index > currentindex && ( e.daydiff < 2 ) ){
 						var val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
@@ -791,7 +825,8 @@ var app = {
 						let header = "Next " + (index-currentindex)*3 + " hours";
 						let footer = (e.daydiff > 0 ) ? e.day : "&nbsp;";
 					
-						/* HTML string appending */		
+						/* HTML string appending */	
+					/*	
 						forecasts += "<div data-listener='forecast' data-index='"+index+"'>";
 						forecasts += "<p>" + header + " </p>";
 						forecasts += "<p class='"+ highlight[0].css + "'>" + val + "</p>";
@@ -799,6 +834,7 @@ var app = {
 						forecasts += "<p>" + footer + "</p>"; 
 						forecasts += "</div>";
 					}
+					
 				});
 			}
 			else{
@@ -806,12 +842,14 @@ var app = {
 				$("#tip_panel").hide();
 				showShortToast("No weather data available");			
 			}
-			$("#forecasts").html( forecasts );
+			//$("#forecasts").html( forecasts );
 			if( currentindex > -1 ){
-				this.initForecastListeners();
+				//this.initForecastListeners();
+				console.log( currentindex );
 				this.updateInfo( currentindex );
 			}			
-				
+		    */
+			this.updateInfo( 0 );
 		}
 		else if( this.currentPageID == "details"){
 			$(".navigation").show();
@@ -832,7 +870,14 @@ var app = {
 			
 			let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
 			let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
-		
+			let tip_html = "";
+			if( draw_cold_gauge || ( isNeutral && icl_min > heat_index ) ) {
+				tip_html += coldLevelTips( index, 2, this.knowledgeBase );
+			}
+			else{
+				tip_html += heatLevelTips( index, 2, this.knowledgeBase );
+			}
+			$("#moreinformation").html( tip_html );
 			if( draw_cold_gauge ){
 				$("div[data-context='heat'],div[data-context='neutral']").hide();
 				$("div[data-context='cold']").show();
@@ -883,7 +928,7 @@ var app = {
 			}
 			else{
 				$("div[data-context='cold'],div[data-context='heat']").hide();
-				$("div[data-context='neutral']").show();
+				$("div[data-context='neutral']").hide();
 			}
 		}
 		else if( this.currentPageID == "settings" ){
@@ -941,9 +986,8 @@ var app = {
 	},
 	updateInfo: function( index ){
 		this.selectedWeatherID = index;
-		if( 'weather' in this.knowledgeBase && this.knowledgeBase.weather.station !== "" ){
+		if( this.knowledgeBase.thermalindices.ireq.length > 0 ){
 			let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
-			console.log( "utc: "+ index );
 			let utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ index ].utc ); //
 			let local_time = utc_date.toLocaleTimeString(navigator.language, { //language specific setting
 					hour: '2-digit',
@@ -962,24 +1006,22 @@ var app = {
 		
 			let draw_cold_gauge = this.isDrawColdGauge( cold_index, heat_index, index );
 			let draw_heat_gauge = this.isDrawHeatGauge( cold_index, heat_index, index );
-		
+		    let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 			let tip_html = "";
+			if( draw_cold_gauge || ( isNeutral && cold_index > heat_index ) ) {
+				tip_html += coldLevelTips( index, 1, this.knowledgeBase );
+			}
+			else{
+				tip_html += heatLevelTips( index, 1, this.knowledgeBase );
+			}
 			
-		
-			if( draw_cold_gauge ){
-				tip_html += windchillTips(index, self.knowledgeBase);
-			}
-			else if( draw_heat_gauge ){
-				tip_html += phsTips(index, self.knowledgeBase);
-			}
-			if( tip_html.length ==0){
-				tip_html += neutralTips();
-			}
 			
 			let windowsize = $( window ).width();
 			let width = windowsize / 2;
 			let value = this.determineThermalIndexValue( cold_index, heat_index, index );
 			let thermal = draw_cold_gauge ? "cold" : "heat";
+			
+			console.log( "ci: " + cold_index + " hi: " + heat_index + " i: " + index);
 			this.drawGauge( 'main_gauge', width, value , thermal );
 		
 			$("#tips").html( tip_html );
