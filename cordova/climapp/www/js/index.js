@@ -222,7 +222,8 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.3,
+			return {"version": 1.4,
+					"app_version": "beta",
 					"user_info": {
 							"isFirstLogin": 1,
 							"hasExternalDBRecord": 0,
@@ -909,6 +910,10 @@ var app = {
 			$("input[id='1star"+this.knowledgeBase.feedback.question1.rating+"']").attr("checked", true);
 			$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").attr("checked", true);
 			$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").attr("checked", true);
+		} 
+		else if(this.currentPageID == "about") {
+			$("#app_version").html("App version: " + this.knowledgeBase.app_version);
+			$("#kb_version").html("Knowledgebase version: " + this.knowledgeBase.version);
 		}
 	},
 	isDrawColdGauge: function( cold, heat, index ){
