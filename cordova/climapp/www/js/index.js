@@ -228,12 +228,8 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-<<<<<<< HEAD
 			return {"version": 1.4,
 					"app_version": "beta",
-=======
-			return {"version": 1.6,
->>>>>>> dev_boris
 					"user_info": {
 							"isFirstLogin": 1,
 							"hasExternalDBRecord": 0,
@@ -496,15 +492,11 @@ var app = {
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
-<<<<<<< HEAD
 			showShortToast(appidFromServer + " id received, yet no hasExternalDBRecord or couldn't fetch appid");
 			
 			//appidFromServer = "f22065144b2119439a589cbfb9d851d3";//until db thing is fixed;
 			// Henriette: this is not a problemm -- the app ID is fetched, there seems to be sometimes where this does not happen but the implementation is correct,
 			//Boris: yes, the implementation is correct, but some dependencies are probably violated, otherwise it should work always. Let's learn what bug causing dependency is. For instance, is it the " self.knowledgeBase.user_info.hasExternalDBRecord ?"
-=======
-			showShortToast(appidFromServer + " id received, yet no hasExternalDBRecord");			
->>>>>>> dev_boris
 		}
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
