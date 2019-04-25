@@ -1,4 +1,4 @@
-<div class="panel settings">
+<div class="panel settings" id="main_panel">
 	<p class="label">Personal settings</p>
 	<div data-target="age" data-listener="wheel">
 		<p>Age<br><span class="settings" id="age"></span></p>
@@ -21,24 +21,24 @@
 	<div class="inlineitems"> 
 		<p id="notify">Notifications</p>
 		<p class="totheright"><label class="switch">
-			<input type="checkbox" id="notification_checkbox" data-target="notifications" data-listener="notification_switch">
+			<input type="checkbox" id="notification_checkbox" data-target="notification_switch" data-listener="tab">
 			<span class="slider round"></span>
 		  </label>
 		</p>
 	</div>
-	<div data-target="reset" data-listener="reset_preferences"> 
+	<div data-target="reset" data-listener="tab"> 
 		<p>Reset personal settings</p>
 	</div>
 </div>
 <div class="panel settings_other">
 	<p class="label">Other</p>
-	<div data-target="about" data-listener="about_page"> 
+	<div data-target="about" data-listener="tab"> 
 		<p>About</p>
 	</div>
-	<div data-target="disclaimer" data-listener="disclaimer_page"> 
+	<div data-target="disclaimer" data-listener="tab"> 
 		<p>Disclaimer</p>
 	</div>
-	<div data-target="feedback" data-listener="feedback_page">
+	<div data-target="feedback" data-listener="tab">
 		<p>Feedback</p> 
 	</div>
 	<p>Privacy</p>

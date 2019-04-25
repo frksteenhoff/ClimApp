@@ -118,7 +118,7 @@ var app = {
 	initSettingsListeners: function(){
 		var self = this;
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='wheel']").on("touchstart", function(){
+		$("div[data-listener='wheel']").on("click", function(){
 			var target = $(this).attr("data-target");
 			let title_ = self.knowledgeBase.settings[target].title;
 			var items_ = self.getSelectables( target );
@@ -141,45 +141,43 @@ var app = {
 			    console.log('Canceled');
 			});
 		});		
-
-		$("input[data-listener='notification_switch']").off(); //prevent multiple instances of listeners on same object
-		$("input[data-listener='notification_switch']").on("click", function(){
-			var isChecked = $(this).is(":checked");
-			self.knowledgeBase.user_info.receivesNotifications = isChecked;
-
-			// Inform user about choice in toast
-			var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
-			showShortToast(notificationText);
+		$("div[data-listener='wheel']").on("swipeleft", function(){
+			window.SelectorCordovaPlugin.hideSelector(); // hide selector so that it is not shown in dashboard (only working on iOS)
+			self.loadUI("dashboard");
 		});
 
-		$("div[data-listener='feedback_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='feedback_page']").on("touchstart", function(){
-			self.loadUI('feedback');
+		$("div[data-listener='tab']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='tab']").on("click", function(){
+			var target = $(this).attr("data-target");
+			
+			if(target === "reset") {
+				// Resetting values to default
+				self.knowledgeBase.settings.age.value = 30;
+				self.knowledgeBase.settings.gender.value = "undefined";
+				self.knowledgeBase.settings.height.value = 178;
+				self.knowledgeBase.settings.weight.value = 82;
+				self.knowledgeBase.settings.unit.value = "SI";
+
+				// Inform user about event in toast
+				var notificationText = "Personal preferences reset, using default values.";
+				showShortToast(notificationText);
+
+			} else if(target === "notification_switch") {
+				var isChecked = $(this).is(":checked");
+				self.knowledgeBase.user_info.receivesNotifications = isChecked;
+
+				// Inform user about choice in toast
+				var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
+				showShortToast(notificationText);
+
+			} else {
+				self.loadUI(target);
+			}
 		});
-
-		$("div[data-listener='disclaimer_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='disclaimer_page']").on("touchstart", function(){
-			self.loadUI('disclaimer');
-		});
-
-		$("div[data-listener='about_page']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='about_page']").on("touchstart", function(){
-			self.loadUI('about');
-		});
-
-		$("div[data-listener='reset_preferences']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='reset_preferences']").on("touchstart", function(){
-			// Resetting values to default
-			self.knowledgeBase.settings.age.value = 30;
-			self.knowledgeBase.settings.gender.value = "undefined";
-			self.knowledgeBase.settings.height.value = 178;
-			self.knowledgeBase.settings.weight.value = 82;
-			self.knowledgeBase.settings.unit.value = "SI";
-			//self.knowledgeBase.user_info.isFirstLogin = true;
-
-			// Inform user about event in toast
-			var notificationText = "Personal preferences reset, using default values.";
-			showShortToast(notificationText);
+		// Always add ability to swipe
+		$("div[data-listener='tab']").on("swipeleft", function(){
+			window.SelectorCordovaPlugin.hideSelector(); // hide selector so that it is not shown in dashboard
+			self.loadUI("dashboard");
 		});
 	},
 	initGeolocationListeners: function(){
@@ -208,6 +206,14 @@ var app = {
 			}, 1000);
 			
 		});		
+	},
+	initDashboardSwipeListeners: function() {
+		var self = this;
+		$("div[data-listener='panel']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='panel']").on("swiperight", function(){
+			var target = $(this).attr("data-target");
+			self.loadUI(target);
+		});
 	},
 	initActivityListeners: function(){
 		var self = this;
@@ -691,6 +697,7 @@ var app = {
 			$("#main_panel").show();
 			$("#tip_panel").show();
 
+			this.initDashboardSwipeListeners();
 			this.initGeolocationListeners();
 			this.initActivityListeners();
 			let selected = this.knowledgeBase.activity.selected;
