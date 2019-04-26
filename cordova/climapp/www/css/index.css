@@ -71,7 +71,7 @@ canvas{
     box-sizing: border-box;         /* Opera/IE 8+ */
 }
 
-.flexbox-5, .flexbox-2{
+.flexbox-5, .flexbox-2, .flexbox-3{
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -90,6 +90,10 @@ canvas{
 	flex-basis:50%;
 }
 
+.flexbox-2 div.left {
+	margin: auto;
+	align-self: flex-start;
+}
 .flexbox-2 div.right {
 	margin: auto;
 	align-self: flex-end;
@@ -97,6 +101,19 @@ canvas{
 
 .flexbox-2 div.wide{
 	flex-basis: 70%;
+}
+.flexbox-3 div{
+	margin: auto;
+	flex-basis: 33%;
+}
+
+.flexbox-3 div.left {
+	margin: auto;
+	align-self: flex-start;
+}
+.flexbox-3 div.right {
+	margin: auto;
+	align-self: flex-end;
 }
 
 .flexbox-5 div{
@@ -152,6 +169,9 @@ span.score{
 	font-weight: bold;
 }
 
+p.left{
+	text-align:left;
+}
 p.center{
 	text-align: center;
 }

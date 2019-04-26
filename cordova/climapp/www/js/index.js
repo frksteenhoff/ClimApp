@@ -22,6 +22,7 @@ var app = {
 	pageMap: undefined,
 	currentPageID: undefined,
 	selectedWeatherID: undefined,
+	maxForecast: undefined,
 	radialgauge: undefined,
 	
 	
@@ -185,32 +186,31 @@ var app = {
 			self.updateLocation();
 		});		
 	},
-	initForecastListeners: function(){
-		var self = this;
-		$("div[data-listener='forecast']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='forecast']").on("click", function(){
-			$("div[data-listener='forecast']").removeClass("focus");
-			$(this).addClass("focus");
-			let windowsize = $(window).width();
-			
-			let index = $(this).attr("data-index");
-			
-			self.updateInfo( index );
-			
-			var offset_scroll = ( $(this).offset().left - ( 0.5*windowsize) + 0.075*windowsize) -
-								$("forecasts").scrollLeft(); //CENTERING
-			$("#forecasts").animate({
-				scrollLeft: offset_scroll
-			}, 1000);
-			
-		});		
-	},
 	initDashboardSwipeListeners: function() {
 		var self = this;
 		$("div[data-listener='panel']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='panel']").on("swiperight", function(){
 			var target = $(this).attr("data-target");
-			self.loadUI(target);
+			if (target === "forecast"){
+				self.selectedWeatherID = Math.max(0, self.selectedWeatherID-1);
+				$("#main_panel").fadeOut(500, function(){
+					self.updateInfo( self.selectedWeatherID );
+					$("#main_panel").fadeIn(500);
+				});
+			}else{
+				self.loadUI(target);
+			}
+		});
+		$("div[data-listener='panel']").on("swipeleft", function(){
+			var target = $(this).attr("data-target");
+			if (target === "forecast"){
+				self.selectedWeatherID = Math.min( self.maxForecast, self.selectedWeatherID+1);
+				$("#main_panel").fadeOut(500, function(){
+					self.updateInfo( self.selectedWeatherID );
+					$("#main_panel").fadeIn(500);
+				});
+				
+			}
 		});
 	},
 	initActivityListeners: function(){
@@ -226,7 +226,7 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.4,
+			return {"version": 1.8,
 					"app_version": "beta",
 					"user_info": {
 							"isFirstLogin": 1,
@@ -363,7 +363,8 @@ var app = {
 		 				 "disclaimer": "./pages/disclaimer.html",
 						 "details": "./pages/details.html",
 		 				 "about": "./pages/about.html"};
-		
+		this.selectedWeatherID = 0;
+		this.maxForecast = 8;
 		//localStorage.clear(); // Need to clear local storage when doing the update
 		var shadowKB = this.initKnowledgeBase();
 		if ( localStorage.getItem("knowledgebase") !== null ) {
@@ -491,7 +492,7 @@ var app = {
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
-			showShortToast(appidFromServer + "no external DB record found");			
+			//showShortToast("no external DB record found");			
 		}
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
@@ -569,7 +570,7 @@ var app = {
 					   		addWeatherDataToDB(self.knowledgeBase);
 					   }
 					   else{
-			   				showShortToast("cannot store weather on ClimApp server");
+			   				//showShortToast("cannot store weather on ClimApp server");
 					   }
 						
 				   }
@@ -638,20 +639,21 @@ var app = {
 			var va = self.knowledgeBase.weather.windspeed[index];
 			var D = 0.15; //diameter black globe 
 			var eps_g = 0.95; //standard emmisivity black bulb
-			var Tmrt_mid = (1.1 * Math.pow(10,8) * Math.pow( va, 0.6 ) ) / (eps_g * Math.pow(D,0.4));
-			
-			var Tmrt = Math.pow( Math.pow((Tg+273.0), 4) + Tmrt_mid * (Tg-Ta), 0.25 ) - 273.0;
+			var t0 = (Tg+273.0);
+			var t1 = Math.pow( t0, 4);
+			var t2 = 1.1 * Math.pow(10,8) * Math.pow( va, 0.6 );
+			var t3 = eps_g * Math.pow( D, 0.4);
+			var t4 = t1 + ( t2 / t3 ) * (Tg-Ta);
+			var Tmrt = Math.pow( t4, 0.25 ) - 273.0;
 			options.air = {
 							"Tair": self.knowledgeBase.weather.temperature[index], 	//C
 							"rh": 	self.knowledgeBase.weather.humidity[index], 	//% relative humidity
 							"Pw_air": self.knowledgeBase.weather.watervapourpressure[index],   //kPa partial water vapour pressure
 							"Trad": Tmrt, 	//C mean radiant temperature
 							"Tglobe": Tg,
-							"v_air": self.knowledgeBase.weather.windspeed[index], 	//m/s air velocity at 10m.
+				"v_air": self.knowledgeBase.weather.windspeed[index], 	//m/s air velocity at 10m.
 			};
-			if( index === 0 ){
-				console.log( JSON.stringify( options ));
-			}
+			
 			heatindex.IREQ.set_options( options );
 			heatindex.IREQ.sim_run();
 
@@ -665,6 +667,7 @@ var app = {
 				"rh": options.air.rh,
 				"v_air": options.air.v_air,
 				"Trad":options.air.Trad,
+				"Tglobe": options.air.Tglobe,
 				"rad":self.knowledgeBase.weather.radiation[index],
 				"wbgt": self.knowledgeBase.weather.wbgt[index],
 				"windchill": self.knowledgeBase.weather.windchill[index],
@@ -688,6 +691,7 @@ var app = {
 				"rh": options.air.rh,
 				"v_air": options.air.v_air,
 				"Trad":options.air.Trad,
+				"Tglobe": options.air.Tglobe,
 				"rad":self.knowledgeBase.weather.radiation[index],
 				"wbgt": self.knowledgeBase.weather.wbgt[index],
 				"windchill": self.knowledgeBase.weather.windchill[index],
@@ -725,119 +729,6 @@ var app = {
 			$("div[data-target='"+selected+"']").addClass("selected");
 			let caption_ = this.knowledgeBase.activity.label[ selected ];
 			$("#activityCaption").html( caption_ );
-			
-			/*
-			var currentindex = -1;
-			var self = this;
-			const ms_p_hour=(1000*60*60);
-			const ms_p_day = ms_p_hour * 24;
-			var localdatetime = new Date();
-			var localutc = new Date( localdatetime.toISOString() );
-			var localdate = new Date( localdatetime.toDateString() );
-			var datemap = {"now": "current",
-							"-1": "yesterday",
-						   "0": "today",
-							"1": "tomorrow",
-							"2": "in 2 days",
-							"3": "in 3 days",
-							"4": "in 4 days",
-							"5": "in 5 days"};
-			var forecastarray = [];
-			
-			//BK: consider to move this logic in the calcthermal indices
-			$.each( this.knowledgeBase.thermalindices.ireq, function(index, obj ){
-				let utc = new Date( obj.utc ); //
-				//console.log( obj.utc + " " +utc );
-				let lt = utc.toLocaleTimeString(navigator.language, { //language specific setting
-						hour: '2-digit',
-					    minute:'2-digit'
-				});
-				
-				//check if forecast is within 3 hours
-				let dif = (utc - localutc) / ms_p_hour;
-				let utcdate = new Date( utc.toDateString() );
-				let daydiff = Math.floor( ( utcdate - localdate ) / ms_p_day );
-				
-				let wbgt = self.knowledgeBase.weather.wbgt[index];
-				let hrisk = WBGTrisk( wbgt, self.knowledgeBase );
-				let crisk = obj.ICLminimal;
-				let daydiffkey = daydiff;
-				
-				self.knowledgeBase.thermalindices.ireq[index].isnow = false;
-				self.knowledgeBase.thermalindices.phs[index].isnow = false;
-				if ( index == 0 ){
-					currentindex = index;
-					daydiffkey = "now";
-					self.knowledgeBase.thermalindices.ireq.isnow = true;
-					self.knowledgeBase.thermalindices.phs[index].isnow = true;
-					self.selectedWeatherID = index;
-				}
-				
-				var element = {"index": index,
-								"cold": crisk,
-								"heat": hrisk,
-							   "time": lt,
-							   "daydiff": daydiff,
-							   "day": datemap[ daydiffkey ]
-				};
-				forecastarray.push( element );
-			});
-			var forecasts = "";
-			if ( currentindex > -1){
-				var base_val = this.determineThermalIndexValue( forecastarray[currentindex].cold, 
-																forecastarray[currentindex].heat, 
-																currentindex );
-			
-				var yesterday_val = undefined;
-				var yesterday_string = "";
-			
-			    /*
-				$.each( forecastarray, function(index, e ){
-					if( e.daydiff==-1 && e.time == forecastarray[currentindex].time ){ //24h before
-						yesterday_val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
-						let percval = (100*((yesterday_val - base_val)/base_val));
-						let sign = percval >= 0 ? "+" : "";
-						let interpretation = base_val > yesterday_val ? "warmer" : "colder";
-						yesterday_string = sign + percval.toFixed(0) + "% " + interpretation + " than yesterday " + e.time;
-						
-						
-						$("#yesterday").html( yesterday_string );
-					}
-					
-					//from current until tomorrow, but not further
-					if( index > currentindex && ( e.daydiff < 2 ) ){
-						var val = self.determineThermalIndexValue( e.cold, e.heat, index ).toFixed(1);
-						let highlight = self.knowledgeBase.gauge.highlights.filter( function( obj ){
-							return ( val > obj.from || (obj.from === -4 && val <= -4) ) && val <= obj.to;
-						});					
-					
-						let header = "Next " + (index-currentindex)*3 + " hours";
-						let footer = (e.daydiff > 0 ) ? e.day : "&nbsp;";
-					
-						/* HTML string appending */	
-					/*	
-						forecasts += "<div data-listener='forecast' data-index='"+index+"'>";
-						forecasts += "<p>" + header + " </p>";
-						forecasts += "<p class='"+ highlight[0].css + "'>" + val + "</p>";
-						forecasts += "<p>" + e.time + "</p>"; 
-						forecasts += "<p>" + footer + "</p>"; 
-						forecasts += "</div>";
-					}
-					
-				});
-			}
-			else{
-				$("#main_panel").hide();
-				$("#tip_panel").hide();
-				showShortToast("No weather data available");			
-			}
-			//$("#forecasts").html( forecasts );
-			if( currentindex > -1 ){
-				//this.initForecastListeners();
-				console.log( currentindex );
-				this.updateInfo( currentindex );
-			}			
-		    */
 			this.updateInfo( 0 );
 		}
 		else if( this.currentPageID == "details"){
@@ -848,10 +739,17 @@ var app = {
 			let rh = this.knowledgeBase.thermalindices.phs[index].rh.toFixed(0);
 			let rad = this.knowledgeBase.thermalindices.phs[index].rad.toFixed(0);
 			let vair = this.knowledgeBase.thermalindices.phs[index].v_air.toFixed(1);
-			$("#detail_airtemp").html(tair + "&#xb0");
+			
+			let tmrt = this.knowledgeBase.thermalindices.phs[index].Trad.toFixed(1);
+			let tglobe = this.knowledgeBase.thermalindices.phs[index].Tglobe.toFixed(1);
+			
+			$("#detail_airtemp").html(tair + "&deg;C");
 			$("#detail_rh").html(rh + "%");
-			$("#detail_rad").html(rad + "W/m<sup>2</sup>");
 			$("#detail_wind").html(vair + "m/s");
+			$("#detail_mrt").html(tmrt + "&deg;C");
+			$("#detail_tglobe").html(tglobe + "&deg;C");
+			
+			$("#detail_rad").html(rad + "W/m<sup>2</sup>");
 			
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
 			let wbgt = this.knowledgeBase.thermalindices.phs[index].wbgt.toFixed(1);
@@ -908,7 +806,7 @@ var app = {
 				let ral = RAL(this.knowledgeBase).toFixed(1);
 				$("#detail_ral").html( ral );
 				
-				let d_tre = this.knowledgeBase.thermalindices.phs[ index].D_Tre;
+				let d_tre = this.knowledgeBase.thermalindices.phs[ index].D_Tre ? this.knowledgeBase.thermalindices.phs[ index].D_Tre : ">120";
 				let d_sw = this.knowledgeBase.thermalindices.phs[ index].Dwl50;
 				let sw_tot_per_hour = 0.001 * 60 * this.knowledgeBase.thermalindices.phs[ index].SWtotg / 
 				(this.knowledgeBase.sim.duration ); //liter per hour
@@ -963,7 +861,7 @@ var app = {
 		return cold >= heat
 			   && 
 			   cold >= this.knowledgeBase.thresholds.ireq &&
-			   this.knowledgeBase.thermalindices.ireq[ index].Tair <= 15;
+			   this.knowledgeBase.thermalindices.ireq[ index].Tair <= 10;
 	},
 	isDrawHeatGauge: function( cold, heat, index ){
  	   return heat > cold
@@ -985,8 +883,46 @@ var app = {
 				    minute:'2-digit'
 			});
 			$("#current_time").html( local_time );
+			
+			let next = index + 1;
+			let prev = index - 1;
+			
+			if( prev < 0 ){
+				$("#forecast_left").hide();
+			}
+			else{
+				$("#forecast_left").show();
+				
+				let prev_utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ prev ].utc ); //
+				let prev_local_time = prev_utc_date.toLocaleTimeString(navigator.language, { //language specific setting
+						month: 'short',
+						day: 'numeric',
+						hour: '2-digit',
+					    minute:'2-digit'
+				});
+				$("#swipe_left_time").html(prev_local_time);
+			}
+			
+			if( next > this.maxForecast ){
+				$("#forecast_right").hide();
+			}
+			else{
+				$("#forecast_right").show();
+				
+				let next_utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ next ].utc ); //
+				let next_local_time = next_utc_date.toLocaleTimeString(navigator.language, { //language specific setting
+						month: 'short',
+						day: 'numeric',
+						hour: '2-digit',
+					    minute:'2-digit'
+				});
+				$("#swipe_right_time").html(next_local_time);
+			}
+			
+			
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
-			$("#temperature").html( getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair, this.knowledgeBase.settings.unit.value).toFixed(0) +"&#xb0");
+			
+			$("#temperature").html( this.knowledgeBase.thermalindices.ireq[ index].Tair.toFixed(0) +"&#xb0");
 			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[index].v_air.toFixed(0) );
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.settings.unit.value)); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
@@ -1011,7 +947,6 @@ var app = {
 			let value = this.determineThermalIndexValue( cold_index, heat_index, index );
 			let thermal = draw_cold_gauge ? "cold" : "heat";
 			
-			console.log( "ci: " + cold_index + " hi: " + heat_index + " i: " + index + " value: " + value);
 			this.drawGauge( 'main_gauge', width, value , thermal );
 		
 			$("#tips").html( tip_html );

@@ -8,8 +8,10 @@
 	<p>
 	   Air temperature <span class="score" id="detail_airtemp"></span>
 	   <br>Humidity <span class="score" id="detail_rh"></span>
-	   <br>Radiation in full sunlight <span class="score" id="detail_rad"></span>
 	   <br>Windspeed <span class="score" id="detail_wind"></span>
+	   <br>Mean radiant temperature <span class="score" id="detail_mrt"></span>
+	   <br>Globe temperature <span class="score" id="detail_tglobe"></span>
+	   <br>Radiation in full sunlight <span class="score" id="detail_rad"></span>  
    </p>
 </div>
 
@@ -19,8 +21,7 @@
 </div>
 <div class="panel" data-context="heat">
 	<p class="label">Heat Strain (PHS ISO7933)</p>
-	<p>This means that the safe exposure limit is <span class="score" id="detail_dle_phs"></span> minutes,
-		and Sweat rate is around <span  class="score" id="detail_sweat"></span> liter per hour if you are dressed in casual office clothing.</p>
+	<p>This means that body core temperature is expected to exceed 38&#xb0;C in <span class="score" id="detail_dle_phs"></span> minutes, and Sweat rate is around <span  class="score" id="detail_sweat"></span> liter per hour.</p>
 </div>
 
 <div class="panel" data-context="cold">
@@ -47,7 +48,7 @@
 			<div id="detail_max_clo"></div>
 		</div>
 	</div>
-	<p>With the minimal clothing level the safe exposure limit is <span id="detail_dle_ireq"></span> minutes.</p>
+	<p>With the minimal clothing level your core temperature is expected <span id="detail_dle_ireq"></span> minutes.</p>
 </div>
 
 <div class="panel" data-context="neutral">
