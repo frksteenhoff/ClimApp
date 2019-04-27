@@ -216,14 +216,16 @@ img.small{
 
 .panel.settings div {
     margin-bottom: 0.5em;
-	border-bottom: solid 1px #ccc;
+	border-bottom: solid 1px rgba(204, 204, 204, 0.3);
 }
 
 .panel.settings_other div {
-	border-bottom: solid 1px #ccc;
+	border-bottom: solid 1px rgba(204, 204, 204, 0.3);
 }
 
-.panel.settings div.inlineitems {
+.panel.settings div.inlineitems,
+.panel.settings div.last
+ {
     border-bottom: hidden;
 }
 
