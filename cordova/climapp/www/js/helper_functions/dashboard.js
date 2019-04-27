@@ -160,11 +160,9 @@ function coldLevelTips( index, level, kb ){
 	if( level === 1 ){ //beginner, early usre
 		if( cold_index <= 1 ){
 			str += "<p>The green level means that low thermal stress is forecasted.</p>";
-			str += "<p>The score will increase towards higher warning levels if the weather agravates, your activity level decreases or your clothing level decreases.</p>";
 		}
 		else if( cold_index <= 2 ){
 			str += "<p>The cyan level means that moderate cold stress is expected.</p>";
-			str += "<p>You should be able to maintain normal activities - but appropriate/adjusted behavior is required.</p>";
 		}
 		else if( cold_index <= 3 ){
 			str += "<p>The blue level means that high cold stress is expected.</p>";
@@ -182,21 +180,23 @@ function coldLevelTips( index, level, kb ){
 	else if( level === 2 ){ //experienced user // or more info requested
 		if( cold_index <= 1 ){
 			str += "<p>The personalized cold stress indicator depends on the weather report as well as your personal input.</p>";
+			str += "<p>The score will increase towards higher warning levels if the weather agravates, your activity level decreases or your clothing level decreases.</p>";
 			str += "<p>No special precautions are required unless you work/excercise in special settings (indoor) or with resticted ability to maintain heat.</p>";
 		}
 		else if( cold_index <= 2 && isWindstopperUseful ){
-			str += "There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.";
+			str += "<p>You should be able to maintain normal activities - but appropriate/adjusted behavior is required.</p>";
+			str += "<p>There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.</p>";
 		}
 		else if( cold_index <= 2 ){
-			str += "You should consider to increase insulation from clothing by adding layers or choosing warmer/thicker clothing.";
+			str += "<p>You should consider to increase insulation from clothing by adding layers or choosing warmer/thicker clothing.</p>";
 		}
 		else if( cold_index > 2 ){
 			str += "<p>At this level you are recommended to pay extra attention to appropriate behavior and match clothing to the cold level and protect exposed skin. Be aware not to overdress, because sweating will cool you down.</p>";
 			if( isWindstopperUseful ){
-				str += "There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.";
+				str += "<p>There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.</p>";
 			}
 			if( windrisk ){
-				str += "Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.";
+				str += "<p>Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
 			}
 		}
 	}

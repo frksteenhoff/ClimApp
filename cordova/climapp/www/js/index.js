@@ -192,11 +192,19 @@ var app = {
 		$("div[data-listener='panel']").on("swiperight", function(){
 			var target = $(this).attr("data-target");
 			if (target === "forecast"){
-				self.selectedWeatherID = Math.max(0, self.selectedWeatherID-1);
-				$("#main_panel").fadeOut(500, function(){
-					self.updateInfo( self.selectedWeatherID );
-					$("#main_panel").fadeIn(500);
-				});
+				
+				if( self.selectedWeatherID === 0 ){
+					self.updateLocation();
+					$("#main_panel").fadeOut(2000, function(){});
+				}
+				else{
+					self.selectedWeatherID = Math.max(0, self.selectedWeatherID-1);
+					$("#main_panel").fadeOut(500, function(){
+						self.updateInfo( self.selectedWeatherID );
+					});
+				}
+				
+				
 			}else{
 				self.loadUI(target);
 			}
@@ -207,9 +215,7 @@ var app = {
 				self.selectedWeatherID = Math.min( self.maxForecast, self.selectedWeatherID+1);
 				$("#main_panel").fadeOut(500, function(){
 					self.updateInfo( self.selectedWeatherID );
-					$("#main_panel").fadeIn(500);
 				});
-				
 			}
 		});
 	},
@@ -552,6 +558,23 @@ var app = {
 					   self.knowledgeBase.weather.radiation = weather.solar.map(Number);
 					   self.knowledgeBase.weather.radiation.unshift( Number( weather.currentweather.solar ) );
 					   
+					   self.knowledgeBase.weather.meanradianttemperature = [];
+					   self.knowledgeBase.weather.windspeed2m = [];
+					   $.each( self.knowledgeBase.weather.windspeed, function(key, vair){
+				   			var Tg= self.knowledgeBase.weather.globetemperature[key];
+				   			var Ta = self.knowledgeBase.weather.temperature[key];
+				   			var va = Math.pow( vair, 0.25 );
+				   			var D = 0.15; //diameter black globe 
+				   			var eps_g = 0.95; //standard emmisivity black bulb
+				   			var t0 = (Tg+273.0);
+				   			var t1 = Math.pow( t0, 4);
+				   			var t2 = 1.1 * Math.pow(10,8) * Math.pow( va, 0.6 );
+				   			var t3 = eps_g * Math.pow( D, 0.4);
+				   			var t4 = t1 + ( t2 / t3 ) * (Tg-Ta);
+				   			var Tmrt = Math.pow( t4, 0.25 ) - 273.0;
+							self.knowledgeBase.weather.meanradianttemperature.push( Tmrt );
+							self.knowledgeBase.weather.windspeed2m.push( va );
+					   } );
 					   
 					   self.knowledgeBase.weather.watervapourpressure = [];
 					   $.each( self.knowledgeBase.weather.humidity,
@@ -633,27 +656,15 @@ var app = {
 						};
 		var self = this;
 		$.each( this.knowledgeBase.weather.temperature, function(index, val ){
-			
-			var Tg= self.knowledgeBase.weather.globetemperature[index];
-			var Ta = self.knowledgeBase.weather.temperature[index];
-			var va = self.knowledgeBase.weather.windspeed[index];
-			var D = 0.15; //diameter black globe 
-			var eps_g = 0.95; //standard emmisivity black bulb
-			var t0 = (Tg+273.0);
-			var t1 = Math.pow( t0, 4);
-			var t2 = 1.1 * Math.pow(10,8) * Math.pow( va, 0.6 );
-			var t3 = eps_g * Math.pow( D, 0.4);
-			var t4 = t1 + ( t2 / t3 ) * (Tg-Ta);
-			var Tmrt = Math.pow( t4, 0.25 ) - 273.0;
 			options.air = {
 							"Tair": self.knowledgeBase.weather.temperature[index], 	//C
 							"rh": 	self.knowledgeBase.weather.humidity[index], 	//% relative humidity
 							"Pw_air": self.knowledgeBase.weather.watervapourpressure[index],   //kPa partial water vapour pressure
-							"Trad": Tmrt, 	//C mean radiant temperature
-							"Tglobe": Tg,
-				"v_air": self.knowledgeBase.weather.windspeed[index], 	//m/s air velocity at 10m.
+							"Trad": self.knowledgeBase.weather.meanradianttemperature[index], 	//C mean radiant temperature
+							"Tglobe": self.knowledgeBase.weather.globetemperature[index],
+							"v_air": self.knowledgeBase.weather.windspeed2m[index], 	//m/s air velocity at 2m.
+							"v_air10": self.knowledgeBase.weather.windspeed[index],  //m/s air velocity at 10m.
 			};
-			
 			heatindex.IREQ.set_options( options );
 			heatindex.IREQ.sim_run();
 
@@ -665,7 +676,8 @@ var app = {
 				"DLEneutral": ireq.DLEneutral,
 				"Tair": options.air.Tair,
 				"rh": options.air.rh,
-				"v_air": options.air.v_air,
+				"v_air": options.air.v_air, //@2m
+				"v_air10": options.air.v_air10, //@10m
 				"Trad":options.air.Trad,
 				"Tglobe": options.air.Tglobe,
 				"rad":self.knowledgeBase.weather.radiation[index],
@@ -689,7 +701,8 @@ var app = {
 				"SWtotg": phs.SWtotg,
 				"Tair": options.air.Tair,
 				"rh": options.air.rh,
-				"v_air": options.air.v_air,
+				"v_air": options.air.v_air, //@2m
+				"v_air10": options.air.v_air10, //@10m
 				"Trad":options.air.Trad,
 				"Tglobe": options.air.Tglobe,
 				"rad":self.knowledgeBase.weather.radiation[index],
@@ -729,7 +742,7 @@ var app = {
 			$("div[data-target='"+selected+"']").addClass("selected");
 			let caption_ = this.knowledgeBase.activity.label[ selected ];
 			$("#activityCaption").html( caption_ );
-			this.updateInfo( 0 );
+			this.updateInfo( this.selectedWeatherID );
 		}
 		else if( this.currentPageID == "details"){
 			$(".navigation").show();
@@ -738,14 +751,16 @@ var app = {
 			let tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
 			let rh = this.knowledgeBase.thermalindices.phs[index].rh.toFixed(0);
 			let rad = this.knowledgeBase.thermalindices.phs[index].rad.toFixed(0);
-			let vair = this.knowledgeBase.thermalindices.phs[index].v_air.toFixed(1);
-			
+			let vair10 = this.knowledgeBase.thermalindices.phs[index].v_air10.toFixed(1);
+			let vair2 = this.knowledgeBase.thermalindices.phs[index].v_air.toFixed(1);
 			let tmrt = this.knowledgeBase.thermalindices.phs[index].Trad.toFixed(1);
 			let tglobe = this.knowledgeBase.thermalindices.phs[index].Tglobe.toFixed(1);
 			
 			$("#detail_airtemp").html(tair + "&deg;C");
 			$("#detail_rh").html(rh + "%");
-			$("#detail_wind").html(vair + "m/s");
+			$("#detail_wind10m").html(vair10 + "m/s");
+			
+			$("#detail_wind2m").html(vair2 + "m/s");
 			$("#detail_mrt").html(tmrt + "&deg;C");
 			$("#detail_tglobe").html(tglobe + "&deg;C");
 			
@@ -887,19 +902,29 @@ var app = {
 			let next = index + 1;
 			let prev = index - 1;
 			
+			let cDate = new Date();
+			let cDaynumber = cDate.getDate();
+			let cMonthnumber = cDate.getMonth();
+			let cYearnumber = cDate.getYear();
+			
+			
 			if( prev < 0 ){
-				$("#forecast_left").hide();
+				$("#swipe_left_time").html( "update weather");
 			}
 			else{
 				$("#forecast_left").show();
 				
 				let prev_utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ prev ].utc ); //
 				let prev_local_time = prev_utc_date.toLocaleTimeString(navigator.language, { //language specific setting
-						month: 'short',
-						day: 'numeric',
 						hour: '2-digit',
 					    minute:'2-digit'
 				});
+				if( prev_utc_date.getDate() > cDaynumber || 
+					prev_utc_date.getMonth() > cMonthnumber || 
+					prev_utc_date.getYear() > cYearnumber ){
+					
+						prev_local_time = "tomorrow " + prev_local_time;
+				}
 				$("#swipe_left_time").html(prev_local_time);
 			}
 			
@@ -911,11 +936,15 @@ var app = {
 				
 				let next_utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ next ].utc ); //
 				let next_local_time = next_utc_date.toLocaleTimeString(navigator.language, { //language specific setting
-						month: 'short',
-						day: 'numeric',
 						hour: '2-digit',
 					    minute:'2-digit'
 				});
+				if( next_utc_date.getDate() > cDaynumber || 
+					next_utc_date.getMonth() > cMonthnumber || 
+					next_utc_date.getYear() > cYearnumber ){
+					
+						next_local_time = "tomorrow " + next_local_time;
+				}
 				$("#swipe_right_time").html(next_local_time);
 			}
 			
@@ -923,7 +952,7 @@ var app = {
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
 			
 			$("#temperature").html( this.knowledgeBase.thermalindices.ireq[ index].Tair.toFixed(0) +"&#xb0");
-			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[index].v_air.toFixed(0) );
+			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[index].v_air10.toFixed(0) );
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.settings.unit.value)); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
 		
@@ -950,6 +979,7 @@ var app = {
 			this.drawGauge( 'main_gauge', width, value , thermal );
 		
 			$("#tips").html( tip_html );
+			$("#main_panel").fadeIn(500);
 		}
 		
 		
