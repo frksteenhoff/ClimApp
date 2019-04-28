@@ -43,7 +43,7 @@ function windchillRisk(windchill) {
 
 
 // kb shorthand for knowledgeBase
-function BSA(kb) {
+function BSA(kb) { //m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
         let w = kb.settings.weight.value; //kg
         let h = kb.settings.height.value / 100; //m
@@ -51,7 +51,7 @@ function BSA(kb) {
     }
 }
 
-function M(kb) {
+function M(kb) { //W/m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
         let ISO_selected = kb.activity.selected;
         let ISO_level = kb.activity.values[ ISO_selected ];
