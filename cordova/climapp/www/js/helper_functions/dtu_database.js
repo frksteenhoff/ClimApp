@@ -7,8 +7,6 @@
 // kb - shorthand for self.knowledgeBase 
 function addFeedbackToDB(kb){
     let apicall = "createFeedbackRecord";
-    console.log("herrere   " + kb.user_info.dtu_ip);
-    console.log("herrere   " + kb.user_info.dtu_api_base_url);
     let url = kb.user_info.dtu_ip + kb.user_info.dtu_api_base_url + apicall;
     let user_data = {
                 "user_id": deviceID(),
