@@ -104,10 +104,10 @@ var app = {
 			
 			// If user not in database, add user to database
 			if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
-				knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
+				self.knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
 			} 
 			// Add feedback to database
-			addFeedbackToDB(self.knowledgeBase.feedback);
+			addFeedbackToDB(self.knowledgeBase);
 						
 			// reset values
 			$('#feedback_text').val("");
@@ -232,7 +232,7 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.8,
+			return {"version": 1.9,
 					"app_version": "beta",
 					"user_info": {
 							"isFirstLogin": 1,
@@ -386,6 +386,7 @@ var app = {
 			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
 				console.log("loaded knowledgebase version : " + this.knowledgeBase.version );
 				showShortToast("loaded database version : " + this.knowledgeBase.version);
+				console.log("KB " + Object.keys(this.knowledgeBase));
 
 			}
 			else{ //old version does not have version key
