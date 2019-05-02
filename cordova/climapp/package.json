@@ -10,6 +10,7 @@
     "author": "Apache Cordova Team",
     "license": "Apache-2.0",
     "dependencies": {
+        "chai": "^4.2.0",
         "cordova-android": "^7.1.4",
         "cordova-ios": "^4.5.5",
         "cordova-plugin-badge": "^0.8.8",
@@ -21,7 +22,10 @@
         "cordova-plugin-whitelist": "^1.3.3",
         "cordova-plugin-x-toast": "^2.7.2",
         "cordova-wheel-selector-plugin": "^1.1.2",
-        "tocca": "^2.0.4"
+        "ffmpeg": "0.0.4",
+        "tocca": "^2.0.4",
+        "wd": "^1.11.2",
+        "yiewd": "^0.6.0"
     },
     "cordova": {
         "plugins": {

@@ -232,10 +232,10 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.9,
+			return {"version": 2.0,
 					"app_version": "beta",
 					"user_info": {
-							"isFirstLogin": 1,
+							"isFirstLogin": 0,
 							"hasExternalDBRecord": 0,
 							"receivesNotifications": 0, // false as notifications are not part of the app
 							"dtu_ip": "http://192.38.64.244",
