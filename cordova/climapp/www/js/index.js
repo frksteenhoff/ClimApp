@@ -563,7 +563,7 @@ var app = {
 					   $.each( self.knowledgeBase.weather.windspeed, function(key, vair){
 				   			var Tg= self.knowledgeBase.weather.globetemperature[key];
 				   			var Ta = self.knowledgeBase.weather.temperature[key];
-				   			var va = Math.pow( vair, 0.25 );
+				   			var va = vair * Math.pow( 0.2, 0.25 ); //stability class D Liljgren 2008 Table 3
 				   			var D = 0.15; //diameter black globe 
 				   			var eps_g = 0.95; //standard emmisivity black bulb
 				   			var t0 = (Tg+273.0);
