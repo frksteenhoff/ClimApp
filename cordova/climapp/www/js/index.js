@@ -726,6 +726,8 @@ var app = {
 	updateUI: function(){
 		// context dependent filling of content
 		this.initNavbarListeners();
+		$(".navigation_back_settings").hide();
+		$(".navigation_back_dashboard").hide();
 		
 		if( this.currentPageID == "onboarding"){
 			$(".navigation").hide();
@@ -746,7 +748,8 @@ var app = {
 			this.updateInfo( this.selectedWeatherID );
 		}
 		else if( this.currentPageID == "details"){
-			$(".navigation").show();
+			$(".navigation").hide();
+			$(".navigation_back_dashboard").show();
 			var index = this.selectedWeatherID;
 			
 			let tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
@@ -851,7 +854,8 @@ var app = {
 			$("#notification_checkbox").attr("checked", this.knowledgeBase.user_info.receivesNotifications);
 		}
 		else if( this.currentPageID == "feedback" ){
-			$(".navigation").show();
+			$(".navigation").hide();
+			$(".navigation_back_settings").show();
 			this.initFeedbackListeners();
 			// Question text
 			$("#question1").html( this.knowledgeBase.feedback.question1.text );
@@ -869,8 +873,14 @@ var app = {
 			$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").attr("checked", true);
 		} 
 		else if(this.currentPageID == "about") {
+			$(".navigation").hide();
+			$(".navigation_back_settings").show();
 			$("#app_version").html("App version: " + this.knowledgeBase.app_version);
 			$("#kb_version").html("Knowledgebase version: " + this.knowledgeBase.version);
+		} 
+		else if (this.currentPageID == "disclaimer") {
+			$(".navigation").hide();
+			$(".navigation_back_settings").show();
 		}
 	},
 	isDrawColdGauge: function( cold, heat, index ){

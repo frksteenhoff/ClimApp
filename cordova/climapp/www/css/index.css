@@ -234,7 +234,9 @@ img.small{
 }
 
 /* BEGIN navigation bar style*/
-.navigation {
+.navigation, 
+.navigation_back_settings,
+.navigation_back_dashboard {
   position: fixed;
   top: 0;
   width:100%;
@@ -253,14 +255,26 @@ img.small{
   justify-content: space-between;
 }
 
-.navigation div{
-	color: #000;
+
+.navigation div, 
+.navigation_back_settings div, 
+.navigation_back_dashboard div{
+    color: #000;
 	display: border-box;
 	margin: auto;
 }
-.navigation i{
+.navigation i {
     vertical-align: middle; /* | top | bottom */
     margin-right: 0.25em;
+}
+
+/* Making sure arrow is aligned accordingly */
+.navigation_back_settings,
+.navigation_back_dashboard {
+    display: none;
+    padding-left: 0.75em;
+    justify-content: start;
+    text-align: left;
 }
 
 /* END navigation bar style */
