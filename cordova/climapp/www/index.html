@@ -40,33 +40,32 @@
         <div id="root" class="app">
 			<div class="navigation">
                 <div data-target="dashboard" data-listener="navbar">
-					<p><i class="fas fa-tachometer-alt fa-2x"></i> Dashboard</p> 
+					<p><i class="fas fa-tachometer-alt fa-2x"></i> DASHBOARD</p> 
 					<!-- I see no reason to have all caps in the navbar  -->
 				</div>
                 <div data-target="settings" data-listener="navbar"> 
-                    <p><i class="fas fa-cog fa-2x" ></i> Settings</p>
+                    <p><i class="fas fa-cog fa-2x" ></i> SETTINGS</p>
 					<!-- put dasjboard to the right, because i keep clicking left if i want to go to dashboard  -->
                 </div>
 			</div>
-			</div>
+			<div class="spacer"><p>&nbsp;</p></div><!-- &nbsp; so we have same style implementation for <p> as in header -->
 			<div id="content">
-			</div>
-        <!-- BK feb 6 2019: we use this div as our root, and dynamically populate it with the content we require.
-		-->    
-            
+		        <!-- BK feb 6 2019: we use this div as our root, and dynamically populate it with the content we require.
+				-->
+			</div>   
         </div>
         <script type="text/javascript" src="cordova.js"></script>
-		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-		<script type="text/javascript" src="js/gauge.min.js"></script>
-		<script type="text/javascript" src="js/phs/phs.js"></script>
-		<script type="text/javascript" src="js/phs/ireq.js"></script>
-        <script type="text/javascript" src="data/feedbackQuestions.json"></script>
+        <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="js/helper_functions/dashboard.js"></script>
         <script type="text/javascript" src="js/helper_functions/expert_dashboard.js"></script>
         <script type="text/javascript" src="js/helper_functions/notifications.js"></script>
         <script type="text/javascript" src="js/helper_functions/toasts.js"></script>
         <script type="text/javascript" src="js/helper_functions/settings.js"></script>
         <script type="text/javascript" src="js/helper_functions/dtu_database.js"></script>
+		<script type="text/javascript" src="js/gauge.min.js"></script>
+		<script type="text/javascript" src="js/phs/phs.js"></script>
+		<script type="text/javascript" src="js/phs/ireq.js"></script>
+        <script type="text/javascript" src="js/Tocca.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
     </body>
 </html>

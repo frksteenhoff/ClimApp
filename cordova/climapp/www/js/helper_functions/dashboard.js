@@ -21,6 +21,13 @@ function gaugeTitleHeat(val) {
 function getTemperatureUnit(unit) {
     return unit === "US" ? "Fahrenheit" : "Celcius";
 }
+function getTemperatureValueInPreferredUnit(temp, unit) {
+	if(unit === "US") {
+		return temp * 9/5 + 32;
+	} else {
+		return temp;
+	}
+}
 
 function windchillRisk(windchill) {
     if( windchill <-50 ){
@@ -36,7 +43,7 @@ function windchillRisk(windchill) {
 
 
 // kb shorthand for knowledgeBase
-function BSA(kb) {
+function BSA(kb) { //m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
         let w = kb.settings.weight.value; //kg
         let h = kb.settings.height.value / 100; //m
@@ -44,7 +51,7 @@ function BSA(kb) {
     }
 }
 
-function M(kb) {
+function M(kb) { //W/m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
         let ISO_selected = kb.activity.selected;
         let ISO_level = kb.activity.values[ ISO_selected ];
@@ -71,56 +78,6 @@ function WBGTrisk(wbgt, kb) {
     }
 }
 
-// TIPS
-function windchillTips(index, kb) {
-	let str = "";
-	let windchill = kb.thermalindices.ireq[index].windchill;
-	if( windchill <
-		( kb.thermalindices.ireq[index].Tair -
-			kb.thresholds.windchill.deltaT )){
-                str += "<p>Winchill is " + windchill.toFixed(0) + 
-                "&deg;, you could wear a windstopper to combat cold stress.</p>";
-	}
-	else if(kb.thermalindices.ireq[index].ICLminimal >
-			kb.thresholds.ireq.icl ){
-		str += "<p>Dress in layers to combat the cold stress.</p>";
-	}
-	let windrisk = windchillRisk( windchill );
-	if( windrisk ){
-        str += "<p>Due to the windchill " + windchill.toFixed(0) + 
-        "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
-	}   
-	return str;    
-}
-
-function phsTips(index, kb) {
-    let str = "";
-    let d_sw = kb.thermalindices.phs[ index].Dwl50;
-    let sw_tot_per_hour = 0.001 * 60 * kb.thermalindices.phs[ index].SWtotg / 
-    (kb.sim.duration ); //liter per hour
-    sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
-
-    let duration_threshold = kb.thresholds.phs.duration;
-    let sweat_threshold = kb.thresholds.phs.sweat;
-    
-    //hydration
-    if( sw_tot_per_hour >= sweat_threshold ){
-        str += "In these conditions you could need " + sw_tot_per_hour + 
-        " liter water per hour";
-    }
-    
-    let humidity = kb.thermalindices.phs[ index].rh;
-    let temperature = kb.thermalindices.phs[ index].Tair;
-
-    //humidity
-    if( humidity >= 50 && temperature >35 ){
-        str += "A fan will not help in this condition, and can even make things worse!";
-    }
-    
-    //radiation
-    return str;    
-}
-
 function neutralTips() {
 	let tips = [ "Enjoy your activity",
 				"Looks like it's all good",
@@ -132,5 +89,117 @@ function neutralTips() {
 	];
 	let i = Math.floor( Math.random() * tips.length );
 	return tips[i];
+}
+
+function heatLevelTips( index, level, kb ){
+	let str = "";
+	
+	let heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb );
+	
+    let d_sw = kb.thermalindices.phs[ index].Dwl50;
+    let sw_tot_per_hour = 0.001 * 60 * kb.thermalindices.phs[ index].SWtotg / 
+    (kb.sim.duration ); //liter per hour
+    sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
+
+	
+	if( level === 1 ){ //beginner, early usre
+		if( heat_index <= 1 ){
+			str += "<p>The green level means that low thermal stress is forecasted.</p>";
+		}
+		else if( heat_index <= 2 ){
+			str += "<p>The yellow level means that moderate heat stress is expected.</p>";
+			
+		}
+		else if( heat_index <= 3 ){
+			str += "<p>The red level means that high heat stress is expected.</p>";
+		}
+		else if( heat_index > 3){
+			str += "<p>This level is associated with severe heat stress.</p>";
+		}
+	}
+	else if( level === 2 ){ //experienced user // or more info requested
+		if ( heat_index <= 1){
+			str += "<p>The personalized heat stress indicator depends on the weather report as well as your personal input</p>";
+			str += "<p>The score will increase towards higher warning levels if the weather agravates, your activity level increases or your clothing level increases.</p>";
+			str += "<p>No special precautions are required unless you work/excercise in special settings (indoor) or with resticted ability to release heat.</p>";
+		}
+		else if( heat_index <= 2 ){
+			str += "<p>You should be able to maintain normal activities. You may experience higher thermal strain and more sweating than normal.</p>";
+			str += "<p>Consider clothing adjustments and drink more than normal; especially when the score approaches the red heat stress level.</p>";
+			
+		}
+		else if( heat_index <= 3 ){
+			str += "<p>Pay special attention to drinking sufficient during the first days with this heat stress.</p>";
+			str += "<p>Consider adjusting activities (heavy physical tasks during periods of the day with lowest heat) and allow time to adapt.</p>";
+			str += "<p>Be aware that thirst is usually not a sufficient indicator when losses are high.</p>";
+			str += "<p>Remember to drink/rehydrate with your meals.</p>";
+		}
+		else if( heat_index > 3){
+			str += "<p>This level is associated with severe heat stress</p>";
+			str += "<p>Your estimated sweat rate surpasses "+ sw_tot_per_hour+" Liter per hour, so additional drinking is required.</p>";
+			str += "<p>The heat will impact your physical performance - adjusting activities and allowing sufficient breaks will benefit your overall daily ability to cope with the heat.</p>";
+		}
+	}
+	return str;
+}
+
+function coldLevelTips( index, level, kb ){
+	let str = "";
+	
+	let icl_min = kb.thermalindices.ireq[ index ].ICLminimal;
+	let cold_index = icl_min;
+	
+	let windchill = kb.thermalindices.ireq[index].windchill;
+    let tair = kb.thermalindices.ireq[index].Tair;
+	let threshold = kb.thresholds.windchill.deltaT;
+	
+	let windrisk = windchillRisk( windchill );
+	
+	let isWindstopperUseful = ( tair - threshold ) > windchill;
+		
+	if( level === 1 ){ //beginner, early usre
+		if( cold_index <= 1 ){
+			str += "<p>The green level means that low thermal stress is forecasted.</p>";
+		}
+		else if( cold_index <= 2 ){
+			str += "<p>The cyan level means that moderate cold stress is expected.</p>";
+		}
+		else if( cold_index <= 3 ){
+			str += "<p>The blue level means that high cold stress is expected.</p>";
+			if( windrisk ){
+				str += "<p>Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
+			}
+		}
+		else if( cold_index > 3){
+			str += "<p>This level is associated with severe cold stress.</p>";
+			if( windrisk ){
+				str += "<p>Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
+			}
+		}
+	}
+	else if( level === 2 ){ //experienced user // or more info requested
+		if( cold_index <= 1 ){
+			str += "<p>The personalized cold stress indicator depends on the weather report as well as your personal input.</p>";
+			str += "<p>The score will increase towards higher warning levels if the weather agravates, your activity level decreases or your clothing level decreases.</p>";
+			str += "<p>No special precautions are required unless you work/excercise in special settings (indoor) or with resticted ability to maintain heat.</p>";
+		}
+		else if( cold_index <= 2 && isWindstopperUseful ){
+			str += "<p>You should be able to maintain normal activities - but appropriate/adjusted behavior is required.</p>";
+			str += "<p>There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.</p>";
+		}
+		else if( cold_index <= 2 ){
+			str += "<p>You should consider to increase insulation from clothing by adding layers or choosing warmer/thicker clothing.</p>";
+		}
+		else if( cold_index > 2 ){
+			str += "<p>At this level you are recommended to pay extra attention to appropriate behavior and match clothing to the cold level and protect exposed skin. Be aware not to overdress, because sweating will cool you down.</p>";
+			if( isWindstopperUseful ){
+				str += "<p>There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.</p>";
+			}
+			if( windrisk ){
+				str += "<p>Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
+			}
+		}
+	}
+	return str;
 }
 

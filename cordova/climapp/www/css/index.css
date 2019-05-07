@@ -29,8 +29,8 @@ body {
      background-size: auto;
     font-family: Arial, sans-serif;
     height:100%;
-    margin:0px;
-    padding:0px;
+    margin:0;
+    padding:0;
     width:100%;
 	text-align: justify;
 	
@@ -38,6 +38,10 @@ body {
 	padding-top: constant(safe-area-inset-top); 
 	padding-top: env(safe-area-inset-top);
 	/*end required for IOS*/
+}
+
+.spacer{
+	height: 2.3em;
 }
 
 /* Portrait layout (default) */
@@ -55,11 +59,11 @@ canvas{
 }
 
 .panel {
-	background: rgba(255,255,255,0.9);
+	background: rgba(255,255,255,0.1);
+	color: #fff;
 	width: 100%;
-    padding: 0.1em 0.5em;
-    margin-top: 3em;
-	margin: 0.5em auto;
+    padding: 0.1em 0.5em; 
+	margin: 0.7em auto;
 	/*border: 1px solid rgba(0, 0, 0, 0.5);
 	/*box-shadow: 2px 2px rgba(0, 0, 0, 0.2);*/
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
@@ -67,7 +71,7 @@ canvas{
     box-sizing: border-box;         /* Opera/IE 8+ */
 }
 
-.flexbox-5, .flexbox-2{
+.flexbox-5, .flexbox-2, .flexbox-3{
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -86,6 +90,10 @@ canvas{
 	flex-basis:50%;
 }
 
+.flexbox-2 div.left {
+	margin: auto;
+	align-self: flex-start;
+}
 .flexbox-2 div.right {
 	margin: auto;
 	align-self: flex-end;
@@ -94,6 +102,19 @@ canvas{
 .flexbox-2 div.wide{
 	flex-basis: 70%;
 }
+.flexbox-3 div{
+	margin: auto;
+	flex-basis: 33%;
+}
+
+.flexbox-3 div.left {
+	margin: auto;
+	align-self: flex-start;
+}
+.flexbox-3 div.right {
+	margin: auto;
+	align-self: flex-end;
+}
 
 .flexbox-5 div{
 	margin: auto;
@@ -101,6 +122,7 @@ canvas{
     text-align: center;
 }
 .flexbox-5 div.button{
+	color: #000;
 	background: #ffffff;
     padding: 0.2em;
 	border-radius: 2px;
@@ -116,11 +138,16 @@ canvas{
     background: #7EBFE5; /* Old browsers */
 }
 
+a {
+    color: #7EBFE5;
+}
+
 p {
     /* commented out, this functionality should not be in root p. 
 	margin-left: 0.5em;
     margin-right: 0.5em;*/
 }
+
 
 p.morelinespacing {
     line-height: 1.5em;
@@ -131,7 +158,6 @@ button p {
 }
 
 p.label{
-	color: #222;/* #52A5D5;*/
 	font-size: 0.8em;
     font-weight: bold;
 }
@@ -148,6 +174,9 @@ span.score{
 	font-weight: bold;
 }
 
+p.left{
+	text-align:left;
+}
 p.center{
 	text-align: center;
 }
@@ -176,7 +205,6 @@ img.small{
 #tips, 
 #forecasts {
     margin-top: 0.5em;
-    margin-bottom: 0.5em;
 }
 
 #forecasts {
@@ -189,26 +217,29 @@ img.small{
 
 /* Settings related */
 
-.inlineitems p {
-    margin-bottom: 1em;
+
+.panel.settings div {
+    margin-bottom: 0.5em;
+	border-bottom: solid 1px rgba(204, 204, 204, 0.3);
 }
 
-.panel.settings p {
-    margin-bottom: 2em;
+.panel.settings_other div {
+	border-bottom: solid 1px rgba(204, 204, 204, 0.3);
 }
 
-.panel.settings_other p {
-    margin-bottom: 2.5em;
-}
-
-.panel.settings.inlineitems#notify {
-    margin-bottom: 0;
+.panel.settings div.inlineitems,
+.panel.settings div.last
+ {
+    border-bottom: hidden;
 }
 
 /* BEGIN navigation bar style*/
 .navigation {
+  position: fixed;
+  top: 0;
+  width:100%;
   margin: 0; 
-  background: rgba(255,255,255,0.9);  
+  background: rgba(255,255,255,1);  
   /*background: #7EBFE5; /* Old browsers */
   /*background: -moz-linear-gradient(top, #52A5D5 0%, #A1D4F2 100%); /* FF3.6-15 */
   /*background: -webkit-linear-gradient(top, #52A5D5 0%,#A1D4F2 100%); /* Chrome10-25,Safari5.1-6 */
@@ -251,23 +282,15 @@ img.small{
 
 #onboarding_settings, 
 #onboarding_dashboard {
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 
 #onboarding_welcome {
-    font-size: 4em;
+    font-size: 3em;
     text-align: center;
     font-weight: normal;
 }
 
-hr {
-    display: block;
-    height: 1px;
-    border: 0;
-    border-top: 1px solid #ccc;
-    margin: 1em 0;
-    padding: 0;
-}
 
 /* END onboarding */
 
@@ -347,15 +370,14 @@ hr {
 
 p.strongtext {
     text-align: center;
-	color: #000000;
 	font-size: 1em;
     font-weight: bold;
     margin:0;
+    margin-bottom: 1em;
 }
 
 p.rating_text {
     text-align: center;
-	color: #939393;
 	font-size: 1em;
     font-style: italic;
 }
@@ -406,11 +428,13 @@ div.inputcontainer{
 	text-align:center;
 }
 #feedback_text{
-	width: 80%;
+    width: 80%;
+    font-size: 1em;
 }
 
 div.inputcontainer div.button {
-	width: 50%;
+    width: 50%;
+    font-size: 1em;
 	margin: 2em auto;
 	text-align: center;
     background: #7EBFE5;

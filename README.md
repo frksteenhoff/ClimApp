@@ -33,6 +33,9 @@ Structure of the program files:
       ├── js/                                                     <-- javascript files
       │     ├── thresholds/ 
       │     ├── phs/
+      │     ├── test/
+      │     │     ├── functionality/                              <-- unit tests (jest)
+      │     │     ├── ui_tests/                                   <-- ui/integration tests (mocha, chai, jasmine) 
       │     ├── *.js
       │     └── ..
       ├── pages/
