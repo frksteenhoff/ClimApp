@@ -98,7 +98,7 @@ var app = {
 		
 		// When user submits feedback, add to object to send to db + reset values
 		$("div[data-listener='submit']").off();
-		$("div[data-listener='submit']").on("touchstart", function(){
+		$("div[data-listener='submit']").on("click", function(){
 			var target = $("#feedback_text").val();
 			self.knowledgeBase.feedback.comment = target;
 			
@@ -158,6 +158,9 @@ var app = {
 				self.knowledgeBase.settings.height.value = 178;
 				self.knowledgeBase.settings.weight.value = 82;
 				self.knowledgeBase.settings.unit.value = "SI";
+
+				self.saveSettings();
+				self.updateUI();
 
 				// Inform user about event in toast
 				var notificationText = "Personal preferences reset, using default values.";
