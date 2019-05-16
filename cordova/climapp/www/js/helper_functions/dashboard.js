@@ -111,7 +111,7 @@ function heatLevelTips( index, level, kb ){
 			
 		}
 		else if( heat_index <= 3 ){
-			str += "<p>The red level means that high heat stress is expected.</p>";
+			str += "<p>The orange level means that high heat stress is expected.</p>";
 		}
 		else if( heat_index > 3){
 			str += "<p>This level is associated with severe heat stress.</p>";
