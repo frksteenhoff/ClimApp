@@ -991,8 +991,10 @@ var app = {
 			let thermal = draw_cold_gauge ? "cold" : "heat";
 			
 			this.drawGauge( 'main_gauge', width, value , thermal );
-		
-			$("#tips").html( tip_html );
+			
+			$("#tips").html( tip_html ); 
+			$("#circle_gauge_color").css("color", getCurrentGaugeColor(value));
+			console.log("VALUE: " + value + " COLOR: " + getCurrentGaugeColor(value));
 			$("#main_panel").fadeIn(500);
 		}
 		

@@ -169,3 +169,54 @@ test.skip('Need to be able to mock knowledgebase to implement test', () => {
 test.skip('Need to be able to mock knowledgebase to implement test', () => {
   expect(dash.neutralTips("")).toBe("");
 });
+
+/* --------------------------------------------------------------------------
+ * Test of function getCurrentGaugeColor(value) 
+ * -------------------------------------------------------------------------- */
+test("When value is 0.5, the color string should be 'rgba(0,180,0,.9)'", () => {
+  let color = dash.getCurrentGaugeColor(0.5); 
+  expect(color).toBe('rgba(0,180,0,.9)');
+});
+
+test("When value is 1.5, the color string should be 'rgba(220,220,0,.9)'", () => {
+  let color = dash.getCurrentGaugeColor(1.5); 
+  expect(color).toBe('rgba(220,220,0,.9)');
+});
+
+test("When value is 2.5, the color string should be 'rgba(255,100,0,.9)'", () => {
+  let color = dash.getCurrentGaugeColor(2.5); 
+  expect(color).toBe('rgba(255,100,0,.9)');
+});
+
+test("When value is 3.5, the color string should be 'rgba(180,0,0,.9)'", () => {
+  let color = dash.getCurrentGaugeColor(3.5); 
+  expect(color).toBe('rgba(180,0,0,.9)');
+});
+
+test("When value is -0.5, the color string should be 'rgba(0,180,0,.9)'", () => {
+  let color = dash.getCurrentGaugeColor(-0.5); 
+  expect(color).toBe('rgba(0,180,0,.9)');
+});
+
+test("When value is -1.5, the color string should be 'rgba(0,180,180,.9)'", () => {
+  let color = dash.getCurrentGaugeColor(-1.5); 
+  expect(color).toBe('rgba(0,180,180,.9)');
+});
+
+test("When value is -2.5, the color string should be 'rgba(0,100,255,.9)'", () => {
+  let color = dash.getCurrentGaugeColor(-2.5); 
+  expect(color).toBe('rgba(0,100,255,.9)');
+});
+
+test("When value is -3.5, the color string should be 'rgba(0,0,180,.9)'", () => {
+  let color = dash.getCurrentGaugeColor(-3.5); 
+  expect(color).toBe('rgba(0,0,180,.9)');
+});
+
+test("When value is -5.5 (outside range), the function should throw an error 'Value not in expected range'", () => {
+  function gaugeColor() {
+    dash.getCurrentGaugeColor(-5.5);
+  }
+  expect(gaugeColor).toThrowError('Value not in expected range');
+  expect(gaugeColor).toThrowError(Error);
+});

@@ -207,6 +207,10 @@ img.small{
     margin-top: 0.5em;
 }
 
+#circle_gauge_color {
+    margin-right: 0.5em;
+}
+
 #forecasts {
     background: #fff; 
 }

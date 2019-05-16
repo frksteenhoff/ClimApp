@@ -102,42 +102,43 @@ function heatLevelTips( index, level, kb ){
     sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
 
 	
-	if( level === 1 ){ //beginner, early usre
+	if( level === 1 ){ //beginner, early user
+		str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i>" // circle with gauge color
 		if( heat_index <= 1 ){
-			str += "<p>The green level means that low thermal stress is forecasted.</p>";
+			str += "The green level means that low thermal stress is forecasted.</p>";
 		}
 		else if( heat_index <= 2 ){
-			str += "<p>The yellow level means that moderate heat stress is expected.</p>";
+			str += "The yellow level means that moderate heat stress is expected.</p>";
 			
 		}
 		else if( heat_index <= 3 ){
-			str += "<p>The red level means that high heat stress is expected.</p>";
+			str += "The red level means that high heat stress is expected.</p>";
 		}
 		else if( heat_index > 3){
-			str += "<p>This level is associated with severe heat stress.</p>";
+			str += "This level is associated with severe heat stress.</p>";
 		}
 	}
 	else if( level === 2 ){ //experienced user // or more info requested
 		if ( heat_index <= 1){
-			str += "<p>The personalized heat stress indicator depends on the weather report as well as your personal input</p>";
-			str += "<p>The score will increase towards higher warning levels if the weather agravates, your activity level increases or your clothing level increases.</p>";
-			str += "<p>No special precautions are required unless you work/excercise in special settings (indoor) or with resticted ability to release heat.</p>";
+			str += "The personalized heat stress indicator depends on the weather report as well as your personal input</p>";
+			str += "The score will increase towards higher warning levels if the weather agravates, your activity level increases or your clothing level increases.</p>";
+			str += "No special precautions are required unless you work/excercise in special settings (indoor) or with resticted ability to release heat.</p>";
 		}
 		else if( heat_index <= 2 ){
-			str += "<p>You should be able to maintain normal activities. You may experience higher thermal strain and more sweating than normal.</p>";
-			str += "<p>Consider clothing adjustments and drink more than normal; especially when the score approaches the red heat stress level.</p>";
+			str += "You should be able to maintain normal activities. You may experience higher thermal strain and more sweating than normal.</p>";
+			str += "Consider clothing adjustments and drink more than normal; especially when the score approaches the red heat stress level.</p>";
 			
 		}
 		else if( heat_index <= 3 ){
-			str += "<p>Pay special attention to drinking sufficient during the first days with this heat stress.</p>";
-			str += "<p>Consider adjusting activities (heavy physical tasks during periods of the day with lowest heat) and allow time to adapt.</p>";
-			str += "<p>Be aware that thirst is usually not a sufficient indicator when losses are high.</p>";
-			str += "<p>Remember to drink/rehydrate with your meals.</p>";
+			str += "Pay special attention to drinking sufficient during the first days with this heat stress.</p>";
+			str += "Consider adjusting activities (heavy physical tasks during periods of the day with lowest heat) and allow time to adapt.</p>";
+			str += "Be aware that thirst is usually not a sufficient indicator when losses are high.</p>";
+			str += "Remember to drink/rehydrate with your meals.</p>";
 		}
 		else if( heat_index > 3){
-			str += "<p>This level is associated with severe heat stress</p>";
-			str += "<p>Your estimated sweat rate surpasses "+ sw_tot_per_hour+" Liter per hour, so additional drinking is required.</p>";
-			str += "<p>The heat will impact your physical performance - adjusting activities and allowing sufficient breaks will benefit your overall daily ability to cope with the heat.</p>";
+			str += "This level is associated with severe heat stress</p>";
+			str += "Your estimated sweat rate surpasses "+ sw_tot_per_hour+" Liter per hour, so additional drinking is required.</p>";
+			str += "The heat will impact your physical performance - adjusting activities and allowing sufficient breaks will benefit your overall daily ability to cope with the heat.</p>";
 		}
 	}
 	return str;
@@ -158,48 +159,71 @@ function coldLevelTips( index, level, kb ){
 	let isWindstopperUseful = ( tair - threshold ) > windchill;
 		
 	if( level === 1 ){ //beginner, early usre
+		str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i>" // circle with gauge color
 		if( cold_index <= 1 ){
-			str += "<p>The green level means that low thermal stress is forecasted.</p>";
+			str += "The green level means that low thermal stress is forecasted.</p>";
 		}
 		else if( cold_index <= 2 ){
-			str += "<p>The cyan level means that moderate cold stress is expected.</p>";
+			str += "The cyan level means that moderate cold stress is expected.</p>";
 		}
 		else if( cold_index <= 3 ){
-			str += "<p>The blue level means that high cold stress is expected.</p>";
+			str += "The blue level means that high cold stress is expected.</p>";
 			if( windrisk ){
-				str += "<p>Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
+				str += "Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
 			}
 		}
 		else if( cold_index > 3){
-			str += "<p>This level is associated with severe cold stress.</p>";
+			str += "This level is associated with severe cold stress.</p>";
 			if( windrisk ){
-				str += "<p>Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
+				str += "Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
 			}
 		}
 	}
 	else if( level === 2 ){ //experienced user // or more info requested
 		if( cold_index <= 1 ){
-			str += "<p>The personalized cold stress indicator depends on the weather report as well as your personal input.</p>";
-			str += "<p>The score will increase towards higher warning levels if the weather agravates, your activity level decreases or your clothing level decreases.</p>";
-			str += "<p>No special precautions are required unless you work/excercise in special settings (indoor) or with resticted ability to maintain heat.</p>";
+			str += "The personalized cold stress indicator depends on the weather report as well as your personal input.</p>";
+			str += "The score will increase towards higher warning levels if the weather agravates, your activity level decreases or your clothing level decreases.</p>";
+			str += "No special precautions are required unless you work/excercise in special settings (indoor) or with resticted ability to maintain heat.</p>";
 		}
 		else if( cold_index <= 2 && isWindstopperUseful ){
-			str += "<p>You should be able to maintain normal activities - but appropriate/adjusted behavior is required.</p>";
-			str += "<p>There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.</p>";
+			str += "You should be able to maintain normal activities - but appropriate/adjusted behavior is required.</p>";
+			str += "There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.</p>";
 		}
 		else if( cold_index <= 2 ){
-			str += "<p>You should consider to increase insulation from clothing by adding layers or choosing warmer/thicker clothing.</p>";
+			str += "You should consider to increase insulation from clothing by adding layers or choosing warmer/thicker clothing.</p>";
 		}
 		else if( cold_index > 2 ){
-			str += "<p>At this level you are recommended to pay extra attention to appropriate behavior and match clothing to the cold level and protect exposed skin. Be aware not to overdress, because sweating will cool you down.</p>";
+			str += "At this level you are recommended to pay extra attention to appropriate behavior and match clothing to the cold level and protect exposed skin. Be aware not to overdress, because sweating will cool you down.</p>";
 			if( isWindstopperUseful ){
-				str += "<p>There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.</p>";
+				str += "There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.</p>";
 			}
 			if( windrisk ){
-				str += "<p>Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
+				str += "Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
 			}
 		}
 	}
 	return str;
 }
 
+// Returning rgba value of current gauge value as string
+function getCurrentGaugeColor(value) {
+	if(value > -4.0 && value <= -3.0) {
+		return 'rgba(0,0,180,.9)';
+	} else if(value > -3.0 && value <= -2.0) {
+		return 'rgba(0,100,255,.9)';
+	} else if(value > -2.0 && value <= -1.0){
+		return 'rgba(0,180,180,.9)';
+	} else if(value > -1.0 && value <= 1.0) {
+		return 'rgba(0,180,0,.9)';
+	} else if(value > 1.0 && value <= 2.0) {
+		return 'rgba(220,220,0,.9)';
+	} else if(value > 2.0 && value <= 3.0) {
+		return 'rgba(255,100,0,.9)';
+	} else if(value > 3.0 && value <= 4.0) {
+		return 'rgba(180,0,0,.9)';
+	} else {
+		throw new Error("Value not in expected range"); // error
+	}
+}
+
+module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor};
