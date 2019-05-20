@@ -12,6 +12,14 @@
 	<div data-target="gender" data-listener="wheel">
 		<p>Gender<br><span class="settings" id="gender"></span></p>
 	</div>
+	<div class="inlineitems"> 
+		<p id="acc">Acclimatization</p>
+		<p class="totheright"><label class="switch">
+			<input type="checkbox" id="acclimatization_checkbox" data-target="acclimatization_switch" data-listener="toggle_switch">
+			<span class="slider round"></span>
+		  </label>
+		</p>
+	</div>
 	<div class="last" data-target="reset" data-listener="tab"> 
 		<p>Reset personal settings</p>
 	</div>
@@ -21,10 +29,10 @@
 	<div data-target="unit" data-listener="wheel">
 		<p>Unit of measurements<br><span class="settings" id="unit"></span></p>
 	</div>
-	<div class="inlineitems"> 
+	<div class="inlineitems last"> 
 		<p id="notify">Notifications</p>
 		<p class="totheright"><label class="switch">
-			<input type="checkbox" id="notification_checkbox" data-target="notification_switch" data-listener="tab">
+			<input type="checkbox" id="notification_checkbox" data-target="notification_switch" data-listener="toggle_switch">
 			<span class="slider round"></span>
 		  </label>
 		</p>

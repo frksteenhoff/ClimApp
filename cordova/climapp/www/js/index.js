@@ -166,14 +166,28 @@ var app = {
 				var notificationText = "Personal preferences reset, using default values.";
 				showShortToast(notificationText);
 
+			} else {
+				self.loadUI(target);
+			}
+		});
+
+		$("input[data-listener='toggle_switch']").off(); //prevent multiple instances of listeners on same object
+		$("input[data-listener='toggle_switch']").on("click", function(){
+			var target = $(this).attr("data-target");
+			
+			if(target === "acclimatization_switch") {
+				var isChecked = $(this).is(":checked");
+				self.knowledgeBase.settings.acclimatization = isChecked;
+				// Inform user about choice in toast
+				var accText = isChecked ? "You are acclimatized to your working environment" : "You are not acclimatized to your working environment.";
+				showShortToast(accText);
+
 			} else if(target === "notification_switch") {
 				var isChecked = $(this).is(":checked");
 				self.knowledgeBase.user_info.receivesNotifications = isChecked;
 				// Inform user about choice in toast
 				var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
 				showShortToast(notificationText);
-			} else {
-				self.loadUI(target);
 			}
 		});
 		// Always add ability to swipe
@@ -206,8 +220,6 @@ var app = {
 						self.updateInfo( self.selectedWeatherID );
 					});
 				}
-				
-				
 			}else{
 				self.loadUI(target);
 			}
@@ -278,7 +290,8 @@ var app = {
 									},
 									 "unit": { "title": "Which units of measurements would you prefer?",
 												 "value": "SI" 
-											} // default SI units
+											}, // default SI units
+									"acclimatization":  0,
 					   },
 					  "activity": { "label": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
 										 		"low":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
@@ -383,9 +396,7 @@ var app = {
 			if ( 'version' in this.knowledgeBase && this.knowledgeBase.version < shadowKB.version ){
 				this.knowledgeBase = this.initKnowledgeBase();
 				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
-				showShortToast("database updated to version : " + this.knowledgeBase.version);
-
-				
+				showShortToast("database updated to version : " + this.knowledgeBase.version);	
 			}
 			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
 				console.log("loaded knowledgebase version : " + this.knowledgeBase.version );
@@ -547,7 +558,7 @@ var app = {
 					   self.knowledgeBase.weather.temperature = weather.tair.map(Number);
 					   self.knowledgeBase.weather.temperature.unshift( Number( weather.currentweather.tair ) );
 					   
-					   
+
 					   self.knowledgeBase.weather.globetemperature = weather.tglobe.map(Number);
 					   self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe ) );
 					   
@@ -862,6 +873,7 @@ var app = {
 			$("#weight").html( getCalculatedWeightValue(unit, weight) + " " + getWeightUnit(unit));
 			$("#gender").html( this.knowledgeBase.settings.gender.value );
 			$("#unit").html( this.knowledgeBase.settings.unit.value + " units" );
+			$("#acclimatization_checkbox").attr("checked", this.knowledgeBase.settings.acclimatization);
 			$("#notification_checkbox").attr("checked", this.knowledgeBase.user_info.receivesNotifications);
 		}
 		else if( this.currentPageID == "feedback" ){
