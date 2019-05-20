@@ -177,6 +177,7 @@ span.score{
 p.left{
 	text-align:left;
 }
+
 p.center{
 	text-align: center;
 }
@@ -216,8 +217,6 @@ img.small{
 }
 
 /* Settings related */
-
-
 .panel.settings div {
     margin-bottom: 0.5em;
 	border-bottom: solid 1px rgba(204, 204, 204, 0.3);
@@ -227,7 +226,7 @@ img.small{
 	border-bottom: solid 1px rgba(204, 204, 204, 0.3);
 }
 
-.panel.settings div.inlineitems,
+.panel.settings div.inlineitems last,
 .panel.settings div.last
  {
     border-bottom: hidden;
@@ -488,6 +487,7 @@ div.select_unit {
     display: inline-block;
     width: 60px;
     height: 30px;
+    margin-bottom: 0.5em;
   }
   
   /* Hide default HTML checkbox */
