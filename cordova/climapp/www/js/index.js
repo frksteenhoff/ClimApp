@@ -158,7 +158,8 @@ var app = {
 				self.knowledgeBase.settings.height.value = 178;
 				self.knowledgeBase.settings.weight.value = 82;
 				self.knowledgeBase.settings.unit.value = "SI";
-				self.knowledgeBase.settings.acclimatization = 0;
+				self.knowledgeBase.settings.acclimatization = false;
+				self.knowledgeBase.user_info.receivesNotifications = false;
 
 				self.saveSettings();
 				self.updateUI();
