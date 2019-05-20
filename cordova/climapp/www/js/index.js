@@ -765,6 +765,8 @@ var app = {
 			// Giving the user an introduction of the dashbord on first login
 			if(!this.knowledgeBase.user_info.introductionCompleted) {
 				startIntro();
+				this.knowledgeBase.user_info.introductionCompleted = 1;
+				this.saveSettings();
 			}
 		}
 		else if( this.currentPageID == "details"){
