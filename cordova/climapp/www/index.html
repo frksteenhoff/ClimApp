@@ -13,20 +13,20 @@
     Unless required by applicable law or agreed to in writing,
     software distributed under the License is distributed on an
     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
+    KIND, either express or implied.  See the License for the
     specific language governing permissions and limitations
     under the License.
 -->
 <html>
     <head>
         <!--
-        Customize this policy to fit your own app's needs. For more guidance, see:
+            Customize this policy to fit your own app's needs. For more guidance, see:
             https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-        Some notes:
+            Some notes:
             * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
             * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                * Enable inline JS: add 'unsafe-inline' to default-src
+            * Enable inline JS: add 'unsafe-inline' to default-src
         -->
         <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: content:; connect-src 'self' https://www.sensationmapps.com:* http://192.38.64.244/;">
         <meta name="format-detection" content="telephone=no">
@@ -34,11 +34,12 @@
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, viewport-fit=cover">
         <link rel="stylesheet" type="text/css" href="css/index.css">
 		<link rel="stylesheet" type="text/css" href="css/fas.min.css">
+        <link rel="stylesheet" type="text/css" href="css/introjs.css">
         <title>Climapp</title>
     </head>
     <body>
         <div id="root" class="app">
-			<div class="navigation">
+			<div class="navigation" id="nav">
                 <div data-target="dashboard" data-listener="navbar">
 					<p><i class="fas fa-tachometer-alt fa-2x"></i> DASHBOARD</p> 
 					<!-- I see no reason to have all caps in the navbar  -->
@@ -67,14 +68,14 @@
         </div>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="js/intro.js"></script>	
         <script type="text/javascript" src="js/helper_functions/dashboard.js"></script>
         <script type="text/javascript" src="js/helper_functions/expert_dashboard.js"></script>
         <script type="text/javascript" src="js/helper_functions/notifications.js"></script>
         <script type="text/javascript" src="js/helper_functions/toasts.js"></script>
         <script type="text/javascript" src="js/helper_functions/settings.js"></script>
         <script type="text/javascript" src="js/helper_functions/dtu_database.js"></script>
-		<script type="text/javascript" src="js/introduction.js"></script>
-		<script type="text/javascript" src="js/gauge.min.js"></script>
+        <script type="text/javascript" src="js/gauge.min.js"></script>
 		<script type="text/javascript" src="js/phs/phs.js"></script>
 		<script type="text/javascript" src="js/phs/ireq.js"></script>
         <script type="text/javascript" src="js/Tocca.js"></script>

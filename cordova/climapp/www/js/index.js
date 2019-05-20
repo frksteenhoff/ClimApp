@@ -247,7 +247,7 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.9,
+			return {"version": 1.91,
 					"app_version": "beta",
 					"user_info": {
 							"isFirstLogin": 1,
@@ -764,9 +764,7 @@ var app = {
 
 			// Giving the user an introduction of the dashbord on first login
 			if(!this.knowledgeBase.user_info.introductionCompleted) {
-				$(".navigation").css({opacity : 0.1});
-				$("#tip_panel").css({opacity : 0.1});
-				$("#activity_panel").css({opacity : 0.1});
+				startIntro();
 			}
 		}
 		else if( this.currentPageID == "details"){
@@ -1014,7 +1012,6 @@ var app = {
 			
 			$("#tips").html( tip_html ); 
 			$("#circle_gauge_color").css("color", getCurrentGaugeColor(value));
-			console.log("VALUE: " + value + " COLOR: " + getCurrentGaugeColor(value));
 			$("#main_panel").fadeIn(500);
 		}
 		

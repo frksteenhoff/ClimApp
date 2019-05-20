@@ -226,4 +226,50 @@ function getCurrentGaugeColor(value) {
 	}
 }
 
-module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor};
+/* The introduction elements follows order of JSON array */
+function startIntro() {
+	var intro = introJs();
+          intro.setOptions({
+            steps: [
+              {
+                element: '#nav',
+				intro: "<p><b>Dashboard introduction</b></p>" +
+				"<p>To familiarize you with the app, we will introduce the different elements on the dashboard.</p>" + 
+				"<p>From the navigation bar you can switch between the Dashboard and Settings screens.</p>",
+				position: "left"
+			  },
+			  
+			  {
+                element: '#gauge_div',
+				intro: "<p>The gauge indicates the expected level of heat or cold stress on a scale from -4 to 4.</p>" /*+ 
+						"<p>The positive values indicate the level of heat stress and the negative values the level of cold stress.</p>"*/
+			  },
+			  {
+                element: '#dashboard_numbers',
+				intro: "This area provides basic information about the current weather.",
+				position: 'bottom'
+              },
+			  {
+                element: '#forecast',
+				intro: "This bar allows for swiping between the forecasted weather data of today to see how the weather is predicted to change during the day.</p>" + 
+						"<p>The data is given in 3 hour intervals.",
+				position: 'bottom'
+              },
+              {
+                element: '#tip_flex',
+				intro: "<p>This area gives you additional details and advice on how to cope with the current climatic situation.</p>" + 
+						"<p>Press more info to read more.</p>",
+                position: 'bottom'
+              },
+              {
+                element: '#activity_flex',
+				intro: "<p>Here you can set your expected activity level for the day.</p>" +
+				"<p>You can read more about the different levels underneath the buttons</p>",
+                position: 'middle'
+              }
+            ]
+          });
+          intro.start();
+}
+
+module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor, startIntro};
