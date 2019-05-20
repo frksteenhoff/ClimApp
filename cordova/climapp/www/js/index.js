@@ -239,6 +239,7 @@ var app = {
 					"app_version": "beta",
 					"user_info": {
 							"isFirstLogin": 1,
+							"introductionCompleted": 0, 
 							"hasExternalDBRecord": 0,
 							"receivesNotifications": 0, // false as notifications are not part of the app
 							"dtu_ip": "http://192.38.64.244",
@@ -749,6 +750,13 @@ var app = {
 			let caption_ = this.knowledgeBase.activity.label[ selected ];
 			$("#activityCaption").html( caption_ );
 			this.updateInfo( this.selectedWeatherID );
+
+			// Giving the user an introduction of the dashbord on first login
+			if(!this.knowledgeBase.user_info.introductionCompleted) {
+				$(".navigation").css({opacity : 0.1});
+				$("#tip_panel").css({opacity : 0.1});
+				$("#activity_panel").css({opacity : 0.1});
+			}
 		}
 		else if( this.currentPageID == "details"){
 			$(".navigation").hide();
