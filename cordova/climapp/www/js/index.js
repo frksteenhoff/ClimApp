@@ -397,6 +397,9 @@ var app = {
 				this.knowledgeBase = this.initKnowledgeBase();
 				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
 				showShortToast("database updated to version : " + this.knowledgeBase.version);	
+				this.knowledgeBase.user_info.isFirstLogin = 0; // If user has previous version, not first login
+				this.knowledgeBase.user_info.hasExternalDBRecord = 1; // User must have DB record already
+				this.saveSettings();
 			}
 			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
 				console.log("loaded knowledgebase version : " + this.knowledgeBase.version );
