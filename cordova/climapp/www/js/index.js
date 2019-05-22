@@ -247,7 +247,7 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.91,
+			return {"version": 1.92,
 					"app_version": "beta",
 					"user_info": {
 							"isFirstLogin": 1,
@@ -766,6 +766,7 @@ var app = {
 			this.updateInfo( this.selectedWeatherID );
 
 			// Giving the user an introduction of the dashbord on first login
+			console.log("INTRO: " + this.knowledgeBase.user_info.introductionCompleted);
 			if(!this.knowledgeBase.user_info.introductionCompleted) {
 				startIntro();
 				this.knowledgeBase.user_info.introductionCompleted = 1;

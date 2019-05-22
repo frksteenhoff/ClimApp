@@ -256,9 +256,14 @@ function startIntro() {
 				position: 'bottom'
               },
               {
-                element: '#tip_flex',
+                element: '#tips',
+				intro: "<p>This area describes how to cope with the current weather.",
+                position: 'bottom'
+              },
+              {
+                element: '#tip_detailed',
 				intro: "<p>This area gives you additional details and advice on how to cope with the current climatic situation.</p>" + 
-						"<p>Press more info to read more.</p>",
+						"<p>Press <i>more info</i> to read more.</p>",
                 position: 'bottom'
               },
               {
