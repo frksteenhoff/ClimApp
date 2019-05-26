@@ -54,15 +54,22 @@ body {
 	
 }
 
-div{
+a {
+	color: #fff;
+}
+
+div{	
 	/*border: 1px solid rgba(0, 0, 0, 0.5);/*layout helper*/
+}
+div.white{
+	color: #fff;
 }
 
 div.hidden{
 	display: none;
 }
 div.menufocus{
-	background: rgba(255,255,255,0.3);
+	background: rgba(255,255,255,0.1);
 }
 div.menuitem{
 	text-align:center;
@@ -79,10 +86,11 @@ canvas{
 	/*vertical-align:middle;*/
 }
 
-.panel {
+.panel, .panelthick {
 	background: rgba(255,255,255,0.1);
-	color: #fff;
 	width: 100%;
+	color: #fff;
+	
     padding: 0.1em 0.5em; 
 	margin: 0 auto;
 	margin-bottom: 0.7em;
@@ -92,6 +100,7 @@ canvas{
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
     box-sizing: border-box;         /* Opera/IE 8+ */
 }
+
 
 .flexbox, .flexbox-5, .flexbox-2, .flexbox-3{
     display: -webkit-box;
@@ -153,13 +162,14 @@ canvas{
 	flex-basis: 18%;
     text-align: center;
 }
-.flexbox-5 div.button{
+
+.flexbox-2 div.button{
 	color: #000;
 	background: #ffffff;
-    padding: 0.2em;
-	border-radius: 2px;
-	border: 1px solid rgba(200, 200, 200, 0.5);
-	box-shadow: 2px 2px rgba(155, 155, 155, 0.2);
+	border-radius: 0.2em;
+	text-align:center;
+	border: 1px solid rgba(200, 200, 200, 0.8);
+	box-shadow: 3px 3px rgba(155, 155, 155, 0.2);
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;         /* Opera/IE 8+ */
@@ -225,9 +235,15 @@ img.small{
 }
 
 #temperature {
-    font-size: 30vw;
+    font-size: 20vw;
 }
 
+#dashboard_forecast{
+	padding: 0.5em;
+	color: 000;
+	border-top: solid 1px rgba(204, 204, 204, 0.3);
+	
+}
 
 #circle_gauge_color {
     margin-right: 0.5em;
@@ -283,6 +299,13 @@ img.small{
 .navigation i{
     vertical-align: middle; /* | top | bottom */
     margin-right: 0.25em;
+}
+
+.navigation_back_settings{
+	color: #fff;
+}
+.navigation_back_dashboard{
+	color: #fff;
 }
 
 /* END navigation bar style */

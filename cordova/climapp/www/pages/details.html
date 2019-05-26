@@ -4,16 +4,34 @@
 </div>
 <div class="panel">
 	<p class="label">Details</p>
-	<p>Here we show information that may be useful to the advanced user. Values assume full sunlight in an open field.</p>
-	<p>
-	   Air temperature <span class="score" id="detail_airtemp"></span>
-	   <br>Humidity <span class="score" id="detail_rh"></span>
-	   <br>Windspeed <span class="score" id="detail_wind10m"></span> at 10m
-	   <br>Windspeed <span class="score" id="detail_wind2m"></span> at 2m
-	   <br>Mean radiant temperature <span class="score" id="detail_mrt"></span> at 2m 
-	   <br>Globe temperature <span class="score" id="detail_tglobe"></span>
-	   <br>Radiation <span class="score" id="detail_rad"></span>
-   </p>
+	<p>Here we show information that may be useful to the advanced user.</p>
+	<div class="panel">
+	    <p class="label">Weather</p>
+		<div class="flexbox-2">
+	 	   <div class="even">Time</div><div class="even"><span class="score" id="detail_time"></span></div>
+		   <div class="even">Air temperature</div><div class="even"><span class="score" id="detail_airtemp"></span></div>
+		   <div class="even">Humidity</div><div class="even"><span class="score" id="detail_rh"></span></div>
+		   <div class="even">Cloud cover</div><div class="even"><span class="score" id="detail_clouds"></span></div>
+		   <div class="even">Windspeed at 10m</div><div class="even"><span class="score" id="detail_wind10m"></span> </div>
+		   <div class="even">Windspeed at 2m</div><div class="even"><span class="score" id="detail_wind2m"></span> </div>
+		   <div class="even">Mean radiant temperature</div><div class="even"><span class="score" id="detail_mrt"></span> </div>
+		   <div class="even">Globe temperature</div><div class="even"><span class="score" id="detail_tglobe"></span></div>
+		   <div class="even">Solar Radiation</div><div class="even"><span class="score" id="detail_rad"></span></div>
+		   <div class="even">WBGT</div><div class="even"><span class="score" id="detail_wbgt"></span></div>
+		   <div class="even">Windchill</div><div class="even"><span class="score" id="detail_windchill"></span></div>   
+	   </div>
+   </div>
+	<div class="panel">
+	   <p class="label">User</p>
+	   <div class="flexbox-2">
+	 	   <div class="even">Metabolic rate</div><div class="even"><span class="score" id="detail_metabolic"></span></div>
+	 	   <div class="even">Surface area</div><div class="even"><span class="score" id="detail_area"></span></div>
+		   
+		   <div class="even">Clothing insulation</div><div class="even"><span class="score" id="detail_icl"></span></div>
+		   <div class="even">Wind permeability</div><div class="even"><span class="score" id="detail_p"></span></div>
+		   <div class="even">Moisture permeability</div><div class="even"><span class="score" id="detail_im"></span></div>
+	   </div>
+	</div>
 </div>
 
 <div class="panel" data-context="heat">

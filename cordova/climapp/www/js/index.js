@@ -238,15 +238,28 @@ var app = {
 	},
 	initActivityListeners: function(){
 		var self = this;
-		$("div[data-listener='activity']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='activity']").on("touchstart", function(){
+		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='wheel']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
-			self.knowledgeBase.activity.selected = target;
-			self.saveSettings();
-			$( "div[data-listener='activity']" ).removeClass( "selected" );
-			self.calcThermalIndices();
-			self.updateUI();
-		});	
+			let title_ = self.knowledgeBase.activity.title;
+			var items_ = self.getSelectables( target );
+			
+			var config = {
+			    title: title_,
+			    items:[ [ items_ ] ],
+			    positiveButtonText: "Done",
+			    negativeButtonText: "Cancel"
+			};
+			window.SelectorCordovaPlugin.showSelector(config, function(result) {
+				self.knowledgeBase.activity.selected = items_[result[0].index].value;
+				console.log( target + ": " + items_[result[0].index].value);
+				self.saveSettings(); 
+				self.calcThermalIndices();
+				self.updateUI();
+			}, function() {
+			    console.log('Canceled');
+			});
+		} );
 	},
 	initMenuListeners: function(){
 		var self = this;
@@ -265,7 +278,7 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.92,
+			return {"version": 1.96,
 					"app_version": "beta",
 					"user_info": {
 							"isFirstLogin": 1,
@@ -311,17 +324,24 @@ var app = {
 											}, // default SI units
 									"acclimatization":  0,
 					   },
-					  "activity": { "label": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
+					   "activity": { "title": "What is your activity",
+						  			"description": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
 										 		"low":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
 										 		"medium":"Walking 2.5 - 5.5km/h. Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.",
 											 	"high":"Intense arm and trunk work: carrying heavy material, shovelling, sawing, hand mowing, concrete block laying.",
 												"intense":"Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs, running on level surface." 
 									},
-									"values": { "rest": 1, //ISO 8896
-												"low": 2,
-												"medium": 3,
-												"high": 4,
-												"intense": 5
+									"label": { "rest": "Rest", //ISO 8896
+												"low": "Light",
+												"medium": "Medium",
+												"high": "High",
+												"intense": "Intense"
+									},
+									"values": { "rest": 115.0, //ISO 8896
+												"low": 180.0,
+												"medium": 300.0,
+												"high": 415.0,
+												"intense": 520.0
 									},	
 									"selected": "low",	
 								},
@@ -518,11 +538,11 @@ var app = {
 			obj_array.push({description: "Helmet", value: "Helmet"} );
 		}
 		else if (key === "activity"){
-			obj_array.push({description: "Rest", value: "Rest" } );
-			obj_array.push({description: "Light activity", value: "Low" } );
-			obj_array.push({description: "Medium activity", value: "Medium" } );
-			obj_array.push({description: "High activity", value: "High" } );
-			obj_array.push({description: "Intense activity", value: "Intens" } );
+			obj_array.push({description: "Rest", value: "rest" } );
+			obj_array.push({description: "Light activity", value: "low" } );
+			obj_array.push({description: "Medium activity", value: "medium" } );
+			obj_array.push({description: "High activity", value: "high" } );
+			obj_array.push({description: "Intense activity", value: "intense" } );
 			
 		}
 		return obj_array;
@@ -614,8 +634,15 @@ var app = {
 					   self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe_clouds ) );
 					   
 					   
+					   self.knowledgeBase.weather.clouds = weather.clouds.map(Number);
+					   self.knowledgeBase.weather.clouds.unshift( Number( weather.currentweather.clouds ) );
+					   
+					   
 					   self.knowledgeBase.weather.humidity = weather.rh.map(Number);
 					   self.knowledgeBase.weather.humidity.unshift( Number( weather.currentweather.rh ) );
+					   
+					   self.knowledgeBase.weather.rain = weather.rain.map(Number);
+					   self.knowledgeBase.weather.rain.unshift( Number( weather.currentweather.rain ) );
 					   
 					   
 					   self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
@@ -744,12 +771,18 @@ var app = {
 				"DLEminimal": ireq.DLEminimal,
 				"ICLneutral": ireq.ICLneutral,
 				"DLEneutral": ireq.DLEneutral,
+				"M":options.body.M,
+				"Icl":options.cloth.Icl,
+				"p":options.cloth.p,
+				"im_st": options.cloth.im_st,
 				"Tair": options.air.Tair,
 				"rh": options.air.rh,
 				"v_air": options.air.v_air, //@2m
 				"v_air10": options.air.v_air10, //@10m
 				"Trad":options.air.Trad,
 				"Tglobe": options.air.Tglobe,
+				"clouds": self.knowledgeBase.weather.clouds[index],
+				"rain": self.knowledgeBase.weather.rain[index],
 				"rad":self.knowledgeBase.weather.radiation[index],
 				"wbgt": self.knowledgeBase.weather.wbgt[index],
 				"windchill": self.knowledgeBase.weather.windchill[index],
@@ -769,12 +802,18 @@ var app = {
 				"D_Tre": phs.D_Tre,
 				"Dwl50": phs.Dwl50,
 				"SWtotg": phs.SWtotg,
+				"M":options.body.M,
+				"Icl":options.cloth.Icl,
+				"p":options.cloth.p,
+				"im_st": options.cloth.im_st,
 				"Tair": options.air.Tair,
 				"rh": options.air.rh,
 				"v_air": options.air.v_air, //@2m
 				"v_air10": options.air.v_air10, //@10m
 				"Trad":options.air.Trad,
 				"Tglobe": options.air.Tglobe,
+				"clouds": self.knowledgeBase.weather.clouds[index],
+				"rain": self.knowledgeBase.weather.rain[index],
 				"rad":self.knowledgeBase.weather.radiation[index],
 				"wbgt": self.knowledgeBase.weather.wbgt[index],
 				"windchill": self.knowledgeBase.weather.windchill[index],
@@ -810,11 +849,25 @@ var app = {
 			this.initGeolocationListeners();
 			this.initActivityListeners();
 			this.initMenuListeners();
-			let selected = this.knowledgeBase.activity.selected;
 			
-			$("div[data-target='"+selected+"']").addClass("selected");
-			let caption_ = this.knowledgeBase.activity.label[ selected ];
+			let selected = this.knowledgeBase.activity.selected;			
+			$("#dashboard_activity").html( this.knowledgeBase.activity.label[ selected ] );
+			let caption_ = this.knowledgeBase.activity.description[ selected ];
 			$("#activityCaption").html( caption_ );
+			
+			selected = this.knowledgeBase.activity.selected;			
+			$("#dashboard_clothing").html( this.knowledgeBase.activity.label[ selected ] );
+			 caption_ = this.knowledgeBase.activity.description[ selected ];
+			$("#clothingCaption").html( caption_ );
+			
+			selected = this.knowledgeBase.activity.selected;			
+			$("#dashboard_headgear").html( this.knowledgeBase.activity.label[ selected ] );
+			 caption_ = this.knowledgeBase.activity.description[ selected ];
+			$("#headgearCaption").html( caption_ );
+			
+			
+			
+			
 			this.updateInfo( this.selectedWeatherID );
 
 			// Giving the user an introduction of the dashbord on first login
@@ -832,24 +885,58 @@ var app = {
 			
 			let tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
 			let rh = this.knowledgeBase.thermalindices.phs[index].rh.toFixed(0);
+			let clouds = this.knowledgeBase.thermalindices.phs[index].clouds.toFixed(0);
+			
 			let rad = this.knowledgeBase.thermalindices.phs[index].rad.toFixed(0);
 			let vair10 = this.knowledgeBase.thermalindices.phs[index].v_air10.toFixed(1);
 			let vair2 = this.knowledgeBase.thermalindices.phs[index].v_air.toFixed(1);
 			let tmrt = this.knowledgeBase.thermalindices.phs[index].Trad.toFixed(1);
 			let tglobe = this.knowledgeBase.thermalindices.phs[index].Tglobe.toFixed(1);
 			
+			let wbgt = this.knowledgeBase.thermalindices.phs[index].wbgt.toFixed(1);
+			let windchill = this.knowledgeBase.thermalindices.phs[index].windchill.toFixed(1);
+			
+			let M = this.knowledgeBase.thermalindices.phs[index].M.toFixed(0);
+			let A = BSA( this.knowledgeBase ).toFixed(1);
+			
+			let Icl = 0.155 * this.knowledgeBase.thermalindices.phs[index].Icl.toFixed(3);
+			let p = this.knowledgeBase.thermalindices.phs[index].p.toFixed(2);
+			let im = this.knowledgeBase.thermalindices.phs[index].im_st.toFixed(2);
+			
+			
+			let utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ index ].utc ); //
+			let local_time = utc_date.toLocaleTimeString(navigator.language, { //language specific setting
+					hour: '2-digit',
+				    minute:'2-digit'
+			});
+			
+			$("#detail_time").html(local_time);
+			
 			$("#detail_airtemp").html(tair + "&deg;C");
 			$("#detail_rh").html(rh + "%");
+			$("#detail_clouds").html(clouds + "%");
+
 			$("#detail_wind10m").html(vair10 + "m/s");
 			
 			$("#detail_wind2m").html(vair2 + "m/s");
 			$("#detail_mrt").html(tmrt + "&deg;C");
 			$("#detail_tglobe").html(tglobe + "&deg;C");
-			
 			$("#detail_rad").html(rad + "W/m<sup>2</sup>");
+			$("#detail_wbgt").html(wbgt + "&deg;C");
+			$("#detail_windchill").html(windchill + "&deg;C");
+			
+			
+			$("#detail_metabolic").html(M + "W/m<sup>2</sup>");
+			$("#detail_area").html(A + "m<sup>2</sup>")
+			
+			$("#detail_icl").html(Icl + "m<sup2</sup>K/W");
+			$("#detail_p").html(p);
+			$("#detail_im").html(im);
+			
+			
+			
 			
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
-			let wbgt = this.knowledgeBase.thermalindices.phs[index].wbgt.toFixed(1);
 			let heat_index = WBGTrisk( wbgt, this.knowledgeBase );
 			
 			let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
@@ -953,7 +1040,7 @@ var app = {
 		} 
 		else if(this.currentPageID == "about") {
 			$(".navigation").hide();
-			$(".navigation_back_settings").show();
+			$(".navigation_back_settings").show(); //BK: class used as id - consider using id - #navigation_back_settings instead of .
 			$("#app_version").html("App version: " + this.knowledgeBase.app_version);
 			$("#kb_version").html("Knowledgebase version: " + this.knowledgeBase.version);
 		} 
@@ -968,11 +1055,14 @@ var app = {
 			   cold >= this.knowledgeBase.thresholds.ireq &&
 			   this.knowledgeBase.thermalindices.ireq[ index].Tair <= 10;
 	},
+	
+
 	isDrawHeatGauge: function( cold, heat, index ){
  	   return heat > cold
 		      && this.knowledgeBase.weather.wbgt[ index ] > 15;
 	},
-	determineThermalIndexValue: function( cold, heat, index ){
+	
+determineThermalIndexValue: function( cold, heat, index ){
 		let value = cold > heat ? -cold : heat;
 		value = this.isDrawColdGauge( cold, heat, index ) ? -cold : value;
 		value = this.isDrawHeatGauge( cold, heat, index ) ? heat : value;
@@ -1047,7 +1137,55 @@ var app = {
 			$("#windspeed").html( ws.toFixed(0) );
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.settings.unit.value)); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
-		
+			
+			//weather icon
+			let clouds = this.knowledgeBase.thermalindices.ireq[index].clouds;
+			let rain = this.knowledgeBase.thermalindices.ireq[index].rain;
+			let solar = this.knowledgeBase.thermalindices.ireq[index].solar;
+			let icon_weather = "fa-cloud-sun-rain";
+			if( solar > 0 ){ //daytime
+				
+				if( clouds < 10 ){                    //sun
+					icon_weather = "fa-sun";
+				}
+				else if( clouds < 80 && rain < 0.1 ){ //clouds sun no rain
+					icon_weather = "fa-cloud-sun";
+				}
+				else if( clouds >= 80 && rain < 0.1 ){ //clouds no rain
+					icon_weather = "fa-cloud";
+				} 
+				else if( clouds < 80 && rain > 0.1 ){  //cloud sun rain
+					icon_weather = "fa-cloud-sun-rain";
+				}
+				else if( clouds >= 80 && rain > 0.1 ){  //cloud  rain
+					icon_weather = "fa-cloud-rain";
+				}
+				else if( clouds >= 80 && rain > 1 ){  //cloud  rain
+					icon_weather = "fa-cloud-showers-heavy";
+				}
+			}
+			else{ //night
+				if( clouds < 10 ){                    //moon
+					icon_weather = "fa-moon";
+				}
+				else if( clouds < 80 && rain < 0.1 ){ //clouds moon no rain
+					icon_weather = "fa-cloud-moon";
+				}
+				else if( clouds >= 80 && rain < 0.1 ){ //clouds no rain
+					icon_weather = "fa-cloud";
+				} 
+				else if( clouds < 80 && rain > 0.1 ){  //cloud moon rain
+					icon_weather = "fa-cloud-moon-rain";
+				}
+				else if( clouds >= 80 && rain > 0.1 ){  //cloud  rain
+					icon_weather = "fa-cloud-rain";
+				}
+				else if( clouds >= 80 && rain > 1 ){  //cloud  rain
+					icon_weather = "fa-cloud-moon-rain";
+				}
+			}
+			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
+		    
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
 			let cold_index = icl_min;
 			let heat_index = WBGTrisk( this.knowledgeBase.thermalindices.phs[index].wbgt, this.knowledgeBase );
@@ -1064,7 +1202,7 @@ var app = {
 			}
 			
 			let windowsize = $( window ).width();
-			let width = windowsize / 2.2;
+			let width = windowsize / 2.5;
 			let value = this.determineThermalIndexValue( cold_index, heat_index, index );
 			let thermal = draw_cold_gauge ? "cold" : "heat";
 			

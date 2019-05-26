@@ -54,8 +54,7 @@ function BSA(kb) { //m2
 function M(kb) { //W/m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
         let ISO_selected = kb.activity.selected;
-        let ISO_level = kb.activity.values[ ISO_selected ];
-        return 65 * (ISO_level);
+        return kb.activity.values[ ISO_selected ] / BSA(kb);
     }
 }
 
@@ -250,7 +249,7 @@ function startIntro() {
 				position: 'bottom'
               },
 			  {
-                element: '#forecast',
+                element: '#dashboard_forecast',
 				intro: "This bar allows for swiping between the forecasted weather data of today to see how the weather is predicted to change during the day.</p>" + 
 						"<p>The data is given in 3 hour intervals.",
 				position: 'bottom'
@@ -267,9 +266,9 @@ function startIntro() {
                 position: 'bottom'
               },
               {
-                element: '#activity_flex',
-				intro: "<p>Here you can set your expected activity level for the day.</p>" +
-				"<p>You can read more about the different levels underneath the buttons</p>",
+                element: '#menu_flex',
+				intro: "<p>Here you can set your estimated activity level, clothing level and head gear.</p>" +
+				"<p>You can read more about the different levels in the description below.</p>",
                 position: 'middle'
               }
             ]
