@@ -157,6 +157,10 @@ canvas{
     background: #7EBFE5; /* Old browsers */
 }
 
+a {
+    color: #7EBFE5;
+}
+
 p {
     /* commented out, this functionality should not be in root p. 
 	margin-left: 0.5em;
@@ -192,6 +196,7 @@ span.score{
 p.left{
 	text-align:left;
 }
+
 p.center{
 	text-align: center;
 }
@@ -231,8 +236,6 @@ img.small{
 }
 
 /* Settings related */
-
-
 .panel.settings div {
     margin-bottom: 0.5em;
 	border-bottom: solid 1px rgba(204, 204, 204, 0.3);
@@ -242,14 +245,16 @@ img.small{
 	border-bottom: solid 1px rgba(204, 204, 204, 0.3);
 }
 
-.panel.settings div.inlineitems,
+.panel.settings div.inlineitems last,
 .panel.settings div.last
  {
     border-bottom: hidden;
 }
 
 /* BEGIN navigation bar style*/
-.navigation {
+.navigation, 
+.navigation_back_settings,
+.navigation_back_dashboard {
   position: fixed;
   top: 0;
   width:100%;
@@ -268,14 +273,26 @@ img.small{
   justify-content: space-between;
 }
 
-.navigation div{
-	color: #000;
+
+.navigation div, 
+.navigation_back_settings div, 
+.navigation_back_dashboard div{
+    color: #000;
 	display: border-box;
 	margin: auto;
 }
-.navigation i{
+.navigation i {
     vertical-align: middle; /* | top | bottom */
     margin-right: 0.25em;
+}
+
+/* Making sure arrow is aligned accordingly */
+.navigation_back_settings,
+.navigation_back_dashboard {
+    display: none;
+    padding-left: 0.75em;
+    justify-content: start;
+    text-align: left;
 }
 
 /* END navigation bar style */
@@ -489,6 +506,7 @@ div.select_unit {
     display: inline-block;
     width: 60px;
     height: 30px;
+    margin-bottom: 0.5em;
   }
   
   /* Hide default HTML checkbox */

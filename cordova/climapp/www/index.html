@@ -47,7 +47,18 @@
                     <p><i class="fas fa-cog fa-2x" ></i> SETTINGS</p>
 					<!-- put dasjboard to the right, because i keep clicking left if i want to go to dashboard  -->
                 </div>
-			</div>
+            </div>
+            <div class="navigation_back_settings">
+                    <div data-target="settings" data-listener="navbar">
+                        <p><i class="fas fa-chevron-left fa-2x"></i></p> 
+                    </div>
+            </div>
+            <div class="navigation_back_dashboard">
+                    <div data-target="dashboard" data-listener="navbar">
+                        <p><i class="fas fa-chevron-left fa-2x"></i></p> 
+                    </div>
+            </div>
+                
 			<div class="spacer"><p>&nbsp;</p></div><!-- &nbsp; so we have same style implementation for <p> as in header -->
 			<div id="content">
 		        <!-- BK feb 6 2019: we use this div as our root, and dynamically populate it with the content we require.

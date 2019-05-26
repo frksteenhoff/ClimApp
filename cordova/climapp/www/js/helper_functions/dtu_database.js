@@ -4,17 +4,17 @@
  * Asynchronous functions.
  */
 
-// kb - shorthand for self.knowledgeBase.feedback 
+// kb - shorthand for self.knowledgeBase 
 function addFeedbackToDB(kb){
     let apicall = "createFeedbackRecord";
     let url = kb.user_info.dtu_ip + kb.user_info.dtu_api_base_url + apicall;
     let user_data = {
                 "user_id": deviceID(),
-                "question_combo_id": 1, // will be changed when more sophisticaed solution is implemented
-                "rating1": kb.question1.rating, 
-                "rating2": kb.question2.rating,
-                "rating3": kb.question3.rating, 
-                "txt": kb.comment === "" ? "_" : kb.feedback.comment 				
+                "question_combo_id": 1, // will be changed when more sophisticated solution is implemented
+                "rating1": kb.feedback.question1.rating, 
+                "rating2": kb.feedback.question2.rating,
+                "rating3": kb.feedback.question3.rating, 
+                "txt": kb.feedback.comment === "" ? "_" : kb.feedback.comment 				
             }  
     $.post(url, user_data).done(function(data, status, xhr){
         if(status === "success") {

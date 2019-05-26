@@ -98,16 +98,16 @@ var app = {
 		
 		// When user submits feedback, add to object to send to db + reset values
 		$("div[data-listener='submit']").off();
-		$("div[data-listener='submit']").on("touchstart", function(){
+		$("div[data-listener='submit']").on("click", function(){
 			var target = $("#feedback_text").val();
 			self.knowledgeBase.feedback.comment = target;
 			
 			// If user not in database, add user to database
 			if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
-				knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
+				self.knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
 			} 
 			// Add feedback to database
-			addFeedbackToDB(self.knowledgeBase.feedback);
+			addFeedbackToDB(self.knowledgeBase);
 						
 			// reset values
 			$('#feedback_text').val("");
@@ -158,10 +158,31 @@ var app = {
 				self.knowledgeBase.settings.height.value = 178;
 				self.knowledgeBase.settings.weight.value = 82;
 				self.knowledgeBase.settings.unit.value = "SI";
+				self.knowledgeBase.settings.acclimatization = false;
+				self.knowledgeBase.user_info.receivesNotifications = false;
+
+				self.saveSettings();
+				self.updateUI();
 
 				// Inform user about event in toast
 				var notificationText = "Personal preferences reset, using default values.";
 				showShortToast(notificationText);
+
+			} else {
+				self.loadUI(target);
+			}
+		});
+
+		$("input[data-listener='toggle_switch']").off(); //prevent multiple instances of listeners on same object
+		$("input[data-listener='toggle_switch']").on("click", function(){
+			var target = $(this).attr("data-target");
+			
+			if(target === "acclimatization_switch") {
+				var isChecked = $(this).is(":checked");
+				self.knowledgeBase.settings.acclimatization = isChecked;
+				// Inform user about choice in toast
+				var accText = isChecked ? "You are acclimatized to your working environment" : "You are not acclimatized to your working environment.";
+				showShortToast(accText);
 
 			} else if(target === "notification_switch") {
 				var isChecked = $(this).is(":checked");
@@ -169,8 +190,6 @@ var app = {
 				// Inform user about choice in toast
 				var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
 				showShortToast(notificationText);
-			} else {
-				self.loadUI(target);
 			}
 		});
 		// Always add ability to swipe
@@ -203,8 +222,6 @@ var app = {
 						self.updateInfo( self.selectedWeatherID );
 					});
 				}
-				
-				
 			}else{
 				self.loadUI(target);
 			}
@@ -248,7 +265,7 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.8,
+			return {"version": 1.9,
 					"app_version": "beta",
 					"user_info": {
 							"isFirstLogin": 1,
@@ -290,7 +307,8 @@ var app = {
 									},
 									 "unit": { "title": "Which units of measurements would you prefer?",
 												 "value": "SI" 
-											} // default SI units
+											}, // default SI units
+									"acclimatization":  0,
 					   },
 					  "activity": { "label": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
 										 		"low":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
@@ -395,13 +413,12 @@ var app = {
 			if ( 'version' in this.knowledgeBase && this.knowledgeBase.version < shadowKB.version ){
 				this.knowledgeBase = this.initKnowledgeBase();
 				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
-				showShortToast("database updated to version : " + this.knowledgeBase.version);
-
-				
+				showShortToast("database updated to version : " + this.knowledgeBase.version);	
 			}
 			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
 				console.log("loaded knowledgebase version : " + this.knowledgeBase.version );
 				showShortToast("loaded database version : " + this.knowledgeBase.version);
+				console.log("KB " + Object.keys(this.knowledgeBase));
 
 			}
 			else{ //old version does not have version key
@@ -588,7 +605,7 @@ var app = {
 					   self.knowledgeBase.weather.temperature = weather.tair.map(Number);
 					   self.knowledgeBase.weather.temperature.unshift( Number( weather.currentweather.tair ) );
 					   
-					   
+
 					   self.knowledgeBase.weather.globetemperature = weather.tglobe.map(Number);
 					   self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe ) );
 					   
@@ -771,6 +788,8 @@ var app = {
 	updateUI: function(){
 		// context dependent filling of content
 		this.initNavbarListeners();
+		$(".navigation_back_settings").hide();
+		$(".navigation_back_dashboard").hide();
 		
 		if( this.currentPageID == "onboarding"){
 			$(".navigation").hide();
@@ -792,7 +811,8 @@ var app = {
 			this.updateInfo( this.selectedWeatherID );
 		}
 		else if( this.currentPageID == "details"){
-			$(".navigation").show();
+			$(".navigation").hide();
+			$(".navigation_back_dashboard").show();
 			var index = this.selectedWeatherID;
 			
 			let tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
@@ -894,10 +914,12 @@ var app = {
 			$("#weight").html( getCalculatedWeightValue(unit, weight) + " " + getWeightUnit(unit));
 			$("#gender").html( this.knowledgeBase.settings.gender.value );
 			$("#unit").html( this.knowledgeBase.settings.unit.value + " units" );
+			$("#acclimatization_checkbox").attr("checked", this.knowledgeBase.settings.acclimatization);
 			$("#notification_checkbox").attr("checked", this.knowledgeBase.user_info.receivesNotifications);
 		}
 		else if( this.currentPageID == "feedback" ){
-			$(".navigation").show();
+			$(".navigation").hide();
+			$(".navigation_back_settings").show();
 			this.initFeedbackListeners();
 			// Question text
 			$("#question1").html( this.knowledgeBase.feedback.question1.text );
@@ -915,8 +937,14 @@ var app = {
 			$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").attr("checked", true);
 		} 
 		else if(this.currentPageID == "about") {
+			$(".navigation").hide();
+			$(".navigation_back_settings").show();
 			$("#app_version").html("App version: " + this.knowledgeBase.app_version);
 			$("#kb_version").html("Knowledgebase version: " + this.knowledgeBase.version);
+		} 
+		else if (this.currentPageID == "disclaimer") {
+			$(".navigation").hide();
+			$(".navigation_back_settings").show();
 		}
 	},
 	isDrawColdGauge: function( cold, heat, index ){

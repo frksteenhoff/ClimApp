@@ -7,12 +7,31 @@ Follow the app development (with some delay) in this interactive screen visualiz
 Note! Not all functionality is made available in the app, furthermore, the commits to the github prototype codebase will not be 1:1 with Invision App.
 
 ## Requirements and installation
+### Android Studio project (in folder `ClimApp`)
 For all Java code you need to install [Java](https://java.com/en/download/) and [Android Studio](https://developer.android.com/studio/install.html) including different SDKs/JDKs and JRE. 
 
 For the best simulation of the app, use USB Debugging on your device (Developer mode).
 
 Inspection of the scripts in Jupyter Notebooks require an installation of Python 2.7.
 
+
+### Cordova project (in folder `cordova/climapp`)
+* `node`
+* `cordova`
+
+Plugins
+* `cordova-android ^7.1.4`
+* `cordova-ios ^4.5.5`
+* `cordova-plugin-badge ^0.8.8`
+* `cordova-plugin-device ^2.0.2`
+* `cordova-plugin-geolocation ^4.0.1`
+* `cordova-plugin-local-notification ^0.9.0-beta.2`
+* `cordova-plugin-splashscreen ^5.0.2`
+* `cordova-plugin-statusbar ^2.4.2`
+* `cordova-plugin-whitelist ^1.3.3`
+* `cordova-plugin-x-toast ^2.7.2`
+* `cordova-wheel-selector-plugin ^1.1.2`
+* `tocca ^2.0.4` 
 
 ## App folder structure
 **ClimApp**
@@ -33,6 +52,9 @@ Structure of the program files:
       ├── js/                                                     <-- javascript files
       │     ├── thresholds/ 
       │     ├── phs/
+      │     ├── test/
+      │     │     ├── functionality/                              <-- unit tests (jest)
+      │     │     ├── ui_tests/                                   <-- ui/integration tests (mocha, chai, jasmine) 
       │     ├── *.js
       │     └── ..
       ├── pages/
