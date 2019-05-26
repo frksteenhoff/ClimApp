@@ -20,6 +20,11 @@
     -webkit-tap-highlight-color: rgba(0,0,0,0); /* make transparent link selection, adjust last value opacity 0 to 1.0 */
 }
 
+@font-face {
+  font-family: "Dosis";
+  src: url("./fonts/Dosis-Medium.ttf");
+}
+
 body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
@@ -27,7 +32,7 @@ body {
     background: url("../img/backgrounds/blue-sky.jpg");
      background-repeat: no-repeat;
      background-size: auto;
-    font-family: Arial, sans-serif;
+    font-family: "Dosis";
     height:100%;
     margin:0;
     padding:0;
@@ -41,7 +46,7 @@ body {
 }
 
 .spacer{
-	height: 2.3em;
+	height: 3.3em;
 }
 
 /* Portrait layout (default) */
@@ -53,6 +58,22 @@ div{
 	/*border: 1px solid rgba(0, 0, 0, 0.5);/*layout helper*/
 }
 
+div.hidden{
+	display: none;
+}
+div.menufocus{
+	background: rgba(255,255,255,0.3);
+}
+div.menuitem{
+	text-align:center;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+}
+div.menuitem.border{
+	border-left: 1px solid;
+	border-right: 1px solid;
+}
 
 canvas{
 	/*vertical-align:middle;*/
@@ -63,7 +84,8 @@ canvas{
 	color: #fff;
 	width: 100%;
     padding: 0.1em 0.5em; 
-	margin: 0.7em auto;
+	margin: 0 auto;
+	margin-bottom: 0.7em;
 	/*border: 1px solid rgba(0, 0, 0, 0.5);
 	/*box-shadow: 2px 2px rgba(0, 0, 0, 0.2);*/
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
@@ -71,7 +93,7 @@ canvas{
     box-sizing: border-box;         /* Opera/IE 8+ */
 }
 
-.flexbox-5, .flexbox-2, .flexbox-3{
+.flexbox, .flexbox-5, .flexbox-2, .flexbox-3{
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -82,12 +104,22 @@ canvas{
     justify-content: space-between;
 }
 
+.flexbox{
+	margin: auto;
+}
 .flexbox-2 div.center{
 	margin: auto;
 }
 .flexbox-2 div.even{
 	margin: auto;
 	flex-basis:50%;
+}
+.flexbox-2 div{
+	border: 0px solid;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+	
 }
 
 .flexbox-2 div.left {
@@ -138,10 +170,6 @@ canvas{
     background: #7EBFE5; /* Old browsers */
 }
 
-a {
-    color: #7EBFE5;
-}
-
 p {
     /* commented out, this functionality should not be in root p. 
 	margin-left: 0.5em;
@@ -177,7 +205,6 @@ span.score{
 p.left{
 	text-align:left;
 }
-
 p.center{
 	text-align: center;
 }
@@ -194,26 +221,16 @@ img.small{
 }
 
 #dashboard_content {
-    align-content: flex-start;
-    margin: 0.5em;
+    /*align-content: flex-start;*/
 }
 
 #temperature {
-    width: 40%;
     font-size: 30vw;
 }
 
-#tips, 
-#forecasts {
-    margin-top: 0.5em;
-}
 
 #circle_gauge_color {
     margin-right: 0.5em;
-}
-
-#forecasts {
-    background: #fff; 
 }
 
 #temp_unit {
@@ -221,6 +238,8 @@ img.small{
 }
 
 /* Settings related */
+
+
 .panel.settings div {
     margin-bottom: 0.5em;
 	border-bottom: solid 1px rgba(204, 204, 204, 0.3);
@@ -230,18 +249,16 @@ img.small{
 	border-bottom: solid 1px rgba(204, 204, 204, 0.3);
 }
 
-.panel.settings div.inlineitems last,
+.panel.settings div.inlineitems,
 .panel.settings div.last
  {
     border-bottom: hidden;
 }
 
 /* BEGIN navigation bar style*/
-.navigation, 
-.navigation_back_settings,
-.navigation_back_dashboard {
+.navigation {
   position: fixed;
-  top: 0;
+  bottom: 0;
   width:100%;
   margin: 0; 
   background: rgba(255,255,255,1);  
@@ -258,26 +275,14 @@ img.small{
   justify-content: space-between;
 }
 
-
-.navigation div, 
-.navigation_back_settings div, 
-.navigation_back_dashboard div{
-    color: #000;
+.navigation div{
+	color: #000;
 	display: border-box;
 	margin: auto;
 }
-.navigation i {
+.navigation i{
     vertical-align: middle; /* | top | bottom */
     margin-right: 0.25em;
-}
-
-/* Making sure arrow is aligned accordingly */
-.navigation_back_settings,
-.navigation_back_dashboard {
-    display: none;
-    padding-left: 0.75em;
-    justify-content: start;
-    text-align: left;
 }
 
 /* END navigation bar style */
@@ -491,7 +496,6 @@ div.select_unit {
     display: inline-block;
     width: 60px;
     height: 30px;
-    margin-bottom: 0.5em;
   }
   
   /* Hide default HTML checkbox */

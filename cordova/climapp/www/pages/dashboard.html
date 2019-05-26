@@ -9,17 +9,19 @@
 		</div>
 	</div>
 	<div class="flexbox-2">
-		<div id="dashboard_numbers" class="left">
+		<div class="left">
 			<p><span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span><br><span id="temp_unit"></span></p>
-			<p><i class="fas fa-wind"></i> Wind speed <span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span >m/s</p>
-			<p><i class="fas fa-tint"></i> Humidity   <span id="humidity"><i class="fas fa-spinner fa-pulse"></i></span >%</p>
 			<!--<p><i class="fas fa-cloud"></i> <span id="cloudiness"><i class="fas fa-spinner fa-pulse"></i></span> %</p>-->
 		</div>
 		<div class="center" id=gauge_div>
 			<canvas id="main_gauge"></canvas>
 		</div>
 	</div>
-	<div class="flexbox-3" id="forecast">
+
+	<div><p><i class="fas fa-wind"></i> Wind speed <span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span> km/h</p></div>
+	<div><p><i class="fas fa-tint"></i> Humidity   <span id="humidity"><i class="fas fa-spinner fa-pulse"></i></span >%</p></div>
+		
+	<div class="flexbox-3">
 		<div>
 			<p id="forecast_left" class="left label"><i class="fas fa-chevron-left"></i> <span id="swipe_left_time"></span></p>
 		</div>
@@ -43,16 +45,16 @@
 	</div>
 </div>
 
-<div class="panel" id="activity_panel" data-listener="panel" data-target="settings">
-	<p class="label">Activity level</p>
-	<div class="flexbox-5" id="activity_flex">
-		<div data-target="rest" data-listener="activity" class="button"><img src="img/activities/rest.png" class="small"><br>Rest</div>
-		<div data-target="low" data-listener="activity" class="button"><img src="img/activities/office.png" class="small"><br>Low</div>
-		<div data-target="medium" data-listener="activity" class="button"><img src="img/activities/gardener.png" class="small"><br>Medium</div>
-		<div data-target="high" data-listener="activity" class="button"><img src="img/activities/shovel.png" class="small"><br>High</div>
-		<div data-target="intense" data-listener="activity" class="button"><img src="img/activities/running.png" class="small"><br>Intense</div>	
+
+<div class="panel" data-listener="panel" data-target="settings">
+	<div class="flexbox-3">
+		<div id="tabactivity" data-listener="menu" data-target="selectactivity" class="menuitem menufocus"><p class="label">Activity</p></div>
+		<div id="tabaclothingy" data-listener="menu" data-target="selectclothing" class="menuitem border"><p class="label">Clothing</p></div>
+		<div id="tabheadgear" data-listener="menu" data-target="selecthood" class="menuitem"><p class="label">Headgear</p></div>
 	</div>
-	<p class="caption" id="activityCaption"></p>
+	<div id="selectactivity" class=""><p>Rest</p></div>
+	<div id="selectclothing" class="hidden"><p>Summer attire</p></div>
+	<div id="selecthood" data-listener="headgear" class="hidden"><p>None</p></div>
 </div>
 
 
