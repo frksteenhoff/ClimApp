@@ -594,8 +594,8 @@ var app = {
 					   self.knowledgeBase.weather.lat = weather.lat;
 					   self.knowledgeBase.weather.lng = weather.lon;
 					   
-					   self.knowledgeBase.weather.wbgt = weather.wbgt_max.map(Number);
-					   self.knowledgeBase.weather.wbgt.unshift( Number( weather.currentweather.wbgt_max ) );
+					   self.knowledgeBase.weather.wbgt = weather.wbgt_min.map(Number);
+					   self.knowledgeBase.weather.wbgt.unshift( Number( weather.currentweather.wbgt_min ) );
 					   
 					   
 					   self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
@@ -606,8 +606,8 @@ var app = {
 					   self.knowledgeBase.weather.temperature.unshift( Number( weather.currentweather.tair ) );
 					   
 
-					   self.knowledgeBase.weather.globetemperature = weather.tglobe.map(Number);
-					   self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe ) );
+					   self.knowledgeBase.weather.globetemperature = weather.tglobe_clouds.map(Number);
+					   self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe_clouds ) );
 					   
 					   
 					   self.knowledgeBase.weather.humidity = weather.rh.map(Number);
@@ -618,8 +618,8 @@ var app = {
 					   self.knowledgeBase.weather.windspeed.unshift( Number( weather.currentweather.vair ) );
 					    
 					   
-					   self.knowledgeBase.weather.radiation = weather.solar.map(Number);
-					   self.knowledgeBase.weather.radiation.unshift( Number( weather.currentweather.solar ) );
+					   self.knowledgeBase.weather.radiation = weather.solar_clouds.map(Number);
+					   self.knowledgeBase.weather.radiation.unshift( Number( weather.currentweather.solar_clouds ) );
 					   
 					   self.knowledgeBase.weather.meanradianttemperature = [];
 					   self.knowledgeBase.weather.windspeed2m = [];
@@ -627,14 +627,17 @@ var app = {
 				   			var Tg= self.knowledgeBase.weather.globetemperature[key];
 				   			var Ta = self.knowledgeBase.weather.temperature[key];
 				   			var va = vair * Math.pow( 0.2, 0.25 ); //stability class D Liljgren 2008 Table 3
-				   			var D = 0.15; //diameter black globe 
+				   			
+							//kruger et al 2014
+							var D = 0.05; //diameter black globe (liljegren - ) --default value = 0.15
 				   			var eps_g = 0.95; //standard emmisivity black bulb
 				   			var t0 = (Tg+273.0);
 				   			var t1 = Math.pow( t0, 4);
-				   			var t2 = 1.1 * Math.pow(10,8) * Math.pow( va, 0.6 );
+				   			var t2 = 1.1 * Math.pow(10,7) * Math.pow( va, 0.6 ); //Math.pow(10,8) seems typo?
 				   			var t3 = eps_g * Math.pow( D, 0.4);
 				   			var t4 = t1 + ( t2 / t3 ) * (Tg-Ta);
 				   			var Tmrt = Math.pow( t4, 0.25 ) - 273.0;
+							
 							self.knowledgeBase.weather.meanradianttemperature.push( Tmrt );
 							self.knowledgeBase.weather.windspeed2m.push( va );
 					   } );
@@ -1027,7 +1030,9 @@ var app = {
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
 			
 			$("#temperature").html( this.knowledgeBase.thermalindices.ireq[ index].Tair.toFixed(0) +"&#xb0");
-			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[index].v_air10.toFixed(0) );
+			
+			let ws = this.knowledgeBase.thermalindices.ireq[index].v_air10 * 3.6; //m/s to km/h
+			$("#windspeed").html( ws.toFixed(0) );
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.settings.unit.value)); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
 		
@@ -1047,7 +1052,7 @@ var app = {
 			}
 			
 			let windowsize = $( window ).width();
-			let width = windowsize / 2;
+			let width = windowsize / 2.2;
 			let value = this.determineThermalIndexValue( cold_index, heat_index, index );
 			let thermal = draw_cold_gauge ? "cold" : "heat";
 			
