@@ -15,11 +15,11 @@
 			<p><i class="fas fa-tint"></i> Humidity   <span id="humidity"><i class="fas fa-spinner fa-pulse"></i></span >%</p>
 			<!--<p><i class="fas fa-cloud"></i> <span id="cloudiness"><i class="fas fa-spinner fa-pulse"></i></span> %</p>-->
 		</div>
-		<div class="center">
+		<div class="center" id=gauge_div>
 			<canvas id="main_gauge"></canvas>
 		</div>
 	</div>
-	<div class="flexbox-3">
+	<div class="flexbox-3" id="forecast">
 		<div>
 			<p id="forecast_left" class="left label"><i class="fas fa-chevron-left"></i> <span id="swipe_left_time"></span></p>
 		</div>
@@ -35,17 +35,17 @@
 
 <div class="panel" id="tip_panel" data-listener="panel" data-target="settings">
 	<div id="tips"></div>
-	<div class="flexbox-2">
-		<div><p class="label">&nbsp;</p></div>
+	<div class="flexbox-2" id="tip_detailed">
+		<div></i><p class="label">&nbsp;</p></div>
 		<div data-listener="navbar" data-target="details">
 			<p class="right"><i class="fas fa-info-circle"></i> <span>more info</span></p>
 		</div>
 	</div>
 </div>
 
-<div class="panel" data-listener="panel" data-target="settings">
+<div class="panel" id="activity_panel" data-listener="panel" data-target="settings">
 	<p class="label">Activity level</p>
-	<div class="flexbox-5">
+	<div class="flexbox-5" id="activity_flex">
 		<div data-target="rest" data-listener="activity" class="button"><img src="img/activities/rest.png" class="small"><br>Rest</div>
 		<div data-target="low" data-listener="activity" class="button"><img src="img/activities/office.png" class="small"><br>Low</div>
 		<div data-target="medium" data-listener="activity" class="button"><img src="img/activities/gardener.png" class="small"><br>Medium</div>

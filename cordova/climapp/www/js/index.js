@@ -249,10 +249,11 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.9,
+			return {"version": 1.92,
 					"app_version": "beta",
 					"user_info": {
 							"isFirstLogin": 1,
+							"introductionCompleted": 0, 
 							"hasExternalDBRecord": 0,
 							"receivesNotifications": 0, // false as notifications are not part of the app
 							"dtu_ip": "http://192.38.64.244",
@@ -398,6 +399,9 @@ var app = {
 				this.knowledgeBase = this.initKnowledgeBase();
 				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
 				showShortToast("database updated to version : " + this.knowledgeBase.version);	
+				this.knowledgeBase.user_info.isFirstLogin = 0; // If user has previous version, not first login
+				this.knowledgeBase.user_info.hasExternalDBRecord = 1; // User must have DB record already
+				this.saveSettings();
 			}
 			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
 				console.log("loaded knowledgebase version : " + this.knowledgeBase.version );
@@ -762,6 +766,14 @@ var app = {
 			let caption_ = this.knowledgeBase.activity.label[ selected ];
 			$("#activityCaption").html( caption_ );
 			this.updateInfo( this.selectedWeatherID );
+
+			// Giving the user an introduction of the dashbord on first login
+			console.log("INTRO: " + this.knowledgeBase.user_info.introductionCompleted);
+			if(!this.knowledgeBase.user_info.introductionCompleted) {
+				startIntro();
+				this.knowledgeBase.user_info.introductionCompleted = 1;
+				this.saveSettings();
+			}
 		}
 		else if( this.currentPageID == "details"){
 			$(".navigation").hide();
@@ -1005,8 +1017,9 @@ var app = {
 			let thermal = draw_cold_gauge ? "cold" : "heat";
 			
 			this.drawGauge( 'main_gauge', width, value , thermal );
-		
-			$("#tips").html( tip_html );
+			
+			$("#tips").html( tip_html ); 
+			$("#circle_gauge_color").css("color", getCurrentGaugeColor(value));
 			$("#main_panel").fadeIn(500);
 		}
 		
