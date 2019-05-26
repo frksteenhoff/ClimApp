@@ -231,6 +231,22 @@ var app = {
 			self.updateUI();
 		});	
 	},
+	initMenuListeners: function(){
+		var self = this;
+		$("div[data-listener='menu']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='menu']").on("touchstart", function(){
+			var target = $(this).attr("data-target");
+			$("div.menuitem").removeClass("menufocus");
+			$(this).addClass("menufocus");
+			
+			//reset tab panels
+			$("#selectactivity").removeClass("hidden").addClass("hidden");
+			$("#selectclothing").removeClass("hidden").addClass("hidden");
+			$("#selecthood").removeClass("hidden").addClass("hidden");
+			$("#"+target).removeClass("hidden");
+			
+		});	
+	},
 	initKnowledgeBase: function(){
 			return {"version": 1.8,
 					"app_version": "beta",
@@ -457,6 +473,36 @@ var app = {
 			obj_array.push({description: "SI: kg, cm, m/s, Celcius", value: "SI" } );
 			obj_array.push({description: "US: lbs, inch, m/s, Fahrenheit", value: "US" } );
 			obj_array.push({description: "UK: stone, inch, m/s, Celcius", value: "UK" } );
+		}
+		else if( key === "windspeed" ){
+			obj_array.push({description: "No wind", value: "No Wind" } );
+			obj_array.push({description: "Some wind", value: "Some wind" } );
+			obj_array.push({description: "Strong wind", value: "Strong wind" } );	
+		}
+		else if( key === "radiation" ){
+			obj_array.push( {description: "Shadow", value: "Shadow"} );
+			obj_array.push( {description: "Halfshadow", value: "Halfshadow" } );
+			obj_array.push( {description: "Direct sunlight", value: "Direct sunlight" } );
+			obj_array.push( {description: "Extreme radiation", value: "Extreme radiation" } );
+		}
+		else if( key === "clothing" ){
+			obj_array.push({description: "Summer attire", value: "Summer attire"} );
+			obj_array.push({description: "Overall", value: "Overall" } );
+			obj_array.push({description: "Protective clothing", value: "Protective clothing" } );
+			obj_array.push({description: "Winter attire", value: "Winter attire"} );
+		}
+		else if( key === "hood" ){
+			obj_array.push({description: "None", value: "None" } );
+			obj_array.push({description: "Hat", value: "Hat" } );
+			obj_array.push({description: "Helmet", value: "Helmet"} );
+		}
+		else if (key === "activity"){
+			obj_array.push({description: "Rest", value: "Rest" } );
+			obj_array.push({description: "Light activity", value: "Low" } );
+			obj_array.push({description: "Medium activity", value: "Medium" } );
+			obj_array.push({description: "High activity", value: "High" } );
+			obj_array.push({description: "Intense activity", value: "Intens" } );
+			
 		}
 		return obj_array;
 	},
@@ -737,6 +783,7 @@ var app = {
 			this.initDashboardSwipeListeners();
 			this.initGeolocationListeners();
 			this.initActivityListeners();
+			this.initMenuListeners();
 			let selected = this.knowledgeBase.activity.selected;
 			
 			$("div[data-target='"+selected+"']").addClass("selected");

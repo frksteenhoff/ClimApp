@@ -55,7 +55,7 @@ function M(kb) { //W/m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
         let ISO_selected = kb.activity.selected;
         let ISO_level = kb.activity.values[ ISO_selected ];
-        return 50 * (ISO_level);
+        return 65 * (ISO_level);
     }
 }
 

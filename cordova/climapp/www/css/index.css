@@ -53,6 +53,22 @@ div{
 	/*border: 1px solid rgba(0, 0, 0, 0.5);/*layout helper*/
 }
 
+div.hidden{
+	display: none;
+}
+div.menufocus{
+	background: rgba(255,255,255,0.3);
+}
+div.menuitem{
+	text-align:center;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
+}
+div.menuitem.border{
+	border-left: 1px solid;
+	border-right: 1px solid;
+}
 
 canvas{
 	/*vertical-align:middle;*/
@@ -71,7 +87,7 @@ canvas{
     box-sizing: border-box;         /* Opera/IE 8+ */
 }
 
-.flexbox-5, .flexbox-2, .flexbox-3{
+.flexbox, .flexbox-5, .flexbox-2, .flexbox-3{
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -82,6 +98,9 @@ canvas{
     justify-content: space-between;
 }
 
+.flexbox{
+	margin: auto;
+}
 .flexbox-2 div.center{
 	margin: auto;
 }
