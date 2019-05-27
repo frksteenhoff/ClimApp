@@ -251,7 +251,7 @@ var app = {
 			    negativeButtonText: "Cancel"
 			};
 			window.SelectorCordovaPlugin.showSelector(config, function(result) {
-				self.knowledgeBase.activity.selected = items_[result[0].index].value;
+				self.knowledgeBase[target].selected = items_[result[0].index].value;
 				console.log( target + ": " + items_[result[0].index].value);
 				self.saveSettings(); 
 				self.calcThermalIndices();
@@ -274,11 +274,12 @@ var app = {
 			$("#selectclothing").removeClass("hidden").addClass("hidden");
 			$("#selecthood").removeClass("hidden").addClass("hidden");
 			$("#"+target).removeClass("hidden");
+			console.log("#"+target);
 			
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.97,
+			return {"version": 1.99,
 					"app_version": "beta",
 					"user_info": {
 							"isFirstLogin": 1,
@@ -345,6 +346,39 @@ var app = {
 									},	
 									"selected": "low",	
 								},
+			   			"clothing": { "title": "What is your clothing",
+				  			"description": {	"Summer_attire": "Loose fitting, short clothing. Typical for summer.",
+								 				"Business_suit":"Regular business suit. Most common in offices.",
+								 				"Overall":"Regular work wear. Most common in workshops. Sweat can evaporate through most of the fabric.",
+									 			"Coverall":"Covering work wear. Common for people working with dangerous materials. Fabric has low permeability to sweat.",
+												"Winter_attire":"Winter clothing, including coat." 
+							},
+							"label": { "Summer_attire": "Summer attire", //ISO 8896
+										"Business_suit": "Business suit",
+										"Overall": "Overall",
+										"Coverall": "Coverall",
+										"Winter_attire": "Winter attire"
+							},
+							"values": { "Summer_attire": 0.5, //ISO 8896
+										"Business_suit": 1.0,
+										"Overall": 1.1,
+										"Coverall": 1.5,
+										"Winter_attire": 2.5
+							},	
+							"selected": "Summer_attire",	
+						},
+			   			"headgear": { "title": "What is your headgear",
+				  			"description": {	"none": "No headgear",
+								 				"helmet":"A helmet or other gear covering the head.",
+							},
+							"label": { "none": "None", //ISO 8896
+										"helmet": "Helmet",
+							},
+							"values": { "none": 0, //clo
+										"helmet": 0.1, //clo
+							},	
+							"selected": "none",	
+						},
 						"feedback": { 
 							"question1": { 
 								"text": "How were your drinking needs?",
@@ -527,22 +561,19 @@ var app = {
 			obj_array.push( {description: "Extreme radiation", value: "Extreme radiation" } );
 		}
 		else if( key === "clothing" ){
-			obj_array.push({description: "Summer attire", value: "Summer attire"} );
-			obj_array.push({description: "Overall", value: "Overall" } );
-			obj_array.push({description: "Protective clothing", value: "Protective clothing" } );
-			obj_array.push({description: "Winter attire", value: "Winter attire"} );
+			$.each( this.knowledgeBase.clothing.label, function(key,val ){
+				obj_array.push({description: val, value: key} );
+			});
 		}
-		else if( key === "hood" ){
-			obj_array.push({description: "None", value: "None" } );
-			obj_array.push({description: "Hat", value: "Hat" } );
-			obj_array.push({description: "Helmet", value: "Helmet"} );
+		else if( key === "headgear" ){
+			$.each( this.knowledgeBase.headgear.label, function(key,val ){
+				obj_array.push({description: val, value: key} );
+			});
 		}
 		else if (key === "activity"){
-			obj_array.push({description: "Rest", value: "rest" } );
-			obj_array.push({description: "Light activity", value: "low" } );
-			obj_array.push({description: "Medium activity", value: "medium" } );
-			obj_array.push({description: "High activity", value: "high" } );
-			obj_array.push({description: "Intense activity", value: "intense" } );
+			$.each( this.knowledgeBase.activity.label, function(key,val ){
+				obj_array.push({description: val, value: key} );
+			});
 			
 		}
 		return obj_array;
@@ -737,9 +768,9 @@ var app = {
 									"accl": 	0		//% acclimatisation state either 0 or 100						
 							},
 							cloth:{
-									"Icl": 		0.8, 	//clo
-									"p": 		50, 	// Air permeability (low < 5, medium 50, high > 100 l/m2s)
-									"im_st": 	0.38, 	// static moisture permeability index
+									"Icl": 		getClo(this.knowledgeBase), 	//clo
+									"p": 		getAirPermeability(this.knowledgeBase), 	// Air permeability (low < 5, medium 50, high > 100 l/m2s)
+									"im_st": 	getMoisturePermeability(this.knowledgeBase), 	// static moisture permeability index
 									"fAref": 	0.54,	// Fraction covered by reflective clothing
 									"Fr": 		0.97,	// Emissivity reflective clothing
 							},
@@ -855,14 +886,14 @@ var app = {
 			let caption_ = this.knowledgeBase.activity.description[ selected ];
 			$("#activityCaption").html( caption_ );
 			
-			selected = this.knowledgeBase.activity.selected;			
-			$("#dashboard_clothing").html( this.knowledgeBase.activity.label[ selected ] );
-			 caption_ = this.knowledgeBase.activity.description[ selected ];
+			selected = this.knowledgeBase.clothing.selected;			
+			$("#dashboard_clothing").html( this.knowledgeBase.clothing.label[ selected ] );
+			 caption_ = this.knowledgeBase.clothing.description[ selected ];
 			$("#clothingCaption").html( caption_ );
 			
-			selected = this.knowledgeBase.activity.selected;			
-			$("#dashboard_headgear").html( this.knowledgeBase.activity.label[ selected ] );
-			 caption_ = this.knowledgeBase.activity.description[ selected ];
+			selected = this.knowledgeBase.headgear.selected;			
+			$("#dashboard_headgear").html( this.knowledgeBase.headgear.label[ selected ] );
+			 caption_ = this.knowledgeBase.headgear.description[ selected ];
 			$("#headgearCaption").html( caption_ );
 			
 			

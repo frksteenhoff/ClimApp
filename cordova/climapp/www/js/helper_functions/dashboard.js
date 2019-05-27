@@ -58,6 +58,30 @@ function M(kb) { //W/m2
     }
 }
 
+function getClo(kb){
+	let clokey = kb.clothing.selected;
+	return kb.clothing.values[clokey];
+}
+function getAirPermeability(kb){
+	let clokey = kb.clothing.selected; //check vals with chuansi
+	let values = { "Summer_attire": 100, 
+					"Business_suit": 50,
+					"Overall": 50,
+					"Coverall": 1, 
+					"Winter_attire": 1 };
+	return values[clokey];
+}
+
+function getMoisturePermeability(kb){
+	let clokey = kb.clothing.selected; //check vals with chuansi
+	let values = { "Summer_attire": 0.38, 
+					"Business_suit": 0.38,
+					"Overall": 0.38,
+					"Coverall": 0.09, 
+					"Winter_attire": 0.38 };
+	return values[clokey];
+}
+
 function RAL(kb) {
     let M_ = M(kb); //W/m2
     let BSA_ = BSA(kb); //m2
