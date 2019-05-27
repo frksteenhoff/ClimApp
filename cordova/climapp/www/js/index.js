@@ -241,7 +241,7 @@ var app = {
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='wheel']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
-			let title_ = self.knowledgeBase.activity.title;
+			let title_ = self.knowledgeBase[target].title;
 			var items_ = self.getSelectables( target );
 			
 			var config = {
@@ -272,14 +272,12 @@ var app = {
 			//reset tab panels
 			$("#selectactivity").removeClass("hidden").addClass("hidden");
 			$("#selectclothing").removeClass("hidden").addClass("hidden");
-			$("#selecthood").removeClass("hidden").addClass("hidden");
-			$("#"+target).removeClass("hidden");
-			console.log("#"+target);
-			
+			$("#selectheadgear").removeClass("hidden").addClass("hidden");
+			$("#"+target).removeClass("hidden");			
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.99,
+			return {"version": 1.991,
 					"app_version": "beta",
 					"user_info": {
 							"isFirstLogin": 1,
@@ -349,30 +347,36 @@ var app = {
 			   			"clothing": { "title": "What is your clothing",
 				  			"description": {	"Summer_attire": "Loose fitting, short clothing. Typical for summer.",
 								 				"Business_suit":"Regular business suit. Most common in offices.",
-								 				"Overall":"Regular work wear. Most common in workshops. Sweat can evaporate through most of the fabric.",
-									 			"Coverall":"Covering work wear. Common for people working with dangerous materials. Fabric has low permeability to sweat.",
-												"Winter_attire":"Winter clothing, including coat." 
+												"Double_layer": "Generally taken to be coveralls over work clothes.",
+												"Cloth_coverall": "Woven fabric that includes treated cotton.",
+												"Cloth_apron_long_sleeve": "The wrap-around apron configuration was designed to protect the front and sides of the body against spills from chemical agents.",
+												"Vapour_barrier_coverall": "Vapour-barrier clothing in a single layer.",
+								 				"Winter_attire":"Winter clothing, multiple layers including a thick coat." 
 							},
-							"label": { "Summer_attire": "Summer attire", //ISO 8896
+							"label": {  "Summer_attire": "Summer attire", //ISO 8896
 										"Business_suit": "Business suit",
-										"Overall": "Overall",
-										"Coverall": "Coverall",
+										"Double_layer": "Double layer",
+										"Cloth_coverall": "Cloth coverall",
+										"Cloth_apron_long_sleeve": "Apron over coverall",
+										"Vapour_barrier_coverall": "Vapour-barrier coverall",
 										"Winter_attire": "Winter attire"
 							},
-							"values": { "Summer_attire": 0.5, //ISO 8896
+							"values": { "Summer_attire": 0.5, //clo
 										"Business_suit": 1.0,
-										"Overall": 1.1,
-										"Coverall": 1.5,
+										"Double_layer": 1.5,
+										"Cloth_coverall": 1.0,
+										"Cloth_apron_long_sleeve": 1.2,
+										"Vapour_barrier_coverall": 1.1,
 										"Winter_attire": 2.5
 							},	
 							"selected": "Summer_attire",	
 						},
 			   			"headgear": { "title": "What is your headgear",
 				  			"description": {	"none": "No headgear",
-								 				"helmet":"A helmet or other gear covering the head.",
+								 				"helmet":"Wearing a hood of any fabric with any clothing ensemble.",
 							},
 							"label": { "none": "None", //ISO 8896
-										"helmet": "Helmet",
+										"helmet": "Helmet or hood",
 							},
 							"values": { "none": 0, //clo
 										"helmet": 0.1, //clo
@@ -925,6 +929,9 @@ var app = {
 			let tglobe = this.knowledgeBase.thermalindices.phs[index].Tglobe.toFixed(1);
 			
 			let wbgt = this.knowledgeBase.thermalindices.phs[index].wbgt.toFixed(1);
+			let wbgt_eff = getWBGTeffective( wbgt, this.knowledgeBase );
+			let ral = RAL( this.knowledgeBase );
+			
 			let windchill = this.knowledgeBase.thermalindices.phs[index].windchill.toFixed(1);
 			
 			let M = this.knowledgeBase.thermalindices.phs[index].M.toFixed(0);
@@ -954,6 +961,10 @@ var app = {
 			$("#detail_tglobe").html(tglobe + "&deg;C");
 			$("#detail_rad").html(rad + "W/m<sup>2</sup>");
 			$("#detail_wbgt").html(wbgt + "&deg;C");
+			$("#detail_wbgt_eff").html( wbgt_eff + "&deg;C");
+			$("#detail_ral").html( ral.toFixed(1) + "&deg;C");
+			
+			
 			$("#detail_windchill").html(windchill + "&deg;C");
 			
 			
@@ -1217,8 +1228,9 @@ determineThermalIndexValue: function( cold, heat, index ){
 			}
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
 		    
-			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
-			let cold_index = icl_min;
+			let icl_min = this.knowledgeBase.thermalindices.ireq[index].ICLminimal;
+			let icl_worn = getClo(this.knowledgeBase);
+			let cold_index = icl_min - icl_worn;
 			let heat_index = WBGTrisk( this.knowledgeBase.thermalindices.phs[index].wbgt, this.knowledgeBase );
 		
 			let draw_cold_gauge = this.isDrawColdGauge( cold_index, heat_index, index );

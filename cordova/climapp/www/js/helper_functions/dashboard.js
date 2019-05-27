@@ -60,14 +60,17 @@ function M(kb) { //W/m2
 
 function getClo(kb){
 	let clokey = kb.clothing.selected;
-	return kb.clothing.values[clokey];
+	let helmetkey = kb.headgear.selected;
+	return kb.clothing.values[clokey] + kb.headgear.values[helmetkey];
 }
 function getAirPermeability(kb){
 	let clokey = kb.clothing.selected; //check vals with chuansi
 	let values = { "Summer_attire": 100, 
 					"Business_suit": 50,
-					"Overall": 50,
-					"Coverall": 1, 
+					"Double_layer": 25,
+					"Cloth_coverall": 5,
+					"Cloth_apron_long_sleeve": 1,
+					"Vapour_barrier_coverall": 1,
 					"Winter_attire": 1 };
 	return values[clokey];
 }
@@ -76,9 +79,11 @@ function getMoisturePermeability(kb){
 	let clokey = kb.clothing.selected; //check vals with chuansi
 	let values = { "Summer_attire": 0.38, 
 					"Business_suit": 0.38,
-					"Overall": 0.38,
-					"Coverall": 0.09, 
-					"Winter_attire": 0.38 };
+					"Double_layer": 0.38,
+					"Cloth_coverall": 0.38,
+					"Cloth_apron_long_sleeve": 0.09,
+					"Vapour_barrier_coverall": 0.09,
+					"Winter_attire": 0.19 };
 	return values[clokey];
 }
 
@@ -86,12 +91,36 @@ function RAL(kb) {
     let M_ = M(kb); //W/m2
     let BSA_ = BSA(kb); //m2
     let watt = M_ * BSA_;
-    return 59.9 - 14.1 * Math.log10( watt );
+	if( kb.settings.acclimatization ){
+	    return 56.7 - 11.5 * Math.log10( watt ); //ISO7243 acclimatised
+	}
+	else{
+	    return 59.9 - 14.1 * Math.log10( watt );
+	}
+}
+
+function getWBGTeffective(wbgt, kb){
+	let clothingvalues = { "Summer_attire": 0, 
+							"Business_suit": 0,
+							"Double_layer": 3,
+							"Cloth_coverall": 0,
+							"Cloth_apron_long_sleeve": 4,
+							"Vapour_barrier_coverall": 10,
+							"Winter_attire": 3 };
+	let headvalues = { "none": 0, 
+					   "helmet": 1};
+	let clokey = kb.clothing.selected;
+	let helmetkey = kb.headgear.selected;
+
+	return 1.0 * (wbgt + clothingvalues[clokey] + headvalues[helmetkey] );
 }
 
 function WBGTrisk(wbgt, kb) {
     let RAL_ = RAL(kb);
-    let risk = wbgt / RAL_; 
+	
+	let wbgt_effective = getWBGTeffective(wbgt, kb);
+	let risk = wbgt_effective / RAL_; 
+	
     if (risk >= 1.2 ){
         return 3 * ( risk / 1.2 );
     } else if (risk > 1.0 ){
