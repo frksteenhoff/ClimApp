@@ -278,7 +278,7 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.96,
+			return {"version": 1.97,
 					"app_version": "beta",
 					"user_info": {
 							"isFirstLogin": 1,
