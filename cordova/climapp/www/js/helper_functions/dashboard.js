@@ -45,17 +45,17 @@ function windchillRisk(windchill) {
 // kb shorthand for knowledgeBase
 function BSA(kb) { //m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
-        let w = kb.settings.weight.value; //kg
-        let h = kb.settings.height.value / 100; //m
+        let w = kb.user.settings.weight; //kg
+        let h = kb.user.settings.height / 100; //m
         return ( Math.pow(h, 0.725) * 0.20247 * Math.pow(w, 0.425 ) );//dubois & dubois 
     }
 }
 
 function M(kb) { //W/m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
-        let ISO_selected = kb.activity.selected;
+        let ISO_selected = kb.user.activity_level;
         let ISO_level = kb.activity.values[ ISO_selected ];
-        return 50 * (ISO_level);
+        return 65 * (ISO_level);
     }
 }
 
@@ -226,6 +226,25 @@ function getCurrentGaugeColor(value) {
 	}
 }
 
+/* Recursively merge properties of two objects (left join) */
+function MergeRecursive(obj1, obj2) {
+
+	for (var p in obj2) {
+	  try {
+		// Property in destination object set earlier; update its value.
+		if ( obj2[p].constructor==Object ) {
+		  obj1[p] = MergeRecursive(obj1[p], obj2[p]);  
+		} else {
+		  obj1[p] = obj2[p];
+		}  
+	  } catch(e) {
+		// Property in destination object not set; create it and set its value.
+		obj1[p] = obj2[p];
+	  }
+	}  
+	return obj1;
+}
+
 /* The introduction elements follows order of JSON array */
 function startIntro() {
 	var intro = introJs();
@@ -277,4 +296,4 @@ function startIntro() {
           intro.start();
 }
 
-module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor, startIntro};
+module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor, startIntro, MergeRecursive};

@@ -7,7 +7,7 @@
 // kb - shorthand for self.knowledgeBase 
 function addFeedbackToDB(kb){
     let apicall = "createFeedbackRecord";
-    let url = kb.user_info.dtu_ip + kb.user_info.dtu_api_base_url + apicall;
+    let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
     let user_data = {
                 "user_id": deviceID(),
                 "question_combo_id": 1, // will be changed when more sophisticated solution is implemented
@@ -27,12 +27,12 @@ function addFeedbackToDB(kb){
 // Create user record in dtu database, kb shorthand for self.knowledgebase
 function createUserRecord(kb){
     let apicall = "createUserRecord";
-    let url = kb.user_info.dtu_ip + kb.user_info.dtu_api_base_url + apicall;
+    let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
     let user_data = {"_id": deviceID(),
-                     "age": kb.settings.age.value,
+                     "age": kb.user.settings.age,
                      "gender": getGenderAsInteger(kb), 
-                     "height": (kb.settings.height.value/100), // unit is meter in database (SI)
-                     "weight": kb.settings.weight.value, 
+                     "height": (kb.user.settings.height/100), // unit is meter in database (SI)
+                     "weight": kb.user.settings.weight, 
                      "unit": 0}  
     $.post(url, user_data).done(function(data, status, xhr){
         if(status === "success") {
@@ -48,7 +48,7 @@ function createUserRecord(kb){
 // Updating user parameter in database when/if user should choose to change the value
 function updateDBParam(kb, param){
     let apicall = "updateUser";
-    let urlsuffix = kb.user_info.dtu_ip + kb.user_info.dtu_api_base_url + apicall;
+    let urlsuffix = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
     let fieldToUpdate = param.charAt(0).toUpperCase() + param.slice(1); // Capitalizing to match API requirement		
 	let url = urlsuffix + fieldToUpdate;
 	let user_data = {
@@ -58,12 +58,12 @@ function updateDBParam(kb, param){
 	if(param === "gender") { 
 		user_data[param] = getGenderAsInteger(kb);
 	} else {
-		user_data[param] = kb.settings[param].value;
+		user_data[param] = kb.user.settings[param];
 	}
 	$.post(url, user_data).done(function(data, status, xhr){
 		if(status === "success") {
 			console.log("Database update" + param + ": " + 
-			kb.settings[param].value + ", " + 
+			kb.user.settings[param] + ", " + 
 			getGenderAsInteger(kb));
 		}
 	});
@@ -71,7 +71,8 @@ function updateDBParam(kb, param){
 
 function addWeatherDataToDB(kb){
     let apicall = "createWeatherRecord";
-    let url = kb.user_info.dtu_ip + kb.user_info.dtu_api_base_url + apicall;
+    let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
+    let acc = kb.user.acclimatization ? 1 : 0;
     let user_data = {
                 "_id": deviceID(),
                 "longitude": kb.weather.lat,
@@ -81,8 +82,8 @@ function addWeatherDataToDB(kb){
                 "wind_speed": kb.weather.windspeed[0], 
                 "humidity": kb.weather.humidity[0]/100, 
                 "cloudiness": 0, // Not in knowledgebase?
-                "activity_level": kb.activity.selected,
-                "acclimatization": 0, // currently not retrieved from sensationsmaps
+                "activity_level": kb.user.activity_level,
+                "acclimatization": acc, 
                 "temp_min": 0, // currently not retrieved from sensationsmaps
                 "temp_max": 0 // currently not retrieved from sensationsmaps
             }  
@@ -101,7 +102,7 @@ function addWeatherDataToDB(kb){
 function getAppIDFromDB(kb) {
 	return new Promise((resolve, reject) => {
 		let apicall = "getAppID";
-        let url = kb.user_info.dtu_ip + kb.user_info.dtu_api_base_url + apicall;
+        let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
 		let user_data = {
 					"user_id": deviceID()
 				}  

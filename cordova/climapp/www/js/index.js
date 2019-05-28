@@ -48,7 +48,7 @@ var app = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
 		this.loadSettings();
-		if( this.knowledgeBase.user_info.isFirstLogin ){//onboarding
+		if( this.knowledgeBase.user.guards.isFirstLogin ){//onboarding
 			this.loadUI( "onboarding" );
 		}
 		else{
@@ -63,7 +63,7 @@ var app = {
 		$("div[data-listener='navbar']").off();
 		$("div[data-listener='navbar']").on("click", function(){
 			let target = $( this ).attr("data-target");
-			self.knowledgeBase.user_info.isFirstLogin = 0;
+			self.knowledgeBase.user.guards.isFirstLogin = 0;
 		    self.saveSettings();
 			if(self.firstTimeLoginWithoutPersonalization(target)) {
 				showShortToast("Using default values in calculations.");
@@ -103,8 +103,8 @@ var app = {
 			self.knowledgeBase.feedback.comment = target;
 			
 			// If user not in database, add user to database
-			if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
-				self.knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
+			if(!self.knowledgeBase.user.guards.hasExternalDBRecord) {
+				self.knowledgeBase.user.guards.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
 			} 
 			// Add feedback to database
 			addFeedbackToDB(self.knowledgeBase);
@@ -131,7 +131,7 @@ var app = {
 			    negativeButtonText: "Cancel"
 			};
 			window.SelectorCordovaPlugin.showSelector(config, function(result) {
-				self.knowledgeBase.settings[target].value = items_[result[0].index].value;
+				self.knowledgeBase.user.settings[target] = items_[result[0].index].value;
 				if(["age", "gender", "height", "weight"].includes(target)) {
 					updateDBParam(self.knowledgeBase, target);
 				}
@@ -153,13 +153,13 @@ var app = {
 			
 			if(target === "reset") {
 				// Resetting values to default
-				self.knowledgeBase.settings.age.value = 30;
-				self.knowledgeBase.settings.gender.value = "undefined";
-				self.knowledgeBase.settings.height.value = 178;
-				self.knowledgeBase.settings.weight.value = 82;
-				self.knowledgeBase.settings.unit.value = "SI";
-				self.knowledgeBase.settings.acclimatization = false;
-				self.knowledgeBase.user_info.receivesNotifications = false;
+				self.knowledgeBase.user.settings.age = 30;
+				self.knowledgeBase.user.settings.gender = "undefined";
+				self.knowledgeBase.user.settings.height = 178;
+				self.knowledgeBase.user.settings.weight = 82;
+				self.knowledgeBase.user.settings.unit = "SI";
+				self.knowledgeBase.user.settings.acclimatization = false;
+				self.knowledgeBase.user.guards.receivesNotifications = false;
 
 				self.saveSettings();
 				self.updateUI();
@@ -179,14 +179,14 @@ var app = {
 			
 			if(target === "acclimatization_switch") {
 				var isChecked = $(this).is(":checked");
-				self.knowledgeBase.settings.acclimatization = isChecked;
+				self.knowledgeBase.user.settings.acclimatization = isChecked;
 				// Inform user about choice in toast
 				var accText = isChecked ? "You are acclimatized to your working environment" : "You are not acclimatized to your working environment.";
 				showShortToast(accText);
 
 			} else if(target === "notification_switch") {
 				var isChecked = $(this).is(":checked");
-				self.knowledgeBase.user_info.receivesNotifications = isChecked;
+				self.knowledgeBase.user.guards.receivesNotifications = isChecked;
 				// Inform user about choice in toast
 				var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
 				showShortToast(notificationText);
@@ -241,7 +241,7 @@ var app = {
 		$("div[data-listener='activity']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='activity']").on("touchstart", function(){
 			var target = $(this).attr("data-target");
-			self.knowledgeBase.activity.selected = target;
+			self.knowledgeBase.user.settings.activity_level = target;
 			self.saveSettings();
 			$( "div[data-listener='activity']" ).removeClass( "selected" );
 			self.calcThermalIndices();
@@ -249,19 +249,38 @@ var app = {
 		});	
 	},
 	initKnowledgeBase: function(){
-			return {"version": 1.92,
-					"app_version": "beta",
-					"user_info": {
-							"isFirstLogin": 1,
-							"introductionCompleted": 0, 
-							"hasExternalDBRecord": 0,
-							"receivesNotifications": 0, // false as notifications are not part of the app
-							"dtu_ip": "http://192.38.64.244",
-							"dtu_api_base_url": "/ClimAppAPI/v1/ClimAppApi.php?apicall="
-					},
-					"position": { "lat": 0, 
-									 "lng": 0, 
-									 "timestamp": "" 
+			return {
+			/* --------------------------------------------------- */
+			// Should not be overwritten!
+			"user": {
+				"guards": {
+					"isFirstLogin": 1,
+					"introductionCompleted": 0, 
+					"hasExternalDBRecord": 0,
+					"receivesNotifications": 0, // false as notifications are not part of the app
+				}, 
+				"settings": { // Using default values
+					"age": 30,
+					"height": 178,
+					"weight": 82, 
+					"gender": "undefined",
+					"unit": "SI", 
+					"acclimatization": false,
+					"activity_level": "medium",
+					"explore": false, // currently not used
+					"level": 0 // currently not used, 0 - beginner, 1 - advanced (possibly 2 for expert)
+				},
+			},
+			/* --------------------------------------------------- */
+			"version": 1.975,
+			"app_version": "beta",
+			"server": {
+				"dtu_ip": "http://192.38.64.244",
+				"dtu_api_base_url": "/ClimAppAPI/v1/ClimAppApi.php?apicall="
+			},
+			"position": { "lat": 0, 
+			"lng": 0, 
+			"timestamp": "" 
 				    },
 					"weather": {	"station": "",
 									"lat": 0,
@@ -276,24 +295,18 @@ var app = {
 									"watervapourpressure": [-99],
 									"windspeed": [-99],
 									"radiation": [-99]
-						},
-					  "settings": { "age": {"title": "What is your age?",
-											"value": 36,
+								},
+								"settings": { "age": {"title": "What is your age?",
 											"unit": "years"
 									 },
-									 "height": {"title": "What is your height?",
-												"value": 186
+									 "height": {"title": "What is your height?"
 									},
-									 "weight": {"title": "What is your weight?",
-												"value": 82
+									 "weight": {"title": "What is your weight?"
 									},
-									 "gender": {"title": "What is your gender?",
-												"value": "Male"
+									 "gender": {"title": "What is your gender?"
 									},
-									 "unit": { "title": "Which units of measurements would you prefer?",
-												 "value": "SI" 
-											}, // default SI units
-									"acclimatization":  0,
+									 "unit": { "title": "Which units of measurements would you prefer?"
+											}, 
 					   },
 					  "activity": { "label": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
 										 		"low":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
@@ -306,8 +319,7 @@ var app = {
 												"medium": 3,
 												"high": 4,
 												"intense": 5
-									},	
-									"selected": "low",	
+									}
 								},
 						"feedback": { 
 							"question1": { 
@@ -392,36 +404,52 @@ var app = {
 		this.maxForecast = 8;
 		//localStorage.clear(); // Need to clear local storage when doing the update
 		var shadowKB = this.initKnowledgeBase();
-		if ( localStorage.getItem("knowledgebase") !== null ) {
+		var msgString = ""; // String deciding message to show in console/toast
+
+		// Distinguishing between a new and an existing user
+		if (localStorage.getItem("knowledgebase_v2") === null ) {
+			// For all users with a different (older) version of the knowledgebase
+			if(localStorage.getItem("knowledgebase") !== null) {
+				localStorage.clear();
+				this.knowledgeBase = shadowKB;
+				this.knowledgeBase.user.guards.hasExternalDBRecord = 1; // Already in ClimApp DB
+				// User will have to input personal settings (but from here on it will run smoothly)
+
+			// Users downloading the app for the first time get new version of knowledgebase
+			} else {
+				this.knowledgeBase = shadowKB;
+			}
+			// Omitting saving to skip next if statement (want to end in line 445 after creating new kb)
+		}
+
+		if (localStorage.getItem("knowledgebase_v2") !== null) {
+			this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase_v2") );
 			
-			this.knowledgeBase = JSON.parse( localStorage.getItem("knowledgebase") );
 			if ( 'version' in this.knowledgeBase && this.knowledgeBase.version < shadowKB.version ){
-				this.knowledgeBase = this.initKnowledgeBase();
-				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
-				showShortToast("database updated to version : " + this.knowledgeBase.version);	
-				this.knowledgeBase.user_info.isFirstLogin = 0; // If user has previous version, not first login
-				this.knowledgeBase.user_info.hasExternalDBRecord = 1; // User must have DB record already
-				this.saveSettings();
+				// Saving user preferences before updating
+				var userPreferences = this.knowledgeBase.user;   // Store old user data in temporary variable
+				this.knowledgeBase = shadowKB;                   // Update knowledgebase to new version
+				var mergedUserPreferences = MergeRecursive(shadowKB.user, userPreferences); // merge old user data into new user object
+				this.knowledgeBase.user = mergedUserPreferences; // Add merged user data to knowledgebase
+
+				msgString = "Knowledge base updated to version: ";
 			}
 			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
-				console.log("loaded knowledgebase version : " + this.knowledgeBase.version );
-				showShortToast("loaded database version : " + this.knowledgeBase.version);
-				console.log("KB " + Object.keys(this.knowledgeBase));
-
+				msgString = "Loaded knowledge base version: ";
 			}
-			else{ //old version does not have version key
-				this.knowledgeBase = this.initKnowledgeBase();
-				console.log("knowledgebase updated to version : " + this.knowledgeBase.version );
-				showShortToast("database updated to version : " + this.knowledgeBase.version);
+			else { //old version does not have version key
+				this.knowledgeBase = shadowKB;
+				msgString = "Knowledge base updated to version: ";
 			}
 		}
-		else{
-			this.knowledgeBase =this.initKnowledgeBase();	
-			console.log("created knowledgebase version : " + this.knowledgeBase.version );
-			showShortToast("created database version : " + this.knowledgeBase.version );
+		else {
+			this.knowledgeBase = shadowKB;	
+			msgString = "Created knowledge base version: ";
 		}
+		console.log(msgString + this.knowledgeBase.version);
+		showShortToast(msgString + this.knowledgeBase.version);
 		this.saveSettings();
-
+		console.log("User settings: \n" + JSON.stringify(this.knowledgeBase.user)); // Showing current user settings
 	},
 	/* In the future this should be used to fetch the needed question from the database
 	   Currently working with static content, just for proof of concept. */
@@ -435,13 +463,14 @@ var app = {
 		var uuid = device.uuid;
 		// Implement logic to handle different types of rating bars
 	},*/
+
 	firstTimeLoginWithoutPersonalization: function(target){
 		var self = this;
-		return self.knowledgeBase.user_info.isFirstLogin && target === 'dashboard';
+		return self.knowledgeBase.user.guards.isFirstLogin && target === 'dashboard';
 	},
 	getSelectables: function( key ){
 		var self = this;
-		let unit = this.knowledgeBase.settings.unit.value;
+		let unit = this.knowledgeBase.user.settings.unit;
 		var obj_array = [];
 		if( key.slice(0, 3) === "age" ){
 			for( var i=0; i<100; i++){
@@ -450,7 +479,7 @@ var app = {
 		}
 		else if( key === "height" ){
 			for( var i=0; i<100; i++){
-				if(this.knowledgeBase.settings.unit.value === "SI") {
+				if(this.knowledgeBase.user.settings.unit === "SI") {
 					obj_array.push({description: (i+120) + " " + getHeightUnit(unit), value: (i+120)  } );
 				} else { // feet, inches (still want to save in cm, not changing value)
 					obj_array.push({description: ((i+120)/30.48).toFixed(1) + " " + getHeightUnit(unit), value: (i+120)  } );
@@ -459,9 +488,9 @@ var app = {
 		}
 		else if( key === "weight" ){
 			for( var i=0; i<100; i++){
-				if(this.knowledgeBase.settings.unit.value === "SI") {
+				if(this.knowledgeBase.user.settings.unit === "SI") {
 					obj_array.push({description: (i+40) + " " + getWeightUnit(unit), value: (i+40) } );
-				} else if (this.knowledgeBase.settings.unit.value === "US") {
+				} else if (this.knowledgeBase.user.settings.unit === "US") {
 					// (still want to save in kg, not changing value)
 					obj_array.push({description: Math.round((i+40) * 2.2046) + " " + getWeightUnit(unit), value: (i+40) } );					
 				} else { // only UK left
@@ -483,7 +512,7 @@ var app = {
 	},
 	saveSettings: function(){
 		let jsonData = JSON.stringify( this.knowledgeBase );
-		localStorage.setItem("knowledgebase", jsonData );
+		localStorage.setItem("knowledgebase_v2", jsonData ); // saving to new version for easier logic
 	},
 	updateLocation: function(){
 		//$('i.fa-sync-alt').toggleClass("fa-spin");
@@ -509,14 +538,15 @@ var app = {
 	},
 	updateWeather: async function(){
 		var self = this;
+		console.log(self.knowledgeBase);
+		console.log(self.knowledgeBase);
 		
-		if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
-			self.knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
+		if(!self.knowledgeBase.user.guards.hasExternalDBRecord) {
+			self.knowledgeBase.user.guards.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
 		}
 		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
 
-
-		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
+		if(self.knowledgeBase.user.guards.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
 			//showShortToast("no external DB record found");			
@@ -582,7 +612,7 @@ var app = {
 					   self.knowledgeBase.weather.meanradianttemperature = [];
 					   self.knowledgeBase.weather.windspeed2m = [];
 					   $.each( self.knowledgeBase.weather.windspeed, function(key, vair){
-				   			var Tg= self.knowledgeBase.weather.globetemperature[key];
+				   			var Tg = self.knowledgeBase.weather.globetemperature[key];
 				   			var Ta = self.knowledgeBase.weather.temperature[key];
 				   			var va = Math.pow( vair, 0.25 );
 				   			var D = 0.15; //diameter black globe 
@@ -610,7 +640,7 @@ var app = {
 					   self.updateUI();
 							  
 					   // Only update when weather data has been received - and when external DB record is present.
-					   if( self.knowledgeBase.user_info.hasExternalDBRecord ){
+					   if( self.knowledgeBase.user.guards.hasExternalDBRecord ){
 					   		addWeatherDataToDB(self.knowledgeBase);
 					   }
 					   else{
@@ -631,7 +661,7 @@ var app = {
 		if(device.platform != 'browser') {
 			var threshold = 0;
 			if(self.knowledgeBase.weather.wbgt < threshold) {
-				//let userWantsNotifications = self.knowledgeBase.user_info.receivesNotifications();
+				//let userWantsNotifications = self.knowledgeBase.user.guards.receivesNotifications();
 				//scheduleDefaultNotification(userWantsNotifications);
 			}
 		}
@@ -651,16 +681,16 @@ var app = {
 		this.knowledgeBase.thermalindices.phs = [];
 		
 		var options =  {	air:{},
-							body:{
+						body:{
 									"M": 		M(this.knowledgeBase), 	//W/m2 
 									"work": 	0,		//W/m2 external work 
 									"posture": 	2,		//1= sitting, 2= standing, 3= crouching
-									"weight":   this.knowledgeBase.settings.weight.value,		//kg  
-									"height": 	this.knowledgeBase.settings.height.value / 100,	//m
+									"weight":   this.knowledgeBase.user.settings.weight,		//kg  
+									"height": 	this.knowledgeBase.user.settings.height / 100,	//m
 									"drink": 	0,	// may drink freely
 									"accl": 	0		//% acclimatisation state either 0 or 100						
-							},
-							cloth:{
+								},
+								cloth:{
 									"Icl": 		0.8, 	//clo
 									"p": 		50, 	// Air permeability (low < 5, medium 50, high > 100 l/m2s)
 									"im_st": 	0.38, 	// static moisture permeability index
@@ -760,7 +790,7 @@ var app = {
 			this.initDashboardSwipeListeners();
 			this.initGeolocationListeners();
 			this.initActivityListeners();
-			let selected = this.knowledgeBase.activity.selected;
+			let selected = this.knowledgeBase.user.settings.activity_level;
 			
 			$("div[data-target='"+selected+"']").addClass("selected");
 			let caption_ = this.knowledgeBase.activity.label[ selected ];
@@ -768,11 +798,10 @@ var app = {
 			this.updateInfo( this.selectedWeatherID );
 
 			// Giving the user an introduction of the dashbord on first login
-			console.log("INTRO: " + this.knowledgeBase.user_info.introductionCompleted);
-			if(!this.knowledgeBase.user_info.introductionCompleted) {
+			if(!this.knowledgeBase.user.guards.introductionCompleted) {
 				startIntro();
-				this.knowledgeBase.user_info.introductionCompleted = 1;
-				this.saveSettings();
+				this.knowledgeBase.user.guards.introductionCompleted = 1;
+				this.saveUserSettings();
 			}
 		}
 		else if( this.currentPageID == "details"){
@@ -832,7 +861,7 @@ var app = {
 				let dle_min = 60 * this.knowledgeBase.thermalindices.ireq[ index].DLEminimal;
 				dle_min = dle_min.toFixed(0);
 				
-				let activity = this.knowledgeBase.activity.selected;
+				let activity = this.knowledgeBase.user.settings.activity_level;
 				$("#detail_activity_ireq").html(activity);
 				$("#detail_icl_max").html( icl_max );
 				$("#detail_icl_min").html( icl_min );
@@ -870,17 +899,17 @@ var app = {
 		else if( this.currentPageID == "settings" ){
 			$(".navigation").show();
 			this.initSettingsListeners();
-			let unit = this.knowledgeBase.settings.unit.value;
-			let height = this.knowledgeBase.settings.height.value;
-			let weight = this.knowledgeBase.settings.weight.value;
+			let unit = this.knowledgeBase.user.settings.unit;
+			let height = this.knowledgeBase.user.settings.height;
+			let weight = this.knowledgeBase.user.settings.weight;
 
-			$("#age").html( this.knowledgeBase.settings.age.value + " " + this.knowledgeBase.settings.age.unit);
-			$("#height").html( getCalculatedHeightValue(unit, height) + " " + getHeightUnit(unit));
-			$("#weight").html( getCalculatedWeightValue(unit, weight) + " " + getWeightUnit(unit));
-			$("#gender").html( this.knowledgeBase.settings.gender.value );
-			$("#unit").html( this.knowledgeBase.settings.unit.value + " units" );
-			$("#acclimatization_checkbox").attr("checked", this.knowledgeBase.settings.acclimatization);
-			$("#notification_checkbox").attr("checked", this.knowledgeBase.user_info.receivesNotifications);
+			$("#age").html(this.knowledgeBase.user.settings.age + " " + this.knowledgeBase.settings.age.unit);
+			$("#height").html(getCalculatedHeightValue(unit, height) + " " + getHeightUnit(unit));
+			$("#weight").html(getCalculatedWeightValue(unit, weight) + " " + getWeightUnit(unit));
+			$("#gender").html(this.knowledgeBase.user.settings.gender);
+			$("#unit").html(this.knowledgeBase.user.settings.unit + " units" );
+			$("#acclimatization_checkbox").attr("checked", this.knowledgeBase.user.settings.acclimatization);
+			$("#notification_checkbox").attr("checked", this.knowledgeBase.user.guards.receivesNotifications);
 		}
 		else if( this.currentPageID == "feedback" ){
 			$(".navigation").hide();
@@ -905,7 +934,7 @@ var app = {
 			$(".navigation").hide();
 			$(".navigation_back_settings").show();
 			$("#app_version").html("App version: " + this.knowledgeBase.app_version);
-			$("#kb_version").html("Knowledgebase version: " + this.knowledgeBase.version);
+			$("#kb_version").html("Knowledge base version: " + this.knowledgeBase.version);
 		} 
 		else if (this.currentPageID == "disclaimer") {
 			$(".navigation").hide();
@@ -993,7 +1022,7 @@ var app = {
 			
 			$("#temperature").html( this.knowledgeBase.thermalindices.ireq[ index].Tair.toFixed(0) +"&#xb0");
 			$("#windspeed").html( this.knowledgeBase.thermalindices.ireq[index].v_air10.toFixed(0) );
-			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.settings.unit.value)); 
+			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit)); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
 		
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
