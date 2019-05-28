@@ -616,7 +616,8 @@ var app = {
 		}
 		console.log( "awaiting appID" );
 		
-		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
+		var appidFromServer = "f22065144b2119439a589cbfb9d851d3";
+		//await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
 
 
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
