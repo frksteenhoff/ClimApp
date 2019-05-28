@@ -328,5 +328,3 @@ function startIntro() {
           });
           intro.start();
 }
-
-module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor, startIntro};

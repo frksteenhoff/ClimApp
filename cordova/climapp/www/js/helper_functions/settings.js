@@ -42,5 +42,3 @@ function deviceID() {
 function getGenderAsInteger(kb) {
     return kb.settings.gender.value === 'Male' ? 1 : 0;
 }
-
-module.exports = { getCalculatedHeightValue, getHeightUnit, getCalculatedWeightValue, getWeightUnit, deviceID, getGenderAsInteger };

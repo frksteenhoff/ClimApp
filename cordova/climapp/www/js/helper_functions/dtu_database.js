@@ -115,5 +115,3 @@ function getAppIDFromDB(kb) {
 		});
 	})
 }
-
-module.exports = {addFeedbackToDB, createUserRecord, updateDBParam, addWeatherDataToDB, getAppIDFromDB};

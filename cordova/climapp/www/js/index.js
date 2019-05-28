@@ -590,7 +590,7 @@ var app = {
 		//$('i.fa-sync-alt').toggleClass("fa-spin");
 		var self = this; //copy current scope into local scope for use in anonymous function 
 		let options = {timeout: 30000 };
-		
+		console.log("updating location");
 		navigator.geolocation.getCurrentPosition( 
 			function( position ){ //on success
 				self.knowledgeBase.position.lat = position.coords.latitude;
@@ -614,13 +614,16 @@ var app = {
 		if(!self.knowledgeBase.user_info.hasExternalDBRecord) {
 			self.knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
 		}
+		console.log( "awaiting appID" );
+		
 		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
 
 
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
-			//showShortToast("no external DB record found");			
+			console.log("noexterdalDBrecord found");
+				
 		}
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
