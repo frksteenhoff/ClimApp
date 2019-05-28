@@ -538,14 +538,12 @@ var app = {
 	},
 	updateWeather: async function(){
 		var self = this;
-		console.log(self.knowledgeBase);
-		console.log(self.knowledgeBase);
 		
 		if(!self.knowledgeBase.user.guards.hasExternalDBRecord) {
 			self.knowledgeBase.user.guards.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
 		}
 		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
-
+		
 		if(self.knowledgeBase.user.guards.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
@@ -801,7 +799,7 @@ var app = {
 			if(!this.knowledgeBase.user.guards.introductionCompleted) {
 				startIntro();
 				this.knowledgeBase.user.guards.introductionCompleted = 1;
-				this.saveUserSettings();
+				this.saveSettings();
 			}
 		}
 		else if( this.currentPageID == "details"){
