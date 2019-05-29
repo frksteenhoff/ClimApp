@@ -615,9 +615,8 @@ var app = {
 			self.knowledgeBase.user_info.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
 		}
 		console.log( "awaiting appID" );
-		
-		var appidFromServer = "f22065144b2119439a589cbfb9d851d3";
-		//await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
+		//"f22065144b2119439a589cbfb9d851d3";
+		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
 
 
 		if(self.knowledgeBase.user_info.hasExternalDBRecord && appidFromServer) { 
@@ -941,7 +940,8 @@ var app = {
 			let M = this.knowledgeBase.thermalindices.phs[index].M.toFixed(0);
 			let A = BSA( this.knowledgeBase ).toFixed(1);
 			
-			let Icl = 0.155 * this.knowledgeBase.thermalindices.phs[index].Icl.toFixed(3);
+			let Icl = (0.155 * this.knowledgeBase.thermalindices.phs[index].Icl);
+			Icl = Icl.toFixed(3);
 			let p = this.knowledgeBase.thermalindices.phs[index].p.toFixed(2);
 			let im = this.knowledgeBase.thermalindices.phs[index].im_st.toFixed(2);
 			
@@ -965,7 +965,7 @@ var app = {
 			$("#detail_tglobe").html(tglobe + "&deg;C");
 			$("#detail_rad").html(rad + "W/m<sup>2</sup>");
 			$("#detail_wbgt").html(wbgt + "&deg;C");
-			$("#detail_wbgt_eff").html( wbgt_eff + "&deg;C");
+			$("#detail_wbgt_eff").html( wbgt_eff.toFixed(1) + "&deg;C");
 			$("#detail_ral").html( ral.toFixed(1) + "&deg;C");
 			
 			
@@ -975,7 +975,7 @@ var app = {
 			$("#detail_metabolic").html(M + "W/m<sup>2</sup>");
 			$("#detail_area").html(A + "m<sup>2</sup>")
 			
-			$("#detail_icl").html(Icl + "m<sup2</sup>K/W");
+			$("#detail_icl").html(Icl + "m<sup>2</sup>K/W");
 			$("#detail_p").html(p);
 			$("#detail_im").html(im);
 			

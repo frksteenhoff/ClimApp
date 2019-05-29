@@ -69,9 +69,9 @@ function getAirPermeability(kb){
 					"Business_suit": 50,
 					"Double_layer": 25,
 					"Cloth_coverall": 5,
-					"Cloth_apron_long_sleeve": 1,
+					"Cloth_apron_long_sleeve": 5,
 					"Vapour_barrier_coverall": 1,
-					"Winter_attire": 1 };
+					"Winter_attire": 5 };
 	return values[clokey];
 }
 
@@ -111,8 +111,8 @@ function getWBGTeffective(wbgt, kb){
 					   "helmet": 1};
 	let clokey = kb.clothing.selected;
 	let helmetkey = kb.headgear.selected;
-
-	return 1.0 * (wbgt + clothingvalues[clokey] + headvalues[helmetkey] );
+	console.log( clokey + " " + helmetkey );
+	return 1.0 * wbgt + ( clothingvalues[clokey] + headvalues[helmetkey] );
 }
 
 function WBGTrisk(wbgt, kb) {
