@@ -328,16 +328,16 @@ var app = {
 			"settings": { "age": {"title": "What is your age?",
 								"unit": "years"
 						 		},
-						 "height": {"title": "What is your height?"
+						 "height": {"title": "How tall are you?"
 								},
-						 "weight": {"title": "What is your weight?"
+						 "weight": {"title": "How much to you weigh?"
 								},
 						 "gender": {"title": "What is your gender?"
 								},
 						 "unit": { "title": "Which units of measurements would you prefer?"
 								}, 
 					   },
-			"activity": { "title": "What is your activity",
+			"activity": { "title": "What is your activity level?",
 				  			"description": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
 										 		"low":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
 										 		"medium":"Walking 2.5 - 5.5km/h. Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.",
@@ -357,7 +357,7 @@ var app = {
 										"intense": 520.0
 							}
 						},
-			   			"clothing": { "title": "What is your clothing",
+			   			"clothing": { "title": "What kind of clothing are you wearing?",
 				  			"description": {	"Summer_attire": "Loose fitting, short clothing. Typical for summer.",
 								 				"Business_suit":"Regular business suit. Most common in offices.",
 												"Double_layer": "Generally taken to be coveralls over work clothes.",
@@ -383,7 +383,7 @@ var app = {
 										"Winter_attire": 2.5
 							}	
 						},
-			   			"headgear": { "title": "What is your headgear",
+			   			"headgear": { "title": "Are you wearing any headgear?",
 				  			"description": {	"none": "No headgear",
 								 				"helmet":"Wearing a hood of any fabric with any clothing ensemble.",
 							},

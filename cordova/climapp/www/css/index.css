@@ -21,8 +21,8 @@
 }
 
 @font-face {
-  font-family: "Dosis";
-  src: url("./fonts/Dosis-Medium.ttf");
+  font-family: "Lato";
+  src: url("./fonts/Lato-Regular.ttf");
 }
 
 body {
@@ -32,7 +32,7 @@ body {
     background: url("../img/backgrounds/blue-sky.jpg");
      background-repeat: no-repeat;
      background-size: auto;
-    font-family: "Dosis";
+    font-family: "Lato";
     height:100%;
     margin:0;
     padding:0;
@@ -240,7 +240,7 @@ img.small{
 
 #dashboard_forecast{
 	padding: 0.5em;
-	color: #000;
+	color: #fff;
 	border-top: solid 1px rgba(204, 204, 204, 0.3);
 	
 }
