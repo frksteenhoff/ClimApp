@@ -103,9 +103,8 @@ var app = {
 			self.knowledgeBase.feedback.comment = target;
 			
 			// If user not in database, add user to database
-			if(!self.knowledgeBase.user.guards.hasExternalDBRecord) {
-				self.knowledgeBase.user.guards.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
-			} 
+			self.checkIfUserExistInDB();
+
 			// Add feedback to database
 			addFeedbackToDB(self.knowledgeBase);
 						
@@ -272,7 +271,7 @@ var app = {
 				},
 			},
 			/* --------------------------------------------------- */
-			"version": 1.976,
+			"version": 1.977,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -538,24 +537,21 @@ var app = {
 	},
 	updateWeather: async function(){
 		var self = this;
-		
-		if(!self.knowledgeBase.user.guards.hasExternalDBRecord && typeof(self.knowledgeBase.user.guards.hasExternalDBRecord) !== 'undefined') {
-			var userCreatedInDB = await createUserRecord(self.knowledgeBase);
+		console.log("1");
+		self.checkIfUserExistInDB();
 
-			// Only update value on success
-			if(userCreatedInDB) {
-				self.knowledgeBase.user.guards.hasExternalDBRecord = 1;
-				self.saveSettings();
-			}
-		} 
-
+		console.log("2");
 		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
 		
+		console.log("3");
+
 		if(self.knowledgeBase.user.guards.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
-			console.log("No external DB record found. AppId:" + appidFromServer + " hasExternalDBRecord: " + self.knowledgeBase.user.guards.hasExternalDBRecord);			
+			console.log("No DB record found or app ID missing. AppId:" + appidFromServer + " hasExternalDBRecord: " + self.knowledgeBase.user.guards.hasExternalDBRecord);			
 		}
+		console.log("4");
+
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
 					 "lat": this.knowledgeBase.position.lat,
@@ -680,6 +676,21 @@ var app = {
 			$("#content").html( content );
 			self.updateUI();
 		})
+	},
+	checkIfUserExistInDB: async function() {
+		var self = this;
+		if(!self.knowledgeBase.user.guards.hasExternalDBRecord && typeof(self.knowledgeBase.user.guards.hasExternalDBRecord) !== 'undefined') {
+			var userCreatedInDB = await createUserRecord(self.knowledgeBase);
+			
+			// Only update value on success
+			if(userCreatedInDB) {
+				console.log("User added to database.");
+				self.knowledgeBase.user.guards.hasExternalDBRecord = 1;
+				self.saveSettings();
+			}
+		} else {
+			console.log("User exist in database.");
+		}
 	},
 	calcThermalIndices: function( ){
 		this.knowledgeBase.thermalindices.ireq = [];
