@@ -53,9 +53,9 @@ function BSA(kb) { //m2
 
 function M(kb) { //W/m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
-        let ISO_selected = kb.user.activity_level;
+        let ISO_selected = kb.user.settings.activity_level;
         let ISO_level = kb.activity.values[ ISO_selected ];
-        return 65 * (ISO_level);
+        return 50 * (ISO_level);
     }
 }
 
@@ -222,7 +222,7 @@ function getCurrentGaugeColor(value) {
 	} else if(value > 3.0 && value <= 4.0) {
 		return 'rgba(180,0,0,.9)';
 	} else {
-		throw new Error("Value not in expected range"); // error
+		throw new Error("Value not in expected range [-4;4]: " + value); // error
 	}
 }
 
@@ -296,4 +296,4 @@ function startIntro() {
           intro.start();
 }
 
-module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor, startIntro, MergeRecursive};
+module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor, startIntro, MergeRecursive, checkUserExistInDB};
