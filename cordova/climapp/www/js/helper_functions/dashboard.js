@@ -53,22 +53,74 @@ function BSA(kb) { //m2
 
 function M(kb) { //W/m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
-        let ISO_selected = kb.user.settings.activity_level;
-        let ISO_level = kb.activity.values[ ISO_selected ];
-        return 50 * (ISO_level);
+        let ISO_selected = kb.user.settings.activity_selected;
+        return kb.activity.values[ ISO_selected ] / BSA(kb);
     }
+}
+
+function getClo(kb){
+	let clokey = kb.user.settings.clothing_selected;
+	let helmetkey = kb.user.settings.headgear_selected;
+	return kb.clothing.values[clokey] + kb.headgear.values[helmetkey];
+}
+function getAirPermeability(kb){
+	let clokey = kb.user.settings.clothing_selected; //check vals with chuansi
+	let values = { "Summer_attire": 100, 
+					"Business_suit": 50,
+					"Double_layer": 25,
+					"Cloth_coverall": 5,
+					"Cloth_apron_long_sleeve": 1,
+					"Vapour_barrier_coverall": 1,
+					"Winter_attire": 1 };
+	return values[clokey];
+}
+
+function getMoisturePermeability(kb){
+	let clokey = kb.user.settings.clothingselected; //check vals with chuansi
+	let values = { "Summer_attire": 0.38, 
+					"Business_suit": 0.38,
+					"Double_layer": 0.38,
+					"Cloth_coverall": 0.38,
+					"Cloth_apron_long_sleeve": 0.09,
+					"Vapour_barrier_coverall": 0.09,
+					"Winter_attire": 0.19 };
+	return values[clokey];
 }
 
 function RAL(kb) {
     let M_ = M(kb); //W/m2
     let BSA_ = BSA(kb); //m2
     let watt = M_ * BSA_;
-    return 59.9 - 14.1 * Math.log10( watt );
+	if( kb.settings.acclimatization ){
+	    return 56.7 - 11.5 * Math.log10( watt ); //ISO7243 acclimatised
+	}
+	else{
+	    return 59.9 - 14.1 * Math.log10( watt );
+	}
+}
+
+function getWBGTeffective(wbgt, kb){
+	let clothingvalues = { "Summer_attire": 0, 
+							"Business_suit": 0,
+							"Double_layer": 3,
+							"Cloth_coverall": 0,
+							"Cloth_apron_long_sleeve": 4,
+							"Vapour_barrier_coverall": 10,
+							"Winter_attire": 3 };
+	let headvalues = { "none": 0, 
+					   "helmet": 1};
+	let clokey = kb.user.settings.clothing_selected;
+	let helmetkey = kb.user.settings.headgear_selected;
+
+	return 1.0 * (wbgt + clothingvalues[clokey] + headvalues[helmetkey] );
 }
 
 function WBGTrisk(wbgt, kb) {
     let RAL_ = RAL(kb);
-    let risk = wbgt / RAL_; 
+	
+	let wbgt_effective = getWBGTeffective(wbgt, kb);
+	let risk = wbgt_effective / RAL_; 
+	
     if (risk >= 1.2 ){
         return 3 * ( risk / 1.2 );
     } else if (risk > 1.0 ){
@@ -103,7 +155,7 @@ function heatLevelTips( index, level, kb ){
 
 	
 	if( level === 1 ){ //beginner, early user
-		str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i>" // circle with gauge color
+		str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i> <b>Advice</b><br>" // circle with gauge color
 		if( heat_index <= 1 ){
 			str += "The green level means that low thermal stress is forecasted.</p>";
 		}
@@ -269,7 +321,7 @@ function startIntro() {
 				position: 'bottom'
               },
 			  {
-                element: '#forecast',
+                element: '#dashboard_forecast',
 				intro: "This bar allows for swiping between the forecasted weather data of today to see how the weather is predicted to change during the day.</p>" + 
 						"<p>The data is given in 3 hour intervals.",
 				position: 'bottom'
@@ -286,9 +338,9 @@ function startIntro() {
                 position: 'bottom'
               },
               {
-                element: '#activity_flex',
-				intro: "<p>Here you can set your expected activity level for the day.</p>" +
-				"<p>You can read more about the different levels underneath the buttons</p>",
+                element: '#menu_flex',
+				intro: "<p>Here you can set your estimated activity level, clothing level and head gear.</p>" +
+				"<p>You can read more about the different levels in the description below.</p>",
                 position: 'middle'
               }
             ]

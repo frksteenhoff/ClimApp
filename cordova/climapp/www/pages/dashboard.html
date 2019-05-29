@@ -9,50 +9,81 @@
 		</div>
 	</div>
 	<div class="flexbox-2">
-		<div id="dashboard_numbers" class="left">
+		<div class="left" id="dashboard_numbers">
 			<p><span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span><br><span id="temp_unit"></span></p>
-			<p><i class="fas fa-wind"></i> Wind speed <span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span >m/s</p>
-			<p><i class="fas fa-tint"></i> Humidity   <span id="humidity"><i class="fas fa-spinner fa-pulse"></i></span >%</p>
 			<!--<p><i class="fas fa-cloud"></i> <span id="cloudiness"><i class="fas fa-spinner fa-pulse"></i></span> %</p>-->
 		</div>
 		<div class="center" id=gauge_div>
 			<canvas id="main_gauge"></canvas>
 		</div>
 	</div>
-	<div class="flexbox-3" id="forecast">
+
+	<div>
+		<p class="label">
+			<i class="fas fa-wind"></i> Wind <span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span> km/h
+			&nbsp; | &nbsp;
+			<i class="fas fa-tint"></i> Humidity <span id="humidity"><i class="fas fa-spinner fa-pulse"></i></span >%
+			&nbsp; | &nbsp;
+			<i id="icon-weather" class="fas fa-cloud-sun-rain"></i> Weather
+		</p>
+	</div>
+	
+	<div class="flexbox-2" id="dashboard_forecast">
 		<div>
 			<p id="forecast_left" class="left label"><i class="fas fa-chevron-left"></i> <span id="swipe_left_time"></span></p>
 		</div>
-		<div><p class="center label">swipe</p></div>
 		<div>
 			<p id="forecast_right" class="right label"><span id="swipe_right_time"></span> <i class="fas fa-chevron-right"></i></p>
 		</div>
 	</div>
-	<div id="yesterday"></div>
-	<div id="forecasts" class="gallery">
-	</div>
 </div>
 
+
+
 <div class="panel" id="tip_panel" data-listener="panel" data-target="settings">
-	<div id="tips"></div>
 	<div class="flexbox-2" id="tip_detailed">
-		<div></i><p class="label">&nbsp;</p></div>
+		<div class="wide" id="tips"></div>
 		<div data-listener="navbar" data-target="details">
 			<p class="right"><i class="fas fa-info-circle"></i> <span>more info</span></p>
 		</div>
 	</div>
 </div>
 
-<div class="panel" id="activity_panel" data-listener="panel" data-target="settings">
-	<p class="label">Activity level</p>
-	<div class="flexbox-5" id="activity_flex">
-		<div data-target="rest" data-listener="activity" class="button"><img src="img/activities/rest.png" class="small"><br>Rest</div>
-		<div data-target="low" data-listener="activity" class="button"><img src="img/activities/office.png" class="small"><br>Low</div>
-		<div data-target="medium" data-listener="activity" class="button"><img src="img/activities/gardener.png" class="small"><br>Medium</div>
-		<div data-target="high" data-listener="activity" class="button"><img src="img/activities/shovel.png" class="small"><br>High</div>
-		<div data-target="intense" data-listener="activity" class="button"><img src="img/activities/running.png" class="small"><br>Intense</div>	
+
+<div id="menu_flex" class="flexbox-3 white">
+	<div id="tabactivity" data-listener="menu" data-target="selectactivity" class="menuitem menufocus"><p class="label">Activity</p></div>
+	<div id="tabaclothingy" data-listener="menu" data-target="selectclothing" class="menuitem border"><p class="label">Clothing</p></div>
+	<div id="tabheadgear" data-listener="menu" data-target="selectheadgear" class="menuitem"><p class="label">Headgear</p></div>
+</div>
+<div id="selectactivity" class="panelthick">
+	<div class="flexbox-2" data-listener="wheel" data-target="activity">
+		<div class="even"><p>Activity level</p></div>
+		<div class="even">
+			<div class="button"><span class="score" id="dashboard_activity"></span></div>
+		</div>
 	</div>
-	<p class="caption" id="activityCaption"></p>
+	<div><p id="activityCaption" class="caption"></p>
+	</div>
+</div>
+
+<div id="selectclothing" class="hidden panelthick">
+	<div class="flexbox-2" data-listener="wheel" data-target="clothing">
+		<div class="even"><p>Clothing level</p></div>
+		<div class="even">
+			<div class="button"><span class="score" id="dashboard_clothing"></span></div>
+		</div>
+	</div>
+	<div><p id="clothingCaption" class="caption"></p></div>
+</div>
+
+<div id="selectheadgear" class="hidden panelthick">
+	<div class="flexbox-2" data-listener="wheel" data-target="headgear">
+		<div class="even"><p>Head gear</p></div>
+		<div class="even">
+			<div class="button"><span class="score" id="dashboard_headgear"></span></div>
+		</div>
+	</div>
+	<div><p id="headgearCaption" class="caption"></p></div>
 </div>
 
 

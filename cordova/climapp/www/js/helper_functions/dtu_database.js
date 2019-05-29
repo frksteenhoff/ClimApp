@@ -42,7 +42,7 @@ function updateDBParam(kb, param){
 	}
 	$.post(url, user_data).done(function(data, status, xhr){
         if(status === "success") {
-            console.log("Database update" + param + ": " + 
+            console.log("Database update, " + param + ": " + 
 			kb.user.settings[param] + ", " + 
 			getGenderAsInteger(kb));
 		}
@@ -62,7 +62,7 @@ function addWeatherDataToDB(kb){
                 "wind_speed": kb.weather.windspeed[0], 
                 "humidity": kb.weather.humidity[0]/100, 
                 "cloudiness": 0, // Not in knowledgebase?
-                "activity_level": kb.user.settings.activity_level,
+                "activity_level": kb.user.settings.activity_selected,
                 "acclimatization": acc, 
                 "temp_min": 0, // currently not retrieved from sensationsmaps
                 "temp_max": 0 // currently not retrieved from sensationsmaps
