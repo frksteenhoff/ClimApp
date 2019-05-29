@@ -638,10 +638,9 @@ var app = {
 	},
 	updateWeather: async function(){
 		var self = this;
-		console.log("1");
-		self.checkIfUserExistInDB();
-
-		console.log("2");
+		console.log("1"); // number added to check execution order
+		await self.checkIfUserExistInDB().then(console.log("2.0"));
+		console.log("2.1");
 		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
 		
 		console.log("3");
@@ -802,6 +801,7 @@ var app = {
 		} else {
 			console.log("User exist in database.");
 		}
+		return true;
 	},
 	calcThermalIndices: function( ){
 		this.knowledgeBase.thermalindices.ireq = [];
