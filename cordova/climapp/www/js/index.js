@@ -272,7 +272,7 @@ var app = {
 				},
 			},
 			/* --------------------------------------------------- */
-			"version": 1.975,
+			"version": 1.976,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -539,15 +539,22 @@ var app = {
 	updateWeather: async function(){
 		var self = this;
 		
-		if(!self.knowledgeBase.user.guards.hasExternalDBRecord) {
-			self.knowledgeBase.user.guards.hasExternalDBRecord = createUserRecord(self.knowledgeBase);
-		}
+		if(!self.knowledgeBase.user.guards.hasExternalDBRecord && typeof(self.knowledgeBase.user.guards.hasExternalDBRecord) !== 'undefined') {
+			var userCreatedInDB = await createUserRecord(self.knowledgeBase);
+
+			// Only update value on success
+			if(userCreatedInDB) {
+				self.knowledgeBase.user.guards.hasExternalDBRecord = 1;
+				self.saveSettings();
+			}
+		} 
+
 		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
 		
 		if(self.knowledgeBase.user.guards.hasExternalDBRecord && appidFromServer) { 
 			console.log("Fetched app ID: " + appidFromServer);
 		} else {
-			//showShortToast("no external DB record found");			
+			console.log("No external DB record found. AppId:" + appidFromServer + " hasExternalDBRecord: " + self.knowledgeBase.user.guards.hasExternalDBRecord);			
 		}
 		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 		let data = { "action": "helios",
