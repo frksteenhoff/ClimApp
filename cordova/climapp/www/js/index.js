@@ -79,8 +79,13 @@ var app = {
 
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want?
-			[width, _, thermal, _] = self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase);		
+			[width, _, thermal, _] = self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase);	
 			self.drawGauge( 'feedback_gauge', width, slider_value , thermal );
+
+			// Set the value as the perceived value in knowledgebase
+			self.knowledgeBase.user.adaptation[thermal].perceived = slider_value;
+			self.knowledgeBase.user.adaptation[thermal].diff = self.knowledgeBase.user.adaptation[thermal].perceived - slider_value;
+			self.saveSettings();
 		});
 
 		// When user rates the feedback questions
@@ -309,9 +314,21 @@ var app = {
 					"explore": false, // currently not used
 					"level": 0 // currently not used, 0 - beginner, 1 - advanced (possibly 2 for expert)
 				},
+				"adaptation": {
+					"heat": {
+						"predicted": 0,
+						"perceived": 0,
+						"diff": 0 // perceived - predicted
+					},
+					"cold": {
+						"predicted": 0,
+						"perceived": 0,
+						"diff": 0 // perceived - predicted
+					}
+				}
 			},
 			/* --------------------------------------------------- */
-			"version": 1.9899,
+			"version": 1.98999,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -407,7 +424,7 @@ var app = {
 						"feedback": { 
 							"gauge": {
 								"text_top": "Your predicted score",
-								"text_bottom": "Slide to adjust to how you experienced the day"
+								"text_bottom": "Slide to adjust how you experienced the day"
 							},
 							"question1": { 
 								"text": "How were your drinking needs?",
@@ -1115,6 +1132,10 @@ var app = {
 
 			this.drawGauge( 'feedback_gauge', width, value , thermal );
 			$("#feedback_slider").val(value);
+			
+			// Save current gauge value as original value
+			this.knowledgeBase.user.adaptation[thermal].predicted = value;
+			this.saveSettings();
 			
 			// Set text around gauge and slider
 			$("#gauge_text_top").html(this.knowledgeBase.feedback.gauge.text_top);
