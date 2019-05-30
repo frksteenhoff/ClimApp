@@ -76,7 +76,7 @@ function getAirPermeability(kb){
 }
 
 function getMoisturePermeability(kb){
-	let clokey = kb.user.settings.clothingselected; //check vals with chuansi
+	let clokey = kb.user.settings.clothing_selected; //check vals with chuansi
 	let values = { "Summer_attire": 0.38, 
 					"Business_suit": 0.38,
 					"Double_layer": 0.38,
