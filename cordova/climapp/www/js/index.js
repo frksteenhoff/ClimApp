@@ -73,8 +73,18 @@ var app = {
 	},
 	initFeedbackListeners: function() {
 		var self = this;
+		$("input[data-listener='slider']").off(); //prevent multiple instances of listeners on same object
+		$("input[data-listener='slider']").change(function() {
+			let slider_value = this.value; 
+
+			// Draw gauge with current index value 
+			let index = 0; // 0 = current situation -- is this what we want?
+			[width, _, thermal, _] = self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase);		
+			self.drawGauge( 'feedback_gauge', width, slider_value , thermal );
+		});
+
 		// When user rates the feedback questions
-		$("input[data-listener='feedback']").off(); //prevent multiple instances of listeners on same object
+		$("input[data-listener='feedback']").off(); 
 		$("input[data-listener='feedback']").on("click", function(){
 			var target = $(this).attr("data-target");
 			
@@ -301,7 +311,7 @@ var app = {
 				},
 			},
 			/* --------------------------------------------------- */
-			"version": 1.98	,
+			"version": 1.9899,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -395,6 +405,10 @@ var app = {
 							}	
 						},
 						"feedback": { 
+							"gauge": {
+								"text_top": "Your predicted score",
+								"text_bottom": "Slide to adjust to how you experienced the day"
+							},
 							"question1": { 
 								"text": "How were your drinking needs?",
 								"rating": 3, 
@@ -1094,6 +1108,18 @@ var app = {
 			$(".navigation").hide();
 			$(".navigation_back_settings").show();
 			this.initFeedbackListeners();
+
+			// Draw gauge with current index value 
+			let index = 0; // 0 = current situation -- is this what we want?
+			[width, value, thermal, _] = this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase);
+
+			this.drawGauge( 'feedback_gauge', width, value , thermal );
+			$("#feedback_slider").val(value);
+			
+			// Set text around gauge and slider
+			$("#gauge_text_top").html(this.knowledgeBase.feedback.gauge.text_top);
+			$("#gauge_text_bottom").html(this.knowledgeBase.feedback.gauge.text_bottom);
+
 			// Question text
 			$("#question1").html( this.knowledgeBase.feedback.question1.text );
 			$("#question2").html( this.knowledgeBase.feedback.question2.text );
@@ -1120,20 +1146,43 @@ var app = {
 			$(".navigation_back_settings").show();
 		}
 	},
+	getDrawGaugeParamsFromIndex(index, kb){
+		let icl_min = kb.thermalindices.ireq[index].ICLminimal;
+		let icl_worn = getClo(kb);
+		let cold_index = icl_min - icl_worn;
+		let heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb );
+		
+		let draw_cold_gauge = this.isDrawColdGauge( cold_index, heat_index, index );
+		let draw_heat_gauge = this.isDrawHeatGauge( cold_index, heat_index, index );
+		let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
+		let tip_html = "";
+
+		if( draw_cold_gauge || ( isNeutral && cold_index > heat_index ) ) {
+			tip_html += coldLevelTips( index, 1, kb );
+		}
+		else{
+			tip_html += heatLevelTips( index, 1, kb );
+		}
+		
+		let windowsize = $( window ).width();
+		let width = windowsize / 2.5;
+		
+		let value = this.determineThermalIndexValue( cold_index, heat_index, index );
+		let thermal = draw_cold_gauge ? "cold" : "heat";
+		
+		return [width, value, thermal, tip_html];
+	},
 	isDrawColdGauge: function( cold, heat, index ){
 		return cold >= heat
 			   && 
 			   cold >= this.knowledgeBase.thresholds.ireq &&
 			   this.knowledgeBase.thermalindices.ireq[ index].Tair <= 10;
 	},
-	
-
 	isDrawHeatGauge: function( cold, heat, index ){
  	   return heat > cold
 		      && this.knowledgeBase.weather.wbgt[ index ] > 15;
 	},
-	
-determineThermalIndexValue: function( cold, heat, index ){
+	determineThermalIndexValue: function( cold, heat, index ){
 		let value = cold > heat ? -cold : heat;
 		value = this.isDrawColdGauge( cold, heat, index ) ? -cold : value;
 		value = this.isDrawHeatGauge( cold, heat, index ) ? heat : value;
@@ -1199,7 +1248,6 @@ determineThermalIndexValue: function( cold, heat, index ){
 				$("#swipe_right_time").html(next_local_time);
 			}
 			
-			
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
 			
 			$("#temperature").html( this.knowledgeBase.thermalindices.ireq[ index].Tair.toFixed(0) +"&#xb0");
@@ -1256,36 +1304,13 @@ determineThermalIndexValue: function( cold, heat, index ){
 			}
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
 		    
-			let icl_min = this.knowledgeBase.thermalindices.ireq[index].ICLminimal;
-			let icl_worn = getClo(this.knowledgeBase);
-			let cold_index = icl_min - icl_worn;
-			let heat_index = WBGTrisk( this.knowledgeBase.thermalindices.phs[index].wbgt, this.knowledgeBase );
-		
-			let draw_cold_gauge = this.isDrawColdGauge( cold_index, heat_index, index );
-			let draw_heat_gauge = this.isDrawHeatGauge( cold_index, heat_index, index );
-		    let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
-			let tip_html = "";
-			if( draw_cold_gauge || ( isNeutral && cold_index > heat_index ) ) {
-				tip_html += coldLevelTips( index, 1, this.knowledgeBase );
-			}
-			else{
-				tip_html += heatLevelTips( index, 1, this.knowledgeBase );
-			}
-			
-			let windowsize = $( window ).width();
-			let width = windowsize / 2.5;
-
-			let value = this.determineThermalIndexValue( cold_index, heat_index, index );
-			let thermal = draw_cold_gauge ? "cold" : "heat";
-			
+			[width, value, thermal, tip_html] = this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase);
 			this.drawGauge( 'main_gauge', width, value , thermal );
 			
 			$("#tips").html( tip_html ); 
 			$("#circle_gauge_color").css("color", getCurrentGaugeColor(value));
 			$("#main_panel").fadeIn(500);
 		}
-		
-		
 	},
 	drawGauge: function( id, width, value, key ){
 		var c = $("#"+id), 
