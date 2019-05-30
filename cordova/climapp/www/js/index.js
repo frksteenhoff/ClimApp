@@ -645,128 +645,120 @@ var app = {
 		
 		console.log("3");
 
-		if(self.knowledgeBase.user.guards.hasExternalDBRecord && appidFromServer) { 
-			console.log("Fetched app ID: " + appidFromServer);
-		} else {
-			console.log("No DB record found or app ID missing. AppId:" + appidFromServer + " hasExternalDBRecord: " + self.knowledgeBase.user.guards.hasExternalDBRecord);			
-		}
-		console.log("4");
-
-		let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
-		let data = { "action": "helios",
-					 "lat": this.knowledgeBase.position.lat,
-				 	 "lon": this.knowledgeBase.position.lng,
-					 "climapp": appidFromServer,
-					 "d": 1.0, //
-				 	 "utc": new Date().toJSON() };
-		$.get( url, 
-			   data, 
-			   function( output ){//on success
-				   try{
-				       let weather = JSON.parse( output );
-					   console.log( weather );
-					   self.knowledgeBase.weather.station = weather.station;
-					   self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
-					   self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
-					   
-					   //returns current weather by default in key "weather.currentweather"
-					   //prepend to array.
-					   self.knowledgeBase.weather.utc.unshift( weather.currentweather.dt );
-					   
-				   	   self.knowledgeBase.weather.utc = self.knowledgeBase.weather.utc.map( function(val){
-						   	let str = val.replace(/-/g,"/");
-							str += " UTC";
-							return str;
-				   	   });
-					   
-					   
-					   self.knowledgeBase.weather.lat = weather.lat;
-					   self.knowledgeBase.weather.lng = weather.lon;
-					   
-					   self.knowledgeBase.weather.wbgt = weather.wbgt_min.map(Number);
-					   self.knowledgeBase.weather.wbgt.unshift( Number( weather.currentweather.wbgt_min ) );
-					   
-					   
-					   self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
-					   self.knowledgeBase.weather.windchill.unshift( Number( weather.currentweather.windchill ) );
-					   
-					   
-					   self.knowledgeBase.weather.temperature = weather.tair.map(Number);
-					   self.knowledgeBase.weather.temperature.unshift( Number( weather.currentweather.tair ) );
-					   
-
-					   self.knowledgeBase.weather.globetemperature = weather.tglobe_clouds.map(Number);
-					   self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe_clouds ) );
-					   
-					   
-					   self.knowledgeBase.weather.clouds = weather.clouds.map(Number);
-					   self.knowledgeBase.weather.clouds.unshift( Number( weather.currentweather.clouds ) );
-					   
-					   
-					   self.knowledgeBase.weather.humidity = weather.rh.map(Number);
-					   self.knowledgeBase.weather.humidity.unshift( Number( weather.currentweather.rh ) );
-					   
-					   self.knowledgeBase.weather.rain = weather.rain.map(Number);
-					   self.knowledgeBase.weather.rain.unshift( Number( weather.currentweather.rain ) );
-					   
-					   
-					   self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
-					   self.knowledgeBase.weather.windspeed.unshift( Number( weather.currentweather.vair ) );
-					    
-					   
-					   self.knowledgeBase.weather.radiation = weather.solar_clouds.map(Number);
-					   self.knowledgeBase.weather.radiation.unshift( Number( weather.currentweather.solar_clouds ) );
-					   
-					   self.knowledgeBase.weather.meanradianttemperature = [];
-					   self.knowledgeBase.weather.windspeed2m = [];
-					   $.each( self.knowledgeBase.weather.windspeed, function(key, vair){
-				   			var Tg = self.knowledgeBase.weather.globetemperature[key];
-				   			var Ta = self.knowledgeBase.weather.temperature[key];
-				   			var va = vair * Math.pow( 0.2, 0.25 ); //stability class D Liljgren 2008 Table 3
-				   			
-							//kruger et al 2014
-							var D = 0.05; //diameter black globe (liljegren - ) --default value = 0.15
-				   			var eps_g = 0.95; //standard emmisivity black bulb
-				   			var t0 = (Tg+273.0);
-				   			var t1 = Math.pow( t0, 4);
-				   			var t2 = 1.1 * Math.pow(10,7) * Math.pow( va, 0.6 ); //Math.pow(10,8) seems typo?
-				   			var t3 = eps_g * Math.pow( D, 0.4);
-				   			var t4 = t1 + ( t2 / t3 ) * (Tg-Ta);
-				   			var Tmrt = Math.pow( t4, 0.25 ) - 273.0;
-							
-							self.knowledgeBase.weather.meanradianttemperature.push( Tmrt );
-							self.knowledgeBase.weather.windspeed2m.push( va );
-					   } );
-					   
-					   self.knowledgeBase.weather.watervapourpressure = [];
-					   $.each( self.knowledgeBase.weather.humidity,
-						   function( key, val){
-							   let T = self.knowledgeBase.weather.temperature[key];
-							   let wvp = ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
-							   self.knowledgeBase.weather.watervapourpressure.push( wvp );	
-					   }); 
-					   
-					   self.saveSettings();
-					   self.calcThermalIndices();
-					   self.updateUI();
-							  
-					   // Only update when weather data has been received - and when external DB record is present.
-					   if( self.knowledgeBase.user.guards.hasExternalDBRecord ){
-					   		addWeatherDataToDB(self.knowledgeBase);
-					   }
-					   else{
-			   				//showShortToast("cannot store weather on ClimApp server");
-					   }
+		if(appidFromServer) { 
+			
+			let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
+			let data = { "action": "helios",
+						"lat": this.knowledgeBase.position.lat,
+						"lon": this.knowledgeBase.position.lng,
+						"climapp": appidFromServer,
+						"d": 1.0, //
+						"utc": new Date().toJSON() };
+			$.get( url, 
+				data, 
+				function( output ){//on success
+					try{
+						let weather = JSON.parse( output );
+						console.log( weather );
+						self.knowledgeBase.weather.station = weather.station;
+						self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
+						self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
 						
-				   }
-				   catch( error ){
-					   console.log( error );
-				   }
-		}).fail(function( e ) {
-				showShortToast("Failed to update weather.");
-				console.log("fail in weather "+ e);
-  		});
+						//returns current weather by default in key "weather.currentweather"
+						//prepend to array.
+						self.knowledgeBase.weather.utc.unshift( weather.currentweather.dt );
+						
+						self.knowledgeBase.weather.utc = self.knowledgeBase.weather.utc.map( function(val){
+								let str = val.replace(/-/g,"/");
+								str += " UTC";
+								return str;
+						});
+						
+						
+						self.knowledgeBase.weather.lat = weather.lat;
+						self.knowledgeBase.weather.lng = weather.lon;
+						
+						self.knowledgeBase.weather.wbgt = weather.wbgt_min.map(Number);
+						self.knowledgeBase.weather.wbgt.unshift( Number( weather.currentweather.wbgt_min ) );
+						
+						
+						self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
+						self.knowledgeBase.weather.windchill.unshift( Number( weather.currentweather.windchill ) );
+						
+						
+						self.knowledgeBase.weather.temperature = weather.tair.map(Number);
+						self.knowledgeBase.weather.temperature.unshift( Number( weather.currentweather.tair ) );
+						
 
+						self.knowledgeBase.weather.globetemperature = weather.tglobe_clouds.map(Number);
+						self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe_clouds ) );
+						
+						
+						self.knowledgeBase.weather.clouds = weather.clouds.map(Number);
+						self.knowledgeBase.weather.clouds.unshift( Number( weather.currentweather.clouds ) );
+						
+						
+						self.knowledgeBase.weather.humidity = weather.rh.map(Number);
+						self.knowledgeBase.weather.humidity.unshift( Number( weather.currentweather.rh ) );
+						
+						self.knowledgeBase.weather.rain = weather.rain.map(Number);
+						self.knowledgeBase.weather.rain.unshift( Number( weather.currentweather.rain ) );
+						
+						
+						self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
+						self.knowledgeBase.weather.windspeed.unshift( Number( weather.currentweather.vair ) );
+							
+						
+						self.knowledgeBase.weather.radiation = weather.solar_clouds.map(Number);
+						self.knowledgeBase.weather.radiation.unshift( Number( weather.currentweather.solar_clouds ) );
+						
+						self.knowledgeBase.weather.meanradianttemperature = [];
+						self.knowledgeBase.weather.windspeed2m = [];
+						$.each( self.knowledgeBase.weather.windspeed, function(key, vair){
+								var Tg = self.knowledgeBase.weather.globetemperature[key];
+								var Ta = self.knowledgeBase.weather.temperature[key];
+								var va = vair * Math.pow( 0.2, 0.25 ); //stability class D Liljgren 2008 Table 3
+								
+								//kruger et al 2014
+								var D = 0.05; //diameter black globe (liljegren - ) --default value = 0.15
+								var eps_g = 0.95; //standard emmisivity black bulb
+								var t0 = (Tg+273.0);
+								var t1 = Math.pow( t0, 4);
+								var t2 = 1.1 * Math.pow(10,7) * Math.pow( va, 0.6 ); //Math.pow(10,8) seems typo?
+								var t3 = eps_g * Math.pow( D, 0.4);
+								var t4 = t1 + ( t2 / t3 ) * (Tg-Ta);
+								var Tmrt = Math.pow( t4, 0.25 ) - 273.0;
+								
+								self.knowledgeBase.weather.meanradianttemperature.push( Tmrt );
+								self.knowledgeBase.weather.windspeed2m.push( va );
+						} );
+						
+						self.knowledgeBase.weather.watervapourpressure = [];
+						$.each( self.knowledgeBase.weather.humidity,
+							function( key, val){
+								let T = self.knowledgeBase.weather.temperature[key];
+								let wvp = ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
+								self.knowledgeBase.weather.watervapourpressure.push( wvp );	
+						}); 
+						
+						self.saveSettings();
+						self.calcThermalIndices();
+						self.updateUI();
+								
+						// Only update when weather data has been received - and when external DB record is present.
+						if( self.knowledgeBase.user.guards.hasExternalDBRecord ){
+								addWeatherDataToDB(self.knowledgeBase);
+						}	
+					}
+					catch( error ){
+						console.log( error );
+					}
+			}).fail(function( e ) {
+				console.log("fail in weather "+ e);
+			});
+		} else  {
+			showShortToast("Failed to update weather, no app ID.");
+		}
 		// Schedule a notification if weather conditions are out of the ordinary
 		// functionality will be extended to handle more complex scenarios - only when not in browser
 		if(device.platform != 'browser') {
@@ -801,7 +793,6 @@ var app = {
 		} else {
 			console.log("User exist in database.");
 		}
-		return true;
 	},
 	calcThermalIndices: function( ){
 		this.knowledgeBase.thermalindices.ireq = [];
@@ -978,7 +969,9 @@ var app = {
 			let M = this.knowledgeBase.thermalindices.phs[index].M.toFixed(0);
 			let A = BSA( this.knowledgeBase ).toFixed(1);
 			
-			let Icl = 0.155 * this.knowledgeBase.thermalindices.phs[index].Icl.toFixed(3);
+			let Icl = (0.155 * this.knowledgeBase.thermalindices.phs[index].Icl);
+			Icl = Icl.toFixed(3);
+
 			let p = this.knowledgeBase.thermalindices.phs[index].p.toFixed(2);
 			let im = this.knowledgeBase.thermalindices.phs[index].im_st.toFixed(2);
 			
@@ -1002,7 +995,7 @@ var app = {
 			$("#detail_tglobe").html(tglobe + "&deg;C");
 			$("#detail_rad").html(rad + "W/m<sup>2</sup>");
 			$("#detail_wbgt").html(wbgt + "&deg;C");
-			$("#detail_wbgt_eff").html( wbgt_eff + "&deg;C");
+			$("#detail_wbgt_eff").html( wbgt_eff.toFixed(1) + "&deg;C");
 			$("#detail_ral").html( ral.toFixed(1) + "&deg;C");
 			
 			$("#detail_windchill").html(windchill + "&deg;C");
@@ -1010,7 +1003,7 @@ var app = {
 			$("#detail_metabolic").html(M + "W/m<sup>2</sup>");
 			$("#detail_area").html(A + "m<sup>2</sup>")
 			
-			$("#detail_icl").html(Icl + "m<sup2</sup>K/W");
+			$("#detail_icl").html(Icl + "m<sup>2</sup>K/W");
 			$("#detail_p").html(p);
 			$("#detail_im").html(im);
 			
