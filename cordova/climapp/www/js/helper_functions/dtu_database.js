@@ -110,9 +110,12 @@ function getAppIDFromDB(kb) {
 				}  
 		$.get(url, user_data).done(function(data, status, xhr){
 			if(status === "success") {
-				let response = JSON.parse(data);
-				resolve(response.config[0].appid); 
+                let response = JSON.parse(data);
+                let appID = response.config[0].appid;
+                console.log("Fetched app ID: " + appID);
+				resolve(appID); 
 			} else {
+                console.log("Could not fetch app ID from server.");
 				reject(false); 
 			}
 		});
