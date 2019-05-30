@@ -21,8 +21,8 @@
 }
 
 @font-face {
-  font-family: "Dosis";
-  src: url("./fonts/Dosis-Medium.ttf");
+  font-family: "Lato";
+  src: url("./fonts/Lato-Regular.ttf");
 }
 
 body {
@@ -32,7 +32,7 @@ body {
     background: url("../img/backgrounds/blue-sky.jpg");
      background-repeat: no-repeat;
      background-size: auto;
-    font-family: "Dosis";
+    font-family: "Lato";
     height:100%;
     margin:0;
     padding:0;
@@ -240,13 +240,14 @@ img.small{
 
 #dashboard_forecast{
 	padding: 0.5em;
-	color: 000;
+	color: #fff;
 	border-top: solid 1px rgba(204, 204, 204, 0.3);
 	
 }
 
 #circle_gauge_color {
     margin-right: 0.5em;
+    margin-bottom: 0.5em;
 }
 
 #temp_unit {
@@ -265,10 +266,14 @@ img.small{
 	border-bottom: solid 1px rgba(204, 204, 204, 0.3);
 }
 
-.panel.settings div.inlineitems,
+.panel.settings div.inlineitems.last,
 .panel.settings div.last
  {
     border-bottom: hidden;
+}
+
+div.inlineitems.line .totheright {
+    margin-bottom: 0.5em;
 }
 
 /* BEGIN navigation bar style*/
@@ -301,11 +306,18 @@ img.small{
     margin-right: 0.25em;
 }
 
-.navigation_back_settings{
-	color: #fff;
-}
-.navigation_back_dashboard{
-	color: #fff;
+.navigation_back_settings, 
+.navigation_back_dashboard {
+    color: #fff;
+    padding-left: 0.5em;
+
+    /*background: #fff;
+    vertical-align: middle;
+    position: fixed;
+    top: 0;
+    width:100%;
+    background: rgba(255,255,255,1);  
+    margin:0;*/
 }
 
 /* END navigation bar style */
@@ -410,7 +422,7 @@ img.small{
 .feedbackpanel{
     
 	width: 100%;
-    margin: 3em auto;
+    margin: 2em auto;
 }
 
 p.strongtext {
@@ -419,6 +431,11 @@ p.strongtext {
     font-weight: bold;
     margin:0;
     margin-bottom: 1em;
+}
+
+p.strongtext.middle {
+    padding-top: 1em;
+    border-top: 1px solid rgba(200, 200, 200, 0.5);
 }
 
 p.rating_text {
@@ -467,7 +484,7 @@ p.rating_text {
 .rating > input:checked + label:hover, /* hover current star when changing rating */
 .rating > input:checked ~ label:hover,
 .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
-.rating > input:checked ~ label:hover ~ label { color: #FFED85;  } 
+.rating > input:checked ~ label:hover ~ label { color: #FFD700;  } 
 
 div.inputcontainer{
 	text-align:center;
@@ -555,28 +572,19 @@ div.select_unit {
   }
   
   input:checked + .slider {
-    background-color: #7EBFE5;
-  }
+      background-color: #7EBFE5;
+    }
   
-  input:focus + .slider {
-    box-shadow: 0 0 1px #7EBFE5;
+    input:focus + .slider {
+        box-shadow: 0 0 1px #7EBFE5;
   }
   
   input:checked + .slider:before {
-    -webkit-transform: translateX(28px);
-    -ms-transform: translateX(28px);
-    transform: translateX(28px);
-  }
-  
-  /* Rounded sliders */
-  .slider.round {
-    border-radius: 30px;
-  }
-  
-  .slider.round:before {
-    border-radius: 50%;
-  }
-
+      -webkit-transform: translateX(28px);
+      -ms-transform: translateX(28px);
+      transform: translateX(28px);
+    }
+    
   /* Styling of unit of measurement seletor */
   #select_unit {
     box-shadow: none;
@@ -587,3 +595,63 @@ div.select_unit {
     font-size: 100%;
     border-radius: 30px;
   }
+ 
+ /* Rounded sliders */
+ .slider.round {
+    border-radius: 30px;
+}
+  
+  .slider.round:before {
+    border-radius: 50%;
+  }
+
+/* Slider for feedback gauge (inspired by: https://www.w3schools.com/howto/howto_js_rangeslider.asp) */
+
+div.feedbackgauge {
+    margin-top: 1em;
+    width:100%;
+}
+
+div.feedbackgauge canvas {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    margin-bottom: 1em;
+}
+
+.slidecontainer {
+    width: 100%; /* Width of the outside container */
+    margin-bottom: 0.5em;
+}
+
+/* The slider itself */
+  .rangeslider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 80%; 
+    height: 10px; /* Height of slider bar */
+    background: #fff; /* Bar color */
+    outline: none; /* Remove outline */
+    opacity: 1; 
+    border-radius: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+  /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */ 
+.rangeslider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Handle width */
+    height: 25px; /* Handle height */
+    background: #FFD700; /* Handle color */
+    border-radius: 30px;
+  }
+  
+  .rangeslider::-moz-range-thumb {
+    width: 25px; /* Handle width */
+    height: 25px; /* Handle height */
+    background: #FFD700; /* Handle color */
+  }
+  

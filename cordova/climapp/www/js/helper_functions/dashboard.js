@@ -45,26 +45,26 @@ function windchillRisk(windchill) {
 // kb shorthand for knowledgeBase
 function BSA(kb) { //m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
-        let w = kb.settings.weight.value; //kg
-        let h = kb.settings.height.value / 100; //m
+        let w = kb.user.settings.weight; //kg
+        let h = kb.user.settings.height / 100; //m
         return ( Math.pow(h, 0.725) * 0.20247 * Math.pow(w, 0.425 ) );//dubois & dubois 
     }
 }
 
 function M(kb) { //W/m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
-        let ISO_selected = kb.activity.selected;
+        let ISO_selected = kb.user.settings.activity_selected;
         return kb.activity.values[ ISO_selected ] / BSA(kb);
     }
 }
 
 function getClo(kb){
-	let clokey = kb.clothing.selected;
-	let helmetkey = kb.headgear.selected;
+	let clokey = kb.user.settings.clothing_selected;
+	let helmetkey = kb.user.settings.headgear_selected;
 	return kb.clothing.values[clokey] + kb.headgear.values[helmetkey];
 }
 function getAirPermeability(kb){
-	let clokey = kb.clothing.selected; //check vals with chuansi
+	let clokey = kb.user.settings.clothing_selected; //check vals with chuansi
 	let values = { "Summer_attire": 100, 
 					"Business_suit": 50,
 					"Double_layer": 25,
@@ -76,7 +76,7 @@ function getAirPermeability(kb){
 }
 
 function getMoisturePermeability(kb){
-	let clokey = kb.clothing.selected; //check vals with chuansi
+	let clokey = kb.user.settings.clothing_selected; //check vals with chuansi
 	let values = { "Summer_attire": 0.38, 
 					"Business_suit": 0.38,
 					"Double_layer": 0.38,
@@ -109,8 +109,8 @@ function getWBGTeffective(wbgt, kb){
 							"Winter_attire": 3 };
 	let headvalues = { "none": 0, 
 					   "helmet": 1};
-	let clokey = kb.clothing.selected;
-	let helmetkey = kb.headgear.selected;
+	let clokey = kb.user.settings.clothing_selected;
+	let helmetkey = kb.user.settings.headgear_selected;
 
 	return 1.0 * (wbgt + clothingvalues[clokey] + headvalues[helmetkey] );
 }
@@ -155,7 +155,7 @@ function heatLevelTips( index, level, kb ){
 
 	
 	if( level === 1 ){ //beginner, early user
-		str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i>" // circle with gauge color
+		str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i> <b>Advice</b><br>" // circle with gauge color
 		if( heat_index <= 1 ){
 			str += "The green level means that low thermal stress is forecasted.</p>";
 		}
@@ -274,8 +274,27 @@ function getCurrentGaugeColor(value) {
 	} else if(value > 3.0 && value <= 4.0) {
 		return 'rgba(180,0,0,.9)';
 	} else {
-		throw new Error("Value not in expected range"); // error
+		throw new Error("Value not in expected range [-4;4]: " + value); // error
 	}
+}
+
+/* Recursively merge properties of two objects (left join) */
+function MergeRecursive(obj1, obj2) {
+
+	for (var p in obj2) {
+	  try {
+		// Property in destination object set earlier; update its value.
+		if ( obj2[p].constructor==Object ) {
+		  obj1[p] = MergeRecursive(obj1[p], obj2[p]);  
+		} else {
+		  obj1[p] = obj2[p];
+		}  
+	  } catch(e) {
+		// Property in destination object not set; create it and set its value.
+		obj1[p] = obj2[p];
+	  }
+	}  
+	return obj1;
 }
 
 /* The introduction elements follows order of JSON array */
@@ -329,4 +348,4 @@ function startIntro() {
           intro.start();
 }
 
-module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor, startIntro};
+module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor, startIntro, MergeRecursive, checkUserExistInDB};
