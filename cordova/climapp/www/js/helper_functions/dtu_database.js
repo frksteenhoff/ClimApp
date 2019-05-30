@@ -11,6 +11,11 @@ function addFeedbackToDB(kb){
     let user_data = {
                 "user_id": deviceID(),
                 "question_combo_id": 1, // will be changed when more sophisticated solution is implemented
+                /*
+                "": kb.user.adaptation.predicted,
+                "": kb.user.adaptation.perceived,
+                "": kb.user.adaptation.diff, 
+                */
                 "rating1": kb.feedback.question1.rating, 
                 "rating2": kb.feedback.question2.rating,
                 "rating3": kb.feedback.question3.rating, 
