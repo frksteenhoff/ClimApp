@@ -84,8 +84,9 @@ var app = {
 
 			// Set the value as the perceived value in knowledgebase
 			self.knowledgeBase.user.adaptation[thermal].perceived = slider_value;
-			self.knowledgeBase.user.adaptation[thermal].diff = self.knowledgeBase.user.adaptation[thermal].perceived - slider_value;
+			self.knowledgeBase.user.adaptation[thermal].diff = slider_value - self.knowledgeBase.user.adaptation[thermal].predicted;
 			self.saveSettings();
+			console.log("slider: " + slider_value + " predicted: " + self.knowledgeBase.user.adaptation[thermal].predicted);
 		});
 
 		// When user rates the feedback questions
@@ -315,6 +316,7 @@ var app = {
 					"level": 0 // currently not used, 0 - beginner, 1 - advanced (possibly 2 for expert)
 				},
 				"adaptation": {
+					"mode": "undefined",
 					"heat": {
 						"predicted": 0,
 						"perceived": 0,
@@ -1134,7 +1136,8 @@ var app = {
 			$("#feedback_slider").val(value);
 			
 			// Save current gauge value as original value
-			this.knowledgeBase.user.adaptation[thermal].predicted = value;
+			this.knowledgeBase.user.adaptation.mode = thermal;
+			this.knowledgeBase.user.adaptation[thermal].predicted = value.toFixed(1);
 			this.saveSettings();
 			
 			// Set text around gauge and slider
