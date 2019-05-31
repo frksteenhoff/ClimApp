@@ -18,7 +18,7 @@ function addFeedbackToDB(kb){
                 "txt": kb.feedback.comment === "" ? "_" : kb.feedback.comment, 				
                 "predicted": kb.user.adaptation[thermal_mode].predicted,
                 "perceived": kb.user.adaptation[thermal_mode].perceived,
-                "diff": kb.user.adaptation[thermal_mode].diff, 
+                "diff": kb.user.adaptation[thermal_mode].diff[0], 
                 "mode": thermal_mode
             }  
     $.post(url, user_data).done(function(data, status, xhr){
