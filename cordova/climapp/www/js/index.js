@@ -1199,8 +1199,11 @@ var app = {
 		let windowsize = $( window ).width();
 		let width = windowsize / 2.5;
 		
-		let value = this.determineThermalIndexValue( cold_index, heat_index, index );
 		let thermal = draw_cold_gauge ? "cold" : "heat";
+
+		// Getting the latest diff for the relevant thermal situation -- do we agree?
+		let diff = kb.user.adaptation[thermal].diff.length > 0 ? kb.user.adaptation[thermal].diff[0] : 0;
+		let value = this.determineThermalIndexValue( cold_index, heat_index, index, diff ); // Gauge dependent on diff
 		
 		return [width, value, thermal, tip_html];
 	},
@@ -1214,11 +1217,11 @@ var app = {
  	   return heat > cold
 		      && this.knowledgeBase.weather.wbgt[ index ] > 15;
 	},
-	determineThermalIndexValue: function( cold, heat, index ){
+	determineThermalIndexValue: function( cold, heat, index, diff ){
 		let value = cold > heat ? -cold : heat;
 		value = this.isDrawColdGauge( cold, heat, index ) ? -cold : value;
 		value = this.isDrawHeatGauge( cold, heat, index ) ? heat : value;
-		return Math.max( -4, Math.min( 4, value ) );//value between -4 and +4
+		return Math.max( -4, Math.min( 4, value + diff ) );//value between -4 and +4
 	},
 	updateInfo: function( index ){
 		this.selectedWeatherID = index;
