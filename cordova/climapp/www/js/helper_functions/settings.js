@@ -44,3 +44,4 @@ function getGenderAsInteger(kb) {
 }
 
 module.exports = { getCalculatedHeightValue, getHeightUnit, getCalculatedWeightValue, getWeightUnit, deviceID, getGenderAsInteger };
+

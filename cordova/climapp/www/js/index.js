@@ -651,7 +651,7 @@ var app = {
 		//$('i.fa-sync-alt').toggleClass("fa-spin");
 		var self = this; //copy current scope into local scope for use in anonymous function 
 		let options = {timeout: 30000 };
-		
+		console.log("updating location");
 		navigator.geolocation.getCurrentPosition( 
 			function( position ){ //on success
 				self.knowledgeBase.position.lat = position.coords.latitude;
@@ -671,9 +671,11 @@ var app = {
 	},
 	updateWeather: async function(){
 		var self = this;
+
 		console.log("1"); // number added to check execution order
 		await self.checkIfUserExistInDB().then(console.log("2.0"));
 		console.log("2.1");
+
 		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
 		
 		console.log("3");
@@ -722,7 +724,6 @@ var app = {
 						self.knowledgeBase.weather.temperature = weather.tair.map(Number);
 						self.knowledgeBase.weather.temperature.unshift( Number( weather.currentweather.tair ) );
 						
-
 						self.knowledgeBase.weather.globetemperature = weather.tglobe_clouds.map(Number);
 						self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe_clouds ) );
 						
