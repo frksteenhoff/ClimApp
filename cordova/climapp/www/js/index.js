@@ -935,14 +935,6 @@ var app = {
 			};
 			self.knowledgeBase.thermalindices.phs.push( phs_object );	
 		});
-		/*
-		this.knowledgeBase.thermalindices.ireq.sort(function(a,b){
-			return new Date(a.utc) - new Date(b.utc);
-		});
-		this.knowledgeBase.thermalindices.phs.sort(function(a,b){
-			return new Date(a.utc) - new Date(b.utc);
-		});
-		*/
 	},
 	updateUI: function(){
 		// context dependent filling of content
@@ -1298,7 +1290,6 @@ var app = {
 			let solar = this.knowledgeBase.thermalindices.ireq[index].solar;
 			let icon_weather = "fa-cloud-sun-rain";
 			if( solar > 0 ){ //daytime
-				
 				if( clouds < 10 ){                    //sun
 					icon_weather = "fa-sun";
 				}
