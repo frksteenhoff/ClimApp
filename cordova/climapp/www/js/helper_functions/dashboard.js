@@ -99,7 +99,7 @@ function RAL(kb) {
 	}
 }
 
-function getWBGTeffective(wbgt, kb){
+function getCAF(kb){
 	let clothingvalues = { "Summer_attire": 0, 
 							"Business_suit": 0,
 							"Double_layer": 3,
@@ -112,7 +112,12 @@ function getWBGTeffective(wbgt, kb){
 
 	let clokey = kb.clothing.selected;
 	let helmetkey = kb.headgear.selected;
-	return 1.0 * wbgt + ( clothingvalues[clokey] + headvalues[helmetkey] );
+	return ( clothingvalues[clokey] + headvalues[helmetkey] );
+}
+
+function getWBGTeffective(wbgt, kb){
+	let caf = getCAF(kb);
+	return 1.0 * wbgt + caf;
 }
 
 function WBGTrisk(wbgt, kb) {
@@ -153,56 +158,33 @@ function neutralTips() {
 }
 
 function heatLevelTips( index, level, kb ){
-	let str = "";
 	
-	let heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb );
-	
-    let d_sw = kb.thermalindices.phs[ index].Dwl50;
-    let sw_tot_per_hour = 0.001 * 60 * kb.thermalindices.phs[ index].SWtotg / 
-    (kb.sim.duration ); //liter per hour
-    sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
-
-	
-	if( level === 1 ){ //beginner, early user
-		str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i> <b>Advice</b><br>" // circle with gauge color
-		if( heat_index <= 1 ){
-			str += "The green level means that low thermal stress is forecasted.</p>";
-		}
-		else if( heat_index <= 2 ){
-			str += "The yellow level means that moderate heat stress is expected.</p>";
-			
-		}
-		else if( heat_index <= 3 ){
-			str += "The red level means that high heat stress is expected.</p>";
-		}
-		else if( heat_index > 3){
-			str += "This level is associated with severe heat stress.</p>";
-		}
-	}
-	else if( level === 2 ){ //experienced user // or more info requested
-		if ( heat_index <= 1){
-			str += "The personalized heat stress indicator depends on the weather report as well as your personal input</p>";
-			str += "The score will increase towards higher warning levels if the weather agravates, your activity level increases or your clothing level increases.</p>";
-			str += "No special precautions are required unless you work/excercise in special settings (indoor) or with resticted ability to release heat.</p>";
-		}
-		else if( heat_index <= 2 ){
-			str += "You should be able to maintain normal activities. You may experience higher thermal strain and more sweating than normal.</p>";
-			str += "Consider clothing adjustments and drink more than normal; especially when the score approaches the red heat stress level.</p>";
-			
-		}
-		else if( heat_index <= 3 ){
-			str += "Pay special attention to drinking sufficient during the first days with this heat stress.</p>";
-			str += "Consider adjusting activities (heavy physical tasks during periods of the day with lowest heat) and allow time to adapt.</p>";
-			str += "Be aware that thirst is usually not a sufficient indicator when losses are high.</p>";
-			str += "Remember to drink/rehydrate with your meals.</p>";
-		}
-		else if( heat_index > 3){
-			str += "This level is associated with severe heat stress</p>";
-			str += "Your estimated sweat rate surpasses "+ sw_tot_per_hour+" Liter per hour, so additional drinking is required.</p>";
-			str += "The heat will impact your physical performance - adjusting activities and allowing sufficient breaks will benefit your overall daily ability to cope with the heat.</p>";
-		}
-	}
-	return str;
+    return new Promise((resolve, reject) => {
+		var data = {
+			"wbgt": kb.thermalindices.phs[index].wbgt,
+			"ral": RAL(kb),
+			"caf": getCAF(kb),
+			"d_tre": kb.thermalindices.phs[ index].Dtre;
+			"d_sw": kb.thermalindices.phs[ index].Dwl50;
+			"sw_tot_g": kb.thermalindices.phs[ index].SWtotg	
+		};
+		var url = "http://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
+		$.get( url, data).done( function(data, status, xhr){
+			if(status === "success") {
+				var str = "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i> Advice</p>"; // circle with gauge color
+				let tips = JSON.parse(data);
+				$.each( tips, function(k, tip ){
+					str += "<p>"+tip+"</p>";
+				} );
+                console.log("Fetched tips");
+				resolve(str); 
+			} else {
+                console.log("Could not get tips from server.");
+				reject(false); 
+			}
+		});
+		
+	});
 }
 
 function coldLevelTips( index, level, kb ){

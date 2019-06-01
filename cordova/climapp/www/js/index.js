@@ -928,7 +928,7 @@ var app = {
 			self.knowledgeBase.thermalindices.phs.push( phs_object );	
 		});
 	},
-	updateUI: function(){
+	updateUI: async function(){
 		// context dependent filling of content
 		this.initNavbarListeners();
 		$(".navigation_back_settings").hide();
@@ -1045,7 +1045,7 @@ var app = {
 				tip_html += coldLevelTips( index, 2, this.knowledgeBase );
 			}
 			else{
-				tip_html += heatLevelTips( index, 2, this.knowledgeBase );
+				tip_html += await heatLevelTips( index, 2, this.knowledgeBase );
 			}
 			$("#moreinformation").html( tip_html );
 			if( draw_cold_gauge ){
@@ -1122,7 +1122,7 @@ var app = {
 			this.initFeedbackListeners();
 
 			// Draw gauge with current index value 
-			let index = 0; // 0 = current situation -- is this what we want?
+			let index = 0; // 0 = current situation -- is this what we want? -BK tricky tbd
 			[width, value, thermal, _] = this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase);
 
 			this.drawGauge( 'feedback_gauge', width, value , thermal );
@@ -1163,7 +1163,7 @@ var app = {
 			$(".navigation_back_settings").show();
 		}
 	},
-	getDrawGaugeParamsFromIndex(index, kb){
+	getDrawGaugeParamsFromIndex(index, kb){//shouldn't this be functionname: function(params)? - async function
 		let icl_min = kb.thermalindices.ireq[index].ICLminimal;
 		let icl_worn = getClo(kb);
 		let cold_index = icl_min - icl_worn;
@@ -1178,7 +1178,7 @@ var app = {
 			tip_html += coldLevelTips( index, 1, kb );
 		}
 		else{
-			tip_html += heatLevelTips( index, 1, kb );
+			tip_html += heatLevelTips( index, 1, kb );//await
 		}
 		
 		let windowsize = $( window ).width();
