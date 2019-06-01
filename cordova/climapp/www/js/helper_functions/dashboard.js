@@ -125,11 +125,11 @@ function WBGTrisk(wbgt, kb) {
 		//class = "green";
 		return risk / 0.8; //scale to max 1
 	}
-	elseif( $risk <= 1.0 ){
+	else if( $risk <= 1.0 ){
 		//class = "orange";
 		return 1 + ($risk - 0.8)/0.2; //scale between 1 and 2
 	}
-	elseif( $risk <= 1.2 ){
+	else if( $risk <= 1.2 ){
 		//class = "red";
 		return 2 + ($risk - 1.0)/0.2; //scale between 2 and 3
 	}
