@@ -84,11 +84,10 @@ var app = {
 
 			// Set the value as the perceived value in knowledgebase
 			self.knowledgeBase.user.adaptation[thermal].perceived = slider_value;
-			self.knowledgeBase.user.adaptation[thermal].diff = slider_value - self.knowledgeBase.user.adaptation[thermal].predicted;
 			self.saveSettings();
 			console.log("slider: " + slider_value + " predicted: " + self.knowledgeBase.user.adaptation[thermal].predicted);
 		});
-
+		
 		// When user rates the feedback questions
 		$("input[data-listener='feedback']").off(); 
 		$("input[data-listener='feedback']").on("click", function(){
@@ -117,7 +116,11 @@ var app = {
 		$("div[data-listener='submit']").on("click", function(){
 			var target = $("#feedback_text").val();
 			self.knowledgeBase.feedback.comment = target;
-			
+			// Only push diff to array on submit
+			let perceived_predicted_diff = self.knowledgeBase.user.adaptation[thermal].perceived - self.knowledgeBase.user.adaptation[thermal].predicted;
+			var diff_array = self.knowledgeBase.user.adaptation[thermal].diff;
+			diff_array.unshift(perceived_predicted_diff);
+					
 			// If user not in database, add user to database
 			self.checkIfUserExistInDB();
 
@@ -126,7 +129,7 @@ var app = {
 						
 			// reset values
 			$('#feedback_text').val("");
-
+			
 			// Load settings page
 			self.loadUI('settings');
 		});
@@ -320,17 +323,17 @@ var app = {
 					"heat": {
 						"predicted": 0,
 						"perceived": 0,
-						"diff": 0 // perceived - predicted
+						"diff": [] // perceived - predicted
 					},
 					"cold": {
 						"predicted": 0,
 						"perceived": 0,
-						"diff": 0 // perceived - predicted
+						"diff": [] // perceived - predicted
 					}
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 1.98999,
+			"version": 1.99999,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -537,6 +540,11 @@ var app = {
 				this.knowledgeBase = shadowKB;                   // Update knowledgebase to new version
 				var mergedUserPreferences = MergeRecursive(shadowKB.user, userPreferences); // merge old user data into new user object
 				this.knowledgeBase.user = mergedUserPreferences; // Add merged user data to knowledgebase
+
+				if(typeof this.knowledgeBase.user.adaptation.heat.diff === 'number' || typeof this.knowledgeBase.user.adaptation.cold.diff === 'number' ){
+                    this.knowledgeBase.user.adaptation.heat.diff = [];
+                    this.knowledgeBase.user.adaptation.cold.diff = [];
+                }
 
 				msgString = "Knowledge base updated to version: ";
 			}
@@ -1138,7 +1146,7 @@ var app = {
 			
 			// Save current gauge value as original value
 			this.knowledgeBase.user.adaptation.mode = thermal;
-			this.knowledgeBase.user.adaptation[thermal].predicted = value.toFixed(1);
+			this.knowledgeBase.user.adaptation[thermal].predicted = value.toFixed(2);
 			this.saveSettings();
 			
 			// Set text around gauge and slider
@@ -1192,8 +1200,11 @@ var app = {
 		let windowsize = $( window ).width();
 		let width = windowsize / 2.5;
 		
-		let value = this.determineThermalIndexValue( cold_index, heat_index, index );
 		let thermal = draw_cold_gauge ? "cold" : "heat";
+
+		// Getting the latest diff for the relevant thermal situation -- do we agree?
+		let diff = kb.user.adaptation[thermal].diff.length > 0 ? kb.user.adaptation[thermal].diff[0] : 0;
+		let value = this.determineThermalIndexValue( cold_index, heat_index, index, diff ); // Gauge dependent on diff
 		
 		return [width, value, thermal, tip_html];
 	},
@@ -1207,11 +1218,11 @@ var app = {
  	   return heat > cold
 		      && this.knowledgeBase.weather.wbgt[ index ] > 15;
 	},
-	determineThermalIndexValue: function( cold, heat, index ){
+	determineThermalIndexValue: function( cold, heat, index, diff ){
 		let value = cold > heat ? -cold : heat;
 		value = this.isDrawColdGauge( cold, heat, index ) ? -cold : value;
 		value = this.isDrawHeatGauge( cold, heat, index ) ? heat : value;
-		return Math.max( -4, Math.min( 4, value ) );//value between -4 and +4
+		return Math.max( -4, Math.min( 4, value + diff ) );//value between -4 and +4
 	},
 	updateInfo: function( index ){
 		this.selectedWeatherID = index;
