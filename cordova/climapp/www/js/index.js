@@ -200,6 +200,7 @@ var app = {
 				self.knowledgeBase.user.settings.acclimatization = isChecked;
 				// Inform user about choice in toast
 				var accText = isChecked ? "You are acclimatized to your working environment" : "You are not acclimatized to your working environment.";
+				updateDBParam(self.knowledgeBase, "acclimatization");
 				showShortToast(accText);
 
 			} else if(target === "notification_switch") {
@@ -1208,7 +1209,7 @@ var app = {
 		return [width, value, thermal, tip_html];
 	},
 	isDrawColdGauge: function( cold, heat, index ){
-		return cold >= heat
+		return cold >= heat	
 			   && 
 			   cold >= this.knowledgeBase.thresholds.ireq &&
 			   this.knowledgeBase.thermalindices.ireq[ index].Tair <= 10;
@@ -1219,6 +1220,7 @@ var app = {
 	},
 	determineThermalIndexValue: function( cold, heat, index, diff ){
 		let value = cold > heat ? -cold : heat;
+		// why is value used to calculate both cold and heat gauge??
 		value = this.isDrawColdGauge( cold, heat, index ) ? -cold : value;
 		value = this.isDrawHeatGauge( cold, heat, index ) ? heat : value;
 		return Math.max( -4, Math.min( 4, value + diff ) );//value between -4 and +4
@@ -1294,7 +1296,7 @@ var app = {
 			//weather icon
 			let clouds = this.knowledgeBase.thermalindices.ireq[index].clouds;
 			let rain = this.knowledgeBase.thermalindices.ireq[index].rain;
-			let solar = this.knowledgeBase.thermalindices.ireq[index].solar;
+			let solar = this.knowledgeBase.thermalindices.ireq[index].rad;
 			let icon_weather = "fa-cloud-sun-rain";
 			if( solar > 0 ){ //daytime
 				
@@ -1337,6 +1339,7 @@ var app = {
 					icon_weather = "fa-cloud-moon-rain";
 				}
 			}
+			console.log(icon_weather);
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
 		    
 			[width, value, thermal, tip_html] = this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase);
