@@ -161,7 +161,6 @@ function heatLevelTips( index, level, kb ){
 		}
 		else if( heat_index <= 2 ){
 			str += "The yellow level means that moderate heat stress is expected.</p>";
-			
 		}
 		else if( heat_index <= 3 ){
 			str += "The red level means that high heat stress is expected.</p>";
@@ -170,7 +169,7 @@ function heatLevelTips( index, level, kb ){
 			str += "This level is associated with severe heat stress.</p>";
 		}
 	}
-	else if( level === 2 ){ //experienced user // or more info requested
+	else if( level === 2 ){ //experienced user // or more info requested // after 5 uses/opens of app
 		if ( heat_index <= 1){
 			str += "The personalized heat stress indicator depends on the weather report as well as your personal input</p>";
 			str += "The score will increase towards higher warning levels if the weather agravates, your activity level increases or your clothing level increases.</p>";
@@ -210,7 +209,7 @@ function coldLevelTips( index, level, kb ){
 	
 	let isWindstopperUseful = ( tair - threshold ) > windchill;
 		
-	if( level === 1 ){ //beginner, early usre
+	if( level === 1 ){ //beginner, early user
 		str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i>" // circle with gauge color
 		if( cold_index <= 1 ){
 			str += "The green level means that low thermal stress is forecasted.</p>";
@@ -306,7 +305,7 @@ function startIntro() {
                 element: '#nav',
 				intro: "<p><b>Dashboard introduction</b></p>" +
 				"<p>To familiarize you with the app, we will introduce the different elements on the dashboard.</p>" + 
-				"<p>From the navigation bar you can switch between the Dashboard and Settings screens.</p>",
+				"<p>From the navigation bar below you can switch between the Dashboard and Settings screens.</p>",
 				position: "left"
 			  },
 			  
@@ -339,8 +338,8 @@ function startIntro() {
               },
               {
                 element: '#menu_flex',
-				intro: "<p>Here you can set your estimated activity level, clothing level and head gear.</p>" +
-				"<p>You can read more about the different levels in the description below.</p>",
+				intro: "<p>This bar allows you to set your estimated activity level, clothing level and whether you are wearing any head gear. This allows for the app to better adapt to your situation.</p>" +
+				"<p>You switch between the different categories by clicking on the headers.</p><p>You can read more about the different levels in the description at the bottom.</p>",
                 position: 'middle'
               }
             ]
