@@ -181,6 +181,9 @@ function heatLevelTips( index, level, kb ){
 				tips.tips.forEach(function(tip){
 					str += "<p>"+tip+"</p>";
 				});
+				tips.personal.forEach(function(tip){
+					str += "<p>"+tip+"</p>";
+				});
                 console.log("Fetched tips.");
 				resolve(str); 
 			} else {
