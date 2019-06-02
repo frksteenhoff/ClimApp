@@ -119,6 +119,10 @@ canvas{
 .flexbox-2 div.center{
 	margin: auto;
 }
+
+.flexbox-2 div.even.last{
+	margin-bottom: 0.5em;
+}
 .flexbox-2 div.even{
 	margin: auto;
 	flex-basis:50%;
