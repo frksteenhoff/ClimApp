@@ -166,7 +166,7 @@ function heatLevelTips( index, level, kb ){
 			"wbgt": kb.thermalindices.phs[index].wbgt, // this does not take diff into account when fetching information?
 			"caf": getCAF(kb),
 			"ral": RAL(kb),
-			"d_tre": kb.thermalindices.phs[ index].Dtre,
+			"d_tre": kb.thermalindices.phs[ index].D_Tre,
 			"d_sw": kb.thermalindices.phs[ index].Dwl50,
 			"sw_tot_g": kb.thermalindices.phs[ index].SWtotg,
 			"wbgt_adaptation": adaptation
@@ -193,7 +193,7 @@ function heatLevelTips( index, level, kb ){
 	});
 }
 
-function coldLevelTips( index, level, kb, cold_index ){
+function coldLevelTips( index, level, kb, cold_index, pageID ){
 	let str = "";
 	
 	let icl_min = kb.thermalindices.ireq[ index ].ICLminimal;
@@ -266,9 +266,9 @@ function getCurrentGaugeColor(value) {
 	} else if(value > 1.0 && value <= 2.0) {
 		return 'rgba(220,220,0,.9)';
 	} else if(value > 2.0 && value <= 3.0) {
-		return 'rgba(255,100,0,.9)';
+		return 'rgba(255,0,0,.9)';
 	} else if(value > 3.0 && value <= 4.0) {
-		return 'rgba(180,0,0,.9)';
+		return 'rgba(150,0,0,.9)';
 	} else {
 		throw new Error("Value not in expected range [-4;4]: " + value); // error
 	}
