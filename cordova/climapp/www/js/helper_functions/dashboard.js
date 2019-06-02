@@ -143,7 +143,7 @@ function neutralTips() {
 	return tips[i];
 }
 
-function heatLevelTips( index, level, kb ){
+function heatLevelTips( pageID, index, level, kb ){
 	let str = "";
 	
 	let heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb );
@@ -153,9 +153,10 @@ function heatLevelTips( index, level, kb ){
     (kb.sim.duration ); //liter per hour
     sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
 
+	// circle with gauge color
+	pageID === "dashboard" ? str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i> <span id='gauge_title_tip'>Advice</span><br>" : str += "";
 	
 	if( level === 1 ){ //beginner, early user
-		str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i> <b>Advice</b><br>" // circle with gauge color
 		if( heat_index <= 1 ){
 			str += "The green level means that low thermal stress is forecasted.</p>";
 		}
@@ -208,9 +209,9 @@ function coldLevelTips( index, level, kb ){
 	let windrisk = windchillRisk( windchill );
 	
 	let isWindstopperUseful = ( tair - threshold ) > windchill;
+	pageID === "dashboard" ? str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i> <span id='gauge_title_tip'>Advice</span><br>" : str += "";
 		
 	if( level === 1 ){ //beginner, early user
-		str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i>" // circle with gauge color
 		if( cold_index <= 1 ){
 			str += "The green level means that low thermal stress is forecasted.</p>";
 		}
@@ -308,7 +309,6 @@ function startIntro() {
 				"<p>From the navigation bar below you can switch between the Dashboard and Settings screens.</p>",
 				position: "left"
 			  },
-			  
 			  {
                 element: '#gauge_div',
 				intro: "<p>The gauge indicates the expected level of heat or cold stress on a scale from -4 to 4.</p>" /*+ 

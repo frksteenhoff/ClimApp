@@ -54,6 +54,14 @@ var app = {
 		else{
 			this.loadUI( "dashboard" );
 		}
+		// Keeping track of how many time user has opened app, until count reaches 5
+		if(this.knowledgeBase.user.guards.appOpenedCount < 5) {
+			this.knowledgeBase.user.guards.appOpenedCount += 1;
+		} 
+		// After 5 times opening the app, the user is seen as advanced
+		if(this.knowledgeBase.user.settings.level !== 2 && this.knowledgeBase.user.guards.appOpenedCount === 5) {
+			this.knowledgeBase.user.settings.level = 2;
+		}
 		this.updateLocation();
 		this.saveSettings();
     },
@@ -305,6 +313,7 @@ var app = {
 					"introductionCompleted": 0, 
 					"hasExternalDBRecord": 0,
 					"receivesNotifications": 0, // false as notifications are not part of the app
+					"appOpenedCount": 0 // number of times user has opened app
 				}, 
 				"settings": { // Using default values
 					"age": 30,
@@ -317,7 +326,7 @@ var app = {
 					"clothing_selected": "Summer_attire",
 					"headgear_selected": "none",
 					"explore": false, // currently not used
-					"level": 0 // currently not used, 0 - beginner, 1 - advanced (possibly 2 for expert)
+					"level": 1 // currently not used, 0 - beginner, 1 - advanced (possibly 2 for expert)
 				},
 				"adaptation": {
 					"mode": "undefined",
@@ -334,7 +343,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 1.99999,
+			"version": 1.9999999,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -1058,10 +1067,10 @@ var app = {
 			
 			let tip_html = "";
 			if( draw_cold_gauge || ( isNeutral && icl_min > heat_index ) ) {
-				tip_html += coldLevelTips( index, 2, this.knowledgeBase );
+				tip_html += coldLevelTips( this.currentPageID, index, 2, this.knowledgeBase );
 			}
 			else{
-				tip_html += heatLevelTips( index, 2, this.knowledgeBase );
+				tip_html += heatLevelTips( this.currentPageID, index, 2, this.knowledgeBase );
 			}
 			$("#moreinformation").html( tip_html );
 			if( draw_cold_gauge ){
@@ -1191,10 +1200,10 @@ var app = {
 		let tip_html = "";
 
 		if( draw_cold_gauge || ( isNeutral && cold_index > heat_index ) ) {
-			tip_html += coldLevelTips( index, 1, kb );
+			tip_html += coldLevelTips( this.currentPageID, index, kb.user.settings.level, kb );
 		}
 		else{
-			tip_html += heatLevelTips( index, 1, kb );
+			tip_html += heatLevelTips( this.currentPageID, index, kb.user.settings.level, kb );
 		}
 		
 		let windowsize = $( window ).width();
@@ -1358,6 +1367,8 @@ var app = {
 			ctx.canvas.width = width;
 		}
 		var title = key === "cold" ? gaugeTitleCold( Math.abs(value)) : gaugeTitleHeat( Math.abs(value));
+		$("#gauge_title_tip").html( title ); 
+		console.log("gggggg: " +title);
 		var highlights =  this.knowledgeBase.gauge.highlights;
 		var gauge = new RadialGauge({
 		    renderTo: id,
