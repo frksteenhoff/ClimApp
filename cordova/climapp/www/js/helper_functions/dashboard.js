@@ -154,7 +154,7 @@ function heatLevelTips( pageID, index, level, kb ){
     sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
 
 	// circle with gauge color
-	pageID === "dashboard" ? str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i> <span id='gauge_title_tip'>Advice</span><br>" : str += "";
+	pageID === "dashboard" ? str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i> <span id='gauge_title_tip'><b>Advice</b></span><br>" : str += "";
 	
 	if( level === 1 ){ //beginner, early user
 		if( heat_index <= 1 ){
