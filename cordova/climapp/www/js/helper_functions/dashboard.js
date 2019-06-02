@@ -91,7 +91,7 @@ function RAL(kb) {
     let M_ = M(kb); //W/m2
     let BSA_ = BSA(kb); //m2
     let watt = M_ * BSA_;
-	if( kb.settings.acclimatization ){
+	if( kb.user.settings.acclimatization ){
 	    return 56.7 - 11.5 * Math.log10( watt ); //ISO7243 acclimatised
 	}
 	else{
@@ -152,7 +152,7 @@ function neutralTips() {
 	return tips[i];
 }
 
-function heatLevelTips( index, level, kb ){
+function heatLevelTips( pageID, index, level, kb ){
 	let str = "";
 	
 	let heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb );
@@ -162,15 +162,15 @@ function heatLevelTips( index, level, kb ){
     (kb.sim.duration ); //liter per hour
     sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
 
+	// circle with gauge color
+	pageID === "dashboard" ? str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i> <span id='gauge_title_tip'><b>Advice</b></span><br>" : str += "";
 	
 	if( level === 1 ){ //beginner, early user
-		str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i> <b>Advice</b><br>" // circle with gauge color
 		if( heat_index <= 1 ){
 			str += "The green level means that low thermal stress is forecasted.</p>";
 		}
 		else if( heat_index <= 2 ){
 			str += "The yellow level means that moderate heat stress is expected.</p>";
-			
 		}
 		else if( heat_index <= 3 ){
 			str += "The red level means that high heat stress is expected.</p>";
@@ -179,7 +179,7 @@ function heatLevelTips( index, level, kb ){
 			str += "This level is associated with severe heat stress.</p>";
 		}
 	}
-	else if( level === 2 ){ //experienced user // or more info requested
+	else if( level === 2 ){ //experienced user // or more info requested // after 5 uses/opens of app
 		if ( heat_index <= 1){
 			str += "The personalized heat stress indicator depends on the weather report as well as your personal input</p>";
 			str += "The score will increase towards higher warning levels if the weather agravates, your activity level increases or your clothing level increases.</p>";
@@ -188,7 +188,6 @@ function heatLevelTips( index, level, kb ){
 		else if( heat_index <= 2 ){
 			str += "You should be able to maintain normal activities. You may experience higher thermal strain and more sweating than normal.</p>";
 			str += "Consider clothing adjustments and drink more than normal; especially when the score approaches the red heat stress level.</p>";
-			
 		}
 		else if( heat_index <= 3 ){
 			str += "Pay special attention to drinking sufficient during the first days with this heat stress.</p>";
@@ -218,9 +217,9 @@ function coldLevelTips( index, level, kb ){
 	let windrisk = windchillRisk( windchill );
 	
 	let isWindstopperUseful = ( tair - threshold ) > windchill;
+	pageID === "dashboard" ? str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i> <span id='gauge_title_tip'>Advice</span><br>" : str += "";
 		
-	if( level === 1 ){ //beginner, early usre
-		str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i>" // circle with gauge color
+	if( level === 1 ){ //beginner, early user
 		if( cold_index <= 1 ){
 			str += "The green level means that low thermal stress is forecasted.</p>";
 		}
@@ -315,10 +314,9 @@ function startIntro() {
                 element: '#nav',
 				intro: "<p><b>Dashboard introduction</b></p>" +
 				"<p>To familiarize you with the app, we will introduce the different elements on the dashboard.</p>" + 
-				"<p>From the navigation bar you can switch between the Dashboard and Settings screens.</p>",
+				"<p>From the navigation bar below you can switch between the Dashboard and Settings screens.</p>",
 				position: "left"
 			  },
-			  
 			  {
                 element: '#gauge_div',
 				intro: "<p>The gauge indicates the expected level of heat or cold stress on a scale from -4 to 4.</p>" /*+ 
@@ -348,8 +346,8 @@ function startIntro() {
               },
               {
                 element: '#menu_flex',
-				intro: "<p>Here you can set your estimated activity level, clothing level and head gear.</p>" +
-				"<p>You can read more about the different levels in the description below.</p>",
+				intro: "<p>This bar allows you to set your estimated activity level, clothing level and whether you are wearing any head gear. This allows for the app to better adapt to your situation.</p>" +
+				"<p>You switch between the different categories by clicking on the headers.</p><p>You can read more about the different levels in the description at the bottom.</p>",
                 position: 'middle'
               }
             ]

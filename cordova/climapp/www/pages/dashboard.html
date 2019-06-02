@@ -9,7 +9,7 @@
 		</div>
 	</div>
 	<div class="flexbox-2">
-		<div class="left" id="dashboard_numbers">
+		<div class="left">
 			<p><span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span><br><span id="temp_unit"></span></p>
 			<!--<p><i class="fas fa-cloud"></i> <span id="cloudiness"><i class="fas fa-spinner fa-pulse"></i></span> %</p>-->
 		</div>
@@ -19,7 +19,7 @@
 	</div>
 
 	<div>
-		<p class="label">
+		<p class="label" id="dashboard_numbers">
 			<i class="fas fa-wind"></i> Wind <span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span> km/h
 			&nbsp; | &nbsp;
 			<i class="fas fa-tint"></i> Humidity <span id="humidity"><i class="fas fa-spinner fa-pulse"></i></span >%
@@ -38,10 +38,8 @@
 	</div>
 </div>
 
-
-
 <div class="panel" id="tip_panel" data-listener="panel" data-target="settings">
-	<div class="flexbox-2" id="tip_detailed">
+	<div id="tip_detailed">
 		<div class="wide" id="tips"></div>
 		<div data-listener="navbar" data-target="details">
 			<p class="right"><i class="fas fa-info-circle"></i> <span>more info</span></p>

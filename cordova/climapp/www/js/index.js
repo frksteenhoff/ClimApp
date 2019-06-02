@@ -54,6 +54,14 @@ var app = {
 		else{
 			this.loadUI( "dashboard" );
 		}
+		// Keeping track of how many time user has opened app, until count reaches 5
+		if(this.knowledgeBase.user.guards.appOpenedCount < 5) {
+			this.knowledgeBase.user.guards.appOpenedCount += 1;
+		} 
+		// After 5 times opening the app, the user is seen as advanced
+		if(this.knowledgeBase.user.settings.level !== 2 && this.knowledgeBase.user.guards.appOpenedCount === 5) {
+			this.knowledgeBase.user.settings.level = 2;
+		}
 		this.updateLocation();
 		this.saveSettings();
     },
@@ -200,6 +208,7 @@ var app = {
 				self.knowledgeBase.user.settings.acclimatization = isChecked;
 				// Inform user about choice in toast
 				var accText = isChecked ? "You are acclimatized to your working environment" : "You are not acclimatized to your working environment.";
+				updateDBParam(self.knowledgeBase, "acclimatization");
 				showShortToast(accText);
 
 			} else if(target === "notification_switch") {
@@ -304,6 +313,7 @@ var app = {
 					"introductionCompleted": 0, 
 					"hasExternalDBRecord": 0,
 					"receivesNotifications": 0, // false as notifications are not part of the app
+					"appOpenedCount": 0 // number of times user has opened app
 				}, 
 				"settings": { // Using default values
 					"age": 30,
@@ -316,7 +326,7 @@ var app = {
 					"clothing_selected": "Summer_attire",
 					"headgear_selected": "none",
 					"explore": false, // currently not used
-					"level": 0 // currently not used, 0 - beginner, 1 - advanced (possibly 2 for expert)
+					"level": 1 // currently not used, 0 - beginner, 1 - advanced (possibly 2 for expert)
 				},
 				"adaptation": {
 					"mode": "undefined",
@@ -333,7 +343,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 1.99999,
+			"version": 1.9999999,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -1050,10 +1060,10 @@ var app = {
 			
 			let tip_html = "";
 			if( draw_cold_gauge || ( isNeutral && icl_min > heat_index ) ) {
-				tip_html += coldLevelTips( index, 2, this.knowledgeBase );
+				tip_html += coldLevelTips( this.currentPageID, index, 2, this.knowledgeBase );
 			}
 			else{
-				tip_html += heatLevelTips( index, 2, this.knowledgeBase );
+				tip_html += heatLevelTips( this.currentPageID, index, 2, this.knowledgeBase );
 			}
 			$("#moreinformation").html( tip_html );
 			if( draw_cold_gauge ){
@@ -1183,10 +1193,10 @@ var app = {
 		let tip_html = "";
 
 		if( draw_cold_gauge || ( isNeutral && cold_index > heat_index ) ) {
-			tip_html += coldLevelTips( index, 1, kb );
+			tip_html += coldLevelTips( this.currentPageID, index, kb.user.settings.level, kb );
 		}
 		else{
-			tip_html += heatLevelTips( index, 1, kb );
+			tip_html += heatLevelTips( this.currentPageID, index, kb.user.settings.level, kb );
 		}
 		
 		let windowsize = $( window ).width();
@@ -1196,12 +1206,13 @@ var app = {
 
 		// Getting the latest diff for the relevant thermal situation -- do we agree?
 		let diff = kb.user.adaptation[thermal].diff.length > 0 ? kb.user.adaptation[thermal].diff[0] : 0;
+
 		let value = this.determineThermalIndexValue( cold_index, heat_index, index, diff ); // Gauge dependent on diff
 		
 		return [width, value, thermal, tip_html];
 	},
 	isDrawColdGauge: function( cold, heat, index ){
-		return cold >= heat
+		return cold >= heat	
 			   && 
 			   cold >= this.knowledgeBase.thresholds.ireq &&
 			   this.knowledgeBase.thermalindices.ireq[ index].Tair <= 10;
@@ -1212,6 +1223,7 @@ var app = {
 	},
 	determineThermalIndexValue: function( cold, heat, index, diff ){
 		let value = cold > heat ? -cold : heat;
+		// why is value used to calculate both cold and heat gauge?? faulty logic
 		value = this.isDrawColdGauge( cold, heat, index ) ? -cold : value;
 		value = this.isDrawHeatGauge( cold, heat, index ) ? heat : value;
 		return Math.max( -4, Math.min( 4, value + diff ) );//value between -4 and +4
@@ -1287,7 +1299,7 @@ var app = {
 			//weather icon
 			let clouds = this.knowledgeBase.thermalindices.ireq[index].clouds;
 			let rain = this.knowledgeBase.thermalindices.ireq[index].rain;
-			let solar = this.knowledgeBase.thermalindices.ireq[index].solar;
+			let solar = this.knowledgeBase.thermalindices.ireq[index].rad; // should be rad rather than solar? solar not in thermalindices
 			let icon_weather = "fa-cloud-sun-rain";
 			if( solar > 0 ){ //daytime
 				if( clouds < 10 ){                    //sun
@@ -1389,7 +1401,6 @@ var app = {
 		    animationRule: 'elastic',
 		    animationDuration: 3000
 		});
-		
 		gauge.draw();
 	},
 };
