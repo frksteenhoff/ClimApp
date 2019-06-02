@@ -1213,6 +1213,7 @@ var app = {
 
 		// Getting the latest diff for the relevant thermal situation -- do we agree?
 		let diff = kb.user.adaptation[thermal].diff.length > 0 ? kb.user.adaptation[thermal].diff[0] : 0;
+
 		let value = this.determineThermalIndexValue( cold_index, heat_index, index, diff ); // Gauge dependent on diff
 		
 		return [width, value, thermal, tip_html];
@@ -1229,7 +1230,7 @@ var app = {
 	},
 	determineThermalIndexValue: function( cold, heat, index, diff ){
 		let value = cold > heat ? -cold : heat;
-		// why is value used to calculate both cold and heat gauge??
+		// why is value used to calculate both cold and heat gauge?? faulty logic
 		value = this.isDrawColdGauge( cold, heat, index ) ? -cold : value;
 		value = this.isDrawHeatGauge( cold, heat, index ) ? heat : value;
 		return Math.max( -4, Math.min( 4, value + diff ) );//value between -4 and +4
@@ -1367,8 +1368,6 @@ var app = {
 			ctx.canvas.width = width;
 		}
 		var title = key === "cold" ? gaugeTitleCold( Math.abs(value)) : gaugeTitleHeat( Math.abs(value));
-		$("#gauge_title_tip").html( title ); 
-		console.log("gggggg: " +title);
 		var highlights =  this.knowledgeBase.gauge.highlights;
 		var gauge = new RadialGauge({
 		    renderTo: id,
@@ -1410,7 +1409,6 @@ var app = {
 		    animationRule: 'elastic',
 		    animationDuration: 3000
 		});
-		
 		gauge.draw();
 	},
 };
