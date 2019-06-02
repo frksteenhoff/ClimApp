@@ -1296,7 +1296,7 @@ var app = {
 			//weather icon
 			let clouds = this.knowledgeBase.thermalindices.ireq[index].clouds;
 			let rain = this.knowledgeBase.thermalindices.ireq[index].rain;
-			let solar = this.knowledgeBase.thermalindices.ireq[index].rad;
+			let solar = this.knowledgeBase.thermalindices.ireq[index].rad; // should be rad rather than solar? solar not in thermalindices
 			let icon_weather = "fa-cloud-sun-rain";
 			if( solar > 0 ){ //daytime
 				
@@ -1339,7 +1339,6 @@ var app = {
 					icon_weather = "fa-cloud-moon-rain";
 				}
 			}
-			console.log(icon_weather);
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
 		    
 			[width, value, thermal, tip_html] = this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase);
