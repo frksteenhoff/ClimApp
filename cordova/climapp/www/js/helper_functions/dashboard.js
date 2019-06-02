@@ -168,7 +168,7 @@ function heatLevelTips( index, level, kb ){
 			"d_sw": kb.thermalindices.phs[ index].Dwl50,
 			"sw_tot_g": kb.thermalindices.phs[ index].SWtotg	
 		};
-		var url = "http://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
+		var url = "https://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
 		$.get( url, data).done( function(data, status, xhr){
 			if(status === "success") {
 				var str = "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i> Advice</p>"; // circle with gauge color
