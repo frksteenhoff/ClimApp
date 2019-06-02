@@ -343,7 +343,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 1.9999999,
+			"version": 1.999999999,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -946,7 +946,7 @@ var app = {
 			self.knowledgeBase.thermalindices.phs.push( phs_object );	
 		});
 	},
-	updateUI: function(){
+	updateUI: async function(){
 		// context dependent filling of content
 		this.initNavbarListeners();
 		$(".navigation_back_settings").hide();
@@ -1052,6 +1052,9 @@ var app = {
 			$("#detail_im").html(im);
 			
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
+			let icl_worn = getClo(this.knowledgeBase);
+			let cold_index = icl_min - icl_worn; // minimal - worn, if negative you do not wear enough clothing
+	
 			let heat_index = WBGTrisk( wbgt, this.knowledgeBase );
 			
 			let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
@@ -1060,10 +1063,11 @@ var app = {
 			
 			let tip_html = "";
 			if( draw_cold_gauge || ( isNeutral && icl_min > heat_index ) ) {
-				tip_html += coldLevelTips( this.currentPageID, index, 2, this.knowledgeBase );
+				tip_html += coldLevelTips( index, 2, this.knowledgeBase, cold_index );
 			}
 			else{
-				tip_html += heatLevelTips( this.currentPageID, index, 2, this.knowledgeBase );
+				var fromThermalAdvisor = await heatLevelTips( index, 2, this.knowledgeBase );
+				tip_html += fromThermalAdvisor;
 			}
 			$("#moreinformation").html( tip_html );
 			if( draw_cold_gauge ){
@@ -1140,7 +1144,7 @@ var app = {
 			this.initFeedbackListeners();
 
 			// Draw gauge with current index value 
-			let index = 0; // 0 = current situation -- is this what we want?
+			let index = 0; // 0 = current situation -- is this what we want? -BK tricky tbd
 			[width, value, thermal, _] = this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase);
 
 			this.drawGauge( 'feedback_gauge', width, value , thermal );
@@ -1181,40 +1185,40 @@ var app = {
 			$(".navigation_back_settings").show();
 		}
 	},
-	getDrawGaugeParamsFromIndex(index, kb){
+	getDrawGaugeParamsFromIndex: async function(index, kb) {
 		let icl_min = kb.thermalindices.ireq[index].ICLminimal;
 		let icl_worn = getClo(kb);
-		let cold_index = icl_min - icl_worn;
+		let cold_index = icl_min - icl_worn; // minimal - worn, if negative you do not wear enough clothing
 		let heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb );
 		
 		let draw_cold_gauge = this.isDrawColdGauge( cold_index, heat_index, index );
 		let draw_heat_gauge = this.isDrawHeatGauge( cold_index, heat_index, index );
 		let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 		let tip_html = "";
-
-		if( draw_cold_gauge || ( isNeutral && cold_index > heat_index ) ) {
-			tip_html += coldLevelTips( this.currentPageID, index, kb.user.settings.level, kb );
-		}
-		else{
-			tip_html += heatLevelTips( this.currentPageID, index, kb.user.settings.level, kb );
-		}
-		
-		let windowsize = $( window ).width();
-		let width = windowsize / 2.5;
-		
 		let thermal = draw_cold_gauge ? "cold" : "heat";
 
 		// Getting the latest diff for the relevant thermal situation -- do we agree?
 		let diff = kb.user.adaptation[thermal].diff.length > 0 ? kb.user.adaptation[thermal].diff[0] : 0;
+		let value = this.determineThermalIndexValue( cold_index, heat_index, index, diff );
 
-		let value = this.determineThermalIndexValue( cold_index, heat_index, index, diff ); // Gauge dependent on diff
+		if( draw_cold_gauge || ( isNeutral && cold_index > heat_index ) ) {
+			tip_html += coldLevelTips( index, 1, kb, cold_index );
+		}
+		else{
+			var fromThermalAdvisor = await heatLevelTips( index, 1, kb ); 
+			tip_html += fromThermalAdvisor;
+		}
+		console.log("tip: " + tip_html);
+		
+		let windowsize = $( window ).width();
+		let width = windowsize / 2.5;
 		
 		return [width, value, thermal, tip_html];
 	},
+	// ireq only valid with temperatures less than 10
 	isDrawColdGauge: function( cold, heat, index ){
-		return cold >= heat	
-			   && 
-			   cold >= this.knowledgeBase.thresholds.ireq &&
+		return cold >= heat
+			   &&
 			   this.knowledgeBase.thermalindices.ireq[ index].Tair <= 10;
 	},
 	isDrawHeatGauge: function( cold, heat, index ){

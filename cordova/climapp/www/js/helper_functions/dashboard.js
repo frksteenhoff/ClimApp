@@ -99,7 +99,7 @@ function RAL(kb) {
 	}
 }
 
-function getWBGTeffective(wbgt, kb){
+function getCAF(kb){
 	let clothingvalues = { "Summer_attire": 0, 
 							"Business_suit": 0,
 							"Double_layer": 3,
@@ -109,10 +109,14 @@ function getWBGTeffective(wbgt, kb){
 							"Winter_attire": 3 };
 	let headvalues = { "none": 0, 
 					   "helmet": 1};
-   let clokey = kb.user.settings.clothing_selected;
-   let helmetkey = kb.user.settings.headgear_selected;
-			   
-   return 1.0 * (wbgt + clothingvalues[clokey] + headvalues[helmetkey] );
+	let clokey = kb.user.settings.clothing_selected;
+	let helmetkey = kb.user.settings.headgear_selected;
+	return ( clothingvalues[clokey] + headvalues[helmetkey] );
+}
+
+function getWBGTeffective(wbgt, kb){
+	let caf = getCAF(kb);
+	return 1.0 * wbgt + caf;
 }
 		   
 function WBGTrisk(wbgt, kb) {
@@ -120,15 +124,24 @@ function WBGTrisk(wbgt, kb) {
 					   
 	let wbgt_effective = getWBGTeffective(wbgt, kb);
 	let risk = wbgt_effective / RAL_; 
-				   
-	if (risk >= 1.2 ){
-	   return 3 * ( risk / 1.2 );
-	} else if (risk > 1.0 ){
-	   return 2 * ( risk );
-	} else if (risk <= 1.0 ){
-	   return ( risk / 0.8); // scale 0.8 to 1
+	
+	if( risk <= 0.8 ){
+		//class = "green";
+		return risk / 0.8; //scale to max 1
 	}
-}			   
+	else if( risk <= 1.0 ){
+		//class = "orange";
+		return 1 + (risk - 0.8)/0.2; //scale between 1 and 2
+	}
+	else if( risk <= 1.2 ){
+		//class = "red";
+		return 2 + (risk - 1.0)/0.2; //scale between 2 and 3
+	}
+	else{
+		//class = "darkred";
+		return 3 + (risk - 1.2); //scale between 2 and 3		
+	}
+}
 
 function neutralTips() {
 	let tips = [ "Enjoy your activity",
@@ -143,63 +156,47 @@ function neutralTips() {
 	return tips[i];
 }
 
-function heatLevelTips( pageID, index, level, kb ){
-	let str = "";
-	
-	let heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb );
-	
-    let d_sw = kb.thermalindices.phs[ index].Dwl50;
-    let sw_tot_per_hour = 0.001 * 60 * kb.thermalindices.phs[ index].SWtotg / 
-    (kb.sim.duration ); //liter per hour
-    sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
-
-	// circle with gauge color
-	pageID === "dashboard" ? str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i> <span id='gauge_title_tip'><b>Advice</b></span><br>" : str += "";
-	
-	if( level === 1 ){ //beginner, early user
-		if( heat_index <= 1 ){
-			str += "The green level means that low thermal stress is forecasted.</p>";
-		}
-		else if( heat_index <= 2 ){
-			str += "The yellow level means that moderate heat stress is expected.</p>";
-		}
-		else if( heat_index <= 3 ){
-			str += "The red level means that high heat stress is expected.</p>";
-		}
-		else if( heat_index > 3){
-			str += "This level is associated with severe heat stress.</p>";
-		}
-	}
-	else if( level === 2 ){ //experienced user // or more info requested // after 5 uses/opens of app
-		if ( heat_index <= 1){
-			str += "The personalized heat stress indicator depends on the weather report as well as your personal input</p>";
-			str += "The score will increase towards higher warning levels if the weather agravates, your activity level increases or your clothing level increases.</p>";
-			str += "No special precautions are required unless you work/excercise in special settings (indoor) or with resticted ability to release heat.</p>";
-		}
-		else if( heat_index <= 2 ){
-			str += "You should be able to maintain normal activities. You may experience higher thermal strain and more sweating than normal.</p>";
-			str += "Consider clothing adjustments and drink more than normal; especially when the score approaches the red heat stress level.</p>";
-		}
-		else if( heat_index <= 3 ){
-			str += "Pay special attention to drinking sufficient during the first days with this heat stress.</p>";
-			str += "Consider adjusting activities (heavy physical tasks during periods of the day with lowest heat) and allow time to adapt.</p>";
-			str += "Be aware that thirst is usually not a sufficient indicator when losses are high.</p>";
-			str += "Remember to drink/rehydrate with your meals.</p>";
-		}
-		else if( heat_index > 3){
-			str += "This level is associated with severe heat stress</p>";
-			str += "Your estimated sweat rate surpasses "+ sw_tot_per_hour+" Liter per hour, so additional drinking is required.</p>";
-			str += "The heat will impact your physical performance - adjusting activities and allowing sufficient breaks will benefit your overall daily ability to cope with the heat.</p>";
-		}
-	}
-	return str;
+function heatLevelTips( index, level, kb ){
+    return new Promise((resolve, reject) => {
+		var mode = "heat";
+		var adaptation = kb.user.adaptation[mode].diff.length > 0 ? kb.user.adaptation[mode].diff[0] : 0; 
+		var data = {
+			"mode": mode,
+			"level": level,
+			"wbgt": kb.thermalindices.phs[index].wbgt, // this does not take diff into account when fetching information?
+			"caf": getCAF(kb),
+			"ral": RAL(kb),
+			"d_tre": kb.thermalindices.phs[ index].Dtre,
+			"d_sw": kb.thermalindices.phs[ index].Dwl50,
+			"sw_tot_g": kb.thermalindices.phs[ index].SWtotg,
+			"wbgt_adaptation": adaptation
+		};
+		var url = "https://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
+		$.get( url, data).done( function(data, status, xhr){
+			if(status === "success") {
+				var str = "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i> Advice</p>"; // circle with gauge color
+				let tips = JSON.parse(data);
+				console.log(JSON.stringify(tips));
+				tips.tips.forEach(function(tip){
+					str += "<p>"+tip+"</p>";
+				});
+				tips.personal.forEach(function(tip){
+					str += "<p>"+tip+"</p>";
+				});
+                console.log("Fetched tips.");
+				resolve(str); 
+			} else {
+                console.log("Could not get tips from server.");
+				reject(false); 
+			}
+		});
+	});
 }
 
-function coldLevelTips( index, level, kb ){
+function coldLevelTips( index, level, kb, cold_index ){
 	let str = "";
 	
 	let icl_min = kb.thermalindices.ireq[ index ].ICLminimal;
-	let cold_index = icl_min;
 	
 	let windchill = kb.thermalindices.ireq[index].windchill;
     let tair = kb.thermalindices.ireq[index].Tair;
