@@ -109,35 +109,26 @@ function getWBGTeffective(wbgt, kb){
 							"Winter_attire": 3 };
 	let headvalues = { "none": 0, 
 					   "helmet": 1};
-
-	let clokey = kb.clothing.selected;
-	let helmetkey = kb.headgear.selected;
-	return 1.0 * wbgt + ( clothingvalues[clokey] + headvalues[helmetkey] );
+   let clokey = kb.user.settings.clothing_selected;
+   let helmetkey = kb.user.settings.headgear_selected;
+			   
+   return 1.0 * (wbgt + clothingvalues[clokey] + headvalues[helmetkey] );
 }
-
+		   
 function WBGTrisk(wbgt, kb) {
-    let RAL_ = RAL(kb);
-	
+	let RAL_ = RAL(kb);
+					   
 	let wbgt_effective = getWBGTeffective(wbgt, kb);
 	let risk = wbgt_effective / RAL_; 
-	
-	if( risk <= 0.8 ){
-		//class = "green";
-		return risk / 0.8; //scale to max 1
+				   
+	if (risk >= 1.2 ){
+	   return 3 * ( risk / 1.2 );
+	} else if (risk > 1.0 ){
+	   return 2 * ( risk );
+	} else if (risk <= 1.0 ){
+	   return ( risk / 0.8); // scale 0.8 to 1
 	}
-	else if( $risk <= 1.0 ){
-		//class = "orange";
-		return 1 + ($risk - 0.8)/0.2; //scale between 1 and 2
-	}
-	else if( $risk <= 1.2 ){
-		//class = "red";
-		return 2 + ($risk - 1.0)/0.2; //scale between 2 and 3
-	}
-	else{
-		//class = "darkred";
-		return 3 + ($risk - 1.2); //scale between 2 and 3		
-	}
-}
+}			   
 
 function neutralTips() {
 	let tips = [ "Enjoy your activity",
