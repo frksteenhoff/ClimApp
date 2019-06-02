@@ -209,7 +209,7 @@ tr.introjs-showElement > th {
   position: relative;
   overflow: visible;
   display: inline-block;
-  padding: 0.3em 0.8em;
+  padding: 0.7em 1.5em;
   border: 1px solid #d4d4d4;
   margin: 0;
   text-decoration: none;
@@ -355,6 +355,10 @@ tr.introjs-showElement > th {
   line-height: 10px;
   text-align: center;
   background-color: #08c;
+}
+
+.introjs-donebutton {
+  color: #000;
 }
 
 .introjsFloatingElement {
