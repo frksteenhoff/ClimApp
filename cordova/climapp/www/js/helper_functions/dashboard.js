@@ -164,8 +164,8 @@ function heatLevelTips( index, level, kb ){
 			"wbgt": kb.thermalindices.phs[index].wbgt,
 			"ral": RAL(kb),
 			"caf": getCAF(kb),
-			"d_tre": kb.thermalindices.phs[ index].Dtre;
-			"d_sw": kb.thermalindices.phs[ index].Dwl50;
+			"d_tre": kb.thermalindices.phs[ index].Dtre,
+			"d_sw": kb.thermalindices.phs[ index].Dwl50,
 			"sw_tot_g": kb.thermalindices.phs[ index].SWtotg	
 		};
 		var url = "http://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
@@ -183,7 +183,6 @@ function heatLevelTips( index, level, kb ){
 				reject(false); 
 			}
 		});
-		
 	});
 }
 
