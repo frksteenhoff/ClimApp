@@ -320,17 +320,17 @@ var app = {
 					"heat": {
 						"predicted": 0,
 						"perceived": 0,
-						"diff": 0 // perceived - predicted
+						"diff": [] // perceived - predicted
 					},
 					"cold": {
 						"predicted": 0,
 						"perceived": 0,
-						"diff": 0 // perceived - predicted
+						"diff": [] // perceived - predicted
 					}
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 1.99999999,
+			"version": 1.999999999,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -538,6 +538,11 @@ var app = {
 				var mergedUserPreferences = MergeRecursive(shadowKB.user, userPreferences); // merge old user data into new user object
 				this.knowledgeBase.user = mergedUserPreferences; // Add merged user data to knowledgebase
 
+				if(typeof this.knowledgeBase.user.adaptation.heat.diff === 'number' || typeof this.knowledgeBase.user.adaptation.cold.diff === 'number' ){
+                    this.knowledgeBase.user.adaptation.heat.diff = [];
+                    this.knowledgeBase.user.adaptation.cold.diff = [];
+				} 
+				
 				msgString = "Knowledge base updated to version: ";
 			}
 			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
@@ -1034,6 +1039,9 @@ var app = {
 			$("#detail_im").html(im);
 			
 			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
+			let icl_worn = getClo(this.knowledgeBase);
+			let cold_index = icl_min - icl_worn; // minimal - worn, if negative you do not wear enough clothing
+	
 			let heat_index = WBGTrisk( wbgt, this.knowledgeBase );
 			
 			let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
@@ -1042,10 +1050,11 @@ var app = {
 			
 			let tip_html = "";
 			if( draw_cold_gauge || ( isNeutral && icl_min > heat_index ) ) {
-				tip_html += coldLevelTips( index, 2, this.knowledgeBase );
+				tip_html += coldLevelTips( index, 2, this.knowledgeBase, cold_index );
 			}
 			else{
-				tip_html += await heatLevelTips( index, 2, this.knowledgeBase );
+				var fromThermalAdvisor = await heatLevelTips( index, 2, this.knowledgeBase );
+				tip_html += fromThermalAdvisor;
 			}
 			$("#moreinformation").html( tip_html );
 			if( draw_cold_gauge ){
@@ -1163,36 +1172,38 @@ var app = {
 			$(".navigation_back_settings").show();
 		}
 	},
-	getDrawGaugeParamsFromIndex(index, kb){//shouldn't this be functionname: function(params)? - async function
+	getDrawGaugeParamsFromIndex: async function(index, kb) {
 		let icl_min = kb.thermalindices.ireq[index].ICLminimal;
 		let icl_worn = getClo(kb);
-		let cold_index = icl_min - icl_worn;
+		let cold_index = icl_min - icl_worn; // minimal - worn, if negative you do not wear enough clothing
 		let heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb );
 		
 		let draw_cold_gauge = this.isDrawColdGauge( cold_index, heat_index, index );
 		let draw_heat_gauge = this.isDrawHeatGauge( cold_index, heat_index, index );
 		let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 		let tip_html = "";
+		let value = this.determineThermalIndexValue( cold_index, heat_index, index );
 
 		if( draw_cold_gauge || ( isNeutral && cold_index > heat_index ) ) {
-			tip_html += coldLevelTips( index, 1, kb );
+			tip_html += coldLevelTips( index, 1, kb, cold_index );
 		}
 		else{
-			tip_html += heatLevelTips( index, 1, kb );//await
+			var fromThermalAdvisor = await heatLevelTips( index, 1, kb ); 
+			tip_html += fromThermalAdvisor;
 		}
+		console.log("tip: " + tip_html);
 		
 		let windowsize = $( window ).width();
 		let width = windowsize / 2.5;
 		
-		let value = this.determineThermalIndexValue( cold_index, heat_index, index );
 		let thermal = draw_cold_gauge ? "cold" : "heat";
 		
 		return [width, value, thermal, tip_html];
 	},
+	// ireq only valid with temperatures less than 10
 	isDrawColdGauge: function( cold, heat, index ){
 		return cold >= heat
-			   && 
-			   cold >= this.knowledgeBase.thresholds.ireq &&
+			   &&
 			   this.knowledgeBase.thermalindices.ireq[ index].Tair <= 10;
 	},
 	isDrawHeatGauge: function( cold, heat, index ){

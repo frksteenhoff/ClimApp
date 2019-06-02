@@ -110,8 +110,8 @@ function getCAF(kb){
 	let headvalues = { "none": 0, 
 					   "helmet": 1};
 
-	let clokey = kb.clothing.selected;
-	let helmetkey = kb.headgear.selected;
+	let clokey = kb.user.settings.clothing_selected;
+	let helmetkey = kb.user.settings.headgear_selected;
 	return ( clothingvalues[clokey] + headvalues[helmetkey] );
 }
 
@@ -158,25 +158,30 @@ function neutralTips() {
 }
 
 function heatLevelTips( index, level, kb ){
-	
     return new Promise((resolve, reject) => {
+		var mode = "heat";
+		var adaptation = kb.user.adaptation[mode].diff.length > 0 ? kb.user.adaptation[mode].diff[0] : 0; 
 		var data = {
+			"mode": mode,
+			"level": level,
 			"wbgt": kb.thermalindices.phs[index].wbgt, // this does not take diff into account when fetching information?
-			"ral": RAL(kb),
 			"caf": getCAF(kb),
+			"ral": RAL(kb),
 			"d_tre": kb.thermalindices.phs[ index].Dtre,
 			"d_sw": kb.thermalindices.phs[ index].Dwl50,
-			"sw_tot_g": kb.thermalindices.phs[ index].SWtotg	
+			"sw_tot_g": kb.thermalindices.phs[ index].SWtotg,
+			"wbgt_adaptation": adaptation
 		};
 		var url = "https://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
 		$.get( url, data).done( function(data, status, xhr){
 			if(status === "success") {
 				var str = "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i> Advice</p>"; // circle with gauge color
 				let tips = JSON.parse(data);
-				$.each( tips, function(k, tip ){
+				console.log(JSON.stringify(tips));
+				tips.tips.forEach(function(tip){
 					str += "<p>"+tip+"</p>";
-				} );
-                console.log("Fetched tips");
+				});
+                console.log("Fetched tips.");
 				resolve(str); 
 			} else {
                 console.log("Could not get tips from server.");
@@ -186,11 +191,10 @@ function heatLevelTips( index, level, kb ){
 	});
 }
 
-function coldLevelTips( index, level, kb ){
+function coldLevelTips( index, level, kb, cold_index ){
 	let str = "";
 	
 	let icl_min = kb.thermalindices.ireq[ index ].ICLminimal;
-	let cold_index = icl_min;
 	
 	let windchill = kb.thermalindices.ireq[index].windchill;
     let tair = kb.thermalindices.ireq[index].Tair;
