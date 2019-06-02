@@ -91,7 +91,7 @@ function RAL(kb) {
     let M_ = M(kb); //W/m2
     let BSA_ = BSA(kb); //m2
     let watt = M_ * BSA_;
-	if( kb.settings.acclimatization ){
+	if( kb.user.settings.acclimatization ){
 	    return 56.7 - 11.5 * Math.log10( watt ); //ISO7243 acclimatised
 	}
 	else{
@@ -179,7 +179,6 @@ function heatLevelTips( pageID, index, level, kb ){
 		else if( heat_index <= 2 ){
 			str += "You should be able to maintain normal activities. You may experience higher thermal strain and more sweating than normal.</p>";
 			str += "Consider clothing adjustments and drink more than normal; especially when the score approaches the red heat stress level.</p>";
-			
 		}
 		else if( heat_index <= 3 ){
 			str += "Pay special attention to drinking sufficient during the first days with this heat stress.</p>";
