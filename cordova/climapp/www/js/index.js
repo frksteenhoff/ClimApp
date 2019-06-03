@@ -28,7 +28,10 @@ var app = {
 	
     // Application Constructor
     initialize: function() {
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+		document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+		document.addEventListener('deviceready', function () {
+			console.log(cordova.plugins.notification.local.launchDetails);
+		}, false);
 		//this.onDeviceReady(); //call this to run on browser, as browser does not fire the event by itself.
     },
 
@@ -41,11 +44,13 @@ var app = {
 		        console.log("Error: "+message+" in "+url+" at line "+lineNumber);
 				showShortToast("Whoops... something went wrong at: " + lineNumber);
 		    }
-        this.receivedEvent('deviceready');
+		this.receivedEvent('deviceready');
+		app.bindNotificationEvents();
     },
 
     // Update DOM on a Received Event
     receivedEvent: function(id) {
+		console.log("ID: "+id);
 		this.loadSettings();
 		if( this.knowledgeBase.user.guards.isFirstLogin ){//onboarding
 			this.loadUI( "onboarding" );
@@ -63,7 +68,15 @@ var app = {
 		}
 		this.updateLocation();
 		this.saveSettings();
-    },
+	},
+	bindNotificationEvents() {
+		// When user clicks "open" the feedback screen is opened
+		// This is the wanted behaviour, but currently not what happens.
+		cordova.plugins.notification.local.on('feedback_yes', function (notification, eopts) { 
+			showShortToast("Now in notification context");
+			self.loadUI('feedback');
+		 });
+	},
 	initNavbarListeners: function(){
 		// navigation menu
 		var self = this;
@@ -86,7 +99,7 @@ var app = {
 
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want?
-			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
+			self.getDrawGaugeParamsFromIndex(index, this.knowledgeBase).then( 
 				([width, value, thermal, tip_html]) => {//
 					self.drawGauge( 'feedback_gauge', width, slider_value , thermal );
 
@@ -576,7 +589,7 @@ var app = {
 		console.log(msgString + this.knowledgeBase.version);
 		showShortToast(msgString + this.knowledgeBase.version);
 		this.saveSettings();
-		//console.log("User settings: \n" + JSON.stringify(this.knowledgeBase.user)); // Showing current user settings
+		console.log("User settings: \n" + JSON.stringify(this.knowledgeBase.user)); // Showing current user settings
 	},
 	/* In the future this should be used to fetch the needed question from the database
 	   Currently working with static content, just for proof of concept. */
@@ -809,16 +822,6 @@ var app = {
 				}		
 			}); // Making code execution wait for app id retrieval
 		});
-
-		// Schedule a notification if weather conditions are out of the ordinary
-		// functionality will be extended to handle more complex scenarios - only when not in browser
-		if(device.platform != 'browser') {
-			var threshold = 0;
-			if(self.knowledgeBase.weather.wbgt < threshold) {
-				//let userWantsNotifications = self.knowledgeBase.user.guards.receivesNotifications();
-				//scheduleDefaultNotification(userWantsNotifications);
-			}
-		}
 	},
 	loadUI: function( pageid ){
 		var self = this;
@@ -1137,8 +1140,8 @@ var app = {
 			$("#weight").html(getCalculatedWeightValue(unit, weight) + " " + getWeightUnit(unit));
 			$("#gender").html(this.knowledgeBase.user.settings.gender);
 			$("#unit").html(this.knowledgeBase.user.settings.unit + " units" );
-			$("#acclimatization_checkbox").attr("checked", this.knowledgeBase.user.settings.acclimatization);
-			$("#notification_checkbox").attr("checked", this.knowledgeBase.user.guards.receivesNotifications);
+			$("#acclimatization_checkbox").prop("checked", this.knowledgeBase.user.settings.acclimatization);
+			$("#notification_checkbox").prop("checked", this.knowledgeBase.user.guards.receivesNotifications);
 		}
 		else if( this.currentPageID == "feedback" ){
 			$(".navigation").hide();
@@ -1215,6 +1218,17 @@ var app = {
 		
 		let windowsize = $( window ).width();
 		let width = windowsize / 2.5;
+
+		// Schedule a notification if weather conditions are out of the ordinary (more than 2.5 or -2.5)
+		let lowerLimit = -2.5;
+		let upperLimit = 2.5;
+		if(value < lowerLimit || value > upperLimit) {
+			if(kb.user.guards.receivesNotifications) {
+				//this.scheduleDefaultNotification();
+			} else {
+				console.log("User has opted out of notifications.");
+			}
+		}
 		
 		return [width, value, thermal, tip_html];
 	},
@@ -1412,6 +1426,41 @@ var app = {
 		});
 		gauge.draw();
 	},
+	scheduleDefaultNotification: function() {
+		var ClimAppNotifications = getAllNotifications();
+		if(ClimAppNotifications > 0) {
+			cancelAllNotifications();
+			console.log("All previous notifications cancelled.");
+		} else {
+			console.log("No previous notifications scheduled");
+		}
+	
+		// Set notification time and date today @ 4.30PM
+		var today = new Date();
+		today.setDate(today.getDate());
+		today.setHours(16);
+		today.setMinutes(30);
+		today.setSeconds(0);
+		var today_at_4_30_pm = new Date(today);
+	
+		// Notification which is triggered 16.30 every weekday
+		cordova.plugins.notification.local.schedule({
+			id: 1,
+			title: 'Feedback',
+			text: 'How was your day?',
+			icon: 'res://icon',
+			smallIcon: 'res://icon-stencil',
+			trigger: {
+				type: "fix",
+				at: today_at_4_30_pm.getTime()
+		},
+		actions: [
+			{ id: 'feedback_yes', title: 'Open'},
+			{ id: 'no',  title: 'Dismiss'}
+		]
+		});	
+		console.log("Notification scheduled.");
+	}
 };
 
 app.initialize();
