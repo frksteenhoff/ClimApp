@@ -73,7 +73,6 @@ var app = {
 		// When user clicks "open" the feedback screen is opened
 		// This is the wanted behaviour, but currently not what happens.
 		cordova.plugins.notification.local.on('feedback_yes', function (notification, eopts) { 
-			showShortToast("Now in notification context");
 			self.loadUI('feedback');
 		 });
 	},
@@ -165,12 +164,16 @@ var app = {
 			var target = $(this).attr("data-target");
 			let title_ = self.knowledgeBase.settings[target].title;
 			var items_ = self.getSelectables( target );
-			
+
 			var config = {
 			    title: title_,
 			    items:[ [ items_ ] ],
 			    positiveButtonText: "Done",
-			    negativeButtonText: "Cancel"
+				negativeButtonText: "Cancel",
+				wrapWheelText: true,
+				/*defaultItems: [
+					{value: self.knowledgeBase.user.settings[target]}
+				]*/
 			};
 			window.SelectorCordovaPlugin.showSelector(config, function(result) {
 				self.knowledgeBase.user.settings[target] = items_[result[0].index].value;
