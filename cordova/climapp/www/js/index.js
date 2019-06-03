@@ -42,7 +42,6 @@ var app = {
 				showShortToast("Whoops... something went wrong at: " + lineNumber);
 		    }
         this.receivedEvent('deviceready');
-		
     },
 
     // Update DOM on a Received Event
@@ -83,12 +82,14 @@ var app = {
 		var self = this;
 		$("input[data-listener='slider']").off(); //prevent multiple instances of listeners on same object
 		$("input[data-listener='slider']").change(function() {
-			let slider_value = this.value; 
+			var slider_value = this.value; 
 
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want?
-			[width, _, thermal, _] = self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase);	
-			self.drawGauge( 'feedback_gauge', width, slider_value , thermal );
+			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
+				([width, value, thermal, tip_html]) => {//
+					self.drawGauge( 'feedback_gauge', width, slider_value , thermal );
+			});
 
 			// Set the value as the perceived value in knowledgebase
 			self.knowledgeBase.user.adaptation[thermal].perceived = slider_value;
@@ -343,7 +344,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 1.999999999,
+			"version": 1.9999999991,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -485,8 +486,8 @@ var app = {
 						},
 						"gauge":{
 							"highlights":[//color also in CSS, keep consistent
-						        { from: 3, to: 4, color:  'rgba(180,0,0,.9)', css:'veryhot'},
-						        { from: 2, to: 3, color: 'rgba(255,100,0,.9)', css:'hot'},
+						        { from: 3, to: 4, color:  'rgba(150,0,0,.9)', css:'veryhot'},
+						        { from: 2, to: 3, color: 'rgba(255,0,0,.9)', css:'hot'},
 						        { from: 1, to: 2, color: 'rgba(220,220,0,.9)', css:'warm'},
 						        { from: -1, to: 1, color: 'rgba(0,180,0,.9)', css:'neutral' },
 						        { from: -2, to: -1, color:  'rgba(0,180,180,.9)', css:'cool' },
@@ -828,7 +829,7 @@ var app = {
 			console.log( "loaded: " + pageid);
 			self.currentPageID = pageid;
 			$("#content").html( content );
-			self.updateUI();
+			self.updateUI();			
 		})
 	},
 	checkIfUserExistInDB: async function() {
@@ -1061,15 +1062,19 @@ var app = {
 			let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
 		    let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 			
-			let tip_html = "";
+			var tip_html = "";
 			if( draw_cold_gauge || ( isNeutral && icl_min > heat_index ) ) {
-				tip_html += coldLevelTips( index, 2, this.knowledgeBase, cold_index );
+				tip_html += coldLevelTips( index, 2, this.knowledgeBase, cold_index, this.currentPageID );
+				$("#moreinformation").html( tip_html );
+				
 			}
 			else{
-				var fromThermalAdvisor = await heatLevelTips( index, 2, this.knowledgeBase );
-				tip_html += fromThermalAdvisor;
+				await heatLevelTips( index, 2, this.knowledgeBase ).then( (data) =>{
+					tip_html += data;
+					console.log("got tips: " + data);
+					$("#moreinformation").html( tip_html );
+				});
 			}
-			$("#moreinformation").html( tip_html );
 			if( draw_cold_gauge ){
 				$("div[data-context='heat'],div[data-context='neutral']").hide();
 				$("div[data-context='cold']").show();
@@ -1105,9 +1110,8 @@ var app = {
 				$("div[data-context='cold'],div[data-context='neutral']").hide();
 				$("div[data-context='heat']").show();
 				
-				$("#detail_wbgt").html( wbgt );
-				let ral = RAL(this.knowledgeBase).toFixed(1);
-				$("#detail_ral").html( ral );
+				$("#detail_wbgt_iso7243").html( wbgt_eff.toFixed(1) );
+				$("#detail_ral_iso7243").html( ral.toFixed(1) );
 				
 				let d_tre = this.knowledgeBase.thermalindices.phs[ index].D_Tre ? this.knowledgeBase.thermalindices.phs[ index].D_Tre : ">120";
 				let d_sw = this.knowledgeBase.thermalindices.phs[ index].Dwl50;
@@ -1145,15 +1149,19 @@ var app = {
 
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want? -BK tricky tbd
-			[width, value, thermal, _] = this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase);
+			[width, value, thermal, _] = this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase).then( 
+				([width, value, thermal, tip_html]) => {//
+					self.drawGauge( 'feedback_gauge', width, value , thermal );
+					$("#feedback_slider").val(value);
+					self.knowledgeBase.user.adaptation.mode = thermal;
+					self.knowledgeBase.user.adaptation[thermal].predicted = value.toFixed(2);
+					self.saveSettings();
+			});
 
-			this.drawGauge( 'feedback_gauge', width, value , thermal );
-			$("#feedback_slider").val(value);
+			
 			
 			// Save current gauge value as original value
-			this.knowledgeBase.user.adaptation.mode = thermal;
-			this.knowledgeBase.user.adaptation[thermal].predicted = value.toFixed(2);
-			this.saveSettings();
+			
 			
 			// Set text around gauge and slider
 			$("#gauge_text_top").html(this.knowledgeBase.feedback.gauge.text_top);
@@ -1202,10 +1210,10 @@ var app = {
 		let value = this.determineThermalIndexValue( cold_index, heat_index, index, diff );
 
 		if( draw_cold_gauge || ( isNeutral && cold_index > heat_index ) ) {
-			tip_html += coldLevelTips( index, 1, kb, cold_index );
+			tip_html += coldLevelTips( index, 1, kb, cold_index, this.currentPageID );
 		}
 		else{
-			var fromThermalAdvisor = await heatLevelTips( index, 1, kb ); 
+			var fromThermalAdvisor = await heatLevelTips( index, 1, kb )
 			tip_html += fromThermalAdvisor;
 		}
 		console.log("tip: " + tip_html);
@@ -1233,6 +1241,7 @@ var app = {
 		return Math.max( -4, Math.min( 4, value + diff ) );//value between -4 and +4
 	},
 	updateInfo: function( index ){
+		var self = this;
 		this.selectedWeatherID = index;
 		if( this.knowledgeBase.thermalindices.ireq.length > 0 ){
 			let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
@@ -1347,12 +1356,15 @@ var app = {
 			}
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
 		    
-			[width, value, thermal, tip_html] = this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase);
-			this.drawGauge( 'main_gauge', width, value , thermal );
+			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase).then( 
+				([width, value, thermal, tip_html]) => {//
+					self.drawGauge( 'main_gauge', width, value , thermal );
+					$("#tips").html( tip_html ); 
+					$("#circle_gauge_color").css("color", getCurrentGaugeColor(value));
+					$("#main_panel").fadeIn(500);
+			});
 			
-			$("#tips").html( tip_html ); 
-			$("#circle_gauge_color").css("color", getCurrentGaugeColor(value));
-			$("#main_panel").fadeIn(500);
+			
 		}
 	},
 	drawGauge: function( id, width, value, key ){
