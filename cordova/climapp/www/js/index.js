@@ -89,12 +89,12 @@ var app = {
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
 				([width, value, thermal, tip_html]) => {//
 					self.drawGauge( 'feedback_gauge', width, slider_value , thermal );
-			});
 
-			// Set the value as the perceived value in knowledgebase
-			self.knowledgeBase.user.adaptation[thermal].perceived = slider_value;
-			self.saveSettings();
-			console.log("slider: " + slider_value + " predicted: " + self.knowledgeBase.user.adaptation[thermal].predicted);
+					// Set the value as the perceived value in knowledgebase
+					self.knowledgeBase.user.adaptation[thermal].perceived = slider_value;
+					self.saveSettings();
+					console.log("slider: " + slider_value + " predicted: " + self.knowledgeBase.user.adaptation[thermal].predicted);
+			});
 		});
 		
 		// When user rates the feedback questions
@@ -124,10 +124,12 @@ var app = {
 		$("div[data-listener='submit']").off();
 		$("div[data-listener='submit']").on("click", function(){
 			var target = $("#feedback_text").val();
+			let mode = self.knowledgeBase.user.adaptation.mode;
 			self.knowledgeBase.feedback.comment = target;
 			// Only push diff to array on submit
-			let perceived_predicted_diff = self.knowledgeBase.user.adaptation[thermal].perceived - self.knowledgeBase.user.adaptation[thermal].predicted;
-			var diff_array = self.knowledgeBase.user.adaptation[thermal].diff;
+			let perceived_predicted_diff = (self.knowledgeBase.user.adaptation[mode].perceived -
+			                                self.knowledgeBase.user.adaptation[mode].predicted).toFixed(2);
+			var diff_array = self.knowledgeBase.user.adaptation[mode].diff;
 			diff_array.unshift(perceived_predicted_diff);
 					
 			// If user not in database, add user to database
@@ -327,7 +329,7 @@ var app = {
 					"clothing_selected": "Summer_attire",
 					"headgear_selected": "none",
 					"explore": false, // currently not used
-					"level": 1 // currently not used, 0 - beginner, 1 - advanced (possibly 2 for expert)
+					"level": 1 // currently not used, 1 - beginner, 2 - advanced (possibly 3 for expert)
 				},
 				"adaptation": {
 					"mode": "undefined",
@@ -574,7 +576,7 @@ var app = {
 		console.log(msgString + this.knowledgeBase.version);
 		showShortToast(msgString + this.knowledgeBase.version);
 		this.saveSettings();
-		console.log("User settings: \n" + JSON.stringify(this.knowledgeBase.user)); // Showing current user settings
+		//console.log("User settings: \n" + JSON.stringify(this.knowledgeBase.user)); // Showing current user settings
 	},
 	/* In the future this should be used to fetch the needed question from the database
 	   Currently working with static content, just for proof of concept. */
@@ -691,127 +693,123 @@ var app = {
 	updateWeather: async function(){
 		var self = this;
 
-		console.log("1"); // number added to check execution order
-		await self.checkIfUserExistInDB().then(console.log("2.0"));
-		console.log("2.1");
+		self.checkIfUserExistInDB().then((result) => {
+			getAppIDFromDB(self.knowledgeBase).then((appidFromServer) => {
+				
+				if(appidFromServer) { 
+					let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
+					let data = { "action": "helios",
+								"lat": this.knowledgeBase.position.lat,
+								"lon": this.knowledgeBase.position.lng,
+								"climapp": appidFromServer,
+								"d": 1.0, //
+								"utc": new Date().toJSON() };
+					$.get( url, 
+						data, 
+						function( output ){//on success
+							try{
+								let weather = JSON.parse( output );
+								console.log( weather );
+								self.knowledgeBase.weather.station = weather.station;
+								self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
+								self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
+								
+								//returns current weather by default in key "weather.currentweather"
+								//prepend to array.
+								self.knowledgeBase.weather.utc.unshift( weather.currentweather.dt );
+								
+								self.knowledgeBase.weather.utc = self.knowledgeBase.weather.utc.map( function(val){
+										let str = val.replace(/-/g,"/");
+										str += " UTC";
+										return str;
+								});
+								
+								self.knowledgeBase.weather.lat = weather.lat;
+								self.knowledgeBase.weather.lng = weather.lon;
+								
+								self.knowledgeBase.weather.wbgt = weather.wbgt_min.map(Number);
+								self.knowledgeBase.weather.wbgt.unshift( Number( weather.currentweather.wbgt_min ) );
+								
+								
+								self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
+								self.knowledgeBase.weather.windchill.unshift( Number( weather.currentweather.windchill ) );
+								
+								
+								self.knowledgeBase.weather.temperature = weather.tair.map(Number);
+								self.knowledgeBase.weather.temperature.unshift( Number( weather.currentweather.tair ) );
+								
+								self.knowledgeBase.weather.globetemperature = weather.tglobe_clouds.map(Number);
+								self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe_clouds ) );
+								
+								
+								self.knowledgeBase.weather.clouds = weather.clouds.map(Number);
+								self.knowledgeBase.weather.clouds.unshift( Number( weather.currentweather.clouds ) );
+								
+								
+								self.knowledgeBase.weather.humidity = weather.rh.map(Number);
+								self.knowledgeBase.weather.humidity.unshift( Number( weather.currentweather.rh ) );
+								
+								self.knowledgeBase.weather.rain = weather.rain.map(Number);
+								self.knowledgeBase.weather.rain.unshift( Number( weather.currentweather.rain ) );
+								
+								
+								self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
+								self.knowledgeBase.weather.windspeed.unshift( Number( weather.currentweather.vair ) );
+									
+								
+								self.knowledgeBase.weather.radiation = weather.solar_clouds.map(Number);
+								self.knowledgeBase.weather.radiation.unshift( Number( weather.currentweather.solar_clouds ) );
+								
+								self.knowledgeBase.weather.meanradianttemperature = [];
+								self.knowledgeBase.weather.windspeed2m = [];
+								$.each( self.knowledgeBase.weather.windspeed, function(key, vair){
+										var Tg = self.knowledgeBase.weather.globetemperature[key];
+										var Ta = self.knowledgeBase.weather.temperature[key];
+										var va = vair * Math.pow( 0.2, 0.25 ); //stability class D Liljgren 2008 Table 3
+										
+										//kruger et al 2014
+										var D = 0.05; //diameter black globe (liljegren - ) --default value = 0.15
+										var eps_g = 0.95; //standard emmisivity black bulb
+										var t0 = (Tg+273.0);
+										var t1 = Math.pow( t0, 4);
+										var t2 = 1.1 * Math.pow(10,7) * Math.pow( va, 0.6 ); //Math.pow(10,8) seems typo?
+										var t3 = eps_g * Math.pow( D, 0.4);
+										var t4 = t1 + ( t2 / t3 ) * (Tg-Ta);
+										var Tmrt = Math.pow( t4, 0.25 ) - 273.0;
+										
+										self.knowledgeBase.weather.meanradianttemperature.push( Tmrt );
+										self.knowledgeBase.weather.windspeed2m.push( va );
+								} );
+								
+								self.knowledgeBase.weather.watervapourpressure = [];
+								$.each( self.knowledgeBase.weather.humidity,
+									function( key, val){
+										let T = self.knowledgeBase.weather.temperature[key];
+										let wvp = ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
+										self.knowledgeBase.weather.watervapourpressure.push( wvp );	
+								}); 
+								
+								self.saveSettings();
+								self.calcThermalIndices();
+								self.updateUI();
+										
+								// Only update when weather data has been received - and when external DB record is present.
+								if( self.knowledgeBase.user.guards.hasExternalDBRecord ){
+										addWeatherDataToDB(self.knowledgeBase);
+								}	
+							}
+							catch( error ){
+								console.log( error );
+							}
+					}).fail(function( e ) {
+						console.log("fail in weather "+ e);
+					});
+				} else  {
+					showShortToast("Failed to update weather, no app ID.");
+				}		
+			}); // Making code execution wait for app id retrieval
+		});
 
-		var appidFromServer = await getAppIDFromDB(self.knowledgeBase); // Making code execution wait for app id retrieval
-		
-		console.log("3");
-
-		if(appidFromServer) { 
-			
-			let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
-			let data = { "action": "helios",
-						"lat": this.knowledgeBase.position.lat,
-						"lon": this.knowledgeBase.position.lng,
-						"climapp": appidFromServer,
-						"d": 1.0, //
-						"utc": new Date().toJSON() };
-			$.get( url, 
-				data, 
-				function( output ){//on success
-					try{
-						let weather = JSON.parse( output );
-						console.log( weather );
-						self.knowledgeBase.weather.station = weather.station;
-						self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
-						self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
-						
-						//returns current weather by default in key "weather.currentweather"
-						//prepend to array.
-						self.knowledgeBase.weather.utc.unshift( weather.currentweather.dt );
-						
-						self.knowledgeBase.weather.utc = self.knowledgeBase.weather.utc.map( function(val){
-								let str = val.replace(/-/g,"/");
-								str += " UTC";
-								return str;
-						});
-						
-						
-						self.knowledgeBase.weather.lat = weather.lat;
-						self.knowledgeBase.weather.lng = weather.lon;
-						
-						self.knowledgeBase.weather.wbgt = weather.wbgt_min.map(Number);
-						self.knowledgeBase.weather.wbgt.unshift( Number( weather.currentweather.wbgt_min ) );
-						
-						
-						self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
-						self.knowledgeBase.weather.windchill.unshift( Number( weather.currentweather.windchill ) );
-						
-						
-						self.knowledgeBase.weather.temperature = weather.tair.map(Number);
-						self.knowledgeBase.weather.temperature.unshift( Number( weather.currentweather.tair ) );
-						
-						self.knowledgeBase.weather.globetemperature = weather.tglobe_clouds.map(Number);
-						self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe_clouds ) );
-						
-						
-						self.knowledgeBase.weather.clouds = weather.clouds.map(Number);
-						self.knowledgeBase.weather.clouds.unshift( Number( weather.currentweather.clouds ) );
-						
-						
-						self.knowledgeBase.weather.humidity = weather.rh.map(Number);
-						self.knowledgeBase.weather.humidity.unshift( Number( weather.currentweather.rh ) );
-						
-						self.knowledgeBase.weather.rain = weather.rain.map(Number);
-						self.knowledgeBase.weather.rain.unshift( Number( weather.currentweather.rain ) );
-						
-						
-						self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
-						self.knowledgeBase.weather.windspeed.unshift( Number( weather.currentweather.vair ) );
-							
-						
-						self.knowledgeBase.weather.radiation = weather.solar_clouds.map(Number);
-						self.knowledgeBase.weather.radiation.unshift( Number( weather.currentweather.solar_clouds ) );
-						
-						self.knowledgeBase.weather.meanradianttemperature = [];
-						self.knowledgeBase.weather.windspeed2m = [];
-						$.each( self.knowledgeBase.weather.windspeed, function(key, vair){
-								var Tg = self.knowledgeBase.weather.globetemperature[key];
-								var Ta = self.knowledgeBase.weather.temperature[key];
-								var va = vair * Math.pow( 0.2, 0.25 ); //stability class D Liljgren 2008 Table 3
-								
-								//kruger et al 2014
-								var D = 0.05; //diameter black globe (liljegren - ) --default value = 0.15
-								var eps_g = 0.95; //standard emmisivity black bulb
-								var t0 = (Tg+273.0);
-								var t1 = Math.pow( t0, 4);
-								var t2 = 1.1 * Math.pow(10,7) * Math.pow( va, 0.6 ); //Math.pow(10,8) seems typo?
-								var t3 = eps_g * Math.pow( D, 0.4);
-								var t4 = t1 + ( t2 / t3 ) * (Tg-Ta);
-								var Tmrt = Math.pow( t4, 0.25 ) - 273.0;
-								
-								self.knowledgeBase.weather.meanradianttemperature.push( Tmrt );
-								self.knowledgeBase.weather.windspeed2m.push( va );
-						} );
-						
-						self.knowledgeBase.weather.watervapourpressure = [];
-						$.each( self.knowledgeBase.weather.humidity,
-							function( key, val){
-								let T = self.knowledgeBase.weather.temperature[key];
-								let wvp = ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
-								self.knowledgeBase.weather.watervapourpressure.push( wvp );	
-						}); 
-						
-						self.saveSettings();
-						self.calcThermalIndices();
-						self.updateUI();
-								
-						// Only update when weather data has been received - and when external DB record is present.
-						if( self.knowledgeBase.user.guards.hasExternalDBRecord ){
-								addWeatherDataToDB(self.knowledgeBase);
-						}	
-					}
-					catch( error ){
-						console.log( error );
-					}
-			}).fail(function( e ) {
-				console.log("fail in weather "+ e);
-			});
-		} else  {
-			showShortToast("Failed to update weather, no app ID.");
-		}
 		// Schedule a notification if weather conditions are out of the ordinary
 		// functionality will be extended to handle more complex scenarios - only when not in browser
 		if(device.platform != 'browser') {
@@ -835,14 +833,14 @@ var app = {
 	checkIfUserExistInDB: async function() {
 		var self = this;
 		if(!self.knowledgeBase.user.guards.hasExternalDBRecord && typeof(self.knowledgeBase.user.guards.hasExternalDBRecord) !== 'undefined') {
-			var userCreatedInDB = await createUserRecord(self.knowledgeBase);
-			
-			// Only update value on success
-			if(userCreatedInDB) {
-				console.log("User added to database.");
-				self.knowledgeBase.user.guards.hasExternalDBRecord = 1;
-				self.saveSettings();
-			}
+			createUserRecord(self.knowledgeBase).then((userCreatedInDB) => {
+				// Only update value on success
+				if(userCreatedInDB) {
+					console.log("User added to database.");
+					self.knowledgeBase.user.guards.hasExternalDBRecord = 1;
+					self.saveSettings();
+				}
+			});
 		} else {
 			console.log("User exist in database.");
 		}
@@ -1060,7 +1058,7 @@ var app = {
 			
 			let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
 			let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
-		    let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
+			let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 			
 			var tip_html = "";
 			if( draw_cold_gauge || ( isNeutral && icl_min > heat_index ) ) {
@@ -1069,9 +1067,9 @@ var app = {
 				
 			}
 			else{
-				await heatLevelTips( index, 2, this.knowledgeBase ).then( (data) =>{
+				heatLevelTips( index, 2, this.knowledgeBase, this.currentPageID ).then( (data) =>{
 					tip_html += data;
-					console.log("got tips: " + data);
+					console.log("tips: " + data);
 					$("#moreinformation").html( tip_html );
 				});
 			}
@@ -1149,38 +1147,34 @@ var app = {
 
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want? -BK tricky tbd
-			[width, value, thermal, _] = this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase).then( 
+			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase).then( 
 				([width, value, thermal, tip_html]) => {//
-					self.drawGauge( 'feedback_gauge', width, value , thermal );
+					this.drawGauge( 'feedback_gauge', width, value, thermal );
 					$("#feedback_slider").val(value);
-					self.knowledgeBase.user.adaptation.mode = thermal;
-					self.knowledgeBase.user.adaptation[thermal].predicted = value.toFixed(2);
-					self.saveSettings();
+					this.knowledgeBase.user.adaptation.mode = thermal;
+					// Save current gauge value as original value
+					this.knowledgeBase.user.adaptation[thermal].predicted = value.toFixed(2);
+					this.saveSettings();
+					
+					// Set text around gauge and slider
+					$("#gauge_text_top").html(this.knowledgeBase.feedback.gauge.text_top);
+					$("#gauge_text_bottom").html(this.knowledgeBase.feedback.gauge.text_bottom);
+					
+					// Question text
+					$("#question1").html( this.knowledgeBase.feedback.question1.text );
+					$("#question2").html( this.knowledgeBase.feedback.question2.text );
+					$("#question3").html( this.knowledgeBase.feedback.question3.text );
+					
+								// Set rating bar text (under feedback buttons) using last given feedback
+					$("#ratingtext1").html( this.knowledgeBase.feedback.question1.ratingtext[this.knowledgeBase.feedback.question1.rating] );
+					$("#ratingtext2").html( this.knowledgeBase.feedback.question2.ratingtext[this.knowledgeBase.feedback.question2.rating] );
+					$("#ratingtext3").html( this.knowledgeBase.feedback.question3.ratingtext[this.knowledgeBase.feedback.question3.rating] );
+					
+					// Rating bar values -- still not setting the default color..
+					$("input[id='1star"+this.knowledgeBase.feedback.question1.rating+"']").attr("checked", true);
+					$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").attr("checked", true);
+					$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").attr("checked", true);
 			});
-
-			
-			
-			// Save current gauge value as original value
-			
-			
-			// Set text around gauge and slider
-			$("#gauge_text_top").html(this.knowledgeBase.feedback.gauge.text_top);
-			$("#gauge_text_bottom").html(this.knowledgeBase.feedback.gauge.text_bottom);
-
-			// Question text
-			$("#question1").html( this.knowledgeBase.feedback.question1.text );
-			$("#question2").html( this.knowledgeBase.feedback.question2.text );
-			$("#question3").html( this.knowledgeBase.feedback.question3.text );
-
-			// Set rating bar text (under feedback buttons) using last given feedback
-			$("#ratingtext1").html( this.knowledgeBase.feedback.question1.ratingtext[this.knowledgeBase.feedback.question1.rating] );
-			$("#ratingtext2").html( this.knowledgeBase.feedback.question2.ratingtext[this.knowledgeBase.feedback.question2.rating] );
-			$("#ratingtext3").html( this.knowledgeBase.feedback.question3.ratingtext[this.knowledgeBase.feedback.question3.rating] );
-
-			// Rating bar values -- still not setting the default color..
-			$("input[id='1star"+this.knowledgeBase.feedback.question1.rating+"']").attr("checked", true);
-			$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").attr("checked", true);
-			$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").attr("checked", true);
 		} 
 		else if(this.currentPageID == "about") {
 			$(".navigation").hide();
@@ -1204,19 +1198,20 @@ var app = {
 		let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 		let tip_html = "";
 		let thermal = draw_cold_gauge ? "cold" : "heat";
+		let level = kb.user.settings.level;
 
 		// Getting the latest diff for the relevant thermal situation -- do we agree?
 		let diff = kb.user.adaptation[thermal].diff.length > 0 ? kb.user.adaptation[thermal].diff[0] : 0;
 		let value = this.determineThermalIndexValue( cold_index, heat_index, index, diff );
 
 		if( draw_cold_gauge || ( isNeutral && cold_index > heat_index ) ) {
-			tip_html += coldLevelTips( index, 1, kb, cold_index, this.currentPageID );
+			tip_html += coldLevelTips( index, level, kb, cold_index, this.currentPageID );
 		}
 		else{
-			var fromThermalAdvisor = await heatLevelTips( index, 1, kb )
+			var fromThermalAdvisor = await heatLevelTips( index, level, kb, this.currentPageID );
 			tip_html += fromThermalAdvisor;
 		}
-		console.log("tip: " + tip_html);
+		console.log("tips " + tip_html);
 		
 		let windowsize = $( window ).width();
 		let width = windowsize / 2.5;
@@ -1303,7 +1298,7 @@ var app = {
 			
 			$("#station").html( this.knowledgeBase.weather.station + " ("+ distance +" km)" );
 			
-			$("#temperature").html( this.knowledgeBase.thermalindices.ireq[ index].Tair.toFixed(0) +"&#xb0");
+			$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair, this.knowledgeBase.user.settings.unit).toFixed(0) +"&#xb0");
 			let ws = this.knowledgeBase.thermalindices.ireq[index].v_air10 * 3.6; //m/s to km/h
 			$("#windspeed").html( ws.toFixed(0) );
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit)); 
@@ -1363,8 +1358,6 @@ var app = {
 					$("#circle_gauge_color").css("color", getCurrentGaugeColor(value));
 					$("#main_panel").fadeIn(500);
 			});
-			
-			
 		}
 	},
 	drawGauge: function( id, width, value, key ){

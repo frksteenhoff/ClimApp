@@ -156,7 +156,7 @@ function neutralTips() {
 	return tips[i];
 }
 
-function heatLevelTips( index, level, kb ){
+function heatLevelTips( index, level, kb, pageID ){
     return new Promise((resolve, reject) => {
 		var mode = "heat";
 		var adaptation = kb.user.adaptation[mode].diff.length > 0 ? kb.user.adaptation[mode].diff[0] : 0; 
@@ -174,7 +174,8 @@ function heatLevelTips( index, level, kb ){
 		var url = "https://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
 		$.get( url, data).done( function(data, status, xhr){
 			if(status === "success") {
-				var str = "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i> Advice</p>"; // circle with gauge color
+				var header = pageID === "dashboard" ? "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i> Advice</p>" : ""; 
+				var str = header; // circle with gauge color
 				let tips = JSON.parse(data);
 				console.log(JSON.stringify(tips));
 				tips.tips.forEach(function(tip){
