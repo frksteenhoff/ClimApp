@@ -164,7 +164,7 @@ var app = {
 			var target = $(this).attr("data-target");
 			let title_ = self.knowledgeBase.settings[target].title;
 			var items_ = self.getSelectables( target );
-
+			let currentValue = self.knowledgeBase.user.settings[target].toString();
 			var config = {
 			    title: title_,
 			    items:[ [ items_ ] ],
@@ -172,7 +172,7 @@ var app = {
 				negativeButtonText: "Cancel",
 				wrapWheelText: true,
 				/*defaultItems: [
-					{value: self.knowledgeBase.user.settings[target]}
+					{index: 0, value: currentValue}
 				]*/
 			};
 			window.SelectorCordovaPlugin.showSelector(config, function(result) {
@@ -345,7 +345,7 @@ var app = {
 					"clothing_selected": "Summer_attire",
 					"headgear_selected": "none",
 					"explore": false, // currently not used
-					"level": 1 // currently not used, 1 - beginner, 2 - advanced (possibly 3 for expert)
+					"level": 1 // 1 - beginner, 2 - advanced 
 				},
 				"adaptation": {
 					"mode": "undefined",
@@ -362,7 +362,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 1.9999999991,
+			"version": 2.00,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -579,6 +579,7 @@ var app = {
 			}
 			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
 				msgString = "Loaded knowledge base version: ";
+				this.knowledgeBase.user.settings.level = 1;
 			}
 			else { //old version does not have version key
 				this.knowledgeBase = shadowKB;
