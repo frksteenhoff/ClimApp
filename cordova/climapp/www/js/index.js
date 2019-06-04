@@ -29,9 +29,6 @@ var app = {
     // Application Constructor
     initialize: function() {
 		document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-		document.addEventListener('deviceready', function () {
-			console.log(cordova.plugins.notification.local.launchDetails);
-		}, false);
 		//this.onDeviceReady(); //call this to run on browser, as browser does not fire the event by itself.
     },
 
@@ -50,7 +47,6 @@ var app = {
 
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-		console.log("ID: "+id);
 		this.loadSettings();
 		if( this.knowledgeBase.user.guards.isFirstLogin ){//onboarding
 			this.loadUI( "onboarding" );
@@ -98,14 +94,14 @@ var app = {
 
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want?
-			self.getDrawGaugeParamsFromIndex(index, this.knowledgeBase).then( 
+			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
 				([width, value, thermal, tip_html]) => {//
 					self.drawGauge( 'feedback_gauge', width, slider_value , thermal );
 
 					// Set the value as the perceived value in knowledgebase
 					self.knowledgeBase.user.adaptation[thermal].perceived = slider_value;
 					self.saveSettings();
-					console.log("slider: " + slider_value + " predicted: " + self.knowledgeBase.user.adaptation[thermal].predicted);
+					console.log("slider: " + slider_value + " predicted: " + self.knowledgeBase.user.adaptation[thermal].predicted + " value " + value);
 			});
 		});
 		
@@ -140,10 +136,12 @@ var app = {
 			self.knowledgeBase.feedback.comment = target;
 			// Only push diff to array on submit
 			let perceived_predicted_diff = (self.knowledgeBase.user.adaptation[mode].perceived -
-			                                self.knowledgeBase.user.adaptation[mode].predicted).toFixed(2);
+			                                self.knowledgeBase.user.adaptation[mode].predicted);
 			var diff_array = self.knowledgeBase.user.adaptation[mode].diff;
-			diff_array.unshift(perceived_predicted_diff);
-					
+			
+			if(perceived_predicted_diff !== "NaN") {
+				diff_array.unshift(perceived_predicted_diff);
+			}
 			// If user not in database, add user to database
 			self.checkIfUserExistInDB();
 
@@ -573,13 +571,12 @@ var app = {
 				if(typeof this.knowledgeBase.user.adaptation.heat.diff === 'number' || typeof this.knowledgeBase.user.adaptation.cold.diff === 'number' ){
                     this.knowledgeBase.user.adaptation.heat.diff = [];
                     this.knowledgeBase.user.adaptation.cold.diff = [];
-                }
+				}
 
 				msgString = "Knowledge base updated to version: ";
 			}
 			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version){
 				msgString = "Loaded knowledge base version: ";
-				this.knowledgeBase.user.settings.level = 1;
 			}
 			else { //old version does not have version key
 				this.knowledgeBase = shadowKB;
@@ -1160,7 +1157,7 @@ var app = {
 					$("#feedback_slider").val(value);
 					this.knowledgeBase.user.adaptation.mode = thermal;
 					// Save current gauge value as original value
-					this.knowledgeBase.user.adaptation[thermal].predicted = value.toFixed(2);
+					this.knowledgeBase.user.adaptation[thermal].predicted = value;
 					this.saveSettings();
 					
 					// Set text around gauge and slider
@@ -1206,11 +1203,10 @@ var app = {
 		let tip_html = "";
 		let thermal = draw_cold_gauge ? "cold" : "heat";
 		let level = kb.user.settings.level;
-
 		// Getting the latest diff for the relevant thermal situation -- do we agree?
-		let diff = kb.user.adaptation[thermal].diff.length > 0 ? kb.user.adaptation[thermal].diff[0] : 0;
+		let diff = this.getDiff(kb, thermal);
 		let value = this.determineThermalIndexValue( cold_index, heat_index, index, diff );
-
+	
 		if( draw_cold_gauge || ( isNeutral && cold_index > heat_index ) ) {
 			tip_html += coldLevelTips( index, level, kb, cold_index, this.currentPageID );
 		}
@@ -1219,12 +1215,11 @@ var app = {
 			tip_html += fromThermalAdvisor;
 		}
 		console.log("tips " + tip_html);
-		
 		let windowsize = $( window ).width();
 		let width = windowsize / 2.5;
 
 		// Schedule a notification if weather conditions are out of the ordinary (more than 2.5 or -2.5)
-		let lowerLimit = -2.5;
+		let lowerLimit = -2.5; // TODO: we need to decide on these values
 		let upperLimit = 2.5;
 		if(value < lowerLimit || value > upperLimit) {
 			if(kb.user.guards.receivesNotifications) {
@@ -1233,8 +1228,11 @@ var app = {
 				console.log("User has opted out of notifications.");
 			}
 		}
-		
 		return [width, value, thermal, tip_html];
+	},
+	getDiff: function(kb, thermal){
+		// This lgoci is also used in dashboard.js function: heatlevelTips
+		return kb.user.adaptation[thermal].diff.length > 0 ? kb.user.adaptation[thermal].diff[0] : 0;
 	},
 	// ireq only valid with temperatures less than 10
 	isDrawColdGauge: function( cold, heat, index ){
@@ -1369,9 +1367,9 @@ var app = {
 			}
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
 		    
-			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase).then( 
+			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
 				([width, value, thermal, tip_html]) => {//
-					self.drawGauge( 'main_gauge', width, value , thermal );
+					self.drawGauge( 'main_gauge', width, value, thermal );
 					$("#tips").html( tip_html ); 
 					$("#circle_gauge_color").css("color", getCurrentGaugeColor(value));
 					$("#main_panel").fadeIn(500);
@@ -1394,7 +1392,7 @@ var app = {
 		    height: width,
 		    units: ' ',
 		    title: title,
-		    value: value,
+		    value: value, // making sure diff is reflected in gauge if any
 		    minValue: -4,
 		    maxValue: 4,
 			startAngle: 45,
