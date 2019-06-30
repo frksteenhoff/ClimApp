@@ -389,7 +389,7 @@ var app = {
 						 		},
 						 "height": {"title": "How tall are you?"
 								},
-						 "weight": {"title": "How much to you weigh?"
+						 "weight": {"title": "How much do you weigh?"
 								},
 						 "gender": {"title": "What is your gender?"
 								},
