@@ -90,7 +90,9 @@ var app = {
 		var self = this;
 		$("input[data-listener='slider']").off(); //prevent multiple instances of listeners on same object
 		$("input[data-listener='slider']").change(function() {
+
 			var slider_value = this.value; 
+		    self.knowledgeBase.user.guards.feedbackSliderChanged = 1;
 
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want?
@@ -101,8 +103,9 @@ var app = {
 					// Set the value as the perceived value in knowledgebase
 					self.knowledgeBase.user.adaptation[thermal].perceived = slider_value;
 					self.saveSettings();
-					console.log("slider: " + slider_value + " predicted: " + self.knowledgeBase.user.adaptation[thermal].predicted + " value " + value);
+					console.log("slider: " + slider_value + " predicted: " + self.knowledgeBase.user.adaptation[thermal].predicted + " value " + value + " sliderchanged " + self.knowledgeBase.user.guards.feedbackSliderChanged);
 			});
+			self.saveSettings();
 		});
 		
 		// When user rates the feedback questions
@@ -133,12 +136,19 @@ var app = {
 		$("div[data-listener='submit']").on("click", function(){
 			var target = $("#feedback_text").val();
 			let mode = self.knowledgeBase.user.adaptation.mode;
+			let perceived_predicted_diff = 0;
 			self.knowledgeBase.feedback.comment = target;
 			// Only push diff to array on submit
-			let perceived_predicted_diff = (self.knowledgeBase.user.adaptation[mode].perceived -
-			                                self.knowledgeBase.user.adaptation[mode].predicted);
+			if(self.knowledgeBase.user.guards.feedbackSliderChanged){
+			    perceived_predicted_diff = (self.knowledgeBase.user.adaptation[mode].perceived -
+			                                    self.knowledgeBase.user.adaptation[mode].predicted);
+			} else {
+			    self.knowledgeBase.user.adaptation[mode].perceived = self.knowledgeBase.user.adaptation[mode].predicted;
+			    perceived_predicted_diff = 0;
+			}
 			var diff_array = self.knowledgeBase.user.adaptation[mode].diff;
-			
+			console.log("diff: " + perceived_predicted_diff);
+
 			if(perceived_predicted_diff !== "NaN") {
 				diff_array.unshift(perceived_predicted_diff);
 			}
@@ -330,7 +340,8 @@ var app = {
 					"introductionCompleted": 0, 
 					"hasExternalDBRecord": 0,
 					"receivesNotifications": 0, // false as notifications are not part of the app
-					"appOpenedCount": 0 // number of times user has opened app
+					"appOpenedCount": 0, // number of times user has opened app
+					"feedbackSliderChanged": 0
 				}, 
 				"settings": { // Using default values
 					"age": 30,
@@ -360,7 +371,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.00,
+			"version": 2.033,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -1148,6 +1159,7 @@ var app = {
 			$(".navigation").hide();
 			$(".navigation_back_settings").show();
 			this.initFeedbackListeners();
+			this.knowledgeBase.user.guards.feedbackSliderChanged = 0;
 
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want? -BK tricky tbd
@@ -1249,6 +1261,7 @@ var app = {
 		// why is value used to calculate both cold and heat gauge?? faulty logic
 		value = this.isDrawColdGauge( cold, heat, index ) ? -cold : value;
 		value = this.isDrawHeatGauge( cold, heat, index ) ? heat : value;
+		console.log("personalized gauge value: " + (value + diff) + " actual: " + value + " diff: " + diff);
 		return Math.max( -4, Math.min( 4, value + diff ) );//value between -4 and +4
 	},
 	updateInfo: function( index ){
