@@ -1259,6 +1259,10 @@ var app = {
 	determineThermalIndexValue: function( cold, heat, index, diff ){
 		let value = cold > heat ? -cold : heat;
 		// why is value used to calculate both cold and heat gauge?? faulty logic
+		
+		//bk: the thermal index is either a hot or cold one, both are defined differntly. 
+		// this function unifies the thermal index value. it is either -cold if it is cold, or heat if it is hot.
+		//by default it is the largest one (if cold > heat -> then cold etc)
 		value = this.isDrawColdGauge( cold, heat, index ) ? -cold : value;
 		value = this.isDrawHeatGauge( cold, heat, index ) ? heat : value;
 		console.log("personalized gauge value: " + (value + diff) + " actual: " + value + " diff: " + diff);
@@ -1336,7 +1340,8 @@ var app = {
 			//weather icon
 			let clouds = this.knowledgeBase.thermalindices.ireq[index].clouds;
 			let rain = this.knowledgeBase.thermalindices.ireq[index].rain;
-			let solar = this.knowledgeBase.thermalindices.ireq[index].rad; // should be rad rather than solar? solar not in thermalindices
+			let solar = this.knowledgeBase.thermalindices.ireq[index].rad; 
+			// should be rad rather than solar? solar not in thermalindices -BK: not necessarily, rad = solar radiation
 			let icon_weather = "fa-cloud-sun-rain";
 			if( solar > 0 ){ //daytime
 				if( clouds < 10 ){                    //sun
