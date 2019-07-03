@@ -1089,7 +1089,7 @@ var app = {
 				});
 			}
 			if( draw_cold_gauge ){
-				$("div[data-context='heat'],div[data-context='neutral']").hide();
+				$("div[data-context='heat'],div[data-context='phs'],div[data-context='neutral']").hide();
 				$("div[data-context='cold']").show();
 				
 				let windchill = this.knowledgeBase.thermalindices.ireq[index].windchill.toFixed(1);
@@ -1120,24 +1120,29 @@ var app = {
 				$("#detail_dle_ireq").html( dle_min );	
 			}
 			else if( draw_heat_gauge ){
-				$("div[data-context='cold'],div[data-context='neutral']").hide();
+				$("div[data-context='cold'],div[data-context='phs'],div[data-context='neutral']").hide();
 				$("div[data-context='heat']").show();
+				
 				
 				$("#detail_wbgt_iso7243").html( wbgt_eff.toFixed(1) );
 				$("#detail_ral_iso7243").html( ral.toFixed(1) );
 				
-				let d_tre = this.knowledgeBase.thermalindices.phs[ index].D_Tre ? this.knowledgeBase.thermalindices.phs[ index].D_Tre : ">120";
-				let d_sw = this.knowledgeBase.thermalindices.phs[ index].Dwl50;
-				let sw_tot_per_hour = 0.001 * 60 * this.knowledgeBase.thermalindices.phs[ index].SWtotg / 
-				(this.knowledgeBase.sim.duration ); //liter per hour
-				sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
+				if( wbgt_eff >= ral ){
+					$("div[data-context='phs']").show();
+					let d_tre = this.knowledgeBase.thermalindices.phs[ index].D_Tre ? this.knowledgeBase.thermalindices.phs[ index].D_Tre : ">120";
+					let d_sw = this.knowledgeBase.thermalindices.phs[ index].Dwl50;
+					let sw_tot_per_hour = 0.001 * 60 * this.knowledgeBase.thermalindices.phs[ index].SWtotg / 
+					(this.knowledgeBase.sim.duration ); //liter per hour
+					sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
 				
-				$("#detail_sweat").html( sw_tot_per_hour );
-				$("#detail_dle_phs").html( d_tre );
+					$("#detail_sweat").html( sw_tot_per_hour );
+					$("#detail_dle_phs").html( d_tre );
+				}
+
 			}
 			else{
-				$("div[data-context='cold'],div[data-context='heat']").hide();
-				$("div[data-context='neutral']").hide();
+				$("div[data-context='cold'],div[data-context='phs'],div[data-context='heat']").hide();
+				$("div[data-context='neutral']").show();
 			}
 		}
 		else if( this.currentPageID == "settings" ){
