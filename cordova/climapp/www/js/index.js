@@ -1407,7 +1407,7 @@ var app = {
 			ctx.canvas.height = width;
 			ctx.canvas.width = width;
 		}
-		var title = key === "cold" ? gaugeTitleCold( Math.abs(value)) : gaugeTitleHeat( Math.abs(value));
+		var title = value < 0 ? gaugeTitleCold( Math.abs(value)) : gaugeTitleHeat( Math.abs(value));
 		var highlights =  this.knowledgeBase.gauge.highlights;
 		var gauge = new RadialGauge({
 		    renderTo: id,
