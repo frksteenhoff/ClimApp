@@ -282,7 +282,8 @@ img.small{
 }
 
 .panel.settings div.inlineitems.last,
-.panel.settings div.last
+.panel.settings div.last, 
+.panel.settings_other div.last
  {
     border-bottom: hidden;
 }
