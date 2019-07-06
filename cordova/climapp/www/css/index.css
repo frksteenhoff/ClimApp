@@ -271,6 +271,9 @@ img.small{
 
 /* Settings related */
 
+.panel.top {
+    margin-top: 4em;
+} 
 
 .panel.settings div {
     margin-bottom: 0.5em;
@@ -326,7 +329,6 @@ div.inlineitems.line .totheright {
 .navigation_back_dashboard {
     color: #fff;
     padding-left: 0.5em;
-
     /*background: #fff;
     vertical-align: middle;
     position: fixed;
@@ -335,6 +337,16 @@ div.inlineitems.line .totheright {
     background: rgba(255,255,255,1);  
     margin:0;*/
 }
+
+.navigation_back_settings {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: rgba(255,255,255,0.3);  
+    margin: 0em;
+
+}
+
 
 /* END navigation bar style */
 
