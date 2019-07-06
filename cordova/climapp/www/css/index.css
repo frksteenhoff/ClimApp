@@ -338,7 +338,8 @@ div.inlineitems.line .totheright {
     margin:0;*/
 }
 
-.navigation_back_settings {
+.navigation_back_settings, 
+.navigation_back_dashboard   {
     position: fixed;
     top: 0;
     width: 100%;
