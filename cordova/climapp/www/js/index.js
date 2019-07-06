@@ -269,6 +269,15 @@ var app = {
 			self.updateLocation();
 		});		
 	},
+	initDashboardListeners: function(){
+		var self = this;
+		$("div[data-listener='tab']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='tab']").on("click", function(){
+			var target = $(this).attr("data-target");
+			// Load feedback page when pressing gauge in dashboard
+			self.loadUI(target);
+		});
+	},
 	initDashboardSwipeListeners: function() {
 		var self = this;
 		$("div[data-listener='panel']").off(); //prevent multiple instances of listeners on same object
@@ -984,6 +993,7 @@ var app = {
 			$("#main_panel").show();
 			$("#tip_panel").show();
 
+			this.initDashboardListeners();
 			this.initDashboardSwipeListeners();
 			this.initGeolocationListeners();
 			this.initActivityListeners();
