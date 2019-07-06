@@ -88,22 +88,37 @@ var app = {
 	},
 	initFeedbackListeners: function() {
 		var self = this;
+		$("i[data-listener='reset_adaptation']").off(); //prevent multiple instances of listeners on same object
+		$("i[data-listener='reset_adaptation']").on("click", function() {
+			var mode = self.knowledgeBase.user.adaptation.mode;
+			var diff_array = self.knowledgeBase.user.adaptation[mode].diff;
+
+			// Reetting diff
+			diff_array.unshift(0);
+			self.saveSettings();
+			showShortToast("Adaptation level reset to 0")
+
+			// Update adaptation level and diff from prediction
+			$("#gauge_text_top_current").html("Difference from system prediction: " + getSliderDiffFromSystemPrediction(self.knowledgeBase, mode, 0));
+			$("#gauge_text_top_diff").html("Current adaptation level: " + diff_array[0].toFixed(2));
+		});
+
 		$("input[data-listener='slider']").off(); //prevent multiple instances of listeners on same object
 		$("input[data-listener='slider']").change(function() {
 
 			var slider_value = this.value; 
 		    self.knowledgeBase.user.guards.feedbackSliderChanged = 1;
-
+			
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want?
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
 				([width, value, thermal, tip_html]) => {//
 					self.drawGauge( 'feedback_gauge', width, slider_value , thermal );
+					$("#gauge_text_top_current").html("Difference from system prediction: " + getSliderDiffFromSystemPrediction(self.knowledgeBase, thermal, slider_value));
 
 					// Set the value as the perceived value in knowledgebase
 					self.knowledgeBase.user.adaptation[thermal].perceived = slider_value;
 					self.saveSettings();
-					console.log("slider: " + slider_value + " predicted: " + self.knowledgeBase.user.adaptation[thermal].predicted + " value " + value + " sliderchanged " + self.knowledgeBase.user.guards.feedbackSliderChanged);
 			});
 			self.saveSettings();
 		});
@@ -115,7 +130,7 @@ var app = {
 			
 			// Updating rating bar using first char in ID
 			var rating_id = $(this).attr("id")[0];
-			
+
 			if(rating_id === '1') {
 				self.knowledgeBase.feedback.question1.rating = target;
 				$("#ratingtext1").html( self.knowledgeBase.feedback.question1.ratingtext[self.knowledgeBase.feedback.question1.rating] );
@@ -138,16 +153,11 @@ var app = {
 			let mode = self.knowledgeBase.user.adaptation.mode;
 			let perceived_predicted_diff = 0;
 			self.knowledgeBase.feedback.comment = target;
-			// Only push diff to array on submit
-			if(self.knowledgeBase.user.guards.feedbackSliderChanged){
-			    perceived_predicted_diff = (self.knowledgeBase.user.adaptation[mode].perceived -
-			                                    self.knowledgeBase.user.adaptation[mode].predicted);
-			} else {
-			    self.knowledgeBase.user.adaptation[mode].perceived = self.knowledgeBase.user.adaptation[mode].predicted;
-			    perceived_predicted_diff = 0;
-			}
+			// Only push diff to array on submit, otherwise we assume user is content with adaptation level
+			perceived_predicted_diff = (self.knowledgeBase.user.adaptation[mode].perceived -
+			                            self.knowledgeBase.user.adaptation[mode].predicted);
+			
 			var diff_array = self.knowledgeBase.user.adaptation[mode].diff;
-			console.log("diff: " + perceived_predicted_diff);
 
 			if(perceived_predicted_diff !== "NaN") {
 				diff_array.unshift(perceived_predicted_diff);
@@ -371,7 +381,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.033,
+			"version": 2.034,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -474,11 +484,11 @@ var app = {
 								"rating": 3, 
 								"ratingtype": "ratingbar",
 								"ratingtext": {
-									"1": "Much lower than expected",
+									"5": "Much higher than expected",
+									"4": "Higher than expected",
+									"3": "Normal",
 									"2": "Lower than expected",
-								    "3": "Normal",
-							        "4": "Higher than expected",
-							        "5": "Much higher than expected"
+									"1": "Much lower than expected"
 								},
 							}, 
 							"question2": {
@@ -486,11 +496,11 @@ var app = {
 								"rating": 3, 
 								"ratingtype": "ratingbar",
 								"ratingtext": {
-									"1": "Not exhausted at all",
-									"2": "Less exhausted than usual",
-									"3": "Normal",
+									"5": "A lot more exhausted than usual",
 									"4": "More exhausted than usual",
-									"5": "A lot more exhausted than usual"
+									"3": "Normal",
+									"2": "Less exhausted than usual",
+									"1": "Not exhausted at all",
 								},
 							},
 							"question3": {
@@ -498,11 +508,11 @@ var app = {
 								"rating": 3, 
 								"ratingtype": "ratingbar",
 								"ratingtext": {
-									"1": "Much less than needed",
-									"2": "Less than needed",
-									"3": "I wore the right amount of clothing",
+									"5": "A lot more than needed",
 									"4": "A little too much clothing",
-									"5": "A lot more than needed"
+									"3": "I wore the right amount of clothing",
+									"2": "Less than needed",
+									"1": "Much less than needed"
 								},
 							},
 							"comment": ""
@@ -1170,15 +1180,22 @@ var app = {
 			let index = 0; // 0 = current situation -- is this what we want? -BK tricky tbd
 			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase).then( 
 				([width, value, thermal, tip_html]) => {//
+					$("#gauge_text_top_diff").hide();
 					this.drawGauge( 'feedback_gauge', width, value, thermal );
 					$("#feedback_slider").val(value);
 					this.knowledgeBase.user.adaptation.mode = thermal;
 					// Save current gauge value as original value
 					this.knowledgeBase.user.adaptation[thermal].predicted = value;
 					this.saveSettings();
-					
+					var diff_array = this.knowledgeBase.user.adaptation[thermal].diff; 
 					// Set text around gauge and slider
 					$("#gauge_text_top").html(this.knowledgeBase.feedback.gauge.text_top);
+					if(diff_array.length >= 1) {
+						$("#gauge_text_top_diff").show();
+						$("#gauge_text_top_diff").html("Current adaptation level: " + diff_array[0].toFixed(2));
+					}
+
+					$("#gauge_text_top_current").html("Difference from system prediction: " + getSliderDiffFromSystemPrediction(this.knowledgeBase, thermal, value));
 					$("#gauge_text_bottom").html(this.knowledgeBase.feedback.gauge.text_bottom);
 					
 					// Question text
@@ -1263,7 +1280,8 @@ var app = {
 	},
 	determineThermalIndexValue: function( cold, heat, index, diff ){
 		let value = cold > heat ? -cold : heat;
-		// why is value used to calculate both cold and heat gauge?? faulty logic
+		// why is the variable value used to calculate both cold and heat gauge?? faulty logic 
+		// (can you use the value as you overwrite it?)
 		
 		//bk: the thermal index is either a hot or cold one, both are defined differntly. 
 		// this function unifies the thermal index value. it is either -cold if it is cold, or heat if it is hot.
