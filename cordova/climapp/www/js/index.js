@@ -753,7 +753,6 @@ var app = {
 						function( output ){//on success
 							try{
 								let weather = JSON.parse( output );
-								console.log( weather );
 								self.knowledgeBase.weather.station = weather.station;
 								self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
 								self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
@@ -787,7 +786,9 @@ var app = {
 								
 								
 								self.knowledgeBase.weather.clouds = weather.clouds.map(Number);
+						
 								self.knowledgeBase.weather.clouds.unshift( Number( weather.currentweather.clouds ) );
+								
 								
 								
 								self.knowledgeBase.weather.humidity = weather.rh.map(Number);
