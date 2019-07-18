@@ -675,9 +675,9 @@ var app = {
 			obj_array.push({description: "Male", value: "Male" } );
 		}
 		else if (key === "unit"){
-			obj_array.push({description: "SI: kg, cm, m/s, Celcius", value: "SI" } );
+			obj_array.push({description: "SI: kg, cm, m/s, Celsius", value: "SI" } );
 			obj_array.push({description: "US: lbs, inch, m/s, Fahrenheit", value: "US" } );
-			obj_array.push({description: "UK: stone, inch, m/s, Celcius", value: "UK" } );
+			obj_array.push({description: "UK: stone, inch, m/s, Celsius", value: "UK" } );
 		}
 		else if( key === "windspeed" ){
 			obj_array.push({description: "No wind", value: "No Wind" } );
