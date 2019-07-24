@@ -570,7 +570,7 @@ var app = {
 						 "details": "./pages/details.html",
 		 				 "about": "./pages/about.html"};
 		this.selectedWeatherID = 0;
-		this.maxForecast = 8;
+		this.maxForecast = 8; //8x3h = 24h
 		//localStorage.clear(); // Need to clear local storage when doing the update
 		var shadowKB = this.initKnowledgeBase();
 		var msgString = ""; // String deciding message to show in console/toast
