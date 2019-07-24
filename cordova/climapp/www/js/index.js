@@ -93,18 +93,54 @@ var app = {
 		$("i[data-listener='reset_adaptation']").off(); //prevent multiple instances of listeners on same object
 		$("i[data-listener='reset_adaptation']").on("click", function() {
 			var mode = self.knowledgeBase.user.adaptation.mode;
-			var diff_array = self.knowledgeBase.user.adaptation[mode].diff;
 
-			// Reetting diff
-			diff_array.unshift(0);
+			// Resetting diff
+			self.knowledgeBase.user.adaptation[mode].diff = [0];
 			self.saveSettings();
-			showShortToast("Adaptation level reset to 0")
+			showShortToast("Adaptation level reset to 0");
+			let index = 0; // 0 = current situation -- is this what we want?
+			
+			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
+				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
+					self.drawGauge( 'feedback_gauge', width, personalvalue , thermal );
+					$("#gauge_text_top_current").html("Personal "+ thermal+" adaptation value: " + currentPal );
+					$("#gauge_text_top_diff").html("Current adaptation level: " + diff_array[0].toFixed(1));
+					// Set the value as the perceived value in knowledgebase
+					self.saveSettings();
+			});
 
 			// Update adaptation level and diff from prediction
-			$("#gauge_text_top_current").html("Difference from system prediction: " + getSliderDiffFromSystemPrediction(self.knowledgeBase, mode, 0));
-			$("#gauge_text_top_diff").html("Current adaptation level: " + diff_array[0].toFixed(2));
+
 		});
 
+
+		$("div[data-listener='adaptation']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='adaptation']").on('click', function() {
+			var thermal = $( this ).attr("data-context");
+			console.log("adaptation context: " + thermal);
+			
+			var currentPAL_ = self.knowledgeBase.user.adaptation[thermal].diff;
+			var currentPAL = 0;
+			if( currentPAL_.length > 0 ){
+				currentPAL = currentPAL_[0];
+			}
+			console.log("OLD PAL : " + currentPAL);
+			
+			currentPAL += 1.0* $( this ).attr("data-value");
+			self.knowledgeBase.user.adaptation[thermal].diff = [currentPAL];
+			console.log("new PAL : " + currentPAL);
+			
+			// Draw gauge with current index value 
+			let index = 0; // 0 = current situation -- is this what we want?
+			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
+				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
+					self.drawGauge( 'feedback_gauge', width, personalvalue , thermal );
+					$("#gauge_text_top_current").html("Personal "+ thermal+" adaptation value: " + currentPAL );
+
+					// Set the value as the perceived value in knowledgebase
+					self.saveSettings();
+			});
+		});
 		$("input[data-listener='slider']").off(); //prevent multiple instances of listeners on same object
 		$("input[data-listener='slider']").change(function() {
 
@@ -393,7 +429,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.034,
+			"version": 2.037,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -489,7 +525,7 @@ var app = {
 						"feedback": { 
 							"gauge": {
 								"text_top": "Your predicted score",
-								"text_bottom": "Slide to adjust how you experienced the day"
+								"text_bottom": "Tap the buttons to adjust the gauge to your thermal experience"
 							},
 							"question1": { 
 								"text": "How were your drinking needs?",
@@ -536,7 +572,7 @@ var app = {
 						"gauge":{
 							"highlights":[//color also in CSS, keep consistent
 						        { from: 3, to: 4, color:  'rgba(150,0,0,.9)', css:'veryhot'},
-						        { from: 2, to: 3, color: 'rgba(255,0,0,.9)', css:'hot'},
+						        { from: 2, to: 3, color: 'rgba(255,165,0,.9)', css:'hot'},
 						        { from: 1, to: 2, color: 'rgba(220,220,0,.9)', css:'warm'},
 						        { from: -1, to: 1, color: 'rgba(0,180,0,.9)', css:'neutral' },
 						        { from: -2, to: -1, color:  'rgba(0,180,180,.9)', css:'cool' },
@@ -1196,7 +1232,6 @@ var app = {
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					$("#gauge_text_top_diff").hide();
 					this.drawGauge( 'feedback_gauge', width, personalvalue, thermal );
-					$("#feedback_slider").val(personalvalue);
 					this.knowledgeBase.user.adaptation.mode = thermal;
 					// Save current gauge value as original value
 					this.knowledgeBase.user.adaptation[thermal].predicted = modelvalue;
@@ -1206,11 +1241,12 @@ var app = {
 					$("#gauge_text_top").html(this.knowledgeBase.feedback.gauge.text_top);
 					if(diff_array.length >= 1) {
 						$("#gauge_text_top_diff").show();
-						$("#gauge_text_top_diff").html("Current adaptation level: " + diff_array[0].toFixed(2));
+						$("#gauge_text_top_diff").html("Personal "+thermal+" adaptation level: " + diff_array[0].toFixed(1));
 					}
 
-					$("#gauge_text_top_current").html("Difference from system prediction: " + getSliderDiffFromSystemPrediction(this.knowledgeBase, thermal, personalvalue));
 					$("#gauge_text_bottom").html(this.knowledgeBase.feedback.gauge.text_bottom);
+					
+					$("div[data-listener='adaptation']").attr("data-context", thermal);
 					
 					// Question text
 					$("#question1").html( this.knowledgeBase.feedback.question1.text );
@@ -1240,11 +1276,22 @@ var app = {
 		}
 	},
 	getDrawGaugeParamsFromIndex: async function(index, kb) {
+		
+		console.log( "getDrawGaugeParamsFromIndex " + index );
 		let icl_min = kb.thermalindices.ireq[index].ICLminimal;
 		let icl_worn = getClo(kb);
 		let cold_index = icl_min - icl_worn; // minimal - worn, if negative you do not wear enough clothing
+		
+		console.log( "cold_index " + cold_index );
+		
 		let personal_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, true );
+		
+		console.log( "personal_heat_index " + personal_heat_index );
+		
 		let model_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, false );
+		
+		console.log( "model_heat_index " + model_heat_index );
+		
 		
 		let draw_cold_gauge = this.isDrawColdGauge( cold_index, personal_heat_index, index );
 		let draw_heat_gauge = this.isDrawHeatGauge( cold_index, personal_heat_index, index );
@@ -1252,8 +1299,15 @@ var app = {
 		let tip_html = "";
 		let thermal = draw_cold_gauge ? "cold" : "heat";
 		let level = kb.user.settings.level;
+		
+		console.log( "level " + level );
+		
 		let personal_value = this.determineThermalIndexValue( cold_index, personal_heat_index, index );
 		let model_value = this.determineThermalIndexValue( cold_index, model_heat_index, index );
+	
+	
+		console.log( "personal_value " + personal_value );
+		console.log( "model_value " + model_value );
 	
 		if( draw_cold_gauge || ( isNeutral && cold_index > personal_heat_index ) ) {
 			tip_html += coldLevelTips( index, level, kb, cold_index, this.currentPageID );
@@ -1266,10 +1320,10 @@ var app = {
 		let windowsize = $( window ).width();
 		let width = windowsize / 2.5;
 
-		// Schedule a notification if weather conditions are out of the ordinary (more than 2.5 or -2.5)
-		let lowerLimit = -2.5; // TODO: we need to decide on these values
-		let upperLimit = 2.5;
-		if(value < lowerLimit || value > upperLimit) {
+		// Schedule a notification if weather conditions are out of the ordinary (more than 2 or ess -1)
+		let lowerLimit = -1; // TODO: we need to decide on these values
+		let upperLimit = 2;
+		if(personal_value < lowerLimit || personal_value > upperLimit) {
 			if(kb.user.guards.receivesNotifications) {
 				//this.scheduleDefaultNotification();
 			} else {
@@ -1302,11 +1356,11 @@ var app = {
 		//by default it is the largest one (if cold > heat -> then cold etc)
 		value = this.isDrawColdGauge( cold, heat, index ) ? -cold : value;
 		value = this.isDrawHeatGauge( cold, heat, index ) ? heat : value;
-		console.log("personalized gauge value: " + (value ) + " actual: " + value + " diff: " + diff);
 		return Math.max( -4, Math.min( 4, value  ) );//value between -4 and +4
 	},
 	updateInfo: function( index ){
 		var self = this;
+		console.log( "update info " + index );
 		if( this.knowledgeBase.thermalindices.ireq.length > 0 ){
 			let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
 			let utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ index ].utc ); //
@@ -1373,6 +1427,8 @@ var app = {
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit)); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
 			
+			console.log( "ireq info - "+ index +" " + JSON.stringify( this.knowledgeBase.thermalindices.ireq ) );
+			
 			//weather icon
 			let clouds = this.knowledgeBase.thermalindices.ireq[index].clouds;
 			let rain = this.knowledgeBase.thermalindices.ireq[index].rain;
@@ -1421,9 +1477,12 @@ var app = {
 			}
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
 		    
+			console.log("update info draw gauge");
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
+					console.log("update info draw gauge phase 2 " + [width, personalvalue, modelvalue, thermal, tip_html]);
 					self.drawGauge( 'main_gauge', width, personalvalue, thermal );
+					
 					$("#tips").html( tip_html ); 
 					$("#circle_gauge_color").css("color", getCurrentGaugeColor(personalvalue));
 					$("#main_panel").fadeIn(500);
@@ -1478,7 +1537,9 @@ var app = {
 			needleType: "line",
 			needleShadow: true,
 		    animationRule: 'elastic',
-		    animationDuration: 3000
+		    animationDuration: 3000,
+			fontNumbersSize: 30,
+			fontValueSize: 30,
 		});
 		gauge.draw();
 	},

@@ -9,13 +9,18 @@
 		<p class="rating_text" id="gauge_text_top_current"> </p>
 		
 		<div class="flexbox-2">
-			<div class="button" data-listener="adaptation" data-value="-0.25">&minus; colder</div>
-			<div class="button" data-listener="adaptation" data-value="0.25">&plus; warmer</div>
+			<div class="even">
+				<div class="button" data-listener="adaptation" data-context="unknown" data-value="-0.25">&minus; colder</div>
+			</div>
+			<div class="even">
+				<div class="button" data-listener="adaptation" data-context="unknown" data-value="0.25">&plus; warmer</div>
+			</div>
 		</div>
-		
+		<!--
 		<div class="slidecontainer">
 			<input type="range" min="-4" max="4" step="0.25" class="rangeslider" id="feedback_slider" data-listener="slider">
 		</div>
+		-->
 		<p class="rating_text" id="gauge_text_bottom"></p>
 	</div>
 

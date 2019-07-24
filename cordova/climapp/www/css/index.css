@@ -182,6 +182,7 @@ canvas{
 	color: #000;
 	background: #ffffff;
 	border-radius: 0.2em;
+	padding:0.1em;
 	text-align:center;
 	border: 1px solid rgba(200, 200, 200, 0.8);
 	box-shadow: 3px 3px rgba(155, 155, 155, 0.2);
@@ -428,7 +429,7 @@ div.inlineitems.line .totheright {
 	color: rgba(180,180,0,.9);
 }
 .gallery .hot{
-	color: rgba(255,100,0,.9);
+	color: rgba(255,165,0,.9);
 }
 .gallery .veryhot{
 	color: rgba(180,0,0,.9);
