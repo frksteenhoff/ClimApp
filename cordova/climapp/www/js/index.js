@@ -88,12 +88,19 @@ var app = {
 			self.loadUI( target );
 		});
 	},
+	initToggleListeners: function(){
+		$("div[data-listener='toggle']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='toggle']").on("click", function() {
+			let target = $(this).attr("data-target");
+			$("#"+target).toggle();
+		});
+	},
 	initFeedbackListeners: function() {
 		var self = this;
 		$("i[data-listener='reset_adaptation']").off(); //prevent multiple instances of listeners on same object
 		$("i[data-listener='reset_adaptation']").on("click", function() {
 			var mode = self.knowledgeBase.user.adaptation.mode;
-
+			console.log("mode: " + mode);
 			// Resetting diff
 			self.knowledgeBase.user.adaptation[mode].diff = [0];
 			self.saveSettings();
@@ -103,10 +110,9 @@ var app = {
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					self.drawGauge( 'feedback_gauge', width, personalvalue , thermal );
-					$("#gauge_text_top_current").html("Personal "+ thermal+" adaptation value: " + currentPal );
-					$("#gauge_text_top_diff").html("Current adaptation level: " + diff_array[0].toFixed(1));
+					$("#gauge_text_top_diff").html("Current adaptation level: 0");
+					
 					// Set the value as the perceived value in knowledgebase
-					self.saveSettings();
 			});
 
 			// Update adaptation level and diff from prediction
@@ -135,7 +141,7 @@ var app = {
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					self.drawGauge( 'feedback_gauge', width, personalvalue , thermal );
-					$("#gauge_text_top_current").html("Personal "+ thermal+" adaptation value: " + currentPAL );
+					$("#gauge_text_top_diff").html("Personal "+ thermal+" adaptation value: " + currentPAL );
 
 					// Set the value as the perceived value in knowledgebase
 					self.saveSettings();
@@ -191,6 +197,10 @@ var app = {
 			let mode = self.knowledgeBase.user.adaptation.mode;
 			let perceived_predicted_diff = 0;
 			self.knowledgeBase.feedback.comment = target;
+			
+			/*
+			//BK: I commented out below code because adaptation[mode].diff is updated on click already - to be discussed further. 
+			
 			// Only push diff to array on submit, otherwise we assume user is content with adaptation level
 			perceived_predicted_diff = (self.knowledgeBase.user.adaptation[mode].perceived -
 			                            self.knowledgeBase.user.adaptation[mode].predicted);
@@ -198,8 +208,11 @@ var app = {
 			var diff_array = self.knowledgeBase.user.adaptation[mode].diff;
 
 			if(perceived_predicted_diff !== "NaN") {
-				diff_array.unshift(perceived_predicted_diff);
+				diff_array.unshift(perceived_predicted_diff); 
 			}
+			*/
+			
+			
 			// If user not in database, add user to database
 			self.checkIfUserExistInDB();
 
@@ -320,33 +333,52 @@ var app = {
 	initDashboardSwipeListeners: function() {
 		var self = this;
 		$("div[data-listener='panel']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='panel']").on("swiperight", function(){
-			var target = $(this).attr("data-target");
+		$("div[data-listener='panel']").on({
+			"swiperight": function(){
+				var target = $(this).attr("data-target");
+				self.dashBoardSwipeHelper("right", target);
+			},
+			"swipeleft": function(){
+				var target = $(this).attr("data-target");
+				self.dashBoardSwipeHelper("left", target);
+			}
+		});
+		$("#forecast_right").off().on( "click", function(){				
+			self.dashBoardSwipeHelper("left", "forecast");//right button is swipe left
+		});
+		$("#forecast_left").off().on( "click", function(){				
+				self.dashBoardSwipeHelper("right", "forecast");//left button is swipe right
+		});
+		
+	},
+	dashBoardSwipeHelper: function( direction, target ){
+		var self = this;
+		console.log("selected weather id: " + this.selectedWeatherID);
+		if( direction === "right"){
 			if (target === "forecast"){
-				
-				if( self.selectedWeatherID === 0 ){
-					self.updateLocation();
+				if( this.selectedWeatherID === 0 ){
+					this.updateLocation();
 					$("#main_panel").fadeOut(2000, function(){});
 				}
 				else{
-					self.selectedWeatherID = Math.max(0, self.selectedWeatherID-1);
+					this.selectedWeatherID = Math.max(0, this.selectedWeatherID-1);
 					$("#main_panel").fadeOut(500, function(){
 						self.updateInfo( self.selectedWeatherID );
 					});
 				}
 			}else{
-				self.loadUI(target);
+				this.loadUI(target);
 			}
-		});
-		$("div[data-listener='panel']").on("swipeleft", function(){
-			var target = $(this).attr("data-target");
+		}
+		else{
 			if (target === "forecast"){
-				self.selectedWeatherID = Math.min( self.maxForecast, self.selectedWeatherID+1);
+				this.selectedWeatherID = Math.min( this.maxForecast, this.selectedWeatherID+1);				
 				$("#main_panel").fadeOut(500, function(){
 					self.updateInfo( self.selectedWeatherID );
 				});
 			}
-		});
+		}
+		
 	},
 	initActivityListeners: function(){
 		var self = this;
@@ -763,8 +795,7 @@ var app = {
 				self.knowledgeBase.position.timestamp = new Date( position.timestamp ).toJSON();
 				console.log( "loc found: " + position.coords.latitude + "," + position.coords.longitude );
 				self.updateWeather();
-				//setTimeout( function(){ $('i.fa-sync-alt').toggleClass("fa-spin") }, 1000 );
-				
+				//setTimeout( function(){ $('i.fa-sync-alt').toggleClass("fa-spin") }, 1000 );	
 			}, 
 			function( error ){ //on error
 				showShortToast("Could not retrieve location.");
@@ -1038,6 +1069,7 @@ var app = {
 			this.initGeolocationListeners();
 			this.initActivityListeners();
 			this.initMenuListeners();
+			this.initToggleListeners();
 			
 			let selected = this.knowledgeBase.user.settings.activity_selected;
 			$("#dashboard_activity").html( this.knowledgeBase.activity.label[ selected ] );
@@ -1223,6 +1255,7 @@ var app = {
 		else if( this.currentPageID == "feedback" ){
 			$(".navigation").hide();
 			$(".navigation_back_settings").show();
+			this.initToggleListeners();
 			this.initFeedbackListeners();
 			this.knowledgeBase.user.guards.feedbackSliderChanged = 0;
 
