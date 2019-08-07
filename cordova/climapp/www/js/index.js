@@ -107,10 +107,12 @@ var app = {
 			showShortToast("Adaptation level reset to 0");
 			let index = 0; // 0 = current situation -- is this what we want?
 			
-			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
+			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false ).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
+					self.drawAlertChart('alert_chart', width, thermal );
+					
 					self.drawGauge( 'feedback_gauge', width, personalvalue , thermal );
-					$("#gauge_text_top_diff").html("Current adaptation level: 0");
+					$("#gauge_text_top_diff").html("Current personal alert level: 0");
 					
 					// Set the value as the perceived value in knowledgebase
 			});
@@ -138,10 +140,12 @@ var app = {
 			
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want?
-			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
+			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
+					self.drawAlertChart('alert_chart', width, thermal );
+					
 					self.drawGauge( 'feedback_gauge', width, personalvalue , thermal );
-					$("#gauge_text_top_diff").html("Personal "+ thermal+" adaptation value: " + currentPAL );
+					$("#gauge_text_top_diff").html("Personal "+ thermal+" alert level: " + currentPAL );
 
 					// Set the value as the perceived value in knowledgebase
 					self.saveSettings();
@@ -155,7 +159,7 @@ var app = {
 			
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want?
-			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
+			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					self.drawGauge( 'feedback_gauge', width, slider_value , thermal );
 					$("#gauge_text_top_current").html("Difference from system prediction: " + getSliderDiffFromSystemPrediction(self.knowledgeBase, thermal, slider_value));
@@ -195,7 +199,6 @@ var app = {
 		$("div[data-listener='submit']").on("click", function(){
 			var target = $("#feedback_text").val();
 			let mode = self.knowledgeBase.user.adaptation.mode;
-			let perceived_predicted_diff = 0;
 			self.knowledgeBase.feedback.comment = target;
 			
 			/*
@@ -309,7 +312,7 @@ var app = {
 			self.saveSettings();
 		});
 		// Always add ability to swipe
-		$("div[data-listener='tab']").on("swipeleft", function(){
+		$("div[data-listener='tab']").off().on("swipeleft", function(){
 			window.SelectorCordovaPlugin.hideSelector(); // hide selector so that it is not shown in dashboard
 			self.loadUI("dashboard");
 		});
@@ -347,7 +350,7 @@ var app = {
 			self.dashBoardSwipeHelper("left", "forecast");//right button is swipe left
 		});
 		$("#forecast_left").off().on( "click", function(){				
-				self.dashBoardSwipeHelper("right", "forecast");//left button is swipe right
+			self.dashBoardSwipeHelper("right", "forecast");//left button is swipe right
 		});
 		
 	},
@@ -461,7 +464,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.037,
+			"version": 2.038,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -625,7 +628,7 @@ var app = {
 							}	
 						},
 						"sim":{
-							"duration": 240, //minutes (required for PHS)
+							"duration": 180, //minutes (required for PHS)
 						},
 					};
 	},
@@ -1100,142 +1103,144 @@ var app = {
 			$(".navigation_back_dashboard").show();
 			var index = this.selectedWeatherID;
 			
-			let tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
-			let rh = this.knowledgeBase.thermalindices.phs[index].rh.toFixed(0);
-			let clouds = this.knowledgeBase.thermalindices.phs[index].clouds.toFixed(0);
+			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, true ).then( 
+				([width, personalvalue, modelvalue, thermal, tip_html]) => {
+					console.log( "**** start cloud cover debugging in UpdateUI" );
+					console.log( "index: " + index );
+					console.log( JSON.stringify(this.knowledgeBase.thermalindices.phs[index]) );
+					console.log( "**** end cloud cover debugging" );
+					let tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
+					let rh = this.knowledgeBase.thermalindices.phs[index].rh.toFixed(0);
+					let clouds = this.knowledgeBase.thermalindices.phs[index].clouds.toFixed(0);
 			
-			let rad = this.knowledgeBase.thermalindices.phs[index].rad.toFixed(0);
-			let vair10 = this.knowledgeBase.thermalindices.phs[index].v_air10.toFixed(1);
-			let vair2 = this.knowledgeBase.thermalindices.phs[index].v_air.toFixed(1);
-			let tmrt = this.knowledgeBase.thermalindices.phs[index].Trad.toFixed(1);
-			let tglobe = this.knowledgeBase.thermalindices.phs[index].Tglobe.toFixed(1);
+					let rad = this.knowledgeBase.thermalindices.phs[index].rad.toFixed(0);
+					let vair10 = this.knowledgeBase.thermalindices.phs[index].v_air10.toFixed(1);
+					let vair2 = this.knowledgeBase.thermalindices.phs[index].v_air.toFixed(1);
+					let tmrt = this.knowledgeBase.thermalindices.phs[index].Trad.toFixed(1);
+					let tglobe = this.knowledgeBase.thermalindices.phs[index].Tglobe.toFixed(1);
 			
-			let wbgt = this.knowledgeBase.thermalindices.phs[index].wbgt.toFixed(1);
-			let wbgt_eff = getWBGTeffective( wbgt, this.knowledgeBase );
-			let ral = RAL( this.knowledgeBase );
+					let wbgt = this.knowledgeBase.thermalindices.phs[index].wbgt.toFixed(1);
+					let wbgt_eff = getWBGTeffective( wbgt, this.knowledgeBase );
+					let ral = RAL( this.knowledgeBase );
+					let pal = getPAL( this.knowledgeBase, thermal);
+					let personal_ral = ral - pal;
 			
-			let windchill = this.knowledgeBase.thermalindices.phs[index].windchill.toFixed(1);
+					let windchill = this.knowledgeBase.thermalindices.phs[index].windchill.toFixed(1);
 			
-			let M = this.knowledgeBase.thermalindices.phs[index].M.toFixed(0);
-			let A = BSA( this.knowledgeBase ).toFixed(1);
+					let M = this.knowledgeBase.thermalindices.phs[index].M.toFixed(0);
+					let A = BSA( this.knowledgeBase ).toFixed(1);
 			
-			let Icl = (0.155 * this.knowledgeBase.thermalindices.phs[index].Icl);
-			Icl = Icl.toFixed(3);
+					let Icl = (0.155 * this.knowledgeBase.thermalindices.phs[index].Icl);
+					Icl = Icl.toFixed(3);
 
-			let p = this.knowledgeBase.thermalindices.phs[index].p.toFixed(2);
-			let im = this.knowledgeBase.thermalindices.phs[index].im_st.toFixed(2);
+					let p = this.knowledgeBase.thermalindices.phs[index].p.toFixed(2);
+					let im = this.knowledgeBase.thermalindices.phs[index].im_st.toFixed(2);
 			
 			
-			let utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ index ].utc ); //
-			let local_time = utc_date.toLocaleTimeString(navigator.language, { //language specific setting
-					hour: '2-digit',
-				    minute:'2-digit'
+					let utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ index ].utc ); //
+					let local_time = utc_date.toLocaleTimeString(navigator.language, { //language specific setting
+							hour: '2-digit',
+						    minute:'2-digit'
+					});
+			
+					$("#detail_time").html(local_time);
+			
+					$("#detail_airtemp").html(tair + "&deg;C");
+					$("#detail_rh").html(rh + "%");
+					$("#detail_clouds").html(clouds + "%");
+
+					$("#detail_wind10m").html(vair10 + "m/s");
+			
+					$("#detail_wind2m").html(vair2 + "m/s");
+					$("#detail_mrt").html(tmrt + "&deg;C");
+					$("#detail_tglobe").html(tglobe + "&deg;C");
+					$("#detail_rad").html(rad + "W/m<sup>2</sup>");
+					$("#detail_wbgt").html(wbgt + "&deg;C");
+					$("#detail_wbgt_eff").html( wbgt_eff.toFixed(1) + "&deg;C");
+					$("#detail_ral").html( ral.toFixed(1) + "&deg;C");
+					$("#detail_ral_pal").html( ral.toFixed(1) + "&deg;C");
+			
+					$("#detail_windchill").html(windchill + "&deg;C");
+			
+					$("#detail_metabolic").html(M + "W/m<sup>2</sup>");
+					$("#detail_area").html(A + "m<sup>2</sup>")
+			
+					$("#detail_icl").html(Icl + "m<sup>2</sup>K/W");
+					$("#detail_p").html(p);
+					$("#detail_im").html(im);
+			
+					let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
+					let icl_worn = getClo(this.knowledgeBase);
+					let cold_index = icl_min - icl_worn; // minimal - worn, if negative you do not wear enough clothing
+	
+					let heat_index = WBGTrisk( wbgt, this.knowledgeBase );
+			
+					let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
+					let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
+					let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
+			
+					
+					$("#moreinformation").html( tip_html );
+				
+					
+					if( personalvalue <= -1 ){
+						$("div[data-context='heat'],div[data-context='phs'],div[data-context='neutral']").hide();
+						$("div[data-context='cold']").show();
+				
+						let windchill = this.knowledgeBase.thermalindices.ireq[index].windchill.toFixed(1);
+						let windrisk = windchillRisk( windchill );
+						let windriskcat = windrisk ? "a risk of frostbite in" : "no risk of frostbite";
+						$("#detail_windchill").html( windchill);
+						$("#detail_windriskcat").html( windriskcat );
+						if( windrisk ){
+							$("#detail_windrisk").html( windrisk + " minutes");
+						}
+				
+						let icl_max = this.knowledgeBase.thermalindices.ireq[ index].ICLneutral;
+				
+						let dle_min = 60 * this.knowledgeBase.thermalindices.ireq[ index].DLEminimal;
+						dle_min = dle_min.toFixed(0);
+				
+						let activity = this.knowledgeBase.user.settings.activity_selected;
+						$("#detail_activity_ireq").html(activity);
+						$("#detail_icl_max").html( icl_max );
+						$("#detail_icl_min").html( icl_min );
+				
+						let minicon = clothingIcon( icl_min);
+						let maxicon = clothingIcon( icl_max);
+				
+						$("#detail_min_clo").html("<img src='"+minicon+"' class='small'/>");
+						$("#detail_max_clo").html("<img src='"+maxicon+"' class='small'/>");
+				
+						$("#detail_dle_ireq").html( dle_min );	
+					}
+					else if( personalvalue >= 1  ){
+						$("div[data-context='cold'],div[data-context='phs'],div[data-context='neutral']").hide();
+						$("div[data-context='heat']").show();
+				
+				
+						$("#detail_wbgt_iso7243").html( wbgt_eff.toFixed(1) );
+						$("#detail_ral_iso7243").html( ral.toFixed(1) );
+				
+						if( wbgt_eff >= (ral-pav) ){
+							$("div[data-context='phs']").show();
+							let d_tre = this.knowledgeBase.thermalindices.phs[ index].D_Tre ? this.knowledgeBase.thermalindices.phs[ index].D_Tre : ">120";
+							let d_sw = this.knowledgeBase.thermalindices.phs[ index].Dwl50;
+							let sw_tot_per_hour = 0.001 * this.knowledgeBase.thermalindices.phs[ index].SWtotg / 
+							(this.knowledgeBase.sim.duration / 60 ); //liter per hour
+							sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
+				
+							$("#detail_sweat").html( sw_tot_per_hour );
+							$("#detail_dle_phs").html( d_tre );
+						}
+
+					}
+					else{
+						$("div[data-context='cold'],div[data-context='phs'],div[data-context='heat']").hide();
+						$("div[data-context='neutral']").show();
+					}
 			});
 			
-			$("#detail_time").html(local_time);
-			
-			$("#detail_airtemp").html(tair + "&deg;C");
-			$("#detail_rh").html(rh + "%");
-			$("#detail_clouds").html(clouds + "%");
-
-			$("#detail_wind10m").html(vair10 + "m/s");
-			
-			$("#detail_wind2m").html(vair2 + "m/s");
-			$("#detail_mrt").html(tmrt + "&deg;C");
-			$("#detail_tglobe").html(tglobe + "&deg;C");
-			$("#detail_rad").html(rad + "W/m<sup>2</sup>");
-			$("#detail_wbgt").html(wbgt + "&deg;C");
-			$("#detail_wbgt_eff").html( wbgt_eff.toFixed(1) + "&deg;C");
-			$("#detail_ral").html( ral.toFixed(1) + "&deg;C");
-			
-			$("#detail_windchill").html(windchill + "&deg;C");
-			
-			$("#detail_metabolic").html(M + "W/m<sup>2</sup>");
-			$("#detail_area").html(A + "m<sup>2</sup>")
-			
-			$("#detail_icl").html(Icl + "m<sup>2</sup>K/W");
-			$("#detail_p").html(p);
-			$("#detail_im").html(im);
-			
-			let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
-			let icl_worn = getClo(this.knowledgeBase);
-			let cold_index = icl_min - icl_worn; // minimal - worn, if negative you do not wear enough clothing
-	
-			let heat_index = WBGTrisk( wbgt, this.knowledgeBase );
-			
-			let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
-			let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
-			let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
-			
-			var tip_html = "";
-			if( draw_cold_gauge || ( isNeutral && icl_min > heat_index ) ) {
-				tip_html += coldLevelTips( index, 2, this.knowledgeBase, cold_index, this.currentPageID );
-				$("#moreinformation").html( tip_html );
-				
-			}
-			else{
-				heatLevelTips( index, 2, this.knowledgeBase, this.currentPageID ).then( (data) =>{
-					tip_html += data;
-					console.log("tips: " + data);
-					$("#moreinformation").html( tip_html );
-				});
-			}
-			if( draw_cold_gauge ){
-				$("div[data-context='heat'],div[data-context='phs'],div[data-context='neutral']").hide();
-				$("div[data-context='cold']").show();
-				
-				let windchill = this.knowledgeBase.thermalindices.ireq[index].windchill.toFixed(1);
-				let windrisk = windchillRisk( windchill );
-				let windriskcat = windrisk ? "a risk of frostbite in" : "no risk of frostbite";
-				$("#detail_windchill").html( windchill);
-				$("#detail_windriskcat").html( windriskcat );
-				if( windrisk ){
-					$("#detail_windrisk").html( windrisk + " minutes");
-				}
-				
-				let icl_max = this.knowledgeBase.thermalindices.ireq[ index].ICLneutral;
-				
-				let dle_min = 60 * this.knowledgeBase.thermalindices.ireq[ index].DLEminimal;
-				dle_min = dle_min.toFixed(0);
-				
-				let activity = this.knowledgeBase.user.settings.activity_selected;
-				$("#detail_activity_ireq").html(activity);
-				$("#detail_icl_max").html( icl_max );
-				$("#detail_icl_min").html( icl_min );
-				
-				let minicon = clothingIcon( icl_min);
-				let maxicon = clothingIcon( icl_max);
-				
-				$("#detail_min_clo").html("<img src='"+minicon+"' class='small'/>");
-				$("#detail_max_clo").html("<img src='"+maxicon+"' class='small'/>");
-				
-				$("#detail_dle_ireq").html( dle_min );	
-			}
-			else if( draw_heat_gauge ){
-				$("div[data-context='cold'],div[data-context='phs'],div[data-context='neutral']").hide();
-				$("div[data-context='heat']").show();
-				
-				
-				$("#detail_wbgt_iso7243").html( wbgt_eff.toFixed(1) );
-				$("#detail_ral_iso7243").html( ral.toFixed(1) );
-				
-				if( wbgt_eff >= ral ){
-					$("div[data-context='phs']").show();
-					let d_tre = this.knowledgeBase.thermalindices.phs[ index].D_Tre ? this.knowledgeBase.thermalindices.phs[ index].D_Tre : ">120";
-					let d_sw = this.knowledgeBase.thermalindices.phs[ index].Dwl50;
-					let sw_tot_per_hour = 0.001 * 60 * this.knowledgeBase.thermalindices.phs[ index].SWtotg / 
-					(this.knowledgeBase.sim.duration ); //liter per hour
-					sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
-				
-					$("#detail_sweat").html( sw_tot_per_hour );
-					$("#detail_dle_phs").html( d_tre );
-				}
-
-			}
-			else{
-				$("div[data-context='cold'],div[data-context='phs'],div[data-context='heat']").hide();
-				$("div[data-context='neutral']").show();
-			}
 		}
 		else if( this.currentPageID == "settings" ){
 			$(".navigation").show();
@@ -1261,9 +1266,10 @@ var app = {
 
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want? -BK tricky tbd
-			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase).then( 
+			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, false ).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					$("#gauge_text_top_diff").hide();
+					this.drawAlertChart('alert_chart', width, thermal );
 					this.drawGauge( 'feedback_gauge', width, personalvalue, thermal );
 					this.knowledgeBase.user.adaptation.mode = thermal;
 					// Save current gauge value as original value
@@ -1274,7 +1280,7 @@ var app = {
 					$("#gauge_text_top").html(this.knowledgeBase.feedback.gauge.text_top);
 					if(diff_array.length >= 1) {
 						$("#gauge_text_top_diff").show();
-						$("#gauge_text_top_diff").html("Personal "+thermal+" adaptation level: " + diff_array[0].toFixed(1));
+						$("#gauge_text_top_diff").html("Personal "+thermal+" alert level: " + diff_array[0].toFixed(1));
 					}
 
 					$("#gauge_text_bottom").html(this.knowledgeBase.feedback.gauge.text_bottom);
@@ -1308,7 +1314,7 @@ var app = {
 			$(".navigation_back_settings").show();
 		}
 	},
-	getDrawGaugeParamsFromIndex: async function(index, kb) {
+	getDrawGaugeParamsFromIndex: async function(index, kb, leveloverride ) {
 		
 		console.log( "getDrawGaugeParamsFromIndex " + index );
 		let icl_min = kb.thermalindices.ireq[index].ICLminimal;
@@ -1331,7 +1337,7 @@ var app = {
 		let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 		let tip_html = "";
 		let thermal = draw_cold_gauge ? "cold" : "heat";
-		let level = kb.user.settings.level;
+		let level = leveloverride ? 2 : kb.user.settings.level;
 		
 		console.log( "level " + level );
 		
@@ -1367,7 +1373,7 @@ var app = {
 	},
 	getDiff: function(kb, thermal){
 		// This lgoci is also used in dashboard.js function: heatlevelTips
-		getPAV( kb, thermal );
+		getPAL( kb, thermal );
 	},
 	// ireq only valid with temperatures less than 10
 	isDrawColdGauge: function( cold, heat, index ){
@@ -1393,7 +1399,6 @@ var app = {
 	},
 	updateInfo: function( index ){
 		var self = this;
-		console.log( "update info " + index );
 		if( this.knowledgeBase.thermalindices.ireq.length > 0 ){
 			let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
 			let utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ index ].utc ); //
@@ -1460,10 +1465,10 @@ var app = {
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit)); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
 			
-			console.log( "ireq info - "+ index +" " + JSON.stringify( this.knowledgeBase.thermalindices.ireq ) );
-			
 			//weather icon
 			let clouds = this.knowledgeBase.thermalindices.ireq[index].clouds;
+			
+			
 			let rain = this.knowledgeBase.thermalindices.ireq[index].rain;
 			let solar = this.knowledgeBase.thermalindices.ireq[index].rad; 
 			// should be rad rather than solar? solar not in thermalindices -BK: not necessarily, rad = solar radiation
@@ -1511,7 +1516,7 @@ var app = {
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
 		    
 			console.log("update info draw gauge");
-			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
+			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false ).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					console.log("update info draw gauge phase 2 " + [width, personalvalue, modelvalue, thermal, tip_html]);
 					self.drawGauge( 'main_gauge', width, personalvalue, thermal );
@@ -1521,6 +1526,57 @@ var app = {
 					$("#main_panel").fadeIn(500);
 			});
 		}
+	},
+	drawAlertChart: function( id, width, thermal ){
+		var ctx = document.getElementById(id).getContext('2d');
+		if( ctx.canvas.width !== width || ctx.canvas.height !== width){
+			ctx.canvas.height = width;
+			ctx.canvas.width = $("#gauge_div").width();
+		}
+		
+		var ral = RAL( this.knowledgeBase );
+		var pal = ral + getPAL( this.knowledgeBase, thermal );		
+		
+		var barChartData = {
+			labels: ['Standard','Personal' ],
+			datasets: [{
+				backgroundColor: 'rgba(255,255,255,0.9)',
+				borderColor: 'rgba(255,255,255,1)',
+				borderWidth: 1,
+				data: [
+					ral, pal
+				]
+			}]
+		};
+		new Chart(ctx, {
+			type: 'horizontalBar',
+			data: barChartData,
+			options: {
+				responsive: false,
+				legend: false,
+				scales: {
+		            yAxes: [{
+		                ticks: {
+							beginAtZero: true,
+							fontColor: 'rgba(255, 255, 255, 1)'
+		                },
+						gridLines:{
+							color: 'rgba(255, 255, 255, 1)'
+						}
+		            }],
+		            xAxes: [{
+		                ticks: {
+							beginAtZero: true,
+							fontColor: 'rgba(255, 255, 255, 1)'
+		                },
+						gridLines:{
+							color: 'rgba(255, 255, 255, 1)'
+						}
+		            }],
+					
+				}
+			}
+		});		
 	},
 	drawGauge: function( id, width, value, key ){
 		var c = $("#"+id), 

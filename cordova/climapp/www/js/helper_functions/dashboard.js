@@ -114,23 +114,33 @@ function getCAF(kb){
 	return ( clothingvalues[clokey] + headvalues[helmetkey] );
 }
 
+function isClothingCovering(kb){
+	let clothingvalues = { "Summer_attire": "no", 
+						"Business_suit": "yes",
+						"Double_layer": "yes",
+						"Cloth_coverall": "yes",
+						"Cloth_apron_long_sleeve": "yes",
+						"Vapour_barrier_coverall": "yes",
+						"Winter_attire": "yes" };
+   let clokey = kb.user.settings.clothing_selected;
+   return clothingvalues[clokey];
+}
+
 function getWBGTeffective(wbgt, kb){
 	let caf = getCAF(kb);
 	return 1.0 * wbgt + caf;
 }
 
-function getPAV(kb, thermal){ //personal adjustment value 
+function getPAL(kb, thermal){ //personal adjustment value 
 	return kb.user.adaptation[thermal].diff.length > 0 ? kb.user.adaptation[thermal].diff[0] : 0;
 }
-function calculatePAV(kb, thermal ){
-	
-}
+
 		   
 function WBGTrisk(wbgt, kb, isPersonalised ) {
 	let RAL_ = RAL(kb);
-	let PAV = isPersonalised ? getPAV(kb, "heat") : 0;//personal adjustment value
+	let PAL = isPersonalised ? getPAL(kb, "heat") : 0;//personal adjustment value
 	let wbgt_effective = getWBGTeffective(wbgt, kb);
-	let RAL_effective = (RAL_ - PAV);
+	let RAL_effective = (RAL_ - PAL);
 	let risk = wbgt_effective / RAL_effective;  
 	
 	if( risk <= 0.8 ){
@@ -165,19 +175,24 @@ function neutralTips() {
 }
 
 function heatLevelTips( index, level, kb, pageID ){
+	console.log( "heatLevelTips");
     return new Promise((resolve, reject) => {
 		var mode = "heat";
-		var adaptation = kb.user.adaptation[mode].diff.length > 0 ? kb.user.adaptation[mode].diff[0] : 0; 
+		var pav = getPAL( kb, mode);
 		var data = {
 			"mode": mode,
 			"level": level,
-			"wbgt": kb.thermalindices.phs[index].wbgt, // this does not take diff into account when fetching information?
+			"wbgt": kb.thermalindices.phs[index].wbgt,
+			"tair": kb.thermalindices.phs[index].Tair,
+			"rh": kb.thermalindices.phs[index].rh,
+			"pal": getPAL( kb, mode),
+			"watt": M( kb ) * BSA( kb ), //Watts
+			"covered": isClothingCovering(kb),
 			"caf": getCAF(kb),
 			"ral": RAL(kb),
 			"d_tre": kb.thermalindices.phs[ index].D_Tre,
 			"d_sw": kb.thermalindices.phs[ index].Dwl50,
 			"sw_tot_g": kb.thermalindices.phs[ index].SWtotg,
-			"wbgt_adaptation": adaptation
 		};
 		var url = "https://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
 		$.get( url, data).done( function(data, status, xhr){
