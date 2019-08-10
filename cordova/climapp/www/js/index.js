@@ -109,8 +109,6 @@ var app = {
 			
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false ).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
-					self.drawAlertChart('alert_chart', width, thermal );
-					
 					self.drawGauge( 'feedback_gauge', width, personalvalue , thermal );
 					$("#gauge_text_top_diff").html("Current personal alert level: 0");
 					
@@ -141,9 +139,7 @@ var app = {
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want?
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then( 
-				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
-					self.drawAlertChart('alert_chart', width, thermal );
-					
+				([width, personalvalue, modelvalue, thermal, tip_html]) => {//					
 					self.drawGauge( 'feedback_gauge', width, personalvalue , thermal );
 					$("#gauge_text_top_diff").html("Personal "+ thermal+" alert level: " + currentPAL );
 
@@ -560,7 +556,7 @@ var app = {
 						"feedback": { 
 							"gauge": {
 								"text_top": "Your predicted score",
-								"text_bottom": "Tap the buttons to adjust the gauge to your thermal experience"
+								"text_bottom": "Tap the buttons to adjust the gauge to your thermal experience."
 							},
 							"question1": { 
 								"text": "How were your drinking needs?",
@@ -634,6 +630,7 @@ var app = {
 	},
 	loadSettings: function(){
 		this.pageMap = { "dashboard": "./pages/dashboard.html",
+						 "forecast": "./pages/forecast.html",
 						 "settings": "./pages/settings.html",
 						 "feedback": "./pages/feedback.html",
 		 				 "onboarding": "./pages/onboarding.html",
@@ -642,7 +639,6 @@ var app = {
 		 				 "about": "./pages/about.html"};
 		this.selectedWeatherID = 0;
 		this.maxForecast = 8; //8x3h = 24h
-		//localStorage.clear(); // Need to clear local storage when doing the update
 		var shadowKB = this.initKnowledgeBase();
 		var msgString = ""; // String deciding message to show in console/toast
 
@@ -846,6 +842,9 @@ var app = {
 								self.knowledgeBase.weather.wbgt = weather.wbgt_min.map(Number);
 								self.knowledgeBase.weather.wbgt.unshift( Number( weather.currentweather.wbgt_min ) );
 								
+								self.knowledgeBase.weather.wbgt_max = weather.wbgt_max.map(Number);
+								self.knowledgeBase.weather.wbgt_max.unshift( Number( weather.currentweather.wbgt_max ) );
+								
 								
 								self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
 								self.knowledgeBase.weather.windchill.unshift( Number( weather.currentweather.windchill ) );
@@ -1016,6 +1015,7 @@ var app = {
 				"rain": self.knowledgeBase.weather.rain[index],
 				"rad":self.knowledgeBase.weather.radiation[index],
 				"wbgt": self.knowledgeBase.weather.wbgt[index],
+				"wbgt_max": self.knowledgeBase.weather.wbgt_max[index],
 				"windchill": self.knowledgeBase.weather.windchill[index],
 				"utc": self.knowledgeBase.weather.utc[index],
 			};
@@ -1047,6 +1047,7 @@ var app = {
 				"rain": self.knowledgeBase.weather.rain[index],
 				"rad":self.knowledgeBase.weather.radiation[index],
 				"wbgt": self.knowledgeBase.weather.wbgt[index],
+				"wbgt_max": self.knowledgeBase.weather.wbgt_max[index],
 				"windchill": self.knowledgeBase.weather.windchill[index],
 				"utc": self.knowledgeBase.weather.utc[index],
 			};
@@ -1269,7 +1270,6 @@ var app = {
 			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, false ).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					$("#gauge_text_top_diff").hide();
-					this.drawAlertChart('alert_chart', width, thermal );
 					this.drawGauge( 'feedback_gauge', width, personalvalue, thermal );
 					this.knowledgeBase.user.adaptation.mode = thermal;
 					// Save current gauge value as original value
@@ -1302,6 +1302,13 @@ var app = {
 					$("input[id='2star"+this.knowledgeBase.feedback.question2.rating+"']").attr("checked", true);
 					$("input[id='3star"+this.knowledgeBase.feedback.question3.rating+"']").attr("checked", true);
 			});
+		} 
+		else if(this.currentPageID == "forecast") {
+			let index = 0;//does not really matter, thermal and width are required
+			this.getDrawGaugeParamsFromIndex( index , this.knowledgeBase, false ).then( 
+				([width, personalvalue, modelvalue, thermal, tip_html]) => {
+					this.drawChart( "forecast_canvas", width, thermal );
+				});
 		} 
 		else if(this.currentPageID == "about") {
 			$(".navigation").hide();
@@ -1527,56 +1534,176 @@ var app = {
 			});
 		}
 	},
-	drawAlertChart: function( id, width, thermal ){
+	convertWeatherToChartData: function(){
+		var data = {
+			"labels":[],
+			"wbgt":{ "points": []},
+			"wbgt_max":{ "points": []},
+			"ral":{ "points": []},
+			"pal":{ "points": []},
+		};
+		for( var i=0; i<this.maxForecast; i++ ){
+			var wbgt_min = this.knowledgeBase.thermalindices.phs[i].wbgt;
+			var wbgt_effective_min = getWBGTeffective( wbgt_min, this.knowledgeBase );
+			
+			var item = {x: new Date( this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
+						y: 1.0* wbgt_effective_min };
+			
+			data.labels.push( item.x );
+			data.wbgt.points.push( item );
+			
+			var wbgt_max = this.knowledgeBase.thermalindices.phs[i].wbgt_max;
+			var wbgt_effective_max = getWBGTeffective( wbgt_max, this.knowledgeBase );
+			item = { x: new Date( this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
+					 y: 1.0* wbgt_effective_max };
+			data.wbgt_max.points.push( item );
+		}
+		return data;
+	},
+	drawChart: function( id, width, thermal ){
 		var ctx = document.getElementById(id).getContext('2d');
+		
 		if( ctx.canvas.width !== width || ctx.canvas.height !== width){
-			ctx.canvas.height = width;
-			ctx.canvas.width = $("#gauge_div").width();
+			ctx.canvas.height = $(window).height()/3;
+			ctx.canvas.width = width;
 		}
 		
+		/*
 		var ral = RAL( this.knowledgeBase );
-		var pal = ral + getPAL( this.knowledgeBase, thermal );		
+		var pal = ral + getPAL( this.knowledgeBase, thermal );
+		*/
+		var data = this.convertWeatherToChartData();	
 		
-		var barChartData = {
-			labels: ['Standard','Personal' ],
+		var x_from = data.labels[0];
+		var x_to = data.labels[ data.labels.length-1 ];
+		
+		var ral = RAL( this.knowledgeBase );
+		var pal = ral - getPAL( this.knowledgeBase, thermal );
+		
+		var green_y = 0.8*pal;
+		var yellow_y = 1.0*pal;
+		var orange_y = 1.2*pal;
+		var red_y = 1.5*pal;
+		console.log( [green_y, yellow_y, orange_y,red_y] );
+		
+		
+		
+		var chartData = {
+			labels: data.labels,
 			datasets: [{
-				backgroundColor: 'rgba(255,255,255,0.9)',
+				label: "wbgt",
+				backgroundColor: 'rgba(255,255,255,0.3)',
 				borderColor: 'rgba(255,255,255,1)',
-				borderWidth: 1,
-				data: [
-					ral, pal
-				]
-			}]
+				borderWidth: 2,
+				fill: false,
+				data: data.wbgt.points,
+				cubicInterpolationMode:'monotone'
+			},
+			{
+				label: "wbgt max",
+				backgroundColor: 'rgba(255,255,255,0.7)',
+				borderColor: 'rgba(255,255,255,1)',
+				borderWidth: 2,
+				fill: '-1',
+				data: data.wbgt_max.points,
+				cubicInterpolationMode:'monotone'
+			},
+			{
+				label: "red",
+				backgroundColor: 'rgba(180,0,0,.5)',
+				borderColor: 'rgba(180,0,0,1)',
+				borderWidth: 2,
+				fill: "+1",
+				data: [{x:x_from, y:red_y}, {x:x_to, y:red_y}],
+				cubicInterpolationMode:'monotone',
+				pointRadius: 0
+			},
+			{
+				label: "orange",
+				backgroundColor: 'rgba(255,125,0,.5)',
+				borderColor: 'rgba(255,125,0,1)',
+				borderWidth: 2,
+				fill: "+1",
+				data: [{x:x_from, y:orange_y}, {x:x_to, y:orange_y}],
+				cubicInterpolationMode:'monotone',
+				pointRadius: 0
+			},
+			{
+				label: "yellow",
+				backgroundColor: 'rgba(255,255,0,.5)',
+				borderColor: 'rgba(255,255,0,1)',
+				borderWidth: 2,
+				fill: "+1",
+				data: [{x:x_from, y:yellow_y}, {x:x_to, y:yellow_y}],
+				cubicInterpolationMode:'monotone',
+				pointRadius: 0
+			},
+			{
+				label: "green",
+				backgroundColor: 'rgba(0,255,0,.5)',
+				borderColor: 'rgba(0,255,0,1)',
+				borderWidth: 2,
+				fill: "origin",
+				data: [{x:x_from, y:green_y}, {x:x_to, y:green_y}],
+				cubicInterpolationMode:'monotone',
+				pointRadius: 0
+			}
+			]
 		};
 		new Chart(ctx, {
-			type: 'horizontalBar',
-			data: barChartData,
+			type: 'line',
+			data: chartData,
 			options: {
-				responsive: false,
+				toolTips: {
+					enabled: false
+				},
+				responsive: true,
+				maintainAspectRatio: false,
 				legend: false,
 				scales: {
 		            yAxes: [{
 		                ticks: {
-							beginAtZero: true,
-							fontColor: 'rgba(255, 255, 255, 1)'
+							fontSize: '16',
+							fontColor: 'rgba(255, 255, 255, 1)',
+							fontFamily: 'Lato'
 		                },
 						gridLines:{
 							color: 'rgba(255, 255, 255, 1)'
+						},
+						scaleLabel:{
+							display: true,
+							labelString: "WBGT effective (\u{2103})",
+							fontColor: 'rgba(255, 255, 255, 1)',
+							fontFamily: 'Lato',
+							fontSize: '16',
 						}
 		            }],
 		            xAxes: [{
+						type: 'time',
+						distribution: 'linear',
+						time: {
+						},
 		                ticks: {
-							beginAtZero: true,
-							fontColor: 'rgba(255, 255, 255, 1)'
+							fontSize: '16',
+							fontColor: 'rgba(255, 255, 255, 1)',
+							fontFamily: 'Lato',
+							source: 'data'
 		                },
 						gridLines:{
 							color: 'rgba(255, 255, 255, 1)'
+						},
+						scaleLabel:{
+							display: false,
+							labelString: "Time",
+							fontColor: 'rgba(255, 255, 255, 1)',
+							fontFamily: 'Lato'
 						}
 		            }],
 					
 				}
 			}
-		});		
+		});	
+		console.log("chart drawn");
 	},
 	drawGauge: function( id, width, value, key ){
 		var c = $("#"+id), 
