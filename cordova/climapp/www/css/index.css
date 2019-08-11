@@ -29,9 +29,11 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    background: url("../img/backgrounds/blue-sky.jpg");
+    /*
+	 background: url("../img/backgrounds/blue-sky.jpg");
      background-repeat: no-repeat;
      background-size: auto;
+	*/
     font-family: "Lato";
     height:100%;
     margin:0;
@@ -55,6 +57,43 @@ body {
 	}
 }
 
+.video-container {
+	position: relative;
+	width:100%;
+	height:100%;
+	min-height:100vh;
+	overflow: hidden;
+}
+
+.video-background {
+	position: absolute;
+	width:100%;
+	height:100%;
+	min-height:100vh;
+	
+	top:0;
+	left:0;
+	z-index:-1;
+}
+
+video{
+	width:100%;
+	height:100%;
+}
+video.cover{
+	-webkit-object-fit: cover;
+    -moz-object-fit: cover;
+    -o-object-fit: cover;
+    -ms-object-fit: cover;
+	object-fit: cover;
+}
+
+.video-foreground {
+	position: -webkit-sticky; /* Safari */
+	position: sticky;
+	top: 0;
+	left:0;
+}
 
 .spacer{
 	height: 3.3em;
@@ -315,6 +354,8 @@ div.inlineitems.line .totheright {
   display: flex;
   -webkit-flex-flow: row wrap;
   justify-content: space-between;
+  z-index: 1;
+  
 }
 
 .navigation div{
@@ -328,26 +369,15 @@ div.inlineitems.line .totheright {
 }
 
 .navigation_back_settings, 
-.navigation_back_dashboard {
-    color: #fff;
-    padding-left: 0.5em;
-    /*background: #fff;
-    vertical-align: middle;
-    position: fixed;
-    top: 0;
-    width:100%;
-    background: rgba(255,255,255,1);  
-    margin:0;*/
-}
-
-.navigation_back_settings, 
 .navigation_back_dashboard   {
+	color:#fff;
+	padding-left:0.5em;
     position: fixed;
     top: 0;
     width: 100%;
     background: rgba(255,255,255,0.3);  
     margin: 0em;
-
+	z-index: 1;
 }
 
 
@@ -646,7 +676,6 @@ div.feedbackgauge canvas {
     margin-left: auto;
     margin-right: auto;
     display: block;
-    margin-bottom: 1em;
 }
 
 .slidecontainer {

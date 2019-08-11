@@ -229,25 +229,25 @@ function coldLevelTips( index, level, kb, cold_index, pageID ){
 	let windrisk = windchillRisk( windchill );
 	
 	let isWindstopperUseful = ( tair - threshold ) > windchill;
-	pageID === "dashboard" ? str += "<p> <i id='circle_gauge_color' class='fas fa-circle'></i> <span id='gauge_title_tip'>Advice</span><br>" : str += "";
+	pageID === "dashboard" ? str += "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i> Advice</p>" : str += "";
 		
 	if( level === 1 ){ //beginner, early user
 		if( cold_index <= 1 ){
-			str += "The green level means that low thermal stress is forecasted.</p>";
+			str += "<p>The green level means that low thermal stress is forecasted.</p>";
 		}
 		else if( cold_index <= 2 ){
-			str += "The cyan level means that moderate cold stress is expected.</p>";
+			str += "<p>The cyan level means that moderate cold stress is expected.</p>";
 		}
 		else if( cold_index <= 3 ){
-			str += "The blue level means that high cold stress is expected.</p>";
+			str += "<p>The blue level means that high cold stress is expected.</p>";
 			if( windrisk ){
-				str += "Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
+				str += "<p>Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
 			}
 		}
 		else if( cold_index > 3){
-			str += "This level is associated with severe cold stress.</p>";
+			str += "<p>This level is associated with severe cold stress.</p>";
 			if( windrisk ){
-				str += "Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
+				str += "<p>Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
 			}
 		}
 	}
@@ -290,7 +290,7 @@ function getCurrentGaugeColor(value) {
 	} else if(value > 1.0 && value <= 2.0) {
 		return 'rgba(220,220,0,.9)';
 	} else if(value > 2.0 && value <= 3.0) {
-		return 'rgba(255,0,0,.9)';
+		return 'rgba(255,165,0,.9)';
 	} else if(value > 3.0 && value <= 4.0) {
 		return 'rgba(150,0,0,.9)';
 	} else {

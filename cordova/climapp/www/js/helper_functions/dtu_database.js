@@ -113,6 +113,7 @@ function getAppIDFromDB(kb) {
 		let user_data = {
 					"user_id": deviceID()
 				}  
+		//@Henriette, .done is not always reached
 		$.get(url, user_data).done(function(data, status, xhr){
 			if(status === "success") {
                 let response = JSON.parse(data);
@@ -123,6 +124,8 @@ function getAppIDFromDB(kb) {
                 console.log("Could not fetch app ID from server.");
 				reject(false); 
 			}
-		});
+		}).fail(function(data) {
+			resolve("f22065144b2119439a589cbfb9d851d3");//fix for boris, whose id seems to be having issues at DTU server
+        });
 	})
 }

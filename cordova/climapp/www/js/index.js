@@ -255,15 +255,14 @@ var app = {
 			    console.log('Canceled');
 			});
 		});		
-		$("div[data-listener='wheel']").on("swipeleft", function(){
-			window.SelectorCordovaPlugin.hideSelector(); // hide selector so that it is not shown in dashboard (only working on iOS)
-			self.loadUI("dashboard");
-		});
-
+		
+		console.log("adding settingslisteners on div[data-listener='tab']")
 		$("div[data-listener='tab']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='tab']").on("click", function(){
-			var target = $(this).attr("data-target");
+			console.log("clicked");
 			
+			var target = $(this).attr("data-target");
+			console.log(target);
 			if(target === "reset") {
 				// Resetting values to default
 				self.knowledgeBase.user.settings.age = 30;
@@ -281,7 +280,8 @@ var app = {
 				var notificationText = "Personal preferences reset, using default values.";
 				showShortToast(notificationText);
 
-			} else {
+			}
+			else {
 				self.loadUI(target);
 			}
 		});
@@ -306,11 +306,6 @@ var app = {
 				showShortToast(notificationText);
 			}
 			self.saveSettings();
-		});
-		// Always add ability to swipe
-		$("div[data-listener='tab']").off().on("swipeleft", function(){
-			window.SelectorCordovaPlugin.hideSelector(); // hide selector so that it is not shown in dashboard
-			self.loadUI("dashboard");
 		});
 	},
 	initGeolocationListeners: function(){
@@ -1075,20 +1070,7 @@ var app = {
 			this.initMenuListeners();
 			this.initToggleListeners();
 			
-			let selected = this.knowledgeBase.user.settings.activity_selected;
-			$("#dashboard_activity").html( this.knowledgeBase.activity.label[ selected ] );
-			let caption_ = this.knowledgeBase.activity.description[ selected ];
-			$("#activityCaption").html( caption_ );
-			
-			selected = this.knowledgeBase.user.settings.clothing_selected;			
-			$("#dashboard_clothing").html( this.knowledgeBase.clothing.label[ selected ] );
-			 caption_ = this.knowledgeBase.clothing.description[ selected ];
-			$("#clothingCaption").html( caption_ );
-			
-			selected = this.knowledgeBase.user.settings.headgear_selected;			
-			$("#dashboard_headgear").html( this.knowledgeBase.headgear.label[ selected ] );
-			 caption_ = this.knowledgeBase.headgear.description[ selected ];
-			$("#headgearCaption").html( caption_ );
+			this.updateMenuItems();
 			
 			this.updateInfo( this.selectedWeatherID );
 
@@ -1106,10 +1088,6 @@ var app = {
 			
 			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, true ).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {
-					console.log( "**** start cloud cover debugging in UpdateUI" );
-					console.log( "index: " + index );
-					console.log( JSON.stringify(this.knowledgeBase.thermalindices.phs[index]) );
-					console.log( "**** end cloud cover debugging" );
 					let tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
 					let rh = this.knowledgeBase.thermalindices.phs[index].rh.toFixed(0);
 					let clouds = this.knowledgeBase.thermalindices.phs[index].clouds.toFixed(0);
@@ -1304,6 +1282,10 @@ var app = {
 			});
 		} 
 		else if(this.currentPageID == "forecast") {
+			//
+			this.initActivityListeners();
+			this.initMenuListeners();
+			this.updateMenuItems();
 			let index = 0;//does not really matter, thermal and width are required
 			this.getDrawGaugeParamsFromIndex( index , this.knowledgeBase, false ).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {
@@ -1320,6 +1302,22 @@ var app = {
 			$(".navigation").hide();
 			$(".navigation_back_settings").show();
 		}
+	},
+	updateMenuItems: function(){
+		let selected = this.knowledgeBase.user.settings.activity_selected;
+		$("#dashboard_activity").html( this.knowledgeBase.activity.label[ selected ] );
+		let caption_ = this.knowledgeBase.activity.description[ selected ];
+		$("#activityCaption").html( caption_ );
+
+		selected = this.knowledgeBase.user.settings.clothing_selected;			
+		$("#dashboard_clothing").html( this.knowledgeBase.clothing.label[ selected ] );
+		 caption_ = this.knowledgeBase.clothing.description[ selected ];
+		$("#clothingCaption").html( caption_ );
+
+		selected = this.knowledgeBase.user.settings.headgear_selected;			
+		$("#dashboard_headgear").html( this.knowledgeBase.headgear.label[ selected ] );
+		 caption_ = this.knowledgeBase.headgear.description[ selected ];
+		$("#headgearCaption").html( caption_ );
 	},
 	getDrawGaugeParamsFromIndex: async function(index, kb, leveloverride ) {
 		
@@ -1478,7 +1476,16 @@ var app = {
 			
 			let rain = this.knowledgeBase.thermalindices.ireq[index].rain;
 			let solar = this.knowledgeBase.thermalindices.ireq[index].rad; 
-			// should be rad rather than solar? solar not in thermalindices -BK: not necessarily, rad = solar radiation
+			
+			/*
+			save code for later use
+			
+			var video = $('#bgvideo')[0];
+			video.src = "./video/rain.mp4";
+			video.load();
+			video.play();
+			function */
+			
 			let icon_weather = "fa-cloud-sun-rain";
 			if( solar > 0 ){ //daytime
 				if( clouds < 10 ){                    //sun
@@ -1522,7 +1529,6 @@ var app = {
 			}
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
 		    
-			console.log("update info draw gauge");
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false ).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					console.log("update info draw gauge phase 2 " + [width, personalvalue, modelvalue, thermal, tip_html]);
@@ -1541,6 +1547,7 @@ var app = {
 			"wbgt_max":{ "points": []},
 			"ral":{ "points": []},
 			"pal":{ "points": []},
+			"ymax": 0,
 		};
 		for( var i=0; i<this.maxForecast; i++ ){
 			var wbgt_min = this.knowledgeBase.thermalindices.phs[i].wbgt;
@@ -1557,6 +1564,8 @@ var app = {
 			item = { x: new Date( this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
 					 y: 1.0* wbgt_effective_max };
 			data.wbgt_max.points.push( item );
+			
+			data.ymax = Math.max( data.ymax, 1.0* wbgt_effective_max );
 		}
 		return data;
 	},
@@ -1564,8 +1573,8 @@ var app = {
 		var ctx = document.getElementById(id).getContext('2d');
 		
 		if( ctx.canvas.width !== width || ctx.canvas.height !== width){
-			ctx.canvas.height = $(window).height()/3;
-			ctx.canvas.width = width;
+			ctx.canvas.height = $(window).height()/2.5;
+			ctx.canvas.width = 0.95*$(window).width();
 		}
 		
 		/*
@@ -1583,7 +1592,7 @@ var app = {
 		var green_y = 0.8*pal;
 		var yellow_y = 1.0*pal;
 		var orange_y = 1.2*pal;
-		var red_y = 1.5*pal;
+		var red_y = Math.ceil( Math.max( 1.5*pal, data.ymax + 1) );
 		console.log( [green_y, yellow_y, orange_y,red_y] );
 		
 		
@@ -1657,7 +1666,7 @@ var app = {
 				toolTips: {
 					enabled: false
 				},
-				responsive: true,
+				responsive: false,
 				maintainAspectRatio: false,
 				legend: false,
 				scales: {
@@ -1665,7 +1674,8 @@ var app = {
 		                ticks: {
 							fontSize: '16',
 							fontColor: 'rgba(255, 255, 255, 1)',
-							fontFamily: 'Lato'
+							fontFamily: 'Lato',
+							max: red_y,
 		                },
 						gridLines:{
 							color: 'rgba(255, 255, 255, 1)'

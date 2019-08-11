@@ -1,5 +1,42 @@
 <div class="panel" id="forecast_div">
 	<p class="label">Forecast</p>
 	<p>The forecast of your personal expected heat stress is shown below.</p>
+	<p>The bandwidth corresponds to uncertainty for the heat of the sun due to clouds.</p>
 	<canvas id="forecast_canvas"></canvas>
+</div>
+
+<div id="menu_flex" class="flexbox-3 white">
+	<div id="tabactivity" data-listener="menu" data-target="selectactivity" class="menuitem menufocus"><p class="label">Activity</p></div>
+	<div id="tabaclothingy" data-listener="menu" data-target="selectclothing" class="menuitem border"><p class="label">Clothing</p></div>
+	<div id="tabheadgear" data-listener="menu" data-target="selectheadgear" class="menuitem"><p class="label">Headgear</p></div>
+</div>
+<div id="selectactivity" class="panelthick">
+	<div class="flexbox-2" data-listener="wheel" data-target="activity">
+		<div class="even"><p>Activity level</p></div>
+		<div class="even">
+			<div class="button"><span class="score" id="dashboard_activity"></span></div>
+		</div>
+	</div>
+	<div><p id="activityCaption" class="caption"></p>
+	</div>
+</div>
+
+<div id="selectclothing" class="hidden panelthick">
+	<div class="flexbox-2" data-listener="wheel" data-target="clothing">
+		<div class="even"><p>Clothing level</p></div>
+		<div class="even">
+			<div class="button"><span class="score" id="dashboard_clothing"></span></div>
+		</div>
+	</div>
+	<div><p id="clothingCaption" class="caption"></p></div>
+</div>
+
+<div id="selectheadgear" class="hidden panelthick">
+	<div class="flexbox-2" data-listener="wheel" data-target="headgear">
+		<div class="even"><p>Head gear</p></div>
+		<div class="even">
+			<div class="button"><span class="score" id="dashboard_headgear"></span></div>
+		</div>
+	</div>
+	<div><p id="headgearCaption" class="caption"></p></div>
 </div>
