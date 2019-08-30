@@ -897,7 +897,7 @@ var app = {
 								$.each( self.knowledgeBase.weather.humidity,
 									function( key, val){
 										let T = self.knowledgeBase.weather.temperature[key];
-										let wvp = ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
+										let wvp = 0.1 * ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
 										self.knowledgeBase.weather.watervapourpressure.push( wvp );	
 								}); 
 								
