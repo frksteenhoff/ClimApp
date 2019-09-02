@@ -480,7 +480,7 @@ heatindex.PHS = ( function ( options ) {
                 return;
             }
         }
-        alert( 'core_temp_pred_std overun');
+        alert( 'core_temp_pred_std overun' );
     }
 
     // part of body having Tcr as mean temperature
