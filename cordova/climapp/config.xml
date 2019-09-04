@@ -42,9 +42,8 @@
         <icon height="72" src="res/icon/ios/icon-72.png" width="72" />
         <icon height="144" src="res/icon/ios/icon-72-2x.png" width="144" />
         <splash src="res/screen/ios/Default@2x~universal~anyany.png" />
-		
-		<preference name="AllowInlineMediaPlayback" value="true"/>
-		<preference name="BackupWebStorage" value="local" />
+        <preference name="AllowInlineMediaPlayback" value="true" />
+        <preference name="BackupWebStorage" value="local" />
         <preference name="StatusBarOverlaysWebView" value="false" />
         <preference name="StatusBarDefaultScrollToTop" value="false" />
         <preference name="StatusBarStyle" value="default" />

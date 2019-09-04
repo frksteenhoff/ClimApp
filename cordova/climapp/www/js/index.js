@@ -308,6 +308,61 @@ var app = {
 			self.saveSettings();
 		});
 	},
+	initExploreListeners: function() {
+		var self = this;
+		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='wheel']").on("click", function(){
+			var target = $(this).attr("data-target");
+			console.log("HERE!" + target);
+			let title_ = self.knowledgeBase.settings.custom[target + "_text"];
+
+			var items_ = self.getSelectables( target );
+				
+			var config = {
+				title: title_,
+				items:[ [ items_ ] ],
+				positiveButtonText: "Done",
+				negativeButtonText: "Cancel"
+			};
+					
+			window.SelectorCordovaPlugin.showSelector(config, function(result) {
+				self.knowledgeBase.settings.custom[title_] = items_[result[0].index].value;
+					
+				console.log( target + ": " + items_[result[0].index].value);
+				self.saveSettings(); 
+				self.updateUI();
+			}, function() {
+				console.log('Canceled');
+			});
+		
+		});
+		
+		$("div[data-listener='tab']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='tab']").on("click", function(){
+			self.loadUI("maps_overlay");
+		});
+
+		$("input[data-listener='toggle_switch']").off(); //prevent multiple instances of listeners on same object
+		$("input[data-listener='toggle_switch']").on("click", function(){
+			var target = $(this).attr("data-target");
+
+			if(target === "custom_input_switch") {
+				var isChecked = $(this).is(":checked");
+				self.knowledgeBase.user.guards.customInputEnabled = isChecked;
+				// Inform user about choice in toast
+				var customText = "";
+				if(isChecked) {
+					customText = "Custom input is enabled.";
+					$("#customSection").show();
+				 } else {  
+					customText = "Custom input is disabled."; 
+					$("#customSection").hide();
+				}
+				showShortToast(customText);
+				self.saveSettings();
+			}
+		});
+	},
 	initGeolocationListeners: function(){
 		var self = this;
 		$("div[data-listener='geolocation']").off(); //prevent multiple instances of listeners on same object
@@ -425,7 +480,8 @@ var app = {
 					"hasExternalDBRecord": 0,
 					"receivesNotifications": 0, // false as notifications are not part of the app
 					"appOpenedCount": 0, // number of times user has opened app
-					"feedbackSliderChanged": 0
+					"feedbackSliderChanged": 0,
+					"customInputEnabled": false
 				}, 
 				"settings": { // Using default values
 					"age": 30,
@@ -455,7 +511,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.038,
+			"version": 2.0393,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -490,6 +546,18 @@ var app = {
 								},
 						 "unit": { "title": "Which units of measurements would you prefer?"
 								}, 
+						 "custom": { "title": "Do you want to input custom location and climatic values for the app to use?", 
+								"value": 0 ,
+								"coordinates_lon": 0,
+								"coordinates_lat": 0,
+								"custom_coordinates_text": "Input the wanted coordinates",
+								"temperature": 0,
+								"custom_temperature_text": "Input the temperature you want to use",
+								"windspeed": 0,
+								"custom_windspeed_text": "Input the windspeed you would like to use",
+								"humidity": 0,																	 
+								"custom_humidity_text": "Input the humidity you would like to use"					
+							   },
 					   },
 			"activity": { "title": "What is your activity level?",
 				  			"description": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
@@ -631,7 +699,9 @@ var app = {
 		 				 "onboarding": "./pages/onboarding.html",
 		 				 "disclaimer": "./pages/disclaimer.html",
 						 "details": "./pages/details.html",
-		 				 "about": "./pages/about.html"};
+						 "about": "./pages/about.html",
+						 "custom_input": "./pages/custom_input.html",
+						 "maps_overlay": "./pages/maps_overlay.html"};
 		this.selectedWeatherID = 0;
 		this.maxForecast = 8; //8x3h = 24h
 		var shadowKB = this.initKnowledgeBase();
@@ -769,9 +839,46 @@ var app = {
 			$.each( this.knowledgeBase.activity.label, function(key,val ){
 				obj_array.push({description: val, value: key} );
 			});
-			
 		}
-		return obj_array;
+		else if(key === "custom_input") {
+			obj_array.push({description: "Yes", value: 1 } );
+			obj_array.push({description: "No", value: 0 } );
+		}
+		else if(key === "custom_coordinates") {
+			// Opening Google Maps API to get location.
+			self.loadUI("maps_overlay");
+		}
+		else if(key === "custom_temperature") {
+			if(this.knowledgeBase.user.settings.unit !== "SI") {
+				// Fahrenheit
+				for(var i = 200; i >= -40; i--) {
+					let convertedTemp = getTemperatureValueInPreferredUnit(i, "US");
+					obj_array.push({description: convertedTemp.toFixed(1) + " fahrenheit", value: convertedTemp.toFixed(1)});
+				}
+			} else {
+				// Celcius
+				for(var j = 60; j >= -30; j--) {
+					obj_array.push({description: j + " celcius", value: j});
+				}
+			}
+		}
+		else if(key === "custom_windspeed") {
+			for(var i = 0.0; i < 20; i+=0.1) {
+				obj_array.push({description: i.toFixed(1) + " m/s", value: i.toFixed(1) } );
+			}
+		}
+		else if(key === "custom_humidity") {
+			for(var i = 0; i <= 100; i+= 10) {
+				obj_array.push({description: i + " %", value: i.toFixed(1)});
+			}
+		}
+
+		// Return two object arrays if working with lon/lat
+		if(key === "customs_coordinates") {
+			return obj_array, obj_array_lon;
+		} else {
+			return obj_array;
+		}
 	},
 	saveSettings: function(){
 		let jsonData = JSON.stringify( this.knowledgeBase );
@@ -823,6 +930,7 @@ var app = {
 								
 								//returns current weather by default in key "weather.currentweather"
 								//prepend to array.
+								console.log( JSON.stringify(weather));
 								self.knowledgeBase.weather.utc.unshift( weather.currentweather.dt );
 								
 								self.knowledgeBase.weather.utc = self.knowledgeBase.weather.utc.map( function(val){
@@ -1301,6 +1409,19 @@ var app = {
 		else if (this.currentPageID == "disclaimer") {
 			$(".navigation").hide();
 			$(".navigation_back_settings").show();
+		}
+		else if (this.currentPageID == "custom_input") {
+			$(".navigation_back_settings").show();
+			$("#custom_input_checkbox").prop("checked", this.knowledgeBase.user.guards.customInputEnabled);
+			this.knowledgeBase.user.guards.customInputEnabled ? $("#customSection").show() : $("#customSection").hide(); 
+			this.initExploreListeners();
+
+			var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
+
+			$("#custom_coordinates").html( "lon: " + this.knowledgeBase.settings.custom.coordinates_lon + " lat: " + this.knowledgeBase.settings.custom.coordinates_lon);
+			$("#custom_temperature").html( this.knowledgeBase.settings.custom.temperature + " &#xb0 " + tempUnit);
+			$("#custom_windspeed").html( this.knowledgeBase.settings.custom.windspeed + " m/s");
+			$("#custom_humidity").html(this.knowledgeBase.settings.custom.humidity + " %");
 		}
 	},
 	updateMenuItems: function(){
