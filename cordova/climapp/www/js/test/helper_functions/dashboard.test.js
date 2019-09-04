@@ -62,28 +62,28 @@ test('Temperature unit is "Fahrenheit" when unit is "US"', () => {
   expect(dash.getTemperatureUnit("US")).toBe("Fahrenheit");
 });
 
-test('Temperature unit is "Celcius" when unit is "UK"', () => {
-  expect(dash.getTemperatureUnit("UK")).toBe("Celcius");
+test('Temperature unit is "Celsius" when unit is "UK"', () => {
+  expect(dash.getTemperatureUnit("UK")).toBe("Celsius");
 });
 
-test('Temperature unit is "Celcius" when unit is "SI"', () => {
-  expect(dash.getTemperatureUnit("SI")).toBe("Celcius");
+test('Temperature unit is "Celsius" when unit is "SI"', () => {
+  expect(dash.getTemperatureUnit("SI")).toBe("Celsius");
 });
 
 // default
-test('Temperature unit is "Celcius" when unit is "" (something other than expected)', () => {
-  expect(dash.getTemperatureUnit(" ")).toBe("Celcius");
+test('Temperature unit is "Celsius" when unit is "" (something other than expected)', () => {
+  expect(dash.getTemperatureUnit(" ")).toBe("Celsius");
 });
 
 /* --------------------------------------------------------------------------
  * Test of function getTemperatureValueInPreferredUnit(unit, temp) 
- * Value of temperatue is always given in celcius
+ * Value of temperatue is always given in Celsius
  * -------------------------------------------------------------------------- */
-test('Temperature is 12 degrees celcius when input unit is "SI" and temperature is 12 degrees', () => {
+test('Temperature is 12 degrees Celsius when input unit is "SI" and temperature is 12 degrees', () => {
   expect(dash.getTemperatureValueInPreferredUnit(12, "SI")).toBe(12);
 });
 
-test('Temperature is 12 degrees celcius when input unit is "UK" and temperature is 12 degrees', () => {
+test('Temperature is 12 degrees Celsius when input unit is "UK" and temperature is 12 degrees', () => {
   expect(dash.getTemperatureValueInPreferredUnit(12, "UK")).toBe(12);
 });
 
