@@ -338,7 +338,7 @@ var app = {
 		$("div[data-listener='set_location']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='set_location']").on("click", function(){
 			// Load Google Maps UI to set location on map
-			self.loadUI("maps_overlay");
+			self.loadUI("google_maps");
 		});
 
 		$("input[data-listener='toggle_switch']").off(); //prevent multiple instances of listeners on same object
@@ -770,7 +770,7 @@ var app = {
 						 "about": "./pages/about.html",
 						 "custom_input": "./pages/custom_input.html",
 						 "indoor": "./pages/indoor.html",
-						 "maps_overlay": "./pages/maps_overlay.html"};
+						 "google_maps": "./pages/google_maps.html"};
 		this.selectedWeatherID = 0;
 		this.maxForecast = 8; //8x3h = 24h
 		var shadowKB = this.initKnowledgeBase();
@@ -918,7 +918,7 @@ var app = {
 		}
 		else if(key === "coordinates") {
 			// Opening Google Maps API to get location in new window.
-			self.loadUI("maps_overlay");
+			self.loadUI("google_maps");
 		}
 		else if(key === "_temperature") {
 			if(this.knowledgeBase.user.settings.unit !== "SI") {
@@ -1504,7 +1504,7 @@ var app = {
 			$("#thermostat_level").html(this.knowledgeBase.settings.indoor.thermostat_level);
 			$("#open_windows").html(windowsOpen);
 		}
-		else if (this.currentPageID === "maps_overlay") {
+		else if (this.currentPageID === "google_maps") {
 			$(".navigation").hide();
 			$(".navigation_back_custom").show();
 		}
@@ -1675,6 +1675,10 @@ var app = {
 			$("#windspeed").html( ws.toFixed(0) );
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit)); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
+
+			// Indicate indoor/outdoor mode on dashboard
+			let isIndoor = this.knowledgeBase.user.guards.isIndoor ? "Indoor" : "Outdoor";
+			$("#indoor_outdoor").html(isIndoor);
 			
 			//weather icon
 			let clouds = this.knowledgeBase.thermalindices.ireq[index].clouds;
