@@ -308,12 +308,12 @@ var app = {
 			self.saveSettings();
 		});
 	},
-	initExploreListeners: function() {
+	initLocationListeners: function() {
 		var self = this;
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='wheel']").on("click", function(){
 			var target = $(this).attr("data-target");
-			let title_ = self.knowledgeBase.settings.custom[target + "_text"];
+			let title_ = self.knowledgeBase.user.settings.location[target + "_text"];
 			var items_ = self.getSelectables( target );
 			console.log(target + "    " + items_);
 
@@ -325,7 +325,7 @@ var app = {
 			};
 					
 			window.SelectorCordovaPlugin.showSelector(config, function(result) {
-				self.knowledgeBase.settings.custom[target] = items_[result[0].index].value;
+				self.knowledgeBase.user.settings.location[target] = items_[result[0].index].value;
 					
 				console.log( target + ": " + items_[result[0].index].value);
 				self.saveSettings(); 
@@ -345,28 +345,21 @@ var app = {
 		$("input[data-listener='toggle_switch']").on("click", function(){
 			var target = $(this).attr("data-target");
 
-			if(target === "custom_input_switch") {
-				var isChecked = $(this).is(":checked");
-				self.knowledgeBase.user.guards.customInputEnabled = isChecked;
-				// Inform user about choice in toast
-				var customText = "";
+			var customText = "";
+			var isChecked = $(this).is(":checked");
+			if(target === "custom_location_switch") {
+				self.knowledgeBase.user.guards.customLocationEnabled = isChecked;
 				if(isChecked) {
-					customText = "Custom input is enabled.";
-					$("#customSection").show();
+					customText = "Custom location is enabled.";
+					$("#customLocationSection").show();
 				 } else {  
-					customText = "Custom input is disabled."; 
-					$("#customSection").hide();
+					customText = "Custom location is disabled."; 
+					$("#customLocationSection").hide();
 				}
-				showShortToast(customText);
-				self.saveSettings();
-			}
-		});
 
-		$("div[data-listener='set_custom_options']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='set_custom_options']").on("click", function(){
-			// Load UI using indoor options
-			var target = $(this).attr("data-target");
-			self.loadUI(target);
+			}
+			showShortToast(customText);
+			self.saveSettings();
 		});
 	},
 	initIndoorListeners: function() {
@@ -375,7 +368,7 @@ var app = {
 		$("div[data-listener='wheel']").on("click", function(){
 			var target = $(this).attr("data-target");
 			console.log(target);
-			let title_ = self.knowledgeBase.settings.indoor[target + "_text"];
+			let title_ = self.knowledgeBase.user.settings.indoor[target + "_text"];
 			var items_ = self.getSelectables( target );
 			
 			var config = {
@@ -386,7 +379,7 @@ var app = {
 			};
 					
 			window.SelectorCordovaPlugin.showSelector(config, function(result) {
-				self.knowledgeBase.settings.indoor[target] = items_[result[0].index].value;
+				self.knowledgeBase.user.settings.indoor[target] = items_[result[0].index].value;
 					
 				console.log( target + ": " + items_[result[0].index].value);
 				self.saveSettings(); 
@@ -411,13 +404,14 @@ var app = {
 				 } else {  
 					customText = "Indoor mode disabled."; 
 					$("#indoorSection").hide();
+					self.updateUI();
 				}
-				showShortToast(customText);
-				self.saveSettings();
 			}
+			showShortToast(customText);
+			self.saveSettings();
 		});
 
-		$("diiv[data-listener='set_indoor_options']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='set_indoor_options']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='set_indoor_options']").on("click", function(){
 			// Load UI using indoor options
 			var target = $(this).attr("data-target");
@@ -542,6 +536,7 @@ var app = {
 					"receivesNotifications": 0, // false as notifications are not part of the app
 					"appOpenedCount": 0, // number of times user has opened app
 					"feedbackSliderChanged": 0,
+					"customLocationEnabled": false,
 					"customInputEnabled": false,
 					"isIndoor": false
 				}, 
@@ -556,7 +551,25 @@ var app = {
 					"clothing_selected": "Summer_attire",
 					"headgear_selected": "none",
 					"explore": false, // currently not used
-					"level": 1 // 1 - beginner, 2 - advanced 
+					"level": 1, // 1 - beginner, 2 - advanced
+					"location": { "title": "Do you want to input custom location and climatic values for the app to use?", 
+								"value": 0 ,
+								"coordinates_lon": 0,
+								"coordinates_lat": 0,
+								"coordinates_text": "Input the wanted coordinates"					
+					  },
+					 "indoor": {
+						 	"thermostat_level": 0,
+							"thermostat_level_text" : "What is your thermostat set to?",
+							"open_windows": 0,
+							"open_windows_text" : "Are there any open windows in the room?",
+							"_temperature": 0, // outdoor temperature
+							"_temperature_text": "Input the outdoor temperature you would like to use",
+							"windspeed": 0,
+							"windspeed_text": "Input the windspeed you would like to use",
+							"_humidity": 0,																	 
+							"_humidity_text": "Input the humidity you would like to use"
+					 } 
 				},
 				"adaptation": {
 					"mode": "undefined",
@@ -573,7 +586,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0397,
+			"version": 2.040,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -607,25 +620,7 @@ var app = {
 						 "gender": {"title": "What is your gender?"
 								},
 						 "unit": { "title": "Which units of measurements would you prefer?"
-								}, 
-						 "custom": { "title": "Do you want to input custom location and climatic values for the app to use?", 
-								"value": 0 ,
-								"coordinates_lon": 0,
-								"coordinates_lat": 0,
-								"coordinates_text": "Input the wanted coordinates",
-								"_temperature": 0,
-								"_temperature_text": "Input the temperature you want to use",
-								"windspeed": 0,
-								"windspeed_text": "Input the windspeed you would like to use",
-								"_humidity": 0,																	 
-								"_humidity_text": "Input the humidity you would like to use"					
-							   },
-						 "indoor": {
-							 	"thermostat_level": 0,
-								"thermostat_level_text" : "What is your thermostat set to?",
-								"open_windows": 0,
-								"open_windows_text" : "Are there any open windows in the room?"
-						 }	   
+								}	   
 					   },
 			"activity": { "title": "What is your activity level?",
 				  			"description": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
@@ -768,7 +763,7 @@ var app = {
 		 				 "disclaimer": "./pages/disclaimer.html",
 						 "details": "./pages/details.html",
 						 "about": "./pages/about.html",
-						 "custom_input": "./pages/custom_input.html",
+						 "location": "./pages/location.html",
 						 "indoor": "./pages/indoor.html",
 						 "google_maps": "./pages/google_maps.html"};
 		this.selectedWeatherID = 0;
@@ -930,7 +925,7 @@ var app = {
 			} else {
 				// Celcius
 				for(var j = -30; j <= 60; j++) {
-					obj_array.push({description: j + " &#xb0  C", value: j});
+					obj_array.push({description: j + " &#xb0 C", value: j});
 				}
 			}
 		}
@@ -978,127 +973,146 @@ var app = {
 	updateWeather: async function(){
 		var self = this;
 
-		self.checkIfUserExistInDB().then((result) => {
-			getAppIDFromDB(self.knowledgeBase).then((appidFromServer) => {
-				
-				if(appidFromServer) { 
-					let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
-					let data = { "action": "helios",
-								"lat": this.knowledgeBase.position.lat,
-								"lon": this.knowledgeBase.position.lng,
-								"climapp": appidFromServer,
-								"d": 1.0, //
-								"utc": new Date().toJSON() };
-					$.get( url, 
-						data, 
-						function( output ){//on success
-							try{
-								let weather = JSON.parse( output );
-								self.knowledgeBase.weather.station = weather.station;
-								self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
-								self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
-								
-								//returns current weather by default in key "weather.currentweather"
-								//prepend to array.
-								console.log( JSON.stringify(weather));
-								self.knowledgeBase.weather.utc.unshift( weather.currentweather.dt );
-								
-								self.knowledgeBase.weather.utc = self.knowledgeBase.weather.utc.map( function(val){
-										let str = val.replace(/-/g,"/");
-										str += " UTC";
-										return str;
-								});
-								
-								self.knowledgeBase.weather.lat = weather.lat;
-								self.knowledgeBase.weather.lng = weather.lon;
-								
-								self.knowledgeBase.weather.wbgt = weather.wbgt_min.map(Number);
-								self.knowledgeBase.weather.wbgt.unshift( Number( weather.currentweather.wbgt_min ) );
-								
-								self.knowledgeBase.weather.wbgt_max = weather.wbgt_max.map(Number);
-								self.knowledgeBase.weather.wbgt_max.unshift( Number( weather.currentweather.wbgt_max ) );
-								
-								
-								self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
-								self.knowledgeBase.weather.windchill.unshift( Number( weather.currentweather.windchill ) );
-								
-								
-								self.knowledgeBase.weather.temperature = weather.tair.map(Number);
-								self.knowledgeBase.weather.temperature.unshift( Number( weather.currentweather.tair ) );
-								
-								self.knowledgeBase.weather.globetemperature = weather.tglobe_clouds.map(Number);
-								self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe_clouds ) );
-								
-								
-								self.knowledgeBase.weather.clouds = weather.clouds.map(Number);
-						
-								self.knowledgeBase.weather.clouds.unshift( Number( weather.currentweather.clouds ) );
-								
-								
-								
-								self.knowledgeBase.weather.humidity = weather.rh.map(Number);
-								self.knowledgeBase.weather.humidity.unshift( Number( weather.currentweather.rh ) );
-								
-								self.knowledgeBase.weather.rain = weather.rain.map(Number);
-								self.knowledgeBase.weather.rain.unshift( Number( weather.currentweather.rain ) );
-								
-								
-								self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
-								self.knowledgeBase.weather.windspeed.unshift( Number( weather.currentweather.vair ) );
+			self.checkIfUserExistInDB().then((result) => {
+				getAppIDFromDB(self.knowledgeBase).then((appidFromServer) => {
+					
+					if(appidFromServer) { 
+						let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
+						let data = { "action": "helios",
+									"lat": this.knowledgeBase.position.lat,
+									"lon": this.knowledgeBase.position.lng,
+									"climapp": appidFromServer,
+									"d": 1.0, //
+									"utc": new Date().toJSON() };
+						$.get( url, 
+							data, 
+							function( output ){//on success
+								try{
+									let weather = JSON.parse( output );
+									self.knowledgeBase.weather.station = weather.station;
+									self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
+									self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
 									
-								
-								self.knowledgeBase.weather.radiation = weather.solar_clouds.map(Number);
-								self.knowledgeBase.weather.radiation.unshift( Number( weather.currentweather.solar_clouds ) );
-								
-								self.knowledgeBase.weather.meanradianttemperature = [];
-								self.knowledgeBase.weather.windspeed2m = [];
-								$.each( self.knowledgeBase.weather.windspeed, function(key, vair){
-										var Tg = self.knowledgeBase.weather.globetemperature[key];
-										var Ta = self.knowledgeBase.weather.temperature[key];
-										var va = vair * Math.pow( 0.2, 0.25 ); //stability class D Liljgren 2008 Table 3
+									//returns current weather by default in key "weather.currentweather"
+									//prepend to array.
+									console.log( JSON.stringify(weather));
+									self.knowledgeBase.weather.utc.unshift( weather.currentweather.dt );
+									
+									self.knowledgeBase.weather.utc = self.knowledgeBase.weather.utc.map( function(val){
+											let str = val.replace(/-/g,"/");
+											str += " UTC";
+											return str;
+									});
+									
+									self.knowledgeBase.weather.lat = weather.lat;
+									self.knowledgeBase.weather.lng = weather.lon;
+									
+									self.knowledgeBase.weather.wbgt = weather.wbgt_min.map(Number);
+									self.knowledgeBase.weather.wbgt.unshift( Number( weather.currentweather.wbgt_min ) );
+									
+									self.knowledgeBase.weather.wbgt_max = weather.wbgt_max.map(Number);
+									self.knowledgeBase.weather.wbgt_max.unshift( Number( weather.currentweather.wbgt_max ) );
+									
+									
+									self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
+									self.knowledgeBase.weather.windchill.unshift( Number( weather.currentweather.windchill ) );
+									
+									// Using custom input, when custom is enabled (indoor mode)
+									if(self.knowledgeBase.user.guards.customInputEnabled || self.knowledgeBase.user.guards.isIndoor) {
+										self.knowledgeBase.weather.temperature = self.knowledgeBase.user.settings.indoor._temperature;
+										self.knowledgeBase.weather.humidity = self.knowledgeBase.user.settings.indoor._humidity;
+										self.knowledgeBase.weather.windspeed = self.translateTextToWindspeed(self.knowledgeBase.user.settings.indoor.windspeed);
+									}
+									else {
+										// Otherwise use weather service info
+										self.knowledgeBase.weather.temperature = weather.tair.map(Number);
+										self.knowledgeBase.weather.temperature.unshift( Number( weather.currentweather.tair ) );
 										
-										//kruger et al 2014
-										var D = 0.05; //diameter black globe (liljegren - ) --default value = 0.15
-										var eps_g = 0.95; //standard emmisivity black bulb
-										var t0 = (Tg+273.0);
-										var t1 = Math.pow( t0, 4);
-										var t2 = 1.1 * Math.pow(10,8) * Math.pow( va, 0.6 ); 
-										var t3 = eps_g * Math.pow( D, 0.4);
-										var t4 = t1 + ( t2 / t3 ) * (Tg-Ta);
-										var Tmrt = Math.pow( t4, 0.25 ) - 273.0;
+										self.knowledgeBase.weather.humidity = weather.rh.map(Number);
+										self.knowledgeBase.weather.humidity.unshift( Number( weather.currentweather.rh ) );
 										
-										self.knowledgeBase.weather.meanradianttemperature.push( Tmrt );
-										self.knowledgeBase.weather.windspeed2m.push( va );
-								} );
-								
-								self.knowledgeBase.weather.watervapourpressure = [];
-								$.each( self.knowledgeBase.weather.humidity,
-									function( key, val){
-										let T = self.knowledgeBase.weather.temperature[key];
-										let wvp = 0.1 * ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
-										self.knowledgeBase.weather.watervapourpressure.push( wvp );	
-								}); 
-								
-								self.saveSettings();
-								self.calcThermalIndices();
-								self.updateUI();
-										
-								// Only update when weather data has been received - and when external DB record is present.
-								if( self.knowledgeBase.user.guards.hasExternalDBRecord ){
-										addWeatherDataToDB(self.knowledgeBase);
-								}	
-							}
-							catch( error ){
-								console.log( error );
-							}
-					}).fail(function( e ) {
-						console.log("fail in weather "+ e);
-					});
-				} else  {
-					showShortToast("Failed to update weather, no app ID.");
-				}		
-			}); // Making code execution wait for app id retrieval
-		});
+										self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
+										self.knowledgeBase.weather.windspeed.unshift( Number( weather.currentweather.vair ) );
+									}									
+																		
+									self.knowledgeBase.weather.globetemperature = weather.tglobe_clouds.map(Number);
+									self.knowledgeBase.weather.globetemperature.unshift( Number( weather.currentweather.tglobe_clouds ) );
+									
+									
+									self.knowledgeBase.weather.clouds = weather.clouds.map(Number);
+									self.knowledgeBase.weather.clouds.unshift( Number( weather.currentweather.clouds ) );
+									
+									self.knowledgeBase.weather.rain = weather.rain.map(Number);
+									self.knowledgeBase.weather.rain.unshift( Number( weather.currentweather.rain ) );										
+									
+									self.knowledgeBase.weather.radiation = weather.solar_clouds.map(Number);
+									self.knowledgeBase.weather.radiation.unshift( Number( weather.currentweather.solar_clouds ) );
+									
+									self.knowledgeBase.weather.meanradianttemperature = [];
+									self.knowledgeBase.weather.windspeed2m = [];
+									$.each( self.knowledgeBase.weather.windspeed, function(key, vair){
+											var Tg = self.knowledgeBase.weather.globetemperature[key];
+											var Ta = self.knowledgeBase.weather.temperature[key];
+											var va = vair * Math.pow( 0.2, 0.25 ); //stability class D Liljgren 2008 Table 3
+											
+											//kruger et al 2014
+											var D = 0.05; //diameter black globe (liljegren - ) --default value = 0.15
+											var eps_g = 0.95; //standard emmisivity black bulb
+											var t0 = (Tg+273.0);
+											var t1 = Math.pow( t0, 4);
+											var t2 = 1.1 * Math.pow(10,8) * Math.pow( va, 0.6 ); 
+											var t3 = eps_g * Math.pow( D, 0.4);
+											var t4 = t1 + ( t2 / t3 ) * (Tg-Ta);
+											var Tmrt = Math.pow( t4, 0.25 ) - 273.0;
+											
+											self.knowledgeBase.weather.meanradianttemperature.push( Tmrt );
+											self.knowledgeBase.weather.windspeed2m.push( va );
+									} );
+									
+									self.knowledgeBase.weather.watervapourpressure = [];
+									$.each( self.knowledgeBase.weather.humidity,
+										function( key, val){
+											let T = self.knowledgeBase.weather.temperature[key];
+											let wvp = 0.1 * ( val * 0.01) * Math.exp( 18.965 - 4030/(T+235));	
+											self.knowledgeBase.weather.watervapourpressure.push( wvp );	
+									}); 
+									
+									self.saveSettings();
+									self.calcThermalIndices();
+									self.updateUI();
+											
+									// Only update when weather data has been received - and when external DB record is present.
+									if( self.knowledgeBase.user.guards.hasExternalDBRecord ){
+											addWeatherDataToDB(self.knowledgeBase);
+									}	
+								}
+								catch( error ){
+									console.log( error );
+								}
+						}).fail(function( e ) {
+							console.log("fail in weather "+ e);
+						});
+					} else  {
+						showShortToast("Failed to update weather, no app ID.");
+					}		
+				}); // Making code execution wait for app id retrieval
+			});
+	},
+	translateTextToWindspeed: function(description) {
+		// Based on wind speeds from: https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwjSq7ndjrzkAhVmposKHboJAGYQjRx6BAgBEAQ&url=https%3A%2F%2Fearthscience.stackexchange.com%2Fquestions%2F12562%2Fwhat-wind-speeds-and-gusts-can-usually-damage-houses-or-trees&psig=AOvVaw2Z8Ea0UmXAVcEuFrzpHpyU&ust=1567856490789493
+		var windspeed = 0; // km/h
+		switch(description) {
+			case "No wind" : 
+				windspeed = 1; // calm
+				break;
+			case "Some wind":
+				windspeed = 15; // light breeze
+				break;
+			case "Strong wind": 
+				windspeed = 35; // fresh breeze
+				break;
+		}
+		return windspeed;
 	},
 	loadUI: function( pageid ){
 		var self = this;
@@ -1241,9 +1255,8 @@ var app = {
 			$(".navigation").show();
 			$("#main_panel").show();
 			$("#tip_panel").show();
-
+			
 			this.initDashboardListeners();
-			this.initDashboardSwipeListeners();
 			this.initGeolocationListeners();
 			this.initActivityListeners();
 			this.initMenuListeners();
@@ -1251,7 +1264,20 @@ var app = {
 			
 			this.updateMenuItems();
 			
-			this.updateInfo( this.selectedWeatherID );
+			if(this.knowledgeBase.user.guards.customInputEnabled || this.knowledgeBase.user.guards.isIndoor) {
+				// Hide forecast when custom input is used
+				$("#dashboard_header").hide();
+				$("#dashboard_forecast").hide();
+
+				this.updateInfo(0);
+
+			} else {
+				$("#dashboard_header").show();
+				$("#dashboard_forecast").show();
+				this.initDashboardSwipeListeners();
+				this.updateInfo( this.selectedWeatherID );
+			}
+			
 
 			// Giving the user an introduction of the dashbord on first login
 			if(!this.knowledgeBase.user.guards.introductionCompleted) {
@@ -1267,13 +1293,25 @@ var app = {
 			
 			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, true ).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {
-					let tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
-					let rh = this.knowledgeBase.thermalindices.phs[index].rh.toFixed(0);
+					let tair = 0;
+					let rh = 0;
+					let vair2 = 0;
+
+					// IS THIS THE CORRECT WAY TO DO IT ?
+					if(this.knowledgeBase.user.guards.isIndoor) {
+						tair = this.knowledgeBase.user.settings.indoor._temperature;
+						rh = this.knowledgeBase.user.settings.indoor._humidity;
+						vair2 = this.knowledgeBase.user.settings.indoor.windspeed;
+					} else {
+						tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
+						rh = this.knowledgeBase.thermalindices.phs[index].rh.toFixed(0);
+						vair2 = this.knowledgeBase.thermalindices.phs[index].v_air.toFixed(1);
+					}
 					let clouds = this.knowledgeBase.thermalindices.phs[index].clouds.toFixed(0);
 			
 					let rad = this.knowledgeBase.thermalindices.phs[index].rad.toFixed(0);
+					// Which of the air velocities should I use? (I took 2m as an example)
 					let vair10 = this.knowledgeBase.thermalindices.phs[index].v_air10.toFixed(1);
-					let vair2 = this.knowledgeBase.thermalindices.phs[index].v_air.toFixed(1);
 					let tmrt = this.knowledgeBase.thermalindices.phs[index].Trad.toFixed(1);
 					let tglobe = this.knowledgeBase.thermalindices.phs[index].Tglobe.toFixed(1);
 			
@@ -1481,32 +1519,33 @@ var app = {
 			$(".navigation").hide();
 			$(".navigation_back_settings").show();
 		}
-		else if (this.currentPageID == "custom_input") {
+		else if (this.currentPageID == "location") {
 			$(".navigation_back_dashboard").show();
-			$("#custom_input_checkbox").prop("checked", this.knowledgeBase.user.guards.customInputEnabled);
-			this.knowledgeBase.user.guards.customInputEnabled ? $("#customSection").show() : $("#customSection").hide(); 
-			this.initExploreListeners();
+			// Location
+			this.knowledgeBase.user.guards.customLocationEnabled ? $("#customLocationSection").show() : $("#customLocationSection").hide(); 
+			$("#custom_location_checkbox").prop("checked", this.knowledgeBase.user.guards.customLocationEnabled);
+			this.initLocationListeners();
 
-			var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
-
-			$("#coordinates").html( "lon: " + this.knowledgeBase.settings.custom.coordinates_lon + " lat: " + this.knowledgeBase.settings.custom.coordinates_lon);
-			$("#_temperature").html( this.knowledgeBase.settings.custom._temperature + " &#xb0 " + tempUnit);
-			$("#windspeed").html( this.knowledgeBase.settings.custom.windspeed);
-			$("#_humidity").html(this.knowledgeBase.settings.custom._humidity + " %");
 		}
 		else if (this.currentPageID == "indoor") {
 			$(".navigation_back_dashboard").show();
 			$("#indoor_checkbox").prop("checked", this.knowledgeBase.user.guards.isIndoor);
 			this.knowledgeBase.user.guards.isIndoor ? $("#indoorSection").show() : $("#indoorSection").hide(); 
 			this.initIndoorListeners();
-			var windowsOpen = this.knowledgeBase.settings.indoor.open_windows ? "Yes" : "No";
-
-			$("#thermostat_level").html(this.knowledgeBase.settings.indoor.thermostat_level);
+			var windowsOpen = this.knowledgeBase.user.settings.indoor.open_windows ? "Yes" : "No";
+			var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
+	
+			$("#coordinates").html( "lon: " + this.knowledgeBase.user.settings.location.coordinates_lon + " lat: " + this.knowledgeBase.user.settings.location.coordinates_lon);
+			$("#_temperature").html( this.knowledgeBase.user.settings.indoor._temperature + " &#xb0 " + tempUnit);
+			$("#windspeed").html( this.knowledgeBase.user.settings.indoor.windspeed);
+			$("#_humidity").html(this.knowledgeBase.user.settings.indoor._humidity + " %");
+			$("#thermostat_level").html(this.knowledgeBase.user.settings.indoor.thermostat_level);
 			$("#open_windows").html(windowsOpen);
 		}
 		else if (this.currentPageID === "google_maps") {
 			$(".navigation").hide();
 			$(".navigation_back_custom").show();
+			initMap();
 		}
 	},
 	updateMenuItems: function(){
@@ -1526,7 +1565,7 @@ var app = {
 		$("#headgearCaption").html( caption_ );
 	},
 	getDrawGaugeParamsFromIndex: async function(index, kb, leveloverride ) {
-		
+
 		console.log( "getDrawGaugeParamsFromIndex " + index );
 		let icl_min = kb.thermalindices.ireq[index].ICLminimal;
 		let icl_worn = getClo(kb);
@@ -1610,7 +1649,11 @@ var app = {
 	},
 	updateInfo: function( index ){
 		var self = this;
-		if( this.knowledgeBase.thermalindices.ireq.length > 0 ){
+		if( this.knowledgeBase.thermalindices.ireq.length > 0 && !this.knowledgeBase.user.guards.isIndoor){
+			// Remove weather indication from dashboard
+			$("#icon-weather").show();
+			$("#weather_desc").show();
+
 			let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
 			let utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ index ].utc ); //
 			let local_time = utc_date.toLocaleTimeString(navigator.language, { //language specific setting
@@ -1676,9 +1719,11 @@ var app = {
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit)); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
 
+			$("#windspeed_desc").html("Wind ");
+			$("#windspeed_unit").html(" km/h");
+
 			//weather icon
 			let clouds = this.knowledgeBase.thermalindices.ireq[index].clouds;
-			
 			
 			let rain = this.knowledgeBase.thermalindices.ireq[index].rain;
 			let solar = this.knowledgeBase.thermalindices.ireq[index].rad; 
@@ -1748,10 +1793,6 @@ var app = {
 			}
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
 			
-			// Indicate indoor/outdoor mode on dashboard
-			let isIndoor = this.knowledgeBase.user.guards.isIndoor ? "Indoor" : "Outdoor";
-			$("#indoor_outdoor").html(isIndoor.toUpperCase());
-			
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false ).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					console.log("update info draw gauge phase 2 " + [width, personalvalue, modelvalue, thermal, tip_html]);
@@ -1760,7 +1801,26 @@ var app = {
 					$("#tips").html( tip_html ); 
 					$("#circle_gauge_color").css("color", getCurrentGaugeColor(personalvalue));
 					$("#main_panel").fadeIn(500);
-			});
+			});		
+		
+		} else {
+			// Indoor mode
+			$("#temperature").html(this.knowledgeBase.user.settings.indoor._temperature + "&#xb0");
+			$("#windspeed").html(this.knowledgeBase.user.settings.indoor.windspeed);
+			$("#humidity").html(  this.knowledgeBase.user.settings.indoor._humidity);
+			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit)); 
+			
+			// Remove weather indication from dashboard // substitute with windows open/close
+			$("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
+			$("#weather_desc").html(this.knowledgeBase.user.settings.indoor.open_windows ? "Open windows" : "No open windows");
+			
+			// Remove redundant wind speed information when indoor
+			$("#windspeed_desc").html("");
+			$("#windspeed_unit").html("");		
+			// Indicate indoor/outdoor mode on dashboard
+			let isIndoor = this.knowledgeBase.user.guards.isIndoor ? "Indoor" : "Outdoor";
+			$("#indoor_outdoor").html(isIndoor.toUpperCase());
+
 		}
 	},
 	convertWeatherToChartData: function(){
