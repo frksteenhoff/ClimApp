@@ -1692,45 +1692,58 @@ var app = {
 			video.play();
 			function */
 			
+			// Weather descriptions aligned with https://openweathermap.org/weather-conditions
 			let icon_weather = "fa-cloud-sun-rain";
 			if( solar > 0 ){ //daytime
 				if( clouds < 10 ){                    //sun
 					icon_weather = "fa-sun";
+					$("#weather_desc").html("Sunny, clear sky");
 				}
 				else if( clouds < 80 && rain < 0.1 ){ //clouds sun no rain
 					icon_weather = "fa-cloud-sun";
+					$("#weather_desc").html("Broken clouds");
 				}
 				else if( clouds >= 80 && rain < 0.1 ){ //clouds no rain
 					icon_weather = "fa-cloud";
+					$("#weather_desc").html("Overcast clouds");
 				} 
 				else if( clouds < 80 && rain > 0.1 ){  //cloud sun rain
 					icon_weather = "fa-cloud-sun-rain";
+					$("#weather_desc").html("Light rain");
 				}
 				else if( clouds >= 80 && rain > 0.1 ){  //cloud  rain
 					icon_weather = "fa-cloud-rain";
+					$("#weather_desc").html("Light rain, overcast");
 				}
 				else if( clouds >= 80 && rain > 1 ){  //cloud  rain
 					icon_weather = "fa-cloud-showers-heavy";
+					$("#weather_desc").html("Shower rain");
 				}
 			}
 			else{ //night
 				if( clouds < 10 ){                    //moon
 					icon_weather = "fa-moon";
+					$("#weather_desc").html("Clear sky");
 				}
 				else if( clouds < 80 && rain < 0.1 ){ //clouds moon no rain
 					icon_weather = "fa-cloud-moon";
+					$("#weather_desc").html("Broken clouds");
 				}
 				else if( clouds >= 80 && rain < 0.1 ){ //clouds no rain
 					icon_weather = "fa-cloud";
+					$("#weather_desc").html("Overcast clouds");
 				} 
 				else if( clouds < 80 && rain > 0.1 ){  //cloud moon rain
 					icon_weather = "fa-cloud-moon-rain";
+					$("#weather_desc").html("Light rain");
 				}
 				else if( clouds >= 80 && rain > 0.1 ){  //cloud  rain
 					icon_weather = "fa-cloud-rain";
+					$("#weather_desc").html("Light rain, overcast");
 				}
 				else if( clouds >= 80 && rain > 1 ){  //cloud  rain
 					icon_weather = "fa-cloud-moon-rain";
+					$("#weather_desc").html("Shower rain");
 				}
 			}
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
