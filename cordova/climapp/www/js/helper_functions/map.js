@@ -1,7 +1,14 @@
 var map;
 function initMap() {
+
     map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -34.397, lng: 150.644},
+    center: currentCoordinates,
     zoom: 8
     });
+
+    var marker = new google.maps.Marker({
+        position: currentCoordinates,
+        map: map,
+        title: 'Current location'
+      })
 }
