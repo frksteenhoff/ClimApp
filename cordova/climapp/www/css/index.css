@@ -344,7 +344,9 @@ img.small{
 .panel.settings div.inlineitems.last,
 .panel.settings div.last, 
 .panel.settings div.map.last,
-.panel.settings_other div.last
+.panel.settings_other div.last, 
+.panel.settings div.inputcontainer.last,
+.panel.settings div.button.last
  {
     border-bottom: hidden;
 }
