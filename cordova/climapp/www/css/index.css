@@ -386,6 +386,7 @@ div.panel.settings div.input_section.last {
     margin-right: 0.25em;
 }
 
+.navigation_back_custom,
 .navigation_back_settings, 
 .navigation_back_dashboard   {
 	color:#fff;
@@ -458,6 +459,11 @@ div.panel.settings div.input_section.last {
 	/**/
 }
 
+/* Google Maps Styling */
+#map {
+    height: 100%;
+    width: 80%;
+  }
 
 /*
 //thermal colors also in knowledgebase.gauge.higlights, keep consistent

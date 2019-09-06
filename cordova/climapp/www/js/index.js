@@ -313,11 +313,10 @@ var app = {
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='wheel']").on("click", function(){
 			var target = $(this).attr("data-target");
-			console.log("HERE!" + target);
 			let title_ = self.knowledgeBase.settings.custom[target + "_text"];
-
 			var items_ = self.getSelectables( target );
-				
+			console.log(target + "    " + items_);
+
 			var config = {
 				title: title_,
 				items:[ [ items_ ] ],
@@ -326,7 +325,7 @@ var app = {
 			};
 					
 			window.SelectorCordovaPlugin.showSelector(config, function(result) {
-				self.knowledgeBase.settings.custom[title_] = items_[result[0].index].value;
+				self.knowledgeBase.settings.custom[target] = items_[result[0].index].value;
 					
 				console.log( target + ": " + items_[result[0].index].value);
 				self.saveSettings(); 
@@ -334,11 +333,11 @@ var app = {
 			}, function() {
 				console.log('Canceled');
 			});
-		
 		});
 		
-		$("div[data-listener='tab']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='tab']").on("click", function(){
+		$("div[data-listener='set_location']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='set_location']").on("click", function(){
+			// Load Google Maps UI to set location on map
 			self.loadUI("maps_overlay");
 		});
 
@@ -361,6 +360,68 @@ var app = {
 				showShortToast(customText);
 				self.saveSettings();
 			}
+		});
+
+		$("div[data-listener='set_custom_options']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='set_custom_options']").on("click", function(){
+			// Load UI using indoor options
+			var target = $(this).attr("data-target");
+			self.loadUI(target);
+		});
+	},
+	initIndoorListeners: function() {
+		var self = this;
+		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='wheel']").on("click", function(){
+			var target = $(this).attr("data-target");
+			console.log(target);
+			let title_ = self.knowledgeBase.settings.indoor[target + "_text"];
+			var items_ = self.getSelectables( target );
+			
+			var config = {
+				title: title_,
+				items:[ [ items_ ] ],
+				positiveButtonText: "Done",
+				negativeButtonText: "Cancel"
+			};
+					
+			window.SelectorCordovaPlugin.showSelector(config, function(result) {
+				self.knowledgeBase.settings.indoor[target] = items_[result[0].index].value;
+					
+				console.log( target + ": " + items_[result[0].index].value);
+				self.saveSettings(); 
+				self.updateUI();
+			}, function() {
+				console.log('Canceled');
+			});
+		});
+
+		$("input[data-listener='toggle_switch']").off(); //prevent multiple instances of listeners on same object
+		$("input[data-listener='toggle_switch']").on("click", function(){
+			var target = $(this).attr("data-target");
+
+			if(target === "indoor_switch") {
+				var isChecked = $(this).is(":checked");
+				self.knowledgeBase.user.guards.isIndoor = isChecked;
+				// Inform user about choice in toast
+				var customText = "";
+				if(isChecked) {
+					customText = "Indoor mode enabled.";
+					$("#indoorSection").show();
+				 } else {  
+					customText = "Indoor mode disabled."; 
+					$("#indoorSection").hide();
+				}
+				showShortToast(customText);
+				self.saveSettings();
+			}
+		});
+
+		$("diiv[data-listener='set_indoor_options']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='set_indoor_options']").on("click", function(){
+			// Load UI using indoor options
+			var target = $(this).attr("data-target");
+			self.loadUI(target);
 		});
 	},
 	initGeolocationListeners: function(){
@@ -481,7 +542,8 @@ var app = {
 					"receivesNotifications": 0, // false as notifications are not part of the app
 					"appOpenedCount": 0, // number of times user has opened app
 					"feedbackSliderChanged": 0,
-					"customInputEnabled": false
+					"customInputEnabled": false,
+					"isIndoor": false
 				}, 
 				"settings": { // Using default values
 					"age": 30,
@@ -511,7 +573,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0393,
+			"version": 2.0397,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -550,14 +612,20 @@ var app = {
 								"value": 0 ,
 								"coordinates_lon": 0,
 								"coordinates_lat": 0,
-								"custom_coordinates_text": "Input the wanted coordinates",
-								"temperature": 0,
-								"custom_temperature_text": "Input the temperature you want to use",
+								"coordinates_text": "Input the wanted coordinates",
+								"_temperature": 0,
+								"_temperature_text": "Input the temperature you want to use",
 								"windspeed": 0,
-								"custom_windspeed_text": "Input the windspeed you would like to use",
-								"humidity": 0,																	 
-								"custom_humidity_text": "Input the humidity you would like to use"					
+								"windspeed_text": "Input the windspeed you would like to use",
+								"_humidity": 0,																	 
+								"_humidity_text": "Input the humidity you would like to use"					
 							   },
+						 "indoor": {
+							 	"thermostat_level": 0,
+								"thermostat_level_text" : "What is your thermostat set to?",
+								"open_windows": 0,
+								"open_windows_text" : "Are there any open windows in the room?"
+						 }	   
 					   },
 			"activity": { "title": "What is your activity level?",
 				  			"description": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
@@ -701,6 +769,7 @@ var app = {
 						 "details": "./pages/details.html",
 						 "about": "./pages/about.html",
 						 "custom_input": "./pages/custom_input.html",
+						 "indoor": "./pages/indoor.html",
 						 "maps_overlay": "./pages/maps_overlay.html"};
 		this.selectedWeatherID = 0;
 		this.maxForecast = 8; //8x3h = 24h
@@ -778,6 +847,7 @@ var app = {
 		var self = this;
 		let unit = this.knowledgeBase.user.settings.unit;
 		var obj_array = [];
+
 		if( key.slice(0, 3) === "age" ){
 			for( var i=0; i<100; i++){
 				obj_array.push({description: (i+12) + " years", value: (i+12) });
@@ -840,45 +910,45 @@ var app = {
 				obj_array.push({description: val, value: key} );
 			});
 		}
-		else if(key === "custom_input") {
+
+		/* CUSTOM INPUT */
+		else if(key === "custom_input" || key === "open_windows") {
 			obj_array.push({description: "Yes", value: 1 } );
 			obj_array.push({description: "No", value: 0 } );
 		}
-		else if(key === "custom_coordinates") {
-			// Opening Google Maps API to get location.
+		else if(key === "coordinates") {
+			// Opening Google Maps API to get location in new window.
 			self.loadUI("maps_overlay");
 		}
-		else if(key === "custom_temperature") {
+		else if(key === "_temperature") {
 			if(this.knowledgeBase.user.settings.unit !== "SI") {
 				// Fahrenheit
 				for(var i = 200; i >= -40; i--) {
 					let convertedTemp = getTemperatureValueInPreferredUnit(i, "US");
-					obj_array.push({description: convertedTemp.toFixed(1) + " fahrenheit", value: convertedTemp.toFixed(1)});
+					obj_array.push({description: convertedTemp.toFixed(1) + " &#xb0 F", value: convertedTemp.toFixed(1)});
 				}
 			} else {
 				// Celcius
-				for(var j = 60; j >= -30; j--) {
-					obj_array.push({description: j + " celcius", value: j});
+				for(var j = -30; j <= 60; j++) {
+					obj_array.push({description: j + " &#xb0  C", value: j});
 				}
 			}
 		}
-		else if(key === "custom_windspeed") {
-			for(var i = 0.0; i < 20; i+=0.1) {
-				obj_array.push({description: i.toFixed(1) + " m/s", value: i.toFixed(1) } );
-			}
-		}
-		else if(key === "custom_humidity") {
+		else if(key === "_humidity") {
 			for(var i = 0; i <= 100; i+= 10) {
-				obj_array.push({description: i + " %", value: i.toFixed(1)});
+				obj_array.push({description: i + " %", value: i});
 			}
 		}
+		// using logic for windspeed above
 
-		// Return two object arrays if working with lon/lat
-		if(key === "customs_coordinates") {
-			return obj_array, obj_array_lon;
-		} else {
-			return obj_array;
+		/* INDOOR MODE */
+		else if(key === "thermostat_level") {
+			for(var i = 1; i <= 5; i++) {
+				obj_array.push({description: i, value: i });
+			}
 		}
+		// logic for windows in custom output section
+		return obj_array;
 	},
 	saveSettings: function(){
 		let jsonData = JSON.stringify( this.knowledgeBase );
@@ -1162,6 +1232,7 @@ var app = {
 		this.initNavbarListeners();
 		$(".navigation_back_settings").hide();
 		$(".navigation_back_dashboard").hide();
+		$(".navigation_back_custom").hide();
 		
 		if( this.currentPageID == "onboarding"){
 			$(".navigation").hide();
@@ -1411,17 +1482,31 @@ var app = {
 			$(".navigation_back_settings").show();
 		}
 		else if (this.currentPageID == "custom_input") {
-			$(".navigation_back_settings").show();
+			$(".navigation_back_dashboard").show();
 			$("#custom_input_checkbox").prop("checked", this.knowledgeBase.user.guards.customInputEnabled);
 			this.knowledgeBase.user.guards.customInputEnabled ? $("#customSection").show() : $("#customSection").hide(); 
 			this.initExploreListeners();
 
 			var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
 
-			$("#custom_coordinates").html( "lon: " + this.knowledgeBase.settings.custom.coordinates_lon + " lat: " + this.knowledgeBase.settings.custom.coordinates_lon);
-			$("#custom_temperature").html( this.knowledgeBase.settings.custom.temperature + " &#xb0 " + tempUnit);
-			$("#custom_windspeed").html( this.knowledgeBase.settings.custom.windspeed + " m/s");
-			$("#custom_humidity").html(this.knowledgeBase.settings.custom.humidity + " %");
+			$("#coordinates").html( "lon: " + this.knowledgeBase.settings.custom.coordinates_lon + " lat: " + this.knowledgeBase.settings.custom.coordinates_lon);
+			$("#_temperature").html( this.knowledgeBase.settings.custom._temperature + " &#xb0 " + tempUnit);
+			$("#windspeed").html( this.knowledgeBase.settings.custom.windspeed);
+			$("#_humidity").html(this.knowledgeBase.settings.custom._humidity + " %");
+		}
+		else if (this.currentPageID == "indoor") {
+			$(".navigation_back_dashboard").show();
+			$("#indoor_checkbox").prop("checked", this.knowledgeBase.user.guards.isIndoor);
+			this.knowledgeBase.user.guards.isIndoor ? $("#indoorSection").show() : $("#indoorSection").hide(); 
+			this.initIndoorListeners();
+			var windowsOpen = this.knowledgeBase.settings.indoor.open_windows ? "Yes" : "No";
+
+			$("#thermostat_level").html(this.knowledgeBase.settings.indoor.thermostat_level);
+			$("#open_windows").html(windowsOpen);
+		}
+		else if (this.currentPageID === "maps_overlay") {
+			$(".navigation").hide();
+			$(".navigation_back_custom").show();
 		}
 	},
 	updateMenuItems: function(){
