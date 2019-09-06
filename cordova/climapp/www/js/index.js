@@ -1676,10 +1676,6 @@ var app = {
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit)); 
 			$("#humidity").html(  this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0) );
 
-			// Indicate indoor/outdoor mode on dashboard
-			let isIndoor = this.knowledgeBase.user.guards.isIndoor ? "Indoor" : "Outdoor";
-			$("#indoor_outdoor").html(isIndoor);
-			
 			//weather icon
 			let clouds = this.knowledgeBase.thermalindices.ireq[index].clouds;
 			
@@ -1751,7 +1747,11 @@ var app = {
 				}
 			}
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
-		    
+			
+			// Indicate indoor/outdoor mode on dashboard
+			let isIndoor = this.knowledgeBase.user.guards.isIndoor ? "Indoor" : "Outdoor";
+			$("#indoor_outdoor").html(isIndoor.toUpperCase());
+			
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false ).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					console.log("update info draw gauge phase 2 " + [width, personalvalue, modelvalue, thermal, tip_html]);
