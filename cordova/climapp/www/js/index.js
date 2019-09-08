@@ -418,6 +418,7 @@ var app = {
  
 			var data = "./ClimApp_Predictor220119.arff" //ARFF json format (see [node-arff](https://github.com/chesles/node-arff))
 			 
+			/* currently not working
 			//See Weka Documentation
 			var options = {
 			  //'classifier': 'weka.classifiers.bayes.NaiveBayes',
@@ -437,7 +438,7 @@ var app = {
 				// returns a label (character from A-S indicating the predicated indoor temperature)
 				console.log(result);   
 			});
-
+			*/
 			self.loadUI(target);
 		});
 	},
