@@ -537,7 +537,6 @@ var app = {
 					"appOpenedCount": 0, // number of times user has opened app
 					"feedbackSliderChanged": 0,
 					"customLocationEnabled": false,
-					"customInputEnabled": false,
 					"isIndoor": false
 				}, 
 				"settings": { // Using default values
@@ -559,11 +558,11 @@ var app = {
 								"coordinates_text": "Input the wanted coordinates"					
 					  },
 					 "indoor": {
-						 	"thermostat_level": 0,
+						 	"thermostat_level": 3,
 							"thermostat_level_text" : "What is your thermostat set to?",
 							"open_windows": 0,
 							"open_windows_text" : "Are there any open windows in the room?",
-							"_temperature": 0, // outdoor temperature
+							"_temperature": 20, // indoor temperature
 							"_temperature_text": "Input the outdoor temperature you would like to use",
 							"windspeed": 0,
 							"windspeed_text": "Input the windspeed you would like to use",
@@ -586,7 +585,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.040,
+			"version": 2.043,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -1018,8 +1017,8 @@ var app = {
 									self.knowledgeBase.weather.windchill.unshift( Number( weather.currentweather.windchill ) );
 									
 									// Using custom input, when custom is enabled (indoor mode)
-									if(self.knowledgeBase.user.guards.customInputEnabled || self.knowledgeBase.user.guards.isIndoor) {
-										self.knowledgeBase.weather.temperature = self.knowledgeBase.user.settings.indoor._temperature;
+									if(self.knowledgeBase.user.guards.isIndoor) {
+										//self.knowledgeBase.weather.temperature = self.knowledgeBase.user.settings.indoor._temperature;
 										self.knowledgeBase.weather.humidity = self.knowledgeBase.user.settings.indoor._humidity;
 										self.knowledgeBase.weather.windspeed = self.translateTextToWindspeed(self.knowledgeBase.user.settings.indoor.windspeed);
 									}
@@ -1264,7 +1263,7 @@ var app = {
 			
 			this.updateMenuItems();
 			
-			if(this.knowledgeBase.user.guards.customInputEnabled || this.knowledgeBase.user.guards.isIndoor) {
+			if(this.knowledgeBase.user.guards.isIndoor) {
 				// Hide forecast when custom input is used
 				$("#dashboard_header").hide();
 				$("#dashboard_forecast").hide();
@@ -1299,14 +1298,14 @@ var app = {
 
 					// IS THIS THE CORRECT WAY TO DO IT ?
 					if(this.knowledgeBase.user.guards.isIndoor) {
-						tair = this.knowledgeBase.user.settings.indoor._temperature;
+						//tair = this.knowledgeBase.user.settings.indoor._temperature;
 						rh = this.knowledgeBase.user.settings.indoor._humidity;
 						vair2 = this.knowledgeBase.user.settings.indoor.windspeed;
 					} else {
-						tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
 						rh = this.knowledgeBase.thermalindices.phs[index].rh.toFixed(0);
 						vair2 = this.knowledgeBase.thermalindices.phs[index].v_air.toFixed(1);
 					}
+					tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
 					let clouds = this.knowledgeBase.thermalindices.phs[index].clouds.toFixed(0);
 			
 					let rad = this.knowledgeBase.thermalindices.phs[index].rad.toFixed(0);
@@ -1536,7 +1535,7 @@ var app = {
 			var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
 	
 			$("#coordinates").html( "lon: " + this.knowledgeBase.user.settings.location.coordinates_lon + " lat: " + this.knowledgeBase.user.settings.location.coordinates_lon);
-			$("#_temperature").html( this.knowledgeBase.user.settings.indoor._temperature + " &#xb0 " + tempUnit);
+			//$("#_temperature").html( this.knowledgeBase.user.settings.indoor._temperature + " &#xb0 " + tempUnit);
 			$("#windspeed").html( this.knowledgeBase.user.settings.indoor.windspeed);
 			$("#_humidity").html(this.knowledgeBase.user.settings.indoor._humidity + " %");
 			$("#thermostat_level").html(this.knowledgeBase.user.settings.indoor.thermostat_level);
@@ -1805,22 +1804,21 @@ var app = {
 		
 		} else {
 			// Indoor mode
-			$("#temperature").html(this.knowledgeBase.user.settings.indoor._temperature + "&#xb0");
+			$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair, this.knowledgeBase.user.settings.unit).toFixed(0));
 			$("#windspeed").html(this.knowledgeBase.user.settings.indoor.windspeed);
 			$("#humidity").html(  this.knowledgeBase.user.settings.indoor._humidity);
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit)); 
-			
+				
 			// Remove weather indication from dashboard // substitute with windows open/close
 			$("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
 			$("#weather_desc").html(this.knowledgeBase.user.settings.indoor.open_windows ? "Open windows" : "No open windows");
-			
+				
 			// Remove redundant wind speed information when indoor
 			$("#windspeed_desc").html("");
 			$("#windspeed_unit").html("");		
 			// Indicate indoor/outdoor mode on dashboard
 			let isIndoor = this.knowledgeBase.user.guards.isIndoor ? "Indoor" : "Outdoor";
 			$("#indoor_outdoor").html(isIndoor.toUpperCase());
-
 		}
 	},
 	convertWeatherToChartData: function(){
