@@ -463,9 +463,17 @@ div.panel.settings div.input_section.last {
 
 /* Google Maps Styling */
 #map {
-    height: 100%;
-    width: 80%;
+    height: 400px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
   }
+
+#location_footer {
+    margin: 0.5em;
+    position: relative;
+    display: inline-block;
+}
 
 /*
 //thermal colors also in knowledgebase.gauge.higlights, keep consistent

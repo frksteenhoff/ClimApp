@@ -338,7 +338,12 @@ var app = {
 		$("div[data-listener='set_location']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='set_location']").on("click", function(){
 			// Load Google Maps UI to set location on map
-			self.loadUI("google_maps");
+			$("#custom_location_switch").hide();
+			$("#customLocationSection").hide();
+			$("#google_maps_elem").show();
+			$("#location_header").html("Choose your location");
+			$("#location_footer").html("Current location");
+			$("#latlon").html("");
 		});
 
 		$("input[data-listener='toggle_switch']").off(); //prevent multiple instances of listeners on same object
@@ -350,6 +355,7 @@ var app = {
 			if(target === "custom_location_switch") {
 				self.knowledgeBase.user.guards.customLocationEnabled = isChecked;
 				if(isChecked) {
+					self.knowledgeBase.user.guards.isIndoor = false;
 					customText = "Custom location is enabled.";
 					$("#customLocationSection").show();
 				 } else {  
@@ -399,6 +405,7 @@ var app = {
 				// Inform user about choice in toast
 				var customText = "";
 				if(isChecked) {
+					self.knowledgeBase.user.guards.customLocationEnabled = false;
 					customText = "Indoor mode enabled.";
 					$("#indoorSection").show();
 				 } else {  
@@ -787,8 +794,7 @@ var app = {
 						 "details": "./pages/details.html",
 						 "about": "./pages/about.html",
 						 "location": "./pages/location.html",
-						 "indoor": "./pages/indoor.html",
-						 "google_maps": "./pages/google_maps.html"};
+						 "indoor": "./pages/indoor.html"};
 		this.selectedWeatherID = 0;
 		this.maxForecast = 8; //8x3h = 24h
 		var shadowKB = this.initKnowledgeBase();
@@ -936,7 +942,7 @@ var app = {
 		}
 		else if(key === "coordinates") {
 			// Opening Google Maps API to get location in new window.
-			self.loadUI("google_maps");
+			$("#google_maps_elem").show();
 		}
 		else if(key === "_temperature") {
 			if(this.knowledgeBase.user.settings.unit !== "SI") {
@@ -1270,6 +1276,7 @@ var app = {
 		$(".navigation_back_settings").hide();
 		$(".navigation_back_dashboard").hide();
 		$(".navigation_back_custom").hide();
+		$("#google_maps_elem").hide();
 		
 		if( this.currentPageID == "onboarding"){
 			$(".navigation").hide();
@@ -1544,6 +1551,11 @@ var app = {
 		}
 		else if (this.currentPageID == "location") {
 			$(".navigation_back_dashboard").show();
+			$("#custom_location_switch").show();
+			$("#customLocationSection").show();
+			$("#google_maps_elem").hide();
+
+			
 			// Location
 			this.knowledgeBase.user.guards.customLocationEnabled ? $("#customLocationSection").show() : $("#customLocationSection").hide(); 
 			$("#custom_location_checkbox").prop("checked", this.knowledgeBase.user.guards.customLocationEnabled);
@@ -1564,11 +1576,6 @@ var app = {
 			$("#_humidity").html(this.knowledgeBase.user.settings.indoor._humidity + " %");
 			$("#thermostat_level").html(this.knowledgeBase.user.settings.indoor.thermostat_level);
 			$("#open_windows").html(windowsOpen);
-		}
-		else if (this.currentPageID === "google_maps") {
-			$(".navigation").hide();
-			$(".navigation_back_custom").show();
-			initMap();
 		}
 	},
 	updateMenuItems: function(){
