@@ -415,6 +415,29 @@ var app = {
 		$("div[data-listener='set_indoor_options']").on("click", function(){
 			// Load UI using indoor options
 			var target = $(this).attr("data-target");
+ 
+			var data = "./ClimApp_Predictor220119.arff" //ARFF json format (see [node-arff](https://github.com/chesles/node-arff))
+			 
+			//See Weka Documentation
+			var options = {
+			  //'classifier': 'weka.classifiers.bayes.NaiveBayes',
+			  'classifier': 'weka.classifiers.functions.SMO',
+			  'params'    : ''
+			};
+			 
+			var testData = {
+			  TAO : 22,  // outside air temperature
+			  RHO : 80,  // relative humiditiy outside
+			  SR  : 10,  // 
+			  TRV : 2,   // temperature/level of thermostat 
+			  TA  : '?'  // last is class attribute
+			};
+			 
+			weka.classify(data, testData, options, function (err, result) {
+				// returns a label (character from A-S indicating the predicated indoor temperature)
+				console.log(result);   
+			});
+
 			self.loadUI(target);
 		});
 	},
