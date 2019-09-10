@@ -158,6 +158,8 @@ var app = {
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then( 
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					self.drawGauge( 'feedback_gauge', width, slider_value , thermal );
+
+					// Not used anymore?
 					$("#gauge_text_top_current").html("Difference from system prediction: " + getSliderDiffFromSystemPrediction(self.knowledgeBase, thermal, slider_value));
 
 					// Set the value as the perceived value in knowledgebase
@@ -313,7 +315,7 @@ var app = {
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='wheel']").on("click", function(){
 			var target = $(this).attr("data-target");
-			let title_ = self.knowledgeBase.user.settings.location[target + "_text"];
+			let title_ = self.knowledgeBase.user.settings[target];
 			var items_ = self.getSelectables( target );
 			console.log(target + "    " + items_);
 
@@ -325,7 +327,7 @@ var app = {
 			};
 					
 			window.SelectorCordovaPlugin.showSelector(config, function(result) {
-				self.knowledgeBase.user.settings.location[target] = items_[result[0].index].value;
+				self.knowledgeBase.user.settings[target] = items_[result[0].index].value;
 					
 				console.log( target + ": " + items_[result[0].index].value);
 				self.saveSettings(); 
@@ -367,6 +369,12 @@ var app = {
 			showShortToast(customText);
 			self.saveSettings();
 		});
+
+		$("input[data-listener='set_coordinates']").off(); //prevent multiple instances of listeners on same object
+		$("input[data-listener='set_coordinates']").on("click", function(){
+			var rawCoordinates = document.getElementById("lonlat").innerText;
+			console.log("coordinates: " + rawCoordinates + "  " + rawCoordinates.split(",")[0]);
+		});
 	},
 	initIndoorListeners: function() {
 		var self = this;
@@ -374,7 +382,7 @@ var app = {
 		$("div[data-listener='wheel']").on("click", function(){
 			var target = $(this).attr("data-target");
 			console.log(target);
-			let title_ = self.knowledgeBase.user.settings.indoor[target + "_text"];
+			let title_ = self.knowledgeBase.user.settings[target + "_text"];
 			var items_ = self.getSelectables( target );
 			
 			var config = {
@@ -385,7 +393,7 @@ var app = {
 			};
 					
 			window.SelectorCordovaPlugin.showSelector(config, function(result) {
-				self.knowledgeBase.user.settings.indoor[target] = items_[result[0].index].value;
+				self.knowledgeBase.user.settings[target] = items_[result[0].index].value;
 					
 				console.log( target + ": " + items_[result[0].index].value);
 				self.saveSettings(); 
@@ -423,9 +431,9 @@ var app = {
 			// Load UI using indoor options
 			var target = $(this).attr("data-target");
  
+			/* currently not working
 			var data = "./ClimApp_Predictor220119.arff" //ARFF json format (see [node-arff](https://github.com/chesles/node-arff))
 			 
-			/* currently not working
 			//See Weka Documentation
 			var options = {
 			  //'classifier': 'weka.classifiers.bayes.NaiveBayes',
@@ -582,24 +590,17 @@ var app = {
 					"headgear_selected": "none",
 					"explore": false, // currently not used
 					"level": 1, // 1 - beginner, 2 - advanced
-					"location": { "title": "Do you want to input custom location and climatic values for the app to use?", 
-								"value": 0 ,
-								"coordinates_lon": 0,
-								"coordinates_lat": 0,
-								"coordinates_text": "Input the wanted coordinates"					
-					  },
-					 "indoor": {
-						 	"thermostat_level": 3,
-							"thermostat_level_text" : "What is your thermostat set to?",
-							"open_windows": 0,
-							"open_windows_text" : "Are there any open windows in the room?",
-							"_temperature": 20, // indoor temperature
-							"_temperature_text": "Input the outdoor temperature you would like to use",
-							"windspeed": 0,
-							"windspeed_text": "Input the windspeed you would like to use",
-							"_humidity": 0,																	 
-							"_humidity_text": "Input the humidity you would like to use"
-					 } 
+
+					/* Indoor mode */ 
+					"thermostat_level": 3,
+					"open_windows": 0,
+					"_temperature": 20, // indoor temperature
+					"windspeed": 0,
+					"_humidity": 0,	
+
+					/* Custom location */																 
+					"coordinates_lon": 0,
+					"coordinates_lat": 0,
 				},
 				"adaptation": {
 					"mode": "undefined",
@@ -623,38 +624,48 @@ var app = {
 				"dtu_api_base_url": "/ClimAppAPI/v1/ClimAppApi.php?apicall="
 			},
 			"position": { "lat": 0, 
-						 "lng": 0, 
+			"lng": 0, 
 						 "timestamp": "" 
-			   },
-			"weather": {	"station": "",
+						},
+						"weather": {	"station": "",
 							"lat": 0,
 							"lng": 0,
 						    "distance": -1,
 							"utc": [""],
 							"wbgt": [-99],
 							"windchill": [-99],
- 							"temperature": [-99],
+							"temperature": [-99],
 							"globetemperature": [-99],
 						    "humidity": [-99],
 							"watervapourpressure": [-99],
 							"windspeed": [-99],
 							"radiation": [-99]
 						},
-			"settings": { "age": {"title": "What is your age?",
-								"unit": "years"
+			"settings": { 	"age": {"title": "What is your age?",
+								   "unit": "years"
 						 		},
-						 "height": {"title": "How tall are you?"
+						 	"height": {"title": "How tall are you?"
 								},
-						 "weight": {"title": "How much do you weigh?"
+							"weight": {"title": "How much do you weigh?"
 								},
-						 "gender": {"title": "What is your gender?"
+						 	"gender": {"title": "What is your gender?"
 								},
-						 "unit": { "title": "Which units of measurements would you prefer?"
-								}	   
-					   },
+						 	"unit": { "title": "Which units of measurements would you prefer?"
+								},	   
+							"thermostat_level": { "title": "What is your thermostat set to?"
+								},
+							"open_windows" : { "title" : "Are there any open windows in the room?"
+								},
+							"_temperature": { "title" : "Input the outdoor temperature you would like to use"
+								},
+							"windspeed_text": { "title" : "Input the windspeed you would like to use"
+								},
+							"_humidity_text": { "title" : "Input the humidity you would like to use"
+								},
+							}, 
 			"activity": { "title": "What is your activity level?",
 				  			"description": {	"rest": "Resting, sitting at ease.\nBreathing not challenged.",
-										 		"low":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
+							  "low":"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
 										 		"medium":"Walking 2.5 - 5.5km/h. Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.",
 											 	"high":"Intense arm and trunk work: carrying heavy material, shovelling, sawing, hand mowing, concrete block laying.",
 												"intense":"Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs, running on level surface." 
@@ -672,7 +683,7 @@ var app = {
 										"intense": 520.0
 							}
 						},
-			   			"clothing": { "title": "What kind of clothing are you wearing?",
+			"clothing": { "title": "What kind of clothing are you wearing?",
 				  			"description": {	"Summer_attire": "Loose fitting, short clothing. Typical for summer.",
 								 				"Business_suit":"Regular business suit. Most common in offices.",
 												"Double_layer": "Generally taken to be coveralls over work clothes.",
@@ -913,6 +924,7 @@ var app = {
 			obj_array.push({description: "Some wind", value: "Some wind" } );
 			obj_array.push({description: "Strong wind", value: "Strong wind" } );	
 		}
+		// Is this being used anywhere?
 		else if( key === "radiation" ){
 			obj_array.push( {description: "Shadow", value: "Shadow"} );
 			obj_array.push( {description: "Halfshadow", value: "Halfshadow" } );
@@ -1048,9 +1060,9 @@ var app = {
 									
 									// Using custom input, when custom is enabled (indoor mode)
 									if(self.knowledgeBase.user.guards.isIndoor) {
-										//self.knowledgeBase.weather.temperature = self.knowledgeBase.user.settings.indoor._temperature;
-										self.knowledgeBase.weather.humidity = self.knowledgeBase.user.settings.indoor._humidity;
-										self.knowledgeBase.weather.windspeed = self.translateTextToWindspeed(self.knowledgeBase.user.settings.indoor.windspeed);
+										//self.knowledgeBase.weather.temperature = self.knowledgeBase.user.settings._temperature;
+										self.knowledgeBase.weather.humidity = self.knowledgeBase.user.settings._humidity;
+										self.knowledgeBase.weather.windspeed = self.translateTextToWindspeed(self.knowledgeBase.user.settings.windspeed);
 									}
 									else {
 										// Otherwise use weather service info
@@ -1329,9 +1341,9 @@ var app = {
 
 					// IS THIS THE CORRECT WAY TO DO IT ?
 					if(this.knowledgeBase.user.guards.isIndoor) {
-						//tair = this.knowledgeBase.user.settings.indoor._temperature;
-						rh = this.knowledgeBase.user.settings.indoor._humidity;
-						vair2 = this.knowledgeBase.user.settings.indoor.windspeed;
+						//tair = this.knowledgeBase.user.settings._temperature;
+						rh = this.knowledgeBase.user.settings._humidity;
+						vair2 = this.knowledgeBase.user.settings.windspeed;
 					} else {
 						rh = this.knowledgeBase.thermalindices.phs[index].rh.toFixed(0);
 						vair2 = this.knowledgeBase.thermalindices.phs[index].v_air.toFixed(1);
@@ -1567,14 +1579,14 @@ var app = {
 			$("#indoor_checkbox").prop("checked", this.knowledgeBase.user.guards.isIndoor);
 			this.knowledgeBase.user.guards.isIndoor ? $("#indoorSection").show() : $("#indoorSection").hide(); 
 			this.initIndoorListeners();
-			var windowsOpen = this.knowledgeBase.user.settings.indoor.open_windows ? "Yes" : "No";
+			var windowsOpen = this.knowledgeBase.user.settings.open_windows ? "Yes" : "No";
 			var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
 	
-			$("#coordinates").html( "lon: " + this.knowledgeBase.user.settings.location.coordinates_lon + " lat: " + this.knowledgeBase.user.settings.location.coordinates_lon);
-			//$("#_temperature").html( this.knowledgeBase.user.settings.indoor._temperature + " &#xb0 " + tempUnit);
-			$("#windspeed").html( this.knowledgeBase.user.settings.indoor.windspeed);
-			$("#_humidity").html(this.knowledgeBase.user.settings.indoor._humidity + " %");
-			$("#thermostat_level").html(this.knowledgeBase.user.settings.indoor.thermostat_level);
+			$("#coordinates").html( "lon: " + this.knowledgeBase.user.settings.coordinates_lon + " lat: " + this.knowledgeBase.user.settings.coordinates_lon);
+			//$("#_temperature").html( this.knowledgeBase.user.settings._temperature + " &#xb0 " + tempUnit);
+			$("#windspeed").html( this.knowledgeBase.user.settings.windspeed);
+			$("#_humidity").html(this.knowledgeBase.user.settings._humidity + " %");
+			$("#thermostat_level").html(this.knowledgeBase.user.settings.thermostat_level);
 			$("#open_windows").html(windowsOpen);
 		}
 	},
@@ -1760,7 +1772,6 @@ var app = {
 			
 			/*
 			save code for later use
-			
 			var video = $('#bgvideo')[0];
 			video.src = "./video/rain.mp4";
 			video.load();
@@ -1836,13 +1847,13 @@ var app = {
 		} else {
 			// Indoor mode
 			$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[ index].Tair, this.knowledgeBase.user.settings.unit).toFixed(0));
-			$("#windspeed").html(this.knowledgeBase.user.settings.indoor.windspeed);
-			$("#humidity").html(  this.knowledgeBase.user.settings.indoor._humidity);
+			$("#windspeed").html(this.knowledgeBase.user.settings.windspeed);
+			$("#humidity").html(  this.knowledgeBase.user.settings._humidity);
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit)); 
 				
 			// Remove weather indication from dashboard // substitute with windows open/close
 			$("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
-			$("#weather_desc").html(this.knowledgeBase.user.settings.indoor.open_windows ? "Open windows" : "No open windows");
+			$("#weather_desc").html(this.knowledgeBase.user.settings.open_windows ? "Open windows" : "No open windows");
 				
 			// Remove redundant wind speed information when indoor
 			$("#windspeed_desc").html("");
