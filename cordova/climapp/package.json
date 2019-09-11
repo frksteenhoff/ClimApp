@@ -22,7 +22,6 @@
         "cordova-plugin-x-toast": "^2.7.2",
         "cordova-wheel-selector-plugin": "1.1.2",
         "intro.js": "^2.9.3",
-        "node-weka": "0.0.8",
         "tocca": "^2.0.4"
     },
     "cordova": {
