@@ -24,15 +24,15 @@
 
 # ## Code
 # **Importing needed libraries**
-
 import pandas as pd
 import json
 import os
 import numpy as np
 
-
 os.getcwd()
+troubleshoot = False
 
+print("---------------------------------------------------")
 print("Preparing for conversion ..")
 # ## Functions
 # 
@@ -107,14 +107,14 @@ for lang in df.columns[1:]:
     else:
         print("'" + lang + "' translations are MISSING VALUES")
 
-print("\nCurrently available languages: ", availableLanguages)
-
+print("Currently available languages: ", availableLanguages)
+print("---------------------------------------------------")
 
 # #### Converting csv content to JSON object
 
 text = convertCSVtoJSON_simple(df, availableLanguages)
-
-print(json.dumps(text, indent=4))
+if(troubleshoot):
+    print(json.dumps(text, indent=4))
 
 
 # ## Toasts
@@ -125,15 +125,13 @@ print("Converting toasts.. ")
 df = pd.read_csv("climapp_translation_sheet_toasts.csv")
 
 # **Showing basic content**
-
 df.head()
 
 
 # #### Converting csv content to JSON object
-
 toasts = convertCSVtoJSON_simple(df, availableLanguages)
-
-print(json.dumps(toasts, indent=4))
+if(troubleshoot):
+    print(json.dumps(toasts, indent=4))
 
 
 # ## Wheels
@@ -147,16 +145,15 @@ df.head()
 # #### Converting csv content to JSON object
 
 wheels = convertCSVtoJSON_nested(df, availableLanguages)
-
-
 # Use to check the result
-print(json.dumps(wheels, indent=4))
+if(troubleshoot):
+    print(json.dumps(wheels, indent=4))
 
 # ## Combining all information in one JSON object
-print("Combining all json object.. ")
+print("Combining all json objects.. ")
 combined_object = {"text" : text, "wheels" : wheels, "toasts" :toasts}
-
-print(json.dumps(combined_object, indent=4))
+if(troubleshoot):
+    print(json.dumps(combined_object, indent=4))
 
 
 # ### Saving the above struture to a .JSON file
@@ -164,7 +161,7 @@ print(json.dumps(combined_object, indent=4))
 print("Saving object to file as 'translations.json'.. ")
 with open('translations.json', 'w') as f:
     json.dump(combined_object, f)
-    print("Conversion completed successfully!")
+    print("Conversion completed!")
 
 
 
