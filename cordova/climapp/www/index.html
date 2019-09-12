@@ -82,11 +82,15 @@
                         <!-- BK feb 6 2019: we use this div as our root, and dynamically populate it with the content we require.
                         -->
                 </div>
-                <div class="panel top" id="google_maps_elem">
-                    <p id="location_header"></p>
+                <div class="panel top hidden" id="google_maps_elem">
+                    <p class="header" id="location_header"></p>
                     <div id="map"></div>
-                    <div id="location_footer"></div>
-                    <div class="button" id="set_location_option" data-target="dashboard" data-listener="set_coordinates">Set location</div>
+                    <div><p id="location"></p></div>
+                    <div><p id="latlon"></p></div>
+
+                    <div class="inputcontainer">
+                        <div class="button" id="set_location_option" data-target="dashboard" data-listener="set_coordinates">Set location</div>
+                    </div>
                 </div>  
                 
 			
@@ -106,7 +110,7 @@
         <script type="text/javascript" src="js/helper_functions/dtu_database.js"></script>
         <script type="text/javascript" src="js/helper_functions/map.js"></script>
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYMo6nfg5WlXwSpbHtl6ZIhnMBlz9jKow&callback=initMap" async defer></script>
-        <script type="text/javascript" src="js/helper_functions/translations.json"></script>
+        <script type="text/javascript" src="translations/translations.json"></script>
         <script type="text/javascript" src="js/Chart.bundle.min.js"></script>
         <script type="text/javascript" src="js/gauge.min.js"></script>
 		<script type="text/javascript" src="js/phs/phs.js"></script>

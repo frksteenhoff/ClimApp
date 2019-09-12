@@ -271,6 +271,12 @@ p.label{
 	font-size: 0.8em;
     font-weight: bold;
 }
+
+p.header{
+	font-size: 1.2em;
+    font-weight: bold;
+}
+
 p.caption{
 	font-size: 1em;
 	font-style: italic;
@@ -591,7 +597,8 @@ div.inputcontainer{
 
 div.inputcontainer div.button {
     width: 80%;
-	margin: auto;	
+    margin: auto;	
+    margin-bottom: 0.5em;
 	color: #000;
 	background: #ffffff;
 	border-radius: 0.2em;

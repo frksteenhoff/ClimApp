@@ -317,6 +317,42 @@ function MergeRecursive(obj1, obj2) {
 	return obj1;
 }
 
+function getTranslations() {
+	/* Will eventually be read in from file and returned as JSON array, this is for testing*/
+	$.getJSON( "translations/translations.json", function( json ) {
+		console.log( "JSON Data received: " + Object.keys(json));
+		return json;
+	});
+}
+
+function customLocationEnabled(kb) {
+	return kb.user.guards.customLocationEnabled && locationSetCorrectly(kb);
+}
+
+function getLocation(kb) {
+	var lat, lon;
+	// Get weather data from correct location
+	if(customLocationEnabled(kb)) {
+		lat = kb.settings.coordinates_lat;
+		lon = kb.settings.coordinates_lon;
+		console.log("Custom location enabled: " + lat + ", " + lon);
+	} else {
+		lat = kb.position.lat;
+		lon = kb.position.lng;
+	}
+	console.log("types " + typeof lat);
+	return [lat, lon];
+}
+
+function locationSetCorrectly(kb) {
+	// Both coordinates are numbers, and within ranges lat: 0-90, lon: 0-180
+	return (typeof kb.settings.coordinates_lat === 'number' && typeof kb.settings.coordinates_lon === 'number') 
+			&&  
+			(kb.settings.coordinates_lat > 0 && kb.settings.coordinates_lat <= 90)
+			&&
+			(kb.settings.coordinates_lon > 0 && kb.settings.coordinates_lat <= 180)
+}
+
 /* The introduction elements follows order of JSON array */
 function startIntro() {
 	var intro = introJs();
@@ -367,4 +403,4 @@ function startIntro() {
           intro.start();
 }
 
-module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor, startIntro, MergeRecursive, checkUserExistInDB};
+module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor, getTranslations, getLocation, customLocationEnabled, startIntro, MergeRecursive, checkUserExistInDB};
