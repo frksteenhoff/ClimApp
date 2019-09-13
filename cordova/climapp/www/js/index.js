@@ -49,26 +49,40 @@ var app = {
 
 	// Update DOM on a Received Event
 	receivedEvent: function (id) {
-		this.loadSettings();
-
-		if (this.knowledgeBase.user.guards.isFirstLogin) {//onboarding
-			this.loadUI("onboarding");
-		}
-		else {
-			this.loadUI("dashboard");
-		}
-		// Keeping track of how many time user has opened app, until count reaches 5
-		if (this.knowledgeBase.user.guards.appOpenedCount < 5) {
-			this.knowledgeBase.user.guards.appOpenedCount += 1;
-		}
-		// After 5 times opening the app, the user is seen as advanced
-		if (this.knowledgeBase.user.settings.level !== 2 && this.knowledgeBase.user.guards.appOpenedCount === 5) {
-			this.knowledgeBase.user.settings.level = 2;
-			showShortToast("After 5 uses you are now considered an experienced user.");
-
-		}
-		this.updateLocation();
-		this.saveSettings();
+		self = this;
+		$.getJSON("translations/translations.json", function (json) {
+			try {
+				console.log("Translations read: " + Object.keys(json));
+			} catch (error) {
+				console.log("Error in reading translations: " + error);
+			}
+		}).fail(function (e) {
+			console.log("Failed to read translations " + e);
+		// Load settings after translations have been read
+		}).done(function (result) {
+			self.translations = result;
+			console.log("result " + Object.keys(result));
+			self.loadSettings();
+			
+			if (self.knowledgeBase.user.guards.isFirstLogin) {//onboarding
+				self.loadUI("onboarding");
+			}
+			else {
+				self.loadUI("dashboard");
+			}
+			// Keeping track of how many time user has opened app, until count reaches 5
+			if (self.knowledgeBase.user.guards.appOpenedCount < 5) {
+				self.knowledgeBase.user.guards.appOpenedCount += 1;
+			}
+			// After 5 times opening the app, the user is seen as advanced
+			if (self.knowledgeBase.user.settings.level !== 2 && self.knowledgeBase.user.guards.appOpenedCount === 5) {
+				self.knowledgeBase.user.settings.level = 2;
+				showShortToast("After 5 uses you are now considered an experienced user.");
+				
+			}
+			self.updateLocation();
+			self.saveSettings();
+		});
 	},
 	bindNotificationEvents() {
 		// When user clicks "open" the feedback screen is opened
@@ -359,10 +373,15 @@ var app = {
 				self.knowledgeBase.settings.coordinates_lon = lon;
 				self.saveSettings();
 				self.updateLocation();
+				customText = "Using custom location: ";
+			} else {
+				customText = "Disabling custom text, bad location: ";
+				self.knowledgeBase.user.guards.customLocationEnabled = false;
+				self.saveSettings();
 			}
 
+			customText +=  + self.knowledgeBase.settings.coordinates_lat.toFixed(4) + ", " + self.knowledgeBase.settings.coordinates_lon.toFixed(4);
 			self.loadUI("dashboard");
-			var customText = "Using custom location: " + self.knowledgeBase.settings.coordinates_lat.toFixed(4) + ", " + self.knowledgeBase.settings.coordinates_lon.toFixed(4);
 			showShortToast(customText);
 		});
 	},
@@ -802,7 +821,7 @@ var app = {
 			"location": "./pages/location.html",
 			"indoor": "./pages/indoor.html"
 		};
-		this.translations = getTranslations(); //check if it works from here	
+		//this.translations = getTranslations(); //check if it works from here	
 		this.selectedWeatherID = 0;
 		this.maxForecast = 8; //8x3h = 24h
 		var shadowKB = this.initKnowledgeBase();

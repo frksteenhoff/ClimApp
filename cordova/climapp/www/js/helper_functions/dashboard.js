@@ -317,14 +317,6 @@ function MergeRecursive(obj1, obj2) {
 	return obj1;
 }
 
-function getTranslations() {
-	/* Will eventually be read in from file and returned as JSON array, this is for testing*/
-	$.getJSON( "translations/translations.json", function( json ) {
-		console.log( "JSON Data received: " + Object.keys(json));
-		return json;
-	});
-}
-
 function customLocationEnabled(kb) {
 	return kb.user.guards.customLocationEnabled && locationSetCorrectly(kb);
 }
