@@ -70,6 +70,7 @@ var app = {
 			else {
 				self.loadUI("dashboard");
 			}
+
 			// Keeping track of how many time user has opened app, until count reaches 5
 			if (self.knowledgeBase.user.guards.appOpenedCount < 5) {
 				self.knowledgeBase.user.guards.appOpenedCount += 1;
@@ -77,7 +78,7 @@ var app = {
 			// After 5 times opening the app, the user is seen as advanced
 			if (self.knowledgeBase.user.settings.level !== 2 && self.knowledgeBase.user.guards.appOpenedCount === 5) {
 				self.knowledgeBase.user.settings.level = 2;
-				showShortToast("After 5 uses you are now considered an experienced user.");
+				showShortToast(self.translations.toasts.toast__toast_adv_user); // Showing how to call translation text for toasts
 				
 			}
 			self.updateLocation();
@@ -103,6 +104,22 @@ var app = {
 				showShortToast("Using default values in calculations.");
 			}
 			self.loadUI(target);
+		});
+	},
+	initErrorListeners: function() {
+		var self = this;
+		$("div[data-listener='weather_error']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='weather_error']").on("click", function () {
+			let target = $(this).attr("data-target");
+			self.updateLocation();
+
+			if (self.knowledgeBase.user.guards.isFirstLogin) {//onboarding
+				self.loadUI("onboarding");
+			}
+			else {
+				self.loadUI(target);
+			}
+
 		});
 	},
 	initToggleListeners: function () {
@@ -363,14 +380,15 @@ var app = {
 		$("div[data-listener='set_coordinates']").on("click", function () {
 
 			var rawCoordinates = document.getElementById("latlon").innerHTML;
+			$("#latlon").html("New location: " + rawCoordinates);
 			// Hack solution, I know. Will fix.
-			var lat = Number(rawCoordinates.split(",")[0].replace("New location (", ""));
+			var lat = Number(rawCoordinates.split(",")[0].replace("(", ""));
 			var lon = Number(rawCoordinates.split(",")[1].replace(")", ""));
 			console.log("coordinates:  " + lat + " " + lon + " typeof " + typeof lat);
 			
 			if (typeof lat === "number" && typeof lon === "number") {
-				self.knowledgeBase.settings.coordinates_lat = lat;
-				self.knowledgeBase.settings.coordinates_lon = lon;
+				self.knowledgeBase.user.settings.coordinates_lat = lat;
+				self.knowledgeBase.user.settings.coordinates_lon = lon;
 				self.saveSettings();
 				self.updateLocation();
 				customText = "Using custom location: ";
@@ -380,7 +398,7 @@ var app = {
 				self.saveSettings();
 			}
 
-			customText +=  + self.knowledgeBase.settings.coordinates_lat.toFixed(4) + ", " + self.knowledgeBase.settings.coordinates_lon.toFixed(4);
+			customText +=  + self.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", " + self.knowledgeBase.user.settings.coordinates_lon.toFixed(4);
 			self.loadUI("dashboard");
 			showShortToast(customText);
 		});
@@ -819,7 +837,8 @@ var app = {
 			"details": "./pages/details.html",
 			"about": "./pages/about.html",
 			"location": "./pages/location.html",
-			"indoor": "./pages/indoor.html"
+			"indoor": "./pages/indoor.html",
+			"error": "./pages/error.html"
 		};
 		//this.translations = getTranslations(); //check if it works from here	
 		this.selectedWeatherID = 0;
@@ -1038,6 +1057,7 @@ var app = {
 			function (error) { //on error
 				showShortToast("Could not retrieve location.");
 				console.log(error);
+				//self.loadUI("error");
 			},
 			options // here the timeout is introduced
 		);
@@ -1067,7 +1087,7 @@ var app = {
 
 								if(customLocationEnabled(self.knowledgeBase)) { 
 									// Used to show last weather station
-									self.knowledgeBase.settings.station = weather.station;
+									self.knowledgeBase.user.settings.station = weather.station;
 								}
 								self.knowledgeBase.weather.station = weather.station;
 								self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
@@ -1332,6 +1352,10 @@ var app = {
 
 		if (this.currentPageID == "onboarding") {
 			$(".navigation").hide();
+		}
+		else if (this.currentPageID == "error") {
+			$(".navigation").hide();
+			this.initErrorListeners();			
 		}
 		else if (this.currentPageID == "dashboard") {
 			$(".navigation").show();
@@ -1606,6 +1630,7 @@ var app = {
 			$("#customLocationSection").show();
 			$(".navigation_back_custom").hide();
 			$("#google_maps_elem").hide();
+			$("#coordinates").html("lat: " + this.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", lon: " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(4));
 
 			// Location
 			this.knowledgeBase.user.guards.customLocationEnabled ? $("#customLocationSection").show() : $("#customLocationSection").hide();
@@ -1613,7 +1638,7 @@ var app = {
 			this.initLocationListeners();
 
 			if (customLocationEnabled(this.knowledgeBase)) {
-				$("#location").html("Saved location: " + this.knowledgeBase.settings.station + " (" + this.knowledgeBase.settings.coordinates_lat.toFixed(4) + ", " + this.knowledgeBase.settings.coordinates_lon.toFixed(4)  + ")");
+				$("#location").html("Saved location: " + this.knowledgeBase.user.settings.station + " (" + this.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(4)  + ")");
 			} else {
 				$("#location").html("Saved location: " + this.knowledgeBase.position.lat + ", " + this.knowledgeBase.position.lng);
 			}
@@ -1628,14 +1653,14 @@ var app = {
 			this.knowledgeBase.user.guards.isIndoor ? $("#indoorSection").show() : $("#indoorSection").hide();
 			this.initIndoorListeners();
 			var windowsOpen = this.knowledgeBase.user.settings.open_windows ? "Yes" : "No";
-			var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
-
-			$("#coordinates").html("lon: " + this.knowledgeBase.user.settings.coordinates_lon + " lat: " + this.knowledgeBase.user.settings.coordinates_lon);
+			
+			//var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
 			//$("#_temperature").html( this.knowledgeBase.user.settings._temperature + " &#xb0 " + tempUnit);
 			$("#windspeed").html(this.knowledgeBase.user.settings.windspeed);
 			$("#_humidity").html(this.knowledgeBase.user.settings._humidity + " %");
 			$("#thermostat_level").html(this.knowledgeBase.user.settings.thermostat_level);
 			$("#open_windows").html(windowsOpen);
+
 		}
 	},
 	updateMenuItems: function () {

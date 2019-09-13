@@ -352,7 +352,8 @@ img.small{
 .panel.settings div.map.last,
 .panel.settings_other div.last, 
 .panel.settings div.inputcontainer.last,
-.panel.settings div.button.last
+.panel.settings div.button.last,
+.panel div.button
  {
     border-bottom: hidden;
 }

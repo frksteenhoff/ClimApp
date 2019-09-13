@@ -325,8 +325,8 @@ function getLocation(kb) {
 	var lat, lon;
 	// Get weather data from correct location
 	if(customLocationEnabled(kb)) {
-		lat = kb.settings.coordinates_lat;
-		lon = kb.settings.coordinates_lon;
+		lat = kb.user.settings.coordinates_lat;
+		lon = kb.user.settings.coordinates_lon;
 		console.log("Custom location enabled: " + lat + ", " + lon);
 	} else {
 		lat = kb.position.lat;
@@ -338,11 +338,11 @@ function getLocation(kb) {
 
 function locationSetCorrectly(kb) {
 	// Both coordinates are numbers, and within ranges lat: 0-90, lon: 0-180
-	return (typeof kb.settings.coordinates_lat === 'number' && typeof kb.settings.coordinates_lon === 'number') 
+	return (typeof kb.user.settings.coordinates_lat === 'number' && typeof kb.user.settings.coordinates_lon === 'number') 
 			&&  
-			(kb.settings.coordinates_lat > 0 && kb.settings.coordinates_lat <= 90)
+			(kb.user.settings.coordinates_lat > 0 && kb.user.settings.coordinates_lat <= 90)
 			&&
-			(kb.settings.coordinates_lon > 0 && kb.settings.coordinates_lat <= 180)
+			(kb.user.settings.coordinates_lon > 0 && kb.user.settings.coordinates_lat <= 180)
 }
 
 /* The introduction elements follows order of JSON array */
