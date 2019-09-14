@@ -42,18 +42,17 @@
         <icon height="72" src="res/icon/ios/icon-72.png" width="72" />
         <icon height="144" src="res/icon/ios/icon-72-2x.png" width="144" />
         <splash src="res/screen/ios/Default@2x~universal~anyany.png" />
-		
-		<preference name="AllowInlineMediaPlayback" value="true"/>
-		<preference name="BackupWebStorage" value="local" />
+        <preference name="AllowInlineMediaPlayback" value="true" />
+        <preference name="BackupWebStorage" value="local" />
         <preference name="StatusBarOverlaysWebView" value="false" />
         <preference name="StatusBarDefaultScrollToTop" value="false" />
         <preference name="StatusBarStyle" value="default" />
     </platform>
-    <plugin name="cordova-plugin-device" spec="^2.0.2" />
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
     <plugin name="cordova-plugin-x-toast" spec="^2.7.2" />
     <plugin name="cordova-plugin-whitelist" spec="^1.3.3" />
     <plugin name="cordova-plugin-geolocation" spec="^4.0.1" />
-    <engine name="ios" spec="^4.5.5" />
-    <engine name="android" spec="^8.0.0" />
+    <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
+    <plugin name="cordova-wheel-selector-plugin" spec="~1.1.2" />
+    <plugin name="cordova-plugin-device" spec="^2.0.2" />
 </widget>

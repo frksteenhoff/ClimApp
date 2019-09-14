@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "822269629295",
+    "firebase_url": "https://climapp-ad978.firebaseio.com",
+    "project_id": "climapp-ad978",
+    "storage_bucket": "climapp-ad978.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:822269629295:android:c0704f370bc82f13dd0e9a",
+        "android_client_info": {
+          "package_name": "com.climapp.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "822269629295-rc2fiqk1cgbgn4so99vvk7ro5to4iqus.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6ZUay4DUZc93YuTPGMMKC_3gBC3XvuC0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "822269629295-rc2fiqk1cgbgn4so99vvk7ro5to4iqus.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "822269629295-pu45eb1pfbli7u3lv3aehv1rc2gan412.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.climapp.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

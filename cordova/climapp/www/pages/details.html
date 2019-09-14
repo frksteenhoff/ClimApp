@@ -15,7 +15,7 @@
 		   <div class="even">Solar Radiation</div><div class="even"><span class="score" id="detail_rad"></span></div>
 		   <div class="even">Windspeed at 10m</div><div class="even"><span class="score" id="detail_wind10m"></span> </div>
 		   <div class="even">Windspeed at 2m</div><div class="even"><span class="score" id="detail_wind2m"></span> </div>
-		   <div class="even">Globe temperature 5cm</div><div class="even"><span class="score" id="detail_tglobe"></span></div>
+		   <div class="even">Globe temperature</div><div class="even"><span class="score" id="detail_tglobe"></span></div>
 		   <div class="even">Mean radiant temperature</div><div class="even"><span class="score" id="detail_mrt"></span> </div>
 		   <div class="even">WBGT</div><div class="even"><span class="score" id="detail_wbgt"></span></div>
 		   <div class="even">WBGT effective</div><div class="even"><span class="score" id="detail_wbgt_eff"></span></div>
@@ -40,7 +40,7 @@
 
 <div class="panel" data-context="heat">
 	<p class="label">Wet Bulb Globe Temperature (WBGT ISO7243)</p>
-	<p>The expected effective WBGT is <span class="score" id="detail_wbgt_iso7243"></span>&#xb0; and based on your activity level the Recommended Alert Limit is <span class="score" id="detail_ral_iso7243"></span>&#xb0;.</p>
+	<p>The expected effective WBGT is <span class="score" id="detail_wbgt_iso7243"></span>&#xb0;C and based on your activity level the Recommended Alert Limit is <span class="score" id="detail_ral_iso7243"></span>&#xb0;C.</p>
 </div>
 <div class="panel" data-context="phs">
 	<p class="label">Heat Strain (PHS ISO7933)</p>
@@ -49,7 +49,7 @@
 
 <div class="panel" data-context="cold">
 	<p class="label">Exposed skin - Windchill (JAG/TI)</p>
-	<p>The Windchill index is <span class="score" id="detail_windchill"></span>&#xb0;, which means that there is <span id="detail_windriskcat"> <span class="score" id="detail_windrisk"></span></p>
+	<p>The Windchill index is <span class="score" id="detail_exposed_windchill"></span>&#xb0;C, which means that there is <span id="detail_exposed_windriskcat"> <span class="score" id="detail_exposed_windrisk"></span></p>
 </div>
 <div class="panel" data-context="cold">
 	<p class="label">Body temperature - Cold Stress (IREQ ISO11079)</p>
@@ -72,7 +72,7 @@
 		</div>
 	</div>
 	<!-- This sentence does not seem to be completed? -->
-	<p>With the minimal clothing level your core temperature is expected <span id="detail_dle_ireq"></span> minutes.</p>
+	<p>With the minimal clothing level, it is recommended that your exposure time in the cold be limited to about <span id="detail_dle_ireq"></span> minutes.</p>
 </div>
 
 <div class="panel" data-context="neutral">

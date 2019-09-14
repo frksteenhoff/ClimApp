@@ -879,6 +879,7 @@ var app = {
 										var Ta = self.knowledgeBase.weather.temperature[key];
 										var va = vair * Math.pow( 0.2, 0.25 ); //stability class D Liljgren 2008 Table 3
 										
+										/*
 										//kruger et al 2014
 										var D = 0.05; //diameter black globe (liljegren - ) --default value = 0.15
 										var eps_g = 0.95; //standard emmisivity black bulb
@@ -888,6 +889,14 @@ var app = {
 										var t3 = eps_g * Math.pow( D, 0.4);
 										var t4 = t1 + ( t2 / t3 ) * (Tg-Ta);
 										var Tmrt = Math.pow( t4, 0.25 ) - 273.0;
+										*/
+										console.log( "ClimateChip" );
+										
+										var WF1 = 0.4 * Math.pow( Math.abs( Tg - Ta ), 0.25 );
+										var WF2 = 2.5 * Math.pow( va, 0.6 );
+										var WF = WF1 > WF2 ? WF1 : WF2;
+										var Tmrt = 100.0 * Math.pow( Math.pow((Tg + 273.0) / 100.0, 4 ) + WF * (Tg - Ta), 0.25) - 273.0;
+										console.log( Tmrt );
 										
 										self.knowledgeBase.weather.meanradianttemperature.push( Tmrt );
 										self.knowledgeBase.weather.windspeed2m.push( va );
@@ -1104,7 +1113,7 @@ var app = {
 					let pal = getPAL( this.knowledgeBase, thermal);
 					let personal_ral = ral - pal;
 			
-					let windchill = this.knowledgeBase.thermalindices.phs[index].windchill.toFixed(1);
+					var windchill = this.knowledgeBase.thermalindices.phs[index].windchill.toFixed(1);
 			
 					let M = this.knowledgeBase.thermalindices.phs[index].M.toFixed(0);
 					let A = BSA( this.knowledgeBase ).toFixed(1);
@@ -1149,8 +1158,9 @@ var app = {
 					$("#detail_im").html(im);
 			
 					let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
+					let icl_neutral = this.knowledgeBase.thermalindices.ireq[ index].ICLneutral;
 					let icl_worn = getClo(this.knowledgeBase);
-					let cold_index = icl_min - icl_worn; // minimal - worn, if negative you do not wear enough clothing
+					let cold_index = this.calculateColdIndex(icl_neutral, icl_min, icl_worn); // minimal - worn, if negative you do not wear enough clothing
 	
 					let heat_index = WBGTrisk( wbgt, this.knowledgeBase );
 			
@@ -1161,18 +1171,16 @@ var app = {
 					
 					$("#moreinformation").html( tip_html );
 				
-					
 					if( personalvalue <= -1 ){
 						$("div[data-context='heat'],div[data-context='phs'],div[data-context='neutral']").hide();
 						$("div[data-context='cold']").show();
 				
-						let windchill = this.knowledgeBase.thermalindices.ireq[index].windchill.toFixed(1);
 						let windrisk = windchillRisk( windchill );
 						let windriskcat = windrisk ? "a risk of frostbite in" : "no risk of frostbite";
-						$("#detail_windchill").html( windchill);
-						$("#detail_windriskcat").html( windriskcat );
+						$("#detail_exposed_windchill").html( windchill );
+						$("#detail_exposed_windriskcat").html( windriskcat );
 						if( windrisk ){
-							$("#detail_windrisk").html( windrisk + " minutes");
+							$("#detail_exposed_windrisk").html( windrisk + " minutes");
 						}
 				
 						let icl_max = this.knowledgeBase.thermalindices.ireq[ index].ICLneutral;
@@ -1319,12 +1327,26 @@ var app = {
 		 caption_ = this.knowledgeBase.headgear.description[ selected ];
 		$("#headgearCaption").html( caption_ );
 	},
+	calculateColdIndex: function( icl_neutral, icl_min, icl_worn ){
+		var value = 0;
+		
+		if( icl_worn < icl_min ){
+			value = 1 +  icl_min - icl_worn;
+		}
+		else if( icl_worn <= icl_neutral ){
+			var range = icl_neutral - icl_min;
+			var x = icl_worn - icl_min;
+			value = 1.0 - x;
+		}
+		return value;
+	},
 	getDrawGaugeParamsFromIndex: async function(index, kb, leveloverride ) {
 		
 		console.log( "getDrawGaugeParamsFromIndex " + index );
-		let icl_min = kb.thermalindices.ireq[index].ICLminimal;
+		var icl_min = kb.thermalindices.ireq[index].ICLminimal;
+		var icl_neutral = kb.thermalindices.ireq[index].ICLneutral;
 		let icl_worn = getClo(kb);
-		let cold_index = icl_min - icl_worn; // minimal - worn, if negative you do not wear enough clothing
+		let cold_index = this.calculateColdIndex( icl_neutral, icl_min, icl_worn); // minimal - worn, if negative you do not wear enough clothing
 		
 		console.log( "cold_index " + cold_index );
 		
@@ -1384,7 +1406,7 @@ var app = {
 	isDrawColdGauge: function( cold, heat, index ){
 		return cold >= heat
 			   &&
-			   this.knowledgeBase.thermalindices.ireq[ index].Tair <= 10;
+		this.knowledgeBase.thermalindices.ireq[ index].Tair <= 15; //ireq only from <10 however, 15 can already be cold with 0.5 clo
 	},
 	isDrawHeatGauge: function( cold, heat, index ){
  	   return heat > cold
@@ -1473,18 +1495,20 @@ var app = {
 			//weather icon
 			let clouds = this.knowledgeBase.thermalindices.ireq[index].clouds;
 			
-			
 			let rain = this.knowledgeBase.thermalindices.ireq[index].rain;
 			let solar = this.knowledgeBase.thermalindices.ireq[index].rad; 
 			
 			/*
-			save code for later use
-			
 			var video = $('#bgvideo')[0];
-			video.src = "./video/rain.mp4";
+			if( rain > 0.1 ){
+				video.src = "./video/rain.mp4";		
+			}
+			else{
+				video.src = "./video/video.mp4";
+			}
 			video.load();
 			video.play();
-			function */
+			*/
 			
 			let icon_weather = "fa-cloud-sun-rain";
 			if( solar > 0 ){ //daytime
