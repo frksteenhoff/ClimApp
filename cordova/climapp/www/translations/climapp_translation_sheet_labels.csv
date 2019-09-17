@@ -9,7 +9,7 @@ str_choose_location,Choose location,Vælg placering,,,Velg plasering
 str_personalise,personalise,tilpas,,,Tilpass
 str_more_info,more info,mere information,,,Mere informasjon
 str_done,Done,Fædig,,,Ferdig
-str_cancel,Cancel,Abryd,,,Avbryt
+str_cancel,Cancel,Afbryd,,,Avbryt
 str_set_location,Set_location,Sæt placering,,,Sett plasering
 str_activity,Activity,Aktivitet,,,Aktivitet
 str_clothing,Clothing,Beklædning,,,Antrekk
@@ -53,7 +53,7 @@ str_pal,Personal alert limit,Personlig alarmgrænse,,,Personlig varslingsgrense
 str_windchill,Windchill,Windchill,,,Windchill
 str_mr,Metabolic rate,Stofskifte,,,Metabolsk nivå
 str_surface_area,Surface area,Overfladeareal,,,Flateareal
-str_clo,Clothing insulation,Beklædningsisolans,,,Klærisolasjon
+str_clo,Clothing insulation,Beklædningsisolans,,,Klesisolasjon
 str_wind_permeability,Wind permeability,Beklædningens luftgennemtrængelighed,,,Vindpermeabilitet
 str_evaporative_permeability,Evaporative permeability,Fordampningpermeabilitet,,,Fordampnings permeabilitet
 str_wbgt_iso,Wet Bulb Globe Temperature (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO07243),,,Wet Bulb Globe Temperature (WBGT ISO07243)
@@ -63,12 +63,12 @@ str_ireq_iso,Body temperature - Cold  stress (IREQ ISO11079),Kropstemperatur - k
 str_min_cloth_level,minimal clothing level,Minimal beklædningsisolans,,,Minimalt klesnivå
 str_max_cloth_level,maximum clothing level,Maksimal beklædningsisolans,,,Maksimalt klesnivå
 str_weather_report,weather report,Vejrudsigt,,,Værmelding
-str_outdoor,Indoor,Indendørs,,,Innendørs
-str_indoor,Outdoor,Udendørs,,,Utendørs
-str_windspeed_desc,Wind,Vind,,,Vind
+str_indoor,Indoor,Indendørs,,,Innendørs
+str_outdoor,Outdoor,Udendørs,,,Utendørs
+str_wind,Wind,Vind,,,Vind
 str_update_weather,update weather,Opdatér vejr,,,Oppdater vær
 str_age,Age,Alder,,,Alder
-str_height,Height,Høde,,,Høyde
+str_height,Height,Højde,,,Høyde
 str_weight,Weight,Vægt,,,Vekt
 str_gender,Gender,Køn,,,Kjønn
 str_acclimatization,Acclimatization,Akklimatisering,,,Akklimatisering
@@ -91,3 +91,19 @@ str_heat_significant,significant heat stress,Væsentlig varmestress,,,Betydelig 
 str_heat_high,high heat stress,Højt varmestress,,,Høj varmestress
 str_heat_severe,severe heat stress,Alvorlig varmestress,,,Alvorlig varmestress
 str_heat_extreme,extreme heat stress,Ekstrem varmestress,,,Ekstrem varmestress
+str_tomorrow,tomorrow,I morgen,,,I morgen
+weather_sunny_clear,"Sunny, clear sky","Sol, klar himmel",,,"Sol, klar himmel"
+weather_broken_clouds,Broken clouds,Delvis skyet,,,Delvis skyet
+weather_overcast_clouds,Overcast clouds,Overskyet,,,Overskyet
+weather_light_rain,Light rain,Let regn,,,Lett regn
+weather_light_rain_overcast,"Light rain, overcast","Let regn, overskyet",,,"Lett regn, overskyet"
+weather_shower_rain,Shower rain,Tung regn,,,Tung regn
+weather_clear,Clear sky,Klart,,,Klart
+indoor_open_windows,Open windows,Åbne vinduer,,,Åpne vinduer
+indoor_no_open_windows,No open windows,Ingen åbne vinduer,,,Ingen åpne vinduer
+str_yes,Yes,Ja,,,Ja
+str_no,No,Nej,,,Nei
+str_saved_location,Saved location,Gemt placering,,,Lagret plassering
+str_years,years,år,,,år
+str_activity_level,Activity level,Aktivitetsniveau,,,Aktivitetsnivå
+str_clothing_level,Clothing level,Beklædningsniveau,,,Klesmengde

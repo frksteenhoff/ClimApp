@@ -78,7 +78,7 @@ var app = {
 			// After 5 times opening the app, the user is seen as advanced
 			if (self.knowledgeBase.user.settings.level !== 2 && self.knowledgeBase.user.guards.appOpenedCount === 5) {
 				self.knowledgeBase.user.settings.level = 2;
-				showShortToast(self.translations.toasts.toast__toast_adv_user); // Showing how to call translation text for toasts
+				showShortToast(self.translations.toasts.adv_user[self.language]); // Showing how to call translation text for toasts
 				
 			}
 			self.updateLocation();
@@ -101,7 +101,7 @@ var app = {
 			self.knowledgeBase.user.guards.isFirstLogin = 0;
 			self.saveSettings();
 			if (self.firstTimeLoginWithoutPersonalization(target)) {
-				showShortToast("Using default values in calculations.");
+				showShortToast(self.translations.toasts.default_values[self.language]);
 			}
 			self.loadUI(target);
 		});
@@ -138,7 +138,7 @@ var app = {
 			// Resetting diff
 			self.knowledgeBase.user.adaptation[mode].diff = [0];
 			self.saveSettings();
-			showShortToast("Adaptation level reset to 0");
+			showShortToast(self.translations.toasts.adaptation_reset[self.language]);
 			let index = 0; // 0 = current situation -- is this what we want?
 
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
@@ -192,7 +192,7 @@ var app = {
 					self.drawGauge('feedback_gauge', width, slider_value, thermal);
 
 					// Not used anymore?
-					$("#gauge_text_top_current").html("Difference from system prediction: " + getSliderDiffFromSystemPrediction(self.knowledgeBase, thermal, slider_value));
+					$("#gauge_text_top_current").html(self.translations.sentences.feedback_diff_sys_pred[self.language] + ": " + getSliderDiffFromSystemPrediction(self.knowledgeBase, thermal, slider_value));
 
 					// Set the value as the perceived value in knowledgebase
 					self.knowledgeBase.user.adaptation[thermal].perceived = slider_value;
@@ -250,7 +250,7 @@ var app = {
 			self.checkIfUserExistInDB();
 
 			// Add feedback to database
-			addFeedbackToDB(self.knowledgeBase);
+			addFeedbackToDB(self.knowledgeBase, self.translations, self.language);
 
 			// reset values
 			$('#feedback_text').val("");
@@ -270,8 +270,8 @@ var app = {
 			var config = {
 				title: title_,
 				items: [[items_]],
-				positiveButtonText: "Done",
-				negativeButtonText: "Cancel",
+				positiveButtonText: self.translations.labels.str_done[self.language],
+				negativeButtonText: self.translations.labels.str_cancel[self.language],
 				wrapWheelText: true,
 				/*defaultItems: [
 					{index: 0, value: currentValue}
@@ -311,8 +311,7 @@ var app = {
 				self.updateUI();
 
 				// Inform user about event in toast
-				var notificationText = "Personal preferences reset, using default values.";
-				showShortToast(notificationText);
+				showShortToast(self.translations.toasts.preferences_reset[self.language]);
 
 			}
 			else {
@@ -328,7 +327,7 @@ var app = {
 				var isChecked = $(this).is(":checked");
 				self.knowledgeBase.user.settings.acclimatization = isChecked;
 				// Inform user about choice in toast
-				var accText = isChecked ? "You are acclimatized to your working environment" : "You are not acclimatized to your working environment.";
+				var accText = isChecked ? self.translations.toasts.acclimatized[self.language] : self.translations.toasts.not_acclimtized[self.language];
 				updateDBParam(self.knowledgeBase, "acclimatization");
 				showShortToast(accText);
 
@@ -336,7 +335,7 @@ var app = {
 				var isChecked = $(this).is(":checked");
 				self.knowledgeBase.user.guards.receivesNotifications = isChecked;
 				// Inform user about choice in toast
-				var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
+				var notificationText = isChecked ? self.translations.toasts.notification_enabled[self.language] : self.translations.toasts.notification_disabled[self.language];
 				showShortToast(notificationText);
 			}
 			self.saveSettings();
@@ -351,7 +350,7 @@ var app = {
 			$("#custom_location_switch").hide();
 			$("#customLocationSection").hide();
 			$("#google_maps_elem").fadeIn(500);
-			$("#location_header").html("Choose your location");
+			$("#location_header").html(self.translations.labels.str_choose_location[self.language]);
 		});
 
 		$("input[data-listener='toggle_switch']").off(); //prevent multiple instances of listeners on same object
@@ -364,10 +363,10 @@ var app = {
 				self.knowledgeBase.user.guards.customLocationEnabled = isChecked;
 				if (isChecked) {
 					self.knowledgeBase.user.guards.isIndoor = false;
-					customText = "Custom location is enabled.";
+					customText = self.translations.toasts.location_enabled[self.language];
 					$("#customLocationSection").show();
 				} else {
-					customText = "Custom location is disabled.";
+					customText = self.translations.toasts.location_disabled[self.language];
 					$("#customLocationSection").hide();
 					self.updateLocation();
 				}
@@ -391,9 +390,9 @@ var app = {
 				self.knowledgeBase.user.settings.coordinates_lon = lon;
 				self.saveSettings();
 				self.updateLocation();
-				customText = "Using custom location: ";
+				customText = self.translations.toasts.custom_location[self.language] + ": ";
 			} else {
-				customText = "Disabling custom text, bad location: ";
+				customText = self.translations.toasts.bad_location[self.language] + ": ";
 				self.knowledgeBase.user.guards.customLocationEnabled = false;
 				self.saveSettings();
 			}
@@ -415,8 +414,8 @@ var app = {
 			var config = {
 				title: title_,
 				items: [[items_]],
-				positiveButtonText: "Done",
-				negativeButtonText: "Cancel"
+				positiveButtonText: self.translations.labels.str_done[self.language],
+				negativeButtonText: self.translations.labels.str_cancel[self.language]
 			};
 
 			window.SelectorCordovaPlugin.showSelector(config, function (result) {
@@ -441,10 +440,10 @@ var app = {
 				var customText = "";
 				if (isChecked) {
 					self.knowledgeBase.user.guards.customLocationEnabled = false;
-					customText = "Indoor mode enabled.";
+					customText = self.translations.toasts.indoor_enabled[self.language];
 					$("#indoorSection").show();
 				} else {
-					customText = "Indoor mode disabled.";
+					customText = self.translations.toasts.indoor_disabled[self.language];
 					$("#indoorSection").hide();
 					self.updateUI();
 				}
@@ -533,13 +532,12 @@ var app = {
 			var target = $(this).attr("data-target");
 			let title_ = self.knowledgeBase[target].title;
 			var items_ = self.getSelectables(target);
-			console.log("transkey " + Object.keys(this.translations.wheels.activity) + " target " + target + " val " + this.translations.wheels.activity.title['en'] + " type " + typeof (this.language));
-
+		
 			var config = {
 				title: title_,
 				items: [[items_]],
-				positiveButtonText: "Done",
-				negativeButtonText: "Cancel"
+				positiveButtonText: self.translations.labels.str_done[self.language],
+				negativeButtonText: self.translations.labels.str_cancel[self.language]
 			};
 			window.SelectorCordovaPlugin.showSelector(config, function (result) {
 				self.knowledgeBase.user.settings[target + "_selected"] = items_[result[0].index].value;
@@ -567,7 +565,7 @@ var app = {
 			$("#" + target).removeClass("hidden");
 		});
 	},
-	initKnowledgeBase: function () {
+	initKnowledgeBase: function (translations, language) {
 		return {
 			/* --------------------------------------------------- */
 			// Should not be overwritten!
@@ -622,7 +620,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0459,
+			"version": 2.0462,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -651,7 +649,7 @@ var app = {
 			"settings": {
 				"age": {
 					"title": "What is your age?",
-					"unit": "years"
+					"unit": translations.labels.str_years[language]
 				},
 				"height": {
 					"title": "How tall are you?"
@@ -682,20 +680,20 @@ var app = {
 				},
 			},
 			"activity": {
-				"title": "NO", //this.translations.wheels.activity.title[this.language],
+				"title": translations.wheels.activity.title[language],
 				"description": {
-					"rest": "rest",//this.translations.wheels.activity.description.rest[this.language],
-					"low": "Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.",
-					"medium": "Walking 2.5 - 5.5km/h. Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.",
-					"high": "Intense arm and trunk work: carrying heavy material, shovelling, sawing, hand mowing, concrete block laying.",
-					"intense": "Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs, running on level surface."
+					"rest": translations.wheels.activity.description.rest[language],
+					"low": translations.wheels.activity.description.light[language],
+					"medium": translations.wheels.activity.description.medium[language],
+					"high": translations.wheels.activity.description.high[language],
+					"intense": translations.wheels.activity.description.intense[language]
 				},
 				"label": {
-					"rest": "Rest", //ISO 8896
-					"low": "Light",
-					"medium": "Medium",
-					"high": "High",
-					"intense": "Intense"
+					"rest": translations.wheels.activity.label.rest[language], //ISO 8896
+					"low": translations.wheels.activity.label.light[language],
+					"medium": translations.wheels.activity.label.medium[language],
+					"high": translations.wheels.activity.label.high[language],
+					"intense": translations.wheels.activity.label.intense[language]
 				},
 				// Only added in knowledgebase
 				"values": {
@@ -743,7 +741,7 @@ var app = {
 					"helmet": "Wearing a hood of any fabric with any clothing ensemble.",
 				},
 				"label": {
-					"none": "None", //ISO 8896
+					"none": translations.wheels.headgear.label.none[language], //ISO 8896
 					"helmet": "Helmet or hood",
 				},
 				"values": {
@@ -843,7 +841,8 @@ var app = {
 		//this.translations = getTranslations(); //check if it works from here	
 		this.selectedWeatherID = 0;
 		this.maxForecast = 8; //8x3h = 24h
-		var shadowKB = this.initKnowledgeBase();
+		var shadowKB = this.initKnowledgeBase(this.translations, this.language);
+		this.language = this.getLanguage(navigator.language);
 		var msgString = ""; // String deciding message to show in console/toast
 
 		// Distinguishing between a new and an existing user
@@ -877,25 +876,25 @@ var app = {
 					this.knowledgeBase.user.adaptation.cold.diff = [];
 				}
 
-				msgString = "Knowledge base updated to version: ";
+				msgString = this.translations.toasts.kb_updated[this.language];
 			}
 			else if ('version' in this.knowledgeBase && this.knowledgeBase.version == shadowKB.version) {
-				msgString = "Loaded knowledge base version: ";
+				msgString = this.translations.toasts.kb_loaded[this.language];
 			}
 			else { //old version does not have version key
 				this.knowledgeBase = shadowKB;
-				msgString = "Knowledge base updated to version: ";
+				msgString = this.translations.toasts.kb_updated[this.language];
 			}
 		}
 		else {
 			this.knowledgeBase = shadowKB;
-			msgString = "Created knowledge base version: ";
+			msgString = this.translations.toasts.kb_created[this.language];
 		}
-		console.log(msgString + this.knowledgeBase.version);
+
+		console.log(msgString + " " + this.knowledgeBase.version);
 		showShortToast(msgString + this.knowledgeBase.version);
 		this.saveSettings();
 
-		this.language = this.getLanguage(navigator.language);
 		console.log("current language: " + this.language); // getting first two letters
 		console.log("User settings: \n" + JSON.stringify(this.knowledgeBase.user)); // Showing current user settings
 	},
@@ -934,7 +933,7 @@ var app = {
 
 		if (key.slice(0, 3) === "age") {
 			for (var i = 0; i < 100; i++) {
-				obj_array.push({ description: (i + 12) + " years", value: (i + 12) });
+				obj_array.push({ description: (i + 12) + " " + this.translations.labels.str_years[this.language], value: (i + 12) });
 			}
 		}
 		else if (key === "height") {
@@ -960,8 +959,8 @@ var app = {
 			}
 		}
 		else if (key === "gender") {
-			obj_array.push({ description: "Female", value: "Female" });
-			obj_array.push({ description: "Male", value: "Male" });
+			obj_array.push({ description: "Female", value: 0 });
+			obj_array.push({ description: "Male", value: 1 });
 		}
 		else if (key === "unit") {
 			obj_array.push({ description: "SI: kg, cm, m/s, Celsius", value: "SI" });
@@ -998,8 +997,8 @@ var app = {
 
 		/* CUSTOM INPUT */
 		else if (key === "custom_input" || key === "open_windows") {
-			obj_array.push({ description: "Yes", value: 1 });
-			obj_array.push({ description: "No", value: 0 });
+			obj_array.push({ description: this.translations.labels.str_yes[this.language], value: 1 });
+			obj_array.push({ description: this.translations.labels.str_no[this.language], value: 0 });
 		}
 
 		else if (key === "_temperature") {
@@ -1051,7 +1050,7 @@ var app = {
 				//setTimeout( function(){ $('i.fa-sync-alt').toggleClass("fa-spin") }, 1000 );	
 			},
 			function (error) { //on error
-				showShortToast("Could not retrieve location.");
+				showShortToast(self.translations.toasts.no_location[self.language]);
 				console.log(error);
 				//self.loadUI("error");
 			},
@@ -1189,7 +1188,7 @@ var app = {
 							console.log("fail in weather " + e);
 						});
 				} else {
-					showShortToast("Failed to update weather, no app ID.");
+					showShortToast(self.translations.toasts.weather_fail[self.language]);
 				}
 			}); // Making code execution wait for app id retrieval
 		});
@@ -1380,10 +1379,21 @@ var app = {
 				this.updateInfo(this.selectedWeatherID);
 			}
 
-
+			// Set dashboard content using translations sheet
+			$("#str_weather_report").html(this.translations.labels.str_weather_report[this.language]);
+			$("#indoor_outdoor").html(this.translations.labels.str_outdoor[this.language]);
+			$("#str_more_info").html(this.translations.labels.str_more_info[this.language]);
+			$("#str_personalise").html(this.translations.labels.str_personalise[this.language]);
+			$("#str_activity_level").html(this.translations.labels.str_activity_level[this.language]);
+			$("#str_clothing_level").html(this.translations.labels.str_clothing_level[this.language]);
+			$("#str_activity").html(this.translations.labels.str_activity[this.language]);
+			$("#str_clothing").html(this.translations.labels.str_clothing[this.language]);
+			$("#str_headgear").html(this.translations.labels.str_headgear[this.language]);
+			$("#head_gear").html(this.translations.labels.str_headgear[this.language]);
+			
 			// Giving the user an introduction of the dashbord on first login
 			if (!this.knowledgeBase.user.guards.introductionCompleted) {
-				startIntro();
+				startIntro(this.translations, this.language);
 				this.knowledgeBase.user.guards.introductionCompleted = 1;
 				this.saveSettings();
 			}
@@ -1441,31 +1451,102 @@ var app = {
 						minute: '2-digit'
 					});
 
+					$("#str_more_info").html(firstCharToUpper(this.translations.labels.str_more_info[this.language]));
+					$("#str_details").html(this.translations.labels.str_details[this.language]);
+					$("#details_desc").html(this.translations.sentences.details_desc[this.language]);
+					$("#str_weather").html(this.translations.labels.str_weather[this.language]);
+
+					$("#str_time").html(this.translations.labels.str_time[this.language]);
 					$("#detail_time").html(local_time);
 
+					$("#str_air_temperature").html(this.translations.labels.str_air_temperature[this.language]);
 					$("#detail_airtemp").html(tair + "&deg;C");
+
+					$("#str_humidity").html(this.translations.labels.str_humidity[this.language]);
 					$("#detail_rh").html(rh + "%");
+
+					$("#str_cloud_cover").html(this.translations.labels.str_cloud_cover[this.language]);
 					$("#detail_clouds").html(clouds + "%");
 
+					$("#str_wind10").html(this.translations.labels.str_wind10[this.language]);
 					$("#detail_wind10m").html(vair10 + "m/s");
 
+					$("#str_wind2").html(this.translations.labels.str_wind2[this.language]);
 					$("#detail_wind2m").html(vair2 + "m/s");
+
+					$("#str_mrt").html(this.translations.labels.str_mrt[this.language]);
 					$("#detail_mrt").html(tmrt + "&deg;C");
+					
+					$("#str_globe_temperature").html(this.translations.labels.str_globe_temperature[this.language]);
 					$("#detail_tglobe").html(tglobe + "&deg;C");
+
+					$("#str_solar_irradiation").html(this.translations.labels.str_solar_irradiation[this.language]);
 					$("#detail_rad").html(rad + "W/m<sup>2</sup>");
+					
+					$("#str_wbgt").html(this.translations.labels.str_wbgt[this.language]);
 					$("#detail_wbgt").html(wbgt + "&deg;C");
+					
+					$("#str_wbgt_effective").html(this.translations.labels.str_wbgt_effective[this.language]);
 					$("#detail_wbgt_eff").html(wbgt_eff.toFixed(1) + "&deg;C");
+					
+					$("#str_aal").html(this.translations.labels.str_aal[this.language]);
 					$("#detail_ral").html(ral.toFixed(1) + "&deg;C");
+					
+					$("#str_pal").html(this.translations.labels.str_pal[this.language]);
 					$("#detail_ral_pal").html(ral.toFixed(1) + "&deg;C");
 
+					$("#str_windchill").html(this.translations.labels.str_windchill[this.language]);
 					$("#detail_windchill").html(windchill + "&deg;C");
 
+					$("#str_mr").html(this.translations.labels.str_mr[this.language]);
 					$("#detail_metabolic").html(M + "W/m<sup>2</sup>");
+
+					$("#str_surface_area").html(this.translations.labels.str_surface_area[this.language]);
 					$("#detail_area").html(A + "m<sup>2</sup>")
 
+					$("#str_clo").html(this.translations.labels.str_clo[this.language]);
 					$("#detail_icl").html(Icl + "m<sup>2</sup>K/W");
+					
+					$("#str_wind_permeability").html(this.translations.labels.str_wind_permeability[this.language]);
 					$("#detail_p").html(p);
+
+					$("#str_evaporative_permeability").html(this.translations.labels.str_evaporative_permeability[this.language]);
 					$("#detail_im").html(im);
+
+					$("#str_user").html(this.translations.labels.str_user[this.language]);
+					$("#str_wbgt").html(this.translations.labels.str_wbgt[this.language]);
+					$("#str_wbgt_iso").html(this.translations.labels.str_wbgt_iso[this.language]);
+					$("#details_wbgt_desc_1").html(this.translations.sentences.details_wbgt_desc_1[this.language]);
+					$("#details_wbgt_desc_2").html(this.translations.sentences.details_wbgt_desc_1[this.language]);
+					
+					$("#str_phs_iso").html(this.translations.labels.str_phs_iso[this.language]);
+					$("#details_phs_desc_1").html(this.translations.sentences.details_phs_desc_1[this.language]);
+					$("#details_phs_desc_2").html(this.translations.sentences.details_phs_desc_2[this.language]);
+					$("#details_phs_desc_3").html(this.translations.sentences.details_phs_desc_3[this.language]);
+					
+					$("#str_windchill_jagti").html(this.translations.labels.str_windchill_jagti[this.language]);
+					$("#details_windchill_desc_1").html(this.translations.sentences.details_windchill_desc_1[this.language]);
+					$("#details_windchill_desc_2").html(this.translations.sentences.details_windchill_desc_2[this.language]);					
+					
+					$("#str_ireq_iso").html(this.translations.labels.str_ireq_iso[this.language]);
+					$("#details_ireq_desc").html(this.translations.sentences.details_ireq_desc[this.language]);
+					$("#details_ireq_desc_list1").html(this.translations.sentences.details_ireq_desc_list1[this.language]);
+					$("#details_ireq_desc_list2").html(this.translations.sentences.details_ireq_desc_list2[this.language]);
+					$("#details_ireq_desc_list3").html(this.translations.sentences.details_ireq_desc_list3[this.language]);
+
+					$("#details_ireq_clo_1").html(this.translations.sentences.details_ireq_clo_1[this.language]);
+					$("#details_ireq_clo_2").html(this.translations.sentences.details_ireq_clo_2[this.language]);
+					$("#details_ireq_clo_3").html(this.translations.sentences.details_ireq_clo_3[this.language]);
+					
+					$("#str_min_cloth_level").html(this.translations.labels.str_min_cloth_level[this.language]);
+					$("#str_max_cloth_level").html(this.translations.labels.str_max_cloth_level[this.language]);
+
+					$("#details_ireq_clo_dle_1").html(this.translations.sentences.details_ireq_clo_dle_1[this.language]);
+					$("#details_ireq_clo_dle_2").html(this.translations.sentences.details_ireq_clo_dle_2[this.language]);
+
+
+					$("#details_neutral").html(this.translations.sentences.details_neutral[this.language]);
+
 
 					let icl_min = this.knowledgeBase.thermalindices.ireq[index].ICLminimal;
 					let icl_worn = getClo(this.knowledgeBase);
@@ -1547,13 +1628,36 @@ var app = {
 			let height = this.knowledgeBase.user.settings.height;
 			let weight = this.knowledgeBase.user.settings.weight;
 
+			$("#str_personal_settings").html(this.translations.labels.str_personal_settings[this.language].toUpperCase());
+
+			$("#str_age").html(this.translations.labels.str_age[this.language]);
 			$("#age").html(this.knowledgeBase.user.settings.age + " " + this.knowledgeBase.settings.age.unit);
+			
+			$("#str_height").html(this.translations.labels.str_height[this.language]);
 			$("#height").html(getCalculatedHeightValue(unit, height) + " " + getHeightUnit(unit));
+			
+			$("#str_weight").html(this.translations.labels.str_weight[this.language]);
 			$("#weight").html(getCalculatedWeightValue(unit, weight) + " " + getWeightUnit(unit));
+			
+			$("#str_gender").html(this.translations.labels.str_gender[this.language]);
 			$("#gender").html(this.knowledgeBase.user.settings.gender);
-			$("#unit").html(this.knowledgeBase.user.settings.unit + " units");
+			
+			$("#str_acclimatization").html(this.translations.labels.str_acclimatization[this.language]);
 			$("#acclimatization_checkbox").prop("checked", this.knowledgeBase.user.settings.acclimatization);
+
+			$("#str_advanced_personalization").html(this.translations.labels.str_advanced_personalization[this.language]);
+			$("#str_reset_preferences").html(this.translations.labels.str_reset_preferences[this.language]);
+			
+			$("#str_preferences").html(this.translations.labels.str_preferences[this.language].toUpperCase());
+			$("#str_unit").html(this.translations.labels.str_unit[this.language]);
+			$("#unit").html(this.knowledgeBase.user.settings.unit + " units");
+
+			$("#str_notifications").html(this.translations.labels.str_notifications[this.language]);
 			$("#notification_checkbox").prop("checked", this.knowledgeBase.user.guards.receivesNotifications);
+
+			$("#str_other").html(this.translations.labels.str_other[this.language].toUpperCase());			
+			$("#str_about").html(this.translations.labels.str_about[this.language]);
+			$("#str_disclaimer_and_privacy").html(this.translations.labels.str_disclaimer_and_privacy[this.language]);
 		}
 		else if (this.currentPageID == "feedback") {
 			$(".navigation").hide();
@@ -1614,6 +1718,15 @@ var app = {
 		else if (this.currentPageID == "about") {
 			$(".navigation").hide();
 			$(".navigation_back_settings").show(); //BK: class used as id - consider using id - #navigation_back_settings instead of .
+			
+			// Setting page content
+			$("#str_era4cs").html(this.translations.labels.str_era4cs[this.language]);
+			$("#about_read_more").html(this.translations.sentences.about_read_more[this.language]);
+			$("#str_img_cred").html(this.translations.labels.str_img_cred[this.language]);
+			$("#about_acknowledge_flaticon").html(this.translations.sentences.about_acknowledge_flaticon[this.language]);
+			$("#about_acknowledge_fontawesome").html(this.translations.sentences.about_acknowledge_fontawesome[this.language]);
+			$("#str_app_info").html(this.translations.labels.str_app_info[this.language]);
+			
 			$("#app_version").html("App version: " + this.knowledgeBase.app_version);
 			$("#kb_version").html("Knowledge base version: " + this.knowledgeBase.version);
 		}
@@ -1636,9 +1749,9 @@ var app = {
 			this.initLocationListeners();
 
 			if (customLocationEnabled(this.knowledgeBase)) {
-				$("#location").html("Saved location: " + this.knowledgeBase.user.settings.station + " (" + this.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(4)  + ")");
+				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.user.settings.station + " (" + this.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(4)  + ")");
 			} else {
-				$("#location").html("Saved location: " + this.knowledgeBase.position.lat + ", " + this.knowledgeBase.position.lng);
+				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.position.lat + ", " + this.knowledgeBase.position.lng);
 			}
 
 		}
@@ -1650,7 +1763,7 @@ var app = {
 			$("#indoor_checkbox").prop("checked", this.knowledgeBase.user.guards.isIndoor);
 			this.knowledgeBase.user.guards.isIndoor ? $("#indoorSection").show() : $("#indoorSection").hide();
 			this.initIndoorListeners();
-			var windowsOpen = this.knowledgeBase.user.settings.open_windows ? "Yes" : "No";
+			var windowsOpen = this.knowledgeBase.user.settings.open_windows ? this.translations.labels.str_yes[this.language] : this.translations.labels.str_no[this.language];
 			
 			//var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
 			//$("#_temperature").html( this.knowledgeBase.user.settings._temperature + " &#xb0 " + tempUnit);
@@ -1712,10 +1825,10 @@ var app = {
 		console.log("model_value " + model_value);
 
 		if (draw_cold_gauge || (isNeutral && cold_index > personal_heat_index)) {
-			tip_html += coldLevelTips(index, level, kb, cold_index, this.currentPageID);
+			tip_html += coldLevelTips(index, level, kb, cold_index, this.currentPageID, this.translations, this.language);
 		}
 		else {
-			var fromThermalAdvisor = await heatLevelTips(index, level, kb, this.currentPageID);
+			var fromThermalAdvisor = await heatLevelTips(index, level, kb, this.currentPageID, this.translations, this.language);
 			tip_html += fromThermalAdvisor;
 		}
 		console.log("tips " + tip_html);
@@ -1785,7 +1898,7 @@ var app = {
 
 
 			if (prev < 0) {
-				$("#swipe_left_time").html("update weather");
+				$("#swipe_left_time").html(this.translations.labels.str_update_weather[this.language]);
 			}
 			else {
 				$("#forecast_left").show();
@@ -1799,7 +1912,7 @@ var app = {
 					prev_utc_date.getMonth() > cMonthnumber ||
 					prev_utc_date.getYear() > cYearnumber) {
 
-					prev_local_time = "tomorrow " + prev_local_time;
+					prev_local_time = this.translations.labels.str_tomorrow[this.language] + " " + prev_local_time;
 				}
 				$("#swipe_left_time").html(prev_local_time);
 			}
@@ -1819,21 +1932,22 @@ var app = {
 					next_utc_date.getMonth() > cMonthnumber ||
 					next_utc_date.getYear() > cYearnumber) {
 
-					next_local_time = "tomorrow " + next_local_time;
+					next_local_time = this.translations.labels.str_tomorrow[this.language] + " " + next_local_time;
 				}
 				$("#swipe_right_time").html(next_local_time);
 			}
 
-			var isCustomLocation = customLocationEnabled(this.knowledgeBase) ? ", custom" : "";
+			var isCustomLocation = customLocationEnabled(this.knowledgeBase) ? ", " + this.translations.labels.str_custom[this.language] : "";
 			$("#station").html(this.knowledgeBase.weather.station + " (" + distance + " km)" + isCustomLocation);
 
 			$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[index].Tair, this.knowledgeBase.user.settings.unit).toFixed(0) + "&#xb0");
 			let ws = this.knowledgeBase.thermalindices.ireq[index].v_air10 * 3.6; //m/s to km/h
 			$("#windspeed").html(ws.toFixed(0));
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
-			$("#humidity").html(this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0));
+			$("#humidity").html(this.translations.labels.str_humidity[this.language]);
+			$("#humidity_value").html(this.knowledgeBase.thermalindices.ireq[index].rh.toFixed(0));
 
-			$("#windspeed_desc").html("Wind ");
+			$("#windspeed_desc").html(this.translations.labels.str_wind[this.language] + " ");
 			$("#windspeed_unit").html(" km/h");
 
 			//weather icon
@@ -1855,53 +1969,53 @@ var app = {
 			if (solar > 0) { //daytime
 				if (clouds < 10) {                    //sun
 					icon_weather = "fa-sun";
-					$("#weather_desc").html("Sunny, clear sky");
+					$("#weather_desc").html(this.translations.labels.weather_sunny_clear[this.language]);
 				}
 				else if (clouds < 80 && rain < 0.1) { //clouds sun no rain
 					icon_weather = "fa-cloud-sun";
-					$("#weather_desc").html("Broken clouds");
+					$("#weather_desc").html(this.translations.labels.weather_broken_clouds[this.language]);
 				}
 				else if (clouds >= 80 && rain < 0.1) { //clouds no rain
 					icon_weather = "fa-cloud";
-					$("#weather_desc").html("Overcast clouds");
+					$("#weather_desc").html(this.translations.labels.weather_overcast_clouds[this.language]);
 				}
 				else if (clouds < 80 && rain > 0.1) {  //cloud sun rain
 					icon_weather = "fa-cloud-sun-rain";
-					$("#weather_desc").html("Light rain");
+					$("#weather_desc").html(this.translations.labels.weather_light_rain[this.language]);
 				}
 				else if (clouds >= 80 && rain > 0.1) {  //cloud  rain
 					icon_weather = "fa-cloud-rain";
-					$("#weather_desc").html("Light rain, overcast");
+					$("#weather_desc").html(this.translations.labels.weather_light_rain_overcast[this.language]);
 				}
 				else if (clouds >= 80 && rain > 1) {  //cloud  rain
 					icon_weather = "fa-cloud-showers-heavy";
-					$("#weather_desc").html("Shower rain");
+					$("#weather_desc").html(this.translations.labels.weather_shower_rain[this.language]);
 				}
 			}
 			else { //night
 				if (clouds < 10) {                    //moon
 					icon_weather = "fa-moon";
-					$("#weather_desc").html("Clear sky");
+					$("#weather_desc").html(this.translations.labels.weather_clear[this.language]);
 				}
 				else if (clouds < 80 && rain < 0.1) { //clouds moon no rain
 					icon_weather = "fa-cloud-moon";
-					$("#weather_desc").html("Broken clouds");
+					$("#weather_desc").html(this.translations.labels.weather_broken_clouds[this.language]);
 				}
 				else if (clouds >= 80 && rain < 0.1) { //clouds no rain
 					icon_weather = "fa-cloud";
-					$("#weather_desc").html("Overcast clouds");
+					$("#weather_desc").html(this.translations.labels.weather_overcast_clouds[this.language]);
 				}
 				else if (clouds < 80 && rain > 0.1) {  //cloud moon rain
 					icon_weather = "fa-cloud-moon-rain";
-					$("#weather_desc").html("Light rain");
+					$("#weather_desc").html(this.translations.labels.weather_light_rain[this.language]);
 				}
 				else if (clouds >= 80 && rain > 0.1) {  //cloud  rain
 					icon_weather = "fa-cloud-rain";
-					$("#weather_desc").html("Light rain, overcast");
+					$("#weather_desc").html(this.translations.labels.weather_light_rain_overcast[this.language]);
 				}
 				else if (clouds >= 80 && rain > 1) {  //cloud  rain
 					icon_weather = "fa-cloud-moon-rain";
-					$("#weather_desc").html("Shower rain");
+					$("#weather_desc").html(this.translations.labels.weather_shower_rain[this.language]);
 				}
 			}
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
@@ -1920,18 +2034,20 @@ var app = {
 			// Indoor mode
 			$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[index].Tair, this.knowledgeBase.user.settings.unit).toFixed(0));
 			$("#windspeed").html(this.knowledgeBase.user.settings.windspeed);
-			$("#humidity").html(this.knowledgeBase.user.settings._humidity);
+			$("#humidity").html(this.translations.labels.str_humidity[this.language]);
+			$("#humidity_value").html(this.knowledgeBase.user.settings._humidity);
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
 
 			// Remove weather indication from dashboard // substitute with windows open/close
 			$("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
-			$("#weather_desc").html(this.knowledgeBase.user.settings.open_windows ? "Open windows" : "No open windows");
+			$("#weather_desc").html(this.knowledgeBase.user.settings.open_windows ? this.translations.labels.indoor_open_windows[this.language] : this.translations.labels.indoor_no_open_windows[this.language]);
 
 			// Remove redundant wind speed information when indoor
 			$("#windspeed_desc").html("");
 			$("#windspeed_unit").html("");
+			
 			// Indicate indoor/outdoor mode on dashboard
-			let isIndoor = this.knowledgeBase.user.guards.isIndoor ? "Indoor" : "Outdoor";
+			let isIndoor = this.knowledgeBase.user.guards.isIndoor ? this.translations.labels.str_indoor[this.language] : this.translations.labels.str_outoor[this.language];
 			$("#indoor_outdoor").html(isIndoor.toUpperCase());
 		}
 	},
@@ -2122,7 +2238,7 @@ var app = {
 			ctx.canvas.height = width;
 			ctx.canvas.width = width;
 		}
-		var title = value < 0 ? gaugeTitleCold(Math.abs(value)) : gaugeTitleHeat(Math.abs(value));
+		var title = value < 0 ? gaugeTitleCold(Math.abs(value), this.translations, this.language) : gaugeTitleHeat(Math.abs(value), this.translations, this.language);
 		var highlights = this.knowledgeBase.gauge.highlights;
 		var gauge = new RadialGauge({
 			renderTo: id,

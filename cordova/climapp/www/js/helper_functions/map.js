@@ -14,7 +14,6 @@ function initMap() {
             currentCoordinates = { lat: position.coords.latitude, lng: position.coords.longitude };
         },
         function (error) { //on error
-            showShortToast("Could not retrieve location for Google Maps.");
             console.log(error);
         },
         options // here the timeout is introduced

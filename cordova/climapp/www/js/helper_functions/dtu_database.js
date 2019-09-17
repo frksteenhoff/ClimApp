@@ -5,7 +5,7 @@
  */
 
 // kb - shorthand for self.knowledgeBase 
-function addFeedbackToDB(kb) {
+function addFeedbackToDB(kb, translations, language) {
     let apicall = "createExtendedFeedbackRecord";
     let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
     let thermal_mode = kb.user.adaptation.mode;
@@ -24,7 +24,7 @@ function addFeedbackToDB(kb) {
     $.post(url, user_data).done(function (data, status, xhr) {
         if (status === "success") {
             console.log("Database update, feedback: " + data);
-            showShortToast("Feedback submitted!");
+            showShortToast(translations.toasts.feedback_submitted[language]);
         }
     });
 }
@@ -91,7 +91,7 @@ function createUserRecord(kb) {
         let user_data = {
             "_id": deviceID(),
             "age": kb.user.settings.age,
-            "gender": getGenderAsInteger(kb),
+            "gender": getGenderAsInteger(kb.user.settings.gender),
             "height": (kb.user.settings.height / 100), // unit is meter in database (SI)
             "weight": kb.user.settings.weight,
             "unit": 0

@@ -1,21 +1,23 @@
 /* Function related to the dashboard */
 
-function gaugeTitleCold(val) {
-    if ( val <= 1 ) return "no thermal stress";
-    else if ( val < 2 ) return "minor cold stress";
-    else if ( val < 3 ) return "significant cold stress";
-    else if ( val < 4 ) return "high cold stress";
-    else if ( val < 5 ) return "severe cold stress";
-    else return "extreme cold stress";
+function gaugeTitleCold(val, translations, language) {
+	var labels = translations.labels;
+    if ( val <= 1 ) return labels.str_no_stress[language];
+    else if ( val < 2 ) return labels.str_cold_minor[language];
+    else if ( val < 3 ) return labels.str_cold_significant[language];
+    else if ( val < 4 ) return labels.str_cold_high[language];
+    else if ( val < 5 ) return labels.str_cold_severe[language];
+    else return labels.str_cold_extreme[language];
 }
 
-function gaugeTitleHeat(val) {
-    if ( val < 1 ) return "no thermal stress";
-    else if ( val < 2 ) return "minor heat stress";
-    else if ( val < 3 ) return "significant heat stress";
-    else if ( val < 4 ) return "high heat stress";
-    else if ( val < 5 ) return "severe heat stress";
-    else return "extreme heat stress"; 
+function gaugeTitleHeat(val, translations, language) {
+	var labels = translations.labels;
+    if ( val < 1 ) return labels.str_no_stress[language];
+    else if ( val < 2 ) return labels.str_heat_minor[language];
+    else if ( val < 3 ) return labels.str_heat_significant[language];
+    else if ( val < 4 ) return labels.str_heat_high[language];
+    else if ( val < 5 ) return labels.str_heat_severe[language];
+    else return labels.str_heat_extreme[language];
 }
 
 function getTemperatureUnit(unit) {
@@ -175,7 +177,7 @@ function neutralTips() {
 	return tips[i];
 }
 
-function heatLevelTips( index, level, kb, pageID ){
+function heatLevelTips( index, level, kb, pageID, translations, language){
 	console.log( "heatLevelTips");
     return new Promise((resolve, reject) => {
 		var mode = "heat";
@@ -199,7 +201,7 @@ function heatLevelTips( index, level, kb, pageID ){
 		$.get( url, data).done( function(data, status, xhr){
 			if(status === "success") {
 				// Need to be changed to follow translation structure
-				var header = pageID === "dashboard" ? "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i> Advice</p>" : ""; 
+				var header = pageID === "dashboard" ? "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i>" + gaugeTitleHeat(getPAL(kb, mode), translations, language) + "</p>" : ""; 
 				var str = header; // circle with gauge color
 				let tips = JSON.parse(data);
 				console.log(JSON.stringify(tips));
@@ -219,7 +221,7 @@ function heatLevelTips( index, level, kb, pageID ){
 	});
 }
 
-function coldLevelTips( index, level, kb, cold_index, pageID ){
+function coldLevelTips( index, level, kb, cold_index, pageID, translations, language){
 	let str = "";
 	
 	let icl_min = kb.thermalindices.ireq[ index ].ICLminimal;
@@ -231,48 +233,48 @@ function coldLevelTips( index, level, kb, cold_index, pageID ){
 	let windrisk = windchillRisk( windchill );
 	
 	let isWindstopperUseful = ( tair - threshold ) > windchill;
-	pageID === "dashboard" ? str += "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i> Advice</p>" : str += "";
+	pageID === "dashboard" ? str += "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i>" + gaugeTitleCold(cold_index, translations, language) + "</p>" : str += "";
 		
 	if( level === 1 ){ //beginner, early user
 		if( cold_index <= 1 ){
-			str += "<p>The green level means that low thermal stress is forecasted.</p>";
+			str += "<p>" + translations.sentences.dash_tip_green[language] + ".</p>";
 		}
 		else if( cold_index <= 2 ){
-			str += "<p>The cyan level means that moderate cold stress is expected.</p>";
+			str += "<p>" + translations.sentences.dash_tip_cyan[language] + "</p>";
 		}
 		else if( cold_index <= 3 ){
-			str += "<p>The blue level means that high cold stress is expected.</p>";
+			str += "<p>" + translations.sentences.dash_tip_blue[language] + "</p>";
 			if( windrisk ){
-				str += "<p>Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
+				str += "<p>" + translations.sentences.dash_tip_windchill_1[language] + " " + windchill.toFixed(0) + "&deg; " + translations.sentences.dash_tip_windchill_2[language] + " " + windrisk + " " + translations.dash_tip_windchill_3[language] + ".</p>";
 			}
 		}
 		else if( cold_index > 3){
-			str += "<p>This level is associated with severe cold stress.</p>";
+			str += "<p>" + translations.sentences.dash_tip_severe_cold[language] + ".</p>";
 			if( windrisk ){
-				str += "<p>Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
+				str += "<p>" + translations.sentences.dash_tip_windchill_1[language] + " " + windchill.toFixed(0) + "&deg; " + translations.sentences.dash_tip_windchill_2[language] + " " + windrisk + " " + translations.sentences.dash_tip_windchill_3[language] + ".</p>";
 			}
 		}
 	}
 	else if( level === 2 ){ //experienced user // or more info requested
 		if( cold_index <= 1 ){
-			str += "The personalized cold stress indicator depends on the weather report as well as your personal input.</p>";
-			str += "The score will increase towards higher warning levels if the weather agravates, your activity level decreases or your clothing level decreases.</p>";
-			str += "No special precautions are required unless you work/excercise in special settings (indoor) or with resticted ability to maintain heat.</p>";
+			str += translations.sentences.dash_tip_general_1[language] + ".</p>";
+			str += translations.sentences.dash_tip_general_2[language] + ".</p>";
+			str += translations.sentences.dash_tip_general_3[language] + ".</p>";
 		}
 		else if( cold_index <= 2 && isWindstopperUseful ){
-			str += "You should be able to maintain normal activities - but appropriate/adjusted behavior is required.</p>";
-			str += "There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.</p>";
+			str += translations.sentences.dash_tip_normal[language] + ".</p>";
+			str += translations.sentences.dash_tip_windchill_significant_1[language] + " " + windchill.toFixed(0) + "&deg;, " + translations.sentences.dash_tip_windchill_significant_2[language] + ".</p>";
 		}
 		else if( cold_index <= 2 ){
-			str += "You should consider to increase insulation from clothing by adding layers or choosing warmer/thicker clothing.</p>";
+			str += translations.sentences.dash_tip_increase_insulation[language] + ".</p>";
 		}
 		else if( cold_index > 2 ){
-			str += "At this level you are recommended to pay extra attention to appropriate behavior and match clothing to the cold level and protect exposed skin. Be aware not to overdress, because sweating will cool you down.</p>";
+			str += translations.sentences.dash_tip_extra_attention[language] + ".</p>";
 			if( isWindstopperUseful ){
-				str += "There is significant windchill " + windchill.toFixed(0) + "&deg;, you should consider clothing with high wind stopping properties.</p>";
+				str += translations.sentences.dash_tip_windchill_significant_1[language] + " " + windchill.toFixed(0) + "&deg;, " + translations.sentences.dash_tip_windchill_significant_2[language] + ".</p>";
 			}
 			if( windrisk ){
-				str += "Due to the windchill " + windchill.toFixed(0) + "&deg; there is a risk for exposed skin to freeze in " + windrisk + " minutes.</p>";
+				str += translations.sentences.dash_tip_windchill_1[language] + " " + windchill.toFixed(0) + "&deg; " + translations.sentences.dash_tip_windchill_2[language] + " " + windrisk + " " + translations.sentences.dash_tip_windchill_3[language] + ".</p>";
 			}
 		}
 	}
@@ -347,48 +349,48 @@ function locationSetCorrectly(kb) {
 }
 
 /* The introduction elements follows order of JSON array */
-function startIntro() {
+function startIntro(translations, language) {
 	var intro = introJs();
           intro.setOptions({
             steps: [
               {
                 element: '#nav',
-				intro: "<p><b>Dashboard introduction</b></p>" +
-				"<p>To familiarize you with the app, we will introduce the different elements on the dashboard.</p>" + 
-				"<p>From the navigation bar below you can switch between the Dashboard and Settings screens.</p>",
+				intro: "<p><b>" + translations.sentences.intro_nav_1[language]  + "</b></p>" +
+				"<p>" + translations.sentences.intro_nav_2[language] + ".</p>" + 
+				"<p>" + translations.sentences.intro_nav_3[language] + ".</p>",
 				position: "left"
 			  },
 			  {
                 element: '#gauge_div',
-				intro: "<p>The gauge indicates the expected level of heat or cold stress on a scale from -4 to 4.</p>" /*+ 
+				intro: "<p>" + translations.sentences.intro_gauge[language] + ".</p>" /*+ 
 						"<p>The positive values indicate the level of heat stress and the negative values the level of cold stress.</p>"*/
 			  },
 			  {
                 element: '#dashboard_numbers',
-				intro: "This area provides basic information about the current weather.",
+				intro: translations.sentences.intro_range[language] + ".",
 				position: 'bottom'
               },
 			  {
                 element: '#dashboard_forecast',
-				intro: "This bar allows for swiping between the forecasted weather data of today to see how the weather is predicted to change during the day.</p>" + 
-						"<p>The data is given in 3 hour intervals.",
+				intro: translations.sentences.intro_forecast_1[language] + ".</p>" + 
+						"<p>" + translations.sentences.intro_forecast_2[language] + ".",
 				position: 'bottom'
               },
               {
                 element: '#tips',
-				intro: "<p>This area describes how to cope with the current weather.",
+				intro: "<p>" + translations.sentences.intro_tips[language] + ".",
                 position: 'bottom'
               },
               {
                 element: '#tip_detailed',
-				intro: "<p>This area gives you additional details and advice on how to cope with the current climatic situation.</p>" + 
-						"<p>Press <i>more info</i> to read more.</p>",
+				intro: "<p>" + translations.sentences.intro_details_1[language] + ".</p>" + 
+						"<p>" + translations.sentences.intro_details_2[language] + ".</p>",
                 position: 'bottom'
               },
               {
                 element: '#menu_flex',
-				intro: "<p>This bar allows you to set your estimated activity level, clothing level and whether you are wearing any head gear. This allows for the app to better adapt to your situation.</p>" +
-				"<p>You switch between the different categories by clicking on the headers.</p><p>You can read more about the different levels in the description at the bottom.</p>",
+				intro: "<p>" + translations.sentences.intro_wheels_1[language] + ".</p>" +
+				"<p>" + translations.sentences.intro_wheels_2[language] + ".</p>",
                 position: 'middle'
               }
             ]
@@ -396,4 +398,8 @@ function startIntro() {
           intro.start();
 }
 
-module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor, getTranslations, getLocation, customLocationEnabled, startIntro, MergeRecursive, checkUserExistInDB};
+function firstCharToUpper(word){
+	return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor, getTranslations, getLocation, customLocationEnabled, startIntro, MergeRecursive, checkUserExistInDB, firstCharToUpper};

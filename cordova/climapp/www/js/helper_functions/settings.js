@@ -1,3 +1,4 @@
+// TODO: change structure of units, make one wheel to set all units individually
 function getCalculatedHeightValue(unit, height) {
     if(unit != "SI") { // feet, inches
         return Math.round(height / 30.48); 
@@ -39,8 +40,11 @@ function deviceID() {
     return device.uuid;
 }
 
-function getGenderAsInteger(kb) {
-    return kb.user.settings.gender === 'Male' ? 1 : 0;
+// Check whether gender has been set.
+// If gender is a number (0 or 1) return that, otherwise 
+// return -1 (when gender is 'undefined')
+function getGenderAsInteger(gender) {
+    return typeof gender === 'number' ? gender : -1;
 }
 
 module.exports = { getCalculatedHeightValue, getHeightUnit, getCalculatedWeightValue, getWeightUnit, deviceID, getGenderAsInteger };

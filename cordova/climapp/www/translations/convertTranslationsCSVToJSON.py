@@ -44,9 +44,15 @@ print("Preparing for conversion ..")
 print("Moving old translation file to archive ..")
 
 datestr = strftime("%d%m%Y", gmtime()) 
-os.rename("translations.json", "archive/translations" + datestr + ".json")
 
-print("Old translations file moved to archive.")
+if os.path.isfile("translations.json"):
+    if not os.path.isfile("archive/translations.json"):
+        os.rename("translations.json", "archive/translations" + datestr + ".json")
+        print("Old translations file moved to archive.")
+    print("Translations file already moved to archive")
+else:
+    print("No previous translation file, skipping move")
+print("---------------------------------------------------")
 
 # ----------------------------------------------------------------
 # ## Functions
