@@ -1001,11 +1001,7 @@ var app = {
 			obj_array.push({ description: "Yes", value: 1 });
 			obj_array.push({ description: "No", value: 0 });
 		}
-		else if (key === "coordinates") {
-			// Opening Google Maps API to get location in new window.
-			$(".navigation_back_custom").show();
-			$("#google_maps_elem").fadeIn(500);
-		}
+
 		else if (key === "_temperature") {
 			if (this.knowledgeBase.user.settings.unit !== "SI") {
 				// Fahrenheit
@@ -1631,7 +1627,9 @@ var app = {
 			$(".navigation_back_custom").hide();
 			$("#google_maps_elem").hide();
 			$("#coordinates").html("lat: " + this.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", lon: " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(4));
-
+			$("#choose_location").html(this.translations.labels.str_choose_location[this.language]);
+			console.log(this.translations.labels.str_choose_location[this.language]);
+			
 			// Location
 			this.knowledgeBase.user.guards.customLocationEnabled ? $("#customLocationSection").show() : $("#customLocationSection").hide();
 			$("#custom_location_checkbox").prop("checked", this.knowledgeBase.user.guards.customLocationEnabled);

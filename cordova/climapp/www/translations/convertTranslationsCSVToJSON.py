@@ -7,9 +7,11 @@
 # the files need to follow the below naming scheme:
 # 
 # #### Input
-# * Toasts: `climapp_translation_sheet_toasts.csv`
-# * Wheels: `climapp_translation_sheet_wheels.csv` 
-# * Text: `climapp_translation_sheet_text.csv`
+# * Toasts:    `climapp_translation_sheet_toasts.csv`
+# * Wheels:    `climapp_translation_sheet_wheels.csv` 
+# * Labels:    `climapp_translation_sheet_labels.csv`
+# * Sentences: `climapp_translation_sheet_sentences.csv`
+# * API text:  `climapp_translation_sheet_api.csv` -- NOT IMPLEMENTED YET
 # 
 # #### Output
 # * `combined_object`: `translations.json`
@@ -22,20 +24,34 @@
 # 
 # ----
 
-# ## Code
+# ----------------------------------------------------------------
 # **Importing needed libraries**
+# ----------------------------------------------------------------
 import pandas as pd
 import json
 import os
 import numpy as np
+from time import ctime, strftime, gmtime
 
 os.getcwd()
 troubleshoot = False
 
+
+print("Today's date: " + ctime())
+
 print("---------------------------------------------------")
 print("Preparing for conversion ..")
+print("Moving old translation file to archive ..")
+
+datestr = strftime("%d%m%Y", gmtime()) 
+os.rename("translations.json", "archive/translations" + datestr + ".json")
+
+print("Old translations file moved to archive.")
+
+# ----------------------------------------------------------------
 # ## Functions
-# 
+# ----------------------------------------------------------------
+
 # Definitions of the two functions used for conversion
 # 
 # * `toast` and `text` use **convertCSVtoJSON_simple**
@@ -75,13 +91,13 @@ def convertCSVtoJSON_nested(df, availableLanguages):
             wheels[df['text_id'][i]][df['key2'][i]].update({df['key3'][i] : {lang : df[lang][i] for lang in availableLanguages}})
     return wheels
 
-
-# ## Text
+# ----------------------------------------------------------------
+# ## Labels
+# ----------------------------------------------------------------
 
 # #### Reading in file with general strings
 
-print("Converting strings.. ")
-df = pd.read_csv("climapp_translation_sheet_strings.csv")
+df = pd.read_csv("climapp_translation_sheet_labels.csv")
 df.head()
 
 
@@ -94,11 +110,12 @@ df.head()
 # 
 # 
 
-# Extracting available languages from the text sheet
+
+# Extracting available languages from the labels sheet
 
 availableLanguages = []
 
-print("All languages in sheet: ", df.columns[1:].values, "\n")
+print("All languages declared in sheet: ", df.columns[1:].values, "\n")
 
 for lang in df.columns[1:]:
     if(not pd.isnull(df[lang]).any()):
@@ -107,17 +124,38 @@ for lang in df.columns[1:]:
     else:
         print("'" + lang + "' translations are MISSING VALUES")
 
+print("---------------------------------------------------")
 print("Currently available languages: ", availableLanguages)
 print("---------------------------------------------------")
 
 # #### Converting csv content to JSON object
 
-text = convertCSVtoJSON_simple(df, availableLanguages)
+print("Converting labels.. ")
+labels = convertCSVtoJSON_simple(df, availableLanguages)
 if(troubleshoot):
-    print(json.dumps(text, indent=4))
+    print(json.dumps(labels, indent=4))
+
+# ----------------------------------------------------------------
+# ## Sentences
+# ----------------------------------------------------------------
+
+# #### Reading in file with toast text
+
+print("Converting sentences.. ")
+df = pd.read_csv("climapp_translation_sheet_sentences.csv")
+
+# **Showing basic content**
+df.head()
 
 
+# #### Converting csv content to JSON object
+sentences = convertCSVtoJSON_simple(df, availableLanguages)
+if(troubleshoot):
+    print(json.dumps(sentences, indent=4))
+
+# ----------------------------------------------------------------
 # ## Toasts
+# ----------------------------------------------------------------
 
 # #### Reading in file with toast text
 
@@ -133,8 +171,10 @@ toasts = convertCSVtoJSON_simple(df, availableLanguages)
 if(troubleshoot):
     print(json.dumps(toasts, indent=4))
 
-
+# ----------------------------------------------------------------
 # ## Wheels
+# ----------------------------------------------------------------
+
 # #### Reading in file with wheels text
 
 print("Converting wheels.. ")
@@ -143,15 +183,19 @@ df.head()
 
 
 # #### Converting csv content to JSON object
-
 wheels = convertCSVtoJSON_nested(df, availableLanguages)
 # Use to check the result
 if(troubleshoot):
     print(json.dumps(wheels, indent=4))
 
+
+# ----------------------------------------------------------------
+# COMBINE 
+# ----------------------------------------------------------------
+
 # ## Combining all information in one JSON object
 print("Combining all json objects.. ")
-combined_object = {"text" : text, "wheels" : wheels, "toasts" :toasts}
+combined_object = {"labels" : labels, "sentences" : sentences, "wheels" : wheels, "toasts" :toasts}
 if(troubleshoot):
     print(json.dumps(combined_object, indent=4))
 

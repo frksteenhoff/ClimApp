@@ -161,6 +161,7 @@ function WBGTrisk(wbgt, kb, isPersonalised ) {
 	}
 }
 
+// Are we still using these? (do they need translation)
 function neutralTips() {
 	let tips = [ "Enjoy your activity",
 				"Looks like it's all good",
@@ -197,6 +198,7 @@ function heatLevelTips( index, level, kb, pageID ){
 		var url = "https://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
 		$.get( url, data).done( function(data, status, xhr){
 			if(status === "success") {
+				// Need to be changed to follow translation structure
 				var header = pageID === "dashboard" ? "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i> Advice</p>" : ""; 
 				var str = header; // circle with gauge color
 				let tips = JSON.parse(data);
@@ -332,7 +334,6 @@ function getLocation(kb) {
 		lat = kb.position.lat;
 		lon = kb.position.lng;
 	}
-	console.log("types " + typeof lat);
 	return [lat, lon];
 }
 
