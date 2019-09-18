@@ -907,18 +907,6 @@ var app = {
 		console.log("current language: " + this.language); // getting first two letters
 		console.log("User settings: \n" + JSON.stringify(this.knowledgeBase.user)); // Showing current user settings
 	},
-	/* In the future this should be used to fetch the needed question from the database
-	   Currently working with static content, just for proof of concept. */
-	/*loadFeedbackQuestions: function() {
-		feedback = $.getJSON("../data/feedbackQuestions.json", function(result){
-		result = JSON.parse(result);
-			self.knowledgeBase.feedback.question1.text = result.question1.text;
-			self.knowledgeBase.feedback.question2.text = result.question2.text;
-			self.knowledgeBase.feedback.question3.text = result.question3.text;
-		});
-		var uuid = device.uuid;
-		// Implement logic to handle different types of rating bars
-	},*/
 
 	/* Getting language based on locale, if language is not supported, English is chosen */
 	getLanguage: function (locale) {
