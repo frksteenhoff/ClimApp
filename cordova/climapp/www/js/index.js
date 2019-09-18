@@ -648,35 +648,35 @@ var app = {
 			},
 			"settings": {
 				"age": {
-					"title": "What is your age?",
+					"title": translations.wheels.settings.age.title[language],
 					"unit": translations.labels.str_years[language]
 				},
 				"height": {
-					"title": "How tall are you?"
+					"title": translations.wheels.settings.height.title[language]
 				},
 				"weight": {
-					"title": "How much do you weigh?"
+					"title": translations.wheels.settings.weight.title[language]
 				},
 				"gender": {
-					"title": "What is your gender?"
+					"title": translations.wheels.settings.gender.title[language]
 				},
 				"unit": {
-					"title": "Which units of measurements would you prefer?"
+					"title": translations.wheels.settings.unit.title[language]
 				},
 				"thermostat_level": {
-					"title": "What is your thermostat set to?"
+					"title": translations.wheels.settings.thermostat_level.title[language]
 				},
 				"open_windows": {
-					"title": "Are there any open windows in the room?"
+					"title": translations.wheels.settings.open_windows.title[language]
 				},
 				"_temperature": {
-					"title": "Input the outdoor temperature you would like to use"
+					"title": translations.wheels.settings._temperature.title[language]
 				},
 				"windspeed_text": {
-					"title": "Input the windspeed you would like to use"
+					"title": translations.wheels.settings.windspeed_text.title[language]
 				},
 				"_humidity_text": {
-					"title": "Input the humidity you would like to use"
+					"title": translations.wheels.settings._humidity_text.title[language]
 				},
 			},
 			"activity": {
@@ -705,24 +705,24 @@ var app = {
 				}
 			},
 			"clothing": {
-				"title": "no", //this.translations.wheels.clothing.title[this.language],
+				"title": translations.wheels.clothing.title[language],
 				"description": {
-					"Summer_attire": "Loose fitting, short clothing. Typical for summer.",
-					"Business_suit": "Regular business suit. Most common in offices.",
-					"Double_layer": "Generally taken to be coveralls over work clothes.",
-					"Cloth_coverall": "Woven fabric that includes treated cotton.",
-					"Cloth_apron_long_sleeve": "The wrap-around apron configuration was designed to protect the front and sides of the body against spills from chemical agents.",
-					"Vapour_barrier_coverall": "Vapour-barrier clothing in a single layer.",
-					"Winter_attire": "Winter clothing, multiple layers including a thick coat."
+					"Summer_attire": translations.wheels.clothing.description.Summer_attire[language],
+					"Business_suit": translations.wheels.clothing.description.Business_suit[language],
+					"Double_layer": translations.wheels.clothing.description.Double_layer[language],
+					"Cloth_coverall": translations.wheels.clothing.description.Cloth_coverall[language],
+					"Cloth_apron_long_sleeve": translations.wheels.clothing.description.Cloth_apron_long_sleeve[language],
+					"Vapour_barrier_coverall": translations.wheels.clothing.description.Vapour_barrier_coverall[language],
+					"Winter_attire": translations.wheels.clothing.description.Winter_attire[language]
 				},
 				"label": {
-					"Summer_attire": "Summer attire", //ISO 8896
-					"Business_suit": "Business suit",
-					"Double_layer": "Double layer",
-					"Cloth_coverall": "Cloth coverall",
-					"Cloth_apron_long_sleeve": "Apron over coverall",
-					"Vapour_barrier_coverall": "Vapour-barrier coverall",
-					"Winter_attire": "Winter attire"
+					"Summer_attire": translations.wheels.clothing.label.Summer_attire[language], //ISO 8896
+					"Business_suit": translations.wheels.clothing.label.Business_suit[language],
+					"Double_layer": translations.wheels.clothing.label.Double_layer[language],
+					"Cloth_coverall": translations.wheels.clothing.label.Cloth_coverall[language],
+					"Cloth_apron_long_sleeve": translations.wheels.clothing.label.Cloth_apron_long_sleeve[language],
+					"Vapour_barrier_coverall": translations.wheels.clothing.label.Vapour_barrier_coverall[language],
+					"Winter_attire": translations.wheels.clothing.label.Winter_attire[language]
 				},
 				"values": {
 					"Summer_attire": 0.5, //clo
@@ -735,14 +735,14 @@ var app = {
 				}
 			},
 			"headgear": {
-				"title": "Hey",
+				"title": translations.wheels.headgear.title[language],
 				"description": {
-					"none": "No headgear",
-					"helmet": "Wearing a hood of any fabric with any clothing ensemble.",
+					"none": translations.wheels.headgear.description.none[language],
+					"helmet": translations.wheels.headgear.description.helmet[language],
 				},
 				"label": {
 					"none": translations.wheels.headgear.label.none[language], //ISO 8896
-					"helmet": "Helmet or hood",
+					"helmet": translations.wheels.headgear.label.helmet[language],
 				},
 				"values": {
 					"none": 0, //clo
@@ -959,8 +959,8 @@ var app = {
 			}
 		}
 		else if (key === "gender") {
-			obj_array.push({ description: "Female", value: 0 });
-			obj_array.push({ description: "Male", value: 1 });
+			obj_array.push({ description: this.translations.labels.str_female[this.language], value: 0 });
+			obj_array.push({ description: this.translations.labels.str_male[this.language], value: 1 });
 		}
 		else if (key === "unit") {
 			obj_array.push({ description: "SI: kg, cm, m/s, Celsius", value: "SI" });
@@ -1599,7 +1599,6 @@ var app = {
 						$("div[data-context='cold'],div[data-context='phs'],div[data-context='neutral']").hide();
 						$("div[data-context='heat']").show();
 
-
 						$("#detail_wbgt_iso7243").html(wbgt_eff.toFixed(1));
 						$("#detail_ral_iso7243").html(ral.toFixed(1));
 
@@ -1614,14 +1613,12 @@ var app = {
 							$("#detail_sweat").html(sw_tot_per_hour);
 							$("#detail_dle_phs").html(d_tre);
 						}
-
 					}
 					else {
 						$("div[data-context='cold'],div[data-context='phs'],div[data-context='heat']").hide();
 						$("div[data-context='neutral']").show();
 					}
-				});
-
+				})
 		}
 		else if (this.currentPageID == "settings") {
 			$(".navigation").show();
@@ -1733,7 +1730,6 @@ var app = {
 			$("#str_activity_level").html(this.translations.labels.str_activity_level[this.language]);
 			$("#str_clothing_level").html(this.translations.labels.str_clothing_level[this.language]);
 			$("#head_gear").html(this.translations.labels.str_headgear[this.language]);
-			
 
 			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, false).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {
@@ -1788,7 +1784,6 @@ var app = {
 			} else {
 				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.position.lat + ", " + this.knowledgeBase.position.lng);
 			}
-
 		}
 		else if (this.currentPageID == "indoor") {
 			$(".navigation_back_settings").hide();
@@ -1807,7 +1802,6 @@ var app = {
 			$("#str_wind_speed").html(this.translations.labels.str_wind_speed[this.language]);
 			$("#str_humidity").html(this.translations.labels.str_humidity[this.language]);
 			$("#str_continue").html(this.translations.labels.str_continue[this.language]);
-		
 
 			// Values
 			//var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
@@ -1851,7 +1845,6 @@ var app = {
 		let model_heat_index = WBGTrisk(kb.thermalindices.phs[index].wbgt, kb, false);
 
 		console.log("model_heat_index " + model_heat_index);
-
 
 		let draw_cold_gauge = this.isDrawColdGauge(cold_index, personal_heat_index, index);
 		let draw_heat_gauge = this.isDrawHeatGauge(cold_index, personal_heat_index, index);
@@ -1940,7 +1933,6 @@ var app = {
 			let cDaynumber = cDate.getDate();
 			let cMonthnumber = cDate.getMonth();
 			let cYearnumber = cDate.getYear();
-
 
 			if (prev < 0) {
 				$("#swipe_left_time").html(this.translations.labels.str_update_weather[this.language]);
@@ -2154,8 +2146,6 @@ var app = {
 		var orange_y = 1.2 * pal;
 		var red_y = Math.ceil(Math.max(1.5 * pal, data.ymax + 1));
 		console.log([green_y, yellow_y, orange_y, red_y]);
-
-
 
 		var chartData = {
 			labels: data.labels,
