@@ -79,7 +79,6 @@ var app = {
 			if (self.knowledgeBase.user.settings.level !== 2 && self.knowledgeBase.user.guards.appOpenedCount === 5) {
 				self.knowledgeBase.user.settings.level = 2;
 				showShortToast(self.translations.toasts.adv_user[self.language]); // Showing how to call translation text for toasts
-				
 			}
 			self.updateLocation();
 			self.saveSettings();
@@ -119,7 +118,6 @@ var app = {
 			else {
 				self.loadUI(target);
 			}
-
 		});
 	},
 	initToggleListeners: function () {
@@ -150,7 +148,6 @@ var app = {
 					self.saveSettings();
 				});
 		});
-
 
 		$("div[data-listener='adaptation']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='adaptation']").on('click', function () {
@@ -221,7 +218,6 @@ var app = {
 			}
 			$("input[data-listener='feedback']").removeClass("checked");
 			self.saveSettings();
-
 		});
 
 		// When user submits feedback, add to object to send to db + reset values
@@ -244,7 +240,6 @@ var app = {
 				diff_array.unshift(perceived_predicted_diff); 
 			}
 			*/
-
 
 			// If user not in database, add user to database
 			self.checkIfUserExistInDB();
@@ -312,7 +307,6 @@ var app = {
 
 				// Inform user about event in toast
 				showShortToast(self.translations.toasts.preferences_reset[self.language]);
-
 			}
 			else {
 				self.loadUI(target);
@@ -1108,7 +1102,6 @@ var app = {
 								self.knowledgeBase.weather.wbgt_max = weather.wbgt_max.map(Number);
 								self.knowledgeBase.weather.wbgt_max.unshift(Number(weather.currentweather.wbgt_max));
 
-
 								self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
 								self.knowledgeBase.weather.windchill.unshift(Number(weather.currentweather.windchill));
 
@@ -1132,7 +1125,6 @@ var app = {
 
 								self.knowledgeBase.weather.globetemperature = weather.tglobe_clouds.map(Number);
 								self.knowledgeBase.weather.globetemperature.unshift(Number(weather.currentweather.tglobe_clouds));
-
 
 								self.knowledgeBase.weather.clouds = weather.clouds.map(Number);
 								self.knowledgeBase.weather.clouds.unshift(Number(weather.currentweather.clouds));
@@ -1514,7 +1506,6 @@ var app = {
 					let p = this.knowledgeBase.thermalindices.phs[index].p.toFixed(2);
 					let im = this.knowledgeBase.thermalindices.phs[index].im_st.toFixed(2);
 
-
 					let utc_date = new Date(this.knowledgeBase.thermalindices.ireq[index].utc); //
 					let local_time = utc_date.toLocaleTimeString(navigator.language, { //language specific setting
 						hour: '2-digit',
@@ -1810,7 +1801,6 @@ var app = {
 			$("#_humidity").html(this.knowledgeBase.user.settings._humidity + " %");
 			$("#thermostat_level").html(this.knowledgeBase.user.settings.thermostat_level);
 			$("#open_windows").html(windowsOpen);
-
 		}
 	},
 	updateMenuItems: function () {
@@ -1857,7 +1847,6 @@ var app = {
 
 		let personal_value = this.determineThermalIndexValue(cold_index, personal_heat_index, index);
 		let model_value = this.determineThermalIndexValue(cold_index, model_heat_index, index);
-
 
 		console.log("personal_value " + personal_value);
 		console.log("model_value " + model_value);
