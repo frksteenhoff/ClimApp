@@ -183,7 +183,7 @@ if(troubleshoot):
 
 # #### Reading in file with wheels text
 
-print("Converting wheels.. ")
+print("Converting wheels (partial content).. ")
 df = pd.read_csv("climapp_translation_sheet_wheels.csv")
 df.head()
 
@@ -196,12 +196,31 @@ if(troubleshoot):
 
 
 # ----------------------------------------------------------------
+# ## API
+# ----------------------------------------------------------------
+
+# #### Reading in file with toast text
+
+print("Converting API text (not used in app).. ")
+df = pd.read_csv("climapp_translation_sheet_api.csv")
+
+# **Showing basic content**
+df.head()
+
+
+# #### Converting csv content to JSON object
+api = convertCSVtoJSON_simple(df, availableLanguages)
+if(troubleshoot):
+    print(json.dumps(api, indent=4))
+
+
+# ----------------------------------------------------------------
 # COMBINE 
 # ----------------------------------------------------------------
 
 # ## Combining all information in one JSON object
 print("Combining all json objects.. ")
-combined_object = {"labels" : labels, "sentences" : sentences, "wheels" : wheels, "toasts" :toasts}
+combined_object = {"labels" : labels, "sentences" : sentences, "wheels" : wheels, "toasts" : toasts, "api" : api}
 if(troubleshoot):
     print(json.dumps(combined_object, indent=4))
 

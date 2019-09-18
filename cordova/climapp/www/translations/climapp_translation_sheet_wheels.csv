@@ -1,18 +1,18 @@
-text_id,key2,key3,en,da,nl,sv,no
-activity,title,,What is your activity level?,Hvad er dit aktivitetsniveau?,,,Hva er aktivitetsnivået ditt?
-activity,description,rest,"Resting, sitting at ease.\nBreathing not challenged.","Hviler, sidder roligt. Vejrtrækning normal",,,"Hviler, sitter i ro. \nPusten er ikke forstyrret."
-activity,description,light,"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.","Let manuelt arbejde: skrive, taste, tegne, bogføring. Nemt at trække vejret og føre en samtale",,,"Lett manulet arbeid: skriving, tegning, bokføring. Lett å puste og føre en  samtale."
-activity,description,medium,"Walking 2.5 - 5.5km/h. Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.","Gang 2.5-5.5 km/t. Vedvarende arm og håndarbejde: håndtering af moderat tungt maskineri, luge ukrudt eller plukke frugt.",,,"Gå 2.5-5.5 km/t. Vedvarende arm- og håndarbeid: håndtering av moderat tungt maskiner, luke plukke frukt."
-activity,description,high,"Intense arm and trunk work: carrying heavy material, shovelling, sawing, hand mowing, concrete block laying.","Intens aktivitet: bære tungt materiale, skovle, save, slå græs, lægge brosten.",,,"Intens armarbeid: bæring av tungt materiale, måking, saging, håndklipping, betongblokklegging."
-activity,description,intense,"Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs, running on level surface.","Meget intens aktivitet ved maksimalt tempo: \n arbejde med en økse, gå på trapper, løb på plan overflade.",,,"Veldig intens aktivitet i raskt maksimalt tempo: \n arbeider med en øks, klatrer trapper, løper på jevn overflate."
-activity,label,rest,Rest ,Hvile,,,Hvile
-activity,label,light,Light ,Let,,,Lett
-activity,label,medium,Medium,Middel,,,Middel
-activity,label,high,High,Høj,,,Høy
-activity,label,intense,Intense,Intens,,,Intens
-clothing,label,rest,Rest ,Hvile,,,Hvile
-clothing,label,light,Light ,Let,,,Lett
-clothing,label,medium,Medium,Middel,,,Middel
-clothing,label,high,High,Høj,,,Høy
-clothing,label,intense,Intense,Intens,,,Intens
-headgear,label,none,None,Intet,,,Intet
+text_id,key2,key3,en,da,nl,sv,no,el,it,de,es,fr
+activity,title,,What is your activity level?,Hvad er dit aktivitetsniveau?,,,Hva er aktivitetsnivået ditt?,,,,,
+activity,description,rest,"Resting, sitting at ease.\nBreathing not challenged.","Hviler, sidder roligt. Vejrtrækning normal",,,"Hviler, sitter i ro. \nPusten er ikke forstyrret.",,,,,
+activity,description,light,"Light manual work:\nwriting, typing, drawing, book-keeping.\nEasy to breathe and carry on a conversation.","Let manuelt arbejde: skrive, taste, tegne, bogføring. Nemt at trække vejret og føre en samtale",,,"Lett manulet arbeid: skriving, tegning, bokføring. Lett å puste og føre en  samtale.",,,,,
+activity,description,medium,"Walking 2.5 - 5.5km/h. Sustained arm and hand work: handling moderately heavy machinery, weeding, picking fruits.","Gang 2.5-5.5 km/t. Vedvarende arm og håndarbejde: håndtering af moderat tungt maskineri, luge ukrudt eller plukke frugt.",,,"Gå 2.5-5.5 km/t. Vedvarende arm- og håndarbeid: håndtering av moderat tungt maskiner, luke plukke frukt.",,,,,
+activity,description,high,"Intense arm and trunk work: carrying heavy material, shovelling, sawing, hand mowing, concrete block laying.","Intens aktivitet: bære tungt materiale, skovle, save, slå græs, lægge brosten.",,,"Intens armarbeid: bæring av tungt materiale, måking, saging, håndklipping, betongblokklegging.",,,,,
+activity,description,intense,"Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs, running on level surface.","Meget intens aktivitet ved maksimalt tempo: \n arbejde med en økse, gå på trapper, løb på plan overflade.",,,"Veldig intens aktivitet i raskt maksimalt tempo: \n arbeider med en øks, klatrer trapper, løper på jevn overflate.",,,,,
+activity,label,rest,Rest ,Hvile,,,Hvile,,,,,
+activity,label,light,Light ,Let,,,Lett,,,,,
+activity,label,medium,Medium,Middel,,,Middel,,,,,
+activity,label,high,High,Høj,,,Høy,,,,,
+activity,label,intense,Intense,Intens,,,Intens,,,,,
+clothing,label,rest,Rest ,Hvile,,,Hvile,,,,,
+clothing,label,light,Light ,Let,,,Lett,,,,,
+clothing,label,medium,Medium,Middel,,,Middel,,,,,
+clothing,label,high,High,Høj,,,Høy,,,,,
+clothing,label,intense,Intense,Intens,,,Intens,,,,,
+headgear,label,none,None,Intet,,,Intet,,,,,

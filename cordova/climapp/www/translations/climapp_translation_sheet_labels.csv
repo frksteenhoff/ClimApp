@@ -1,109 +1,109 @@
-text_id,en,da,nl,sv,no
-str_dashboard,Dashboard,Instrumentbræt,,,Dashbord
-str_settings,Settings,Indstillinger,,,Innstillinger
-str_continue,Continue,Fortsæt,,,Fortsett
-str_colder,colder,koldere,,,kaldere
-str_warmer,warmer,varmere,,,varmere
-str_ok,OK,OK,,,OK
-str_choose_location,Choose location,Vælg placering,,,Velg plasering
-str_personalise,personalise,tilpas,,,Tilpass
-str_more_info,more info,mere information,,,Mere informasjon
-str_done,Done,Fædig,,,Ferdig
-str_cancel,Cancel,Afbryd,,,Avbryt
-str_set_location,Set_location,Sæt placering,,,Sett plasering
-str_activity,Activity,Aktivitet,,,Aktivitet
-str_clothing,Clothing,Beklædning,,,Antrekk
-str_headgear,Headgear,Hovedbeskyttelse,,,Hodebeskyttelse
-str_img_cred,Image credits,Kilde,,,Kilde
-str_app_info,App information,Information,,,Informasjon
-str_welcome,Welcome,Velkommen,,,Velkommen
-str_personal_settings,Personal settings,Personlige indstillinger,,,Personlige innstillinger
-str_preferences,Preferences,Foretrukne,,,Preferanser
-str_other,Other,Andet,,,Annet
-str_indoor_outdoor_mode,Indoor/outdoor mode,Indendørs/udendørs tilstand,,,Innendørs/utendørs
-str_forecast,Forecast,Vejrudsigt,,,Værmelding
-str_more_questions,More questions,Flere spørgsmål,,,Flere spørgsmål
-str_submit_data,Submit data,Send data,,,Send data
-str_custom_location,Custom location,Valgfri placering,,,Valgfri plassering
-str_location,Location,Placering,,,Plassering
-str_disclaimer,Disclaimer,Ansvarsfraskrivelse,,,Ansvarsfraskrivelse
-str_privacy,Privacy,Datasikkerhed,,,Personvern
-str_details,Details,Detaljer,,,Detaljer
-str_weather,Weather,Vejr,,,Vær
-str_user,User,Bruger,,,Bruker
-str_custom,Custom,Tilpasset,,,Tilpasset
-str_thermostat,Thermostat,Termostat,,,Termostat
-str_windows,Windows,Vinduer,,,Vinduer
-str_wind_speed,Wind speed,Vindhastighed,,,Vindfart
-str_humidity,Humidity,Luftfugtighed,,,Luftfuktighet
-str_input_custom_location,Input custom location?,Angiv placering,,,Input plassering
-str_current_location,Current location,Nuværende placering,,,Nåværende plassering
-str_time,Time,Klokkeslæt,,,Klokkeslett
-str_air_temperature,Air temperature,Lufttemperatur,,,Luftemperatur
-str_cloud_cover,Cloud cover,Skydække,,,Skydekke
-str_solar_irradiation,Solar irradiation,Solstråling,,,Solbestråling
-str_wind10,Windspeed at 10m,Vindhastighed ved 10m,,,Vindfart ved 2m
-str_wind2,Windspeed at 2m,Vindhastighed ved 2m,,,Vindfart ved 10m
-str_globe_temperature,Globe temperature,Globetemperatur,,,Klodetemperatur
-str_mrt,Mean radiant temperature,Gennemsnitlig strålingstemperatur,,,Gjennomsnittlig strålingstemperatur
-str_wbgt,WBGT,WBGT,,,WBGT
-str_wbgt_effective,WBGT effective,Effektiv WBGT,,,Effektiv WBGT
-str_aal,Average alert limit,Gennemsnitlig alarmgrænse,,,Gjennomsnittlig varslingsgrense
-str_pal,Personal alert limit,Personlig alarmgrænse,,,Personlig varslingsgrense
-str_windchill,Windchill,Windchill,,,Windchill
-str_mr,Metabolic rate,Stofskifte,,,Metabolsk nivå
-str_surface_area,Surface area,Overfladeareal,,,Flateareal
-str_clo,Clothing insulation,Beklædningsisolans,,,Klesisolasjon
-str_wind_permeability,Wind permeability,Beklædningens luftgennemtrængelighed,,,Vindpermeabilitet
-str_evaporative_permeability,Evaporative permeability,Fordampningpermeabilitet,,,Fordampnings permeabilitet
-str_wbgt_iso,Wet Bulb Globe Temperature (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO07243),,,Wet Bulb Globe Temperature (WBGT ISO07243)
-str_phs_iso,Heat Strain (PHS ISO07933),Varmestress (PHS ISO07933),,,Varmestress
-str_windchill_jagti,Exposed skin - Windchill (JAG/TI),Udækket hud - Windchill (JAG/TI),,,Utsatt hud - windchill (JAG/TI)
-str_ireq_iso,Body temperature - Cold  stress (IREQ ISO11079),Kropstemperatur - kuldestress (IREQ ISO11079),,,Kroppstemperatur
-str_min_cloth_level,minimal clothing level,Minimal beklædningsisolans,,,Minimalt klesnivå
-str_max_cloth_level,maximum clothing level,Maksimal beklædningsisolans,,,Maksimalt klesnivå
-str_weather_report,weather report,Vejrudsigt,,,Værmelding
-str_indoor,Indoor,Indendørs,,,Innendørs
-str_outdoor,Outdoor,Udendørs,,,Utendørs
-str_wind,Wind,Vind,,,Vind
-str_update_weather,update weather,Opdatér vejr,,,Oppdater vær
-str_age,Age,Alder,,,Alder
-str_height,Height,Højde,,,Høyde
-str_weight,Weight,Vægt,,,Vekt
-str_gender,Gender,Køn,,,Kjønn
-str_acclimatization,Acclimatization,Akklimatisering,,,Akklimatisering
-str_advanced_personalization,Advanced personalization,Avanceret tilpasning,,,Avansert tillpasning
-str_reset_preferences,Reset preferences,Nulstil foretrukne,,,Tilbakestill foretrukne
-str_unit,Unit,Enhed,,,Enhet
-str_notifications,Notifications (not functional yet),Notifikationer (virker ikke endnu),,,Varslinger
-str_about,About,Om,,,Om
-str_disclaimer_and_privacy,Disclaimer & privacy,Ansvarsfraskrivelse og datahåndtering,,,Ansvarsfraskrivelse og personvern
-str_new_location,New location,Ny placering,,,Ny plassering
-str_era4cs,What is the ERA4CS project?,Hvad er ERA4CS-projektet?,,,Hva er ERA4CS-prosjektet?
-str_no_stress,no thermal stress,Ingen termisk stress,,,Ingen termisk stress
-str_cold_minor,minor cold stress,Mindre kuldestress,,,Mindre kuldestress
-str_cold_significant,significant cold stress,Væsentlig kuldestress,,,Betydelig kuldestress
-str_cold_high,high cold stress,Højt kuldestress,,,Højt kuldestress
-str_cold_severe,severe cold stress,Alvorlig kuldestress,,,Alvorlig kuldestress
-str_cold_extreme,extreme cold stress,Ekstrem kuldestress,,,Ekstrem kuldestress
-str_heat_minor,minor heat stress,Mindre varmestress,,,Mindre varmestress
-str_heat_significant,significant heat stress,Væsentlig varmestress,,,Betydelig varmestress
-str_heat_high,high heat stress,Højt varmestress,,,Høj varmestress
-str_heat_severe,severe heat stress,Alvorlig varmestress,,,Alvorlig varmestress
-str_heat_extreme,extreme heat stress,Ekstrem varmestress,,,Ekstrem varmestress
-str_tomorrow,tomorrow,I morgen,,,I morgen
-weather_sunny_clear,"Sunny, clear sky","Sol, klar himmel",,,"Sol, klar himmel"
-weather_broken_clouds,Broken clouds,Delvis skyet,,,Delvis skyet
-weather_overcast_clouds,Overcast clouds,Overskyet,,,Overskyet
-weather_light_rain,Light rain,Let regn,,,Lett regn
-weather_light_rain_overcast,"Light rain, overcast","Let regn, overskyet",,,"Lett regn, overskyet"
-weather_shower_rain,Shower rain,Tung regn,,,Tung regn
-weather_clear,Clear sky,Klart,,,Klart
-indoor_open_windows,Open windows,Åbne vinduer,,,Åpne vinduer
-indoor_no_open_windows,No open windows,Ingen åbne vinduer,,,Ingen åpne vinduer
-str_yes,Yes,Ja,,,Ja
-str_no,No,Nej,,,Nei
-str_saved_location,Saved location,Gemt placering,,,Lagret plassering
-str_years,years,år,,,år
-str_activity_level,Activity level,Aktivitetsniveau,,,Aktivitetsnivå
-str_clothing_level,Clothing level,Beklædningsniveau,,,Klesmengde
+text_id,en,da,nl,sv,no,el,it,de,es,fr
+str_dashboard,Dashboard,Instrumentbræt,,,Dashbord,,,,,
+str_settings,Settings,Indstillinger,,,Innstillinger,,,,,
+str_continue,Continue,Fortsæt,,,Fortsett,,,,,
+str_colder,colder,koldere,,,kaldere,,,,,
+str_warmer,warmer,varmere,,,varmere,,,,,
+str_ok,OK,OK,,,OK,,,,,
+str_choose_location,Choose location,Vælg placering,,,Velg plasering,,,,,
+str_personalise,personalise,tilpas,,,Tilpass,,,,,
+str_more_info,more info,mere information,,,Mere informasjon,,,,,
+str_done,Done,Fædig,,,Ferdig,,,,,
+str_cancel,Cancel,Afbryd,,,Avbryt,,,,,
+str_set_location,Set_location,Sæt placering,,,Sett plasering,,,,,
+str_activity,Activity,Aktivitet,,,Aktivitet,,,,,
+str_clothing,Clothing,Beklædning,,,Antrekk,,,,,
+str_headgear,Headgear,Hovedbeskyttelse,,,Hodebeskyttelse,,,,,
+str_img_cred,Image credits,Kilde,,,Kilde,,,,,
+str_app_info,App information,Information,,,Informasjon,,,,,
+str_welcome,Welcome,Velkommen,,,Velkommen,,,,,
+str_personal_settings,Personal settings,Personlige indstillinger,,,Personlige innstillinger,,,,,
+str_preferences,Preferences,Foretrukne,,,Preferanser,,,,,
+str_other,Other,Andet,,,Annet,,,,,
+str_indoor_outdoor_mode,Indoor/outdoor mode,Indendørs/udendørs tilstand,,,Innendørs/utendørs,,,,,
+str_forecast,Forecast,Vejrudsigt,,,Værmelding,,,,,
+str_more_questions,More questions,Flere spørgsmål,,,Flere spørgsmål,,,,,
+str_submit_data,Submit data,Send data,,,Send data,,,,,
+str_custom_location,Custom location,Valgfri placering,,,Valgfri plassering,,,,,
+str_location,Location,Placering,,,Plassering,,,,,
+str_disclaimer,Disclaimer,Ansvarsfraskrivelse,,,Ansvarsfraskrivelse,,,,,
+str_privacy,Privacy,Datasikkerhed,,,Personvern,,,,,
+str_details,Details,Detaljer,,,Detaljer,,,,,
+str_weather,Weather,Vejr,,,Vær,,,,,
+str_user,User,Bruger,,,Bruker,,,,,
+str_custom,Custom,Tilpasset,,,Tilpasset,,,,,
+str_thermostat,Thermostat,Termostat,,,Termostat,,,,,
+str_windows,Windows,Vinduer,,,Vinduer,,,,,
+str_wind_speed,Wind speed,Vindhastighed,,,Vindfart,,,,,
+str_humidity,Humidity,Luftfugtighed,,,Luftfuktighet,,,,,
+str_input_custom_location,Input custom location?,Angiv placering,,,Input plassering,,,,,
+str_current_location,Current location,Nuværende placering,,,Nåværende plassering,,,,,
+str_time,Time,Klokkeslæt,,,Klokkeslett,,,,,
+str_air_temperature,Air temperature,Lufttemperatur,,,Luftemperatur,,,,,
+str_cloud_cover,Cloud cover,Skydække,,,Skydekke,,,,,
+str_solar_irradiation,Solar irradiation,Solstråling,,,Solbestråling,,,,,
+str_wind10,Windspeed at 10m,Vindhastighed ved 10m,,,Vindfart ved 2m,,,,,
+str_wind2,Windspeed at 2m,Vindhastighed ved 2m,,,Vindfart ved 10m,,,,,
+str_globe_temperature,Globe temperature,Globetemperatur,,,Klodetemperatur,,,,,
+str_mrt,Mean radiant temperature,Gennemsnitlig strålingstemperatur,,,Gjennomsnittlig strålingstemperatur,,,,,
+str_wbgt,WBGT,WBGT,,,WBGT,,,,,
+str_wbgt_effective,WBGT effective,Effektiv WBGT,,,Effektiv WBGT,,,,,
+str_aal,Average alert limit,Gennemsnitlig alarmgrænse,,,Gjennomsnittlig varslingsgrense,,,,,
+str_pal,Personal alert limit,Personlig alarmgrænse,,,Personlig varslingsgrense,,,,,
+str_windchill,Windchill,Windchill,,,Windchill,,,,,
+str_mr,Metabolic rate,Stofskifte,,,Metabolsk nivå,,,,,
+str_surface_area,Surface area,Overfladeareal,,,Flateareal,,,,,
+str_clo,Clothing insulation,Beklædningsisolans,,,Klesisolasjon,,,,,
+str_wind_permeability,Wind permeability,Beklædningens luftgennemtrængelighed,,,Vindpermeabilitet,,,,,
+str_evaporative_permeability,Evaporative permeability,Fordampningpermeabilitet,,,Fordampnings permeabilitet,,,,,
+str_wbgt_iso,Wet Bulb Globe Temperature (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO07243),,,Wet Bulb Globe Temperature (WBGT ISO07243),,,,,
+str_phs_iso,Heat Strain (PHS ISO07933),Varmestress (PHS ISO07933),,,Varmestress,,,,,
+str_windchill_jagti,Exposed skin - Windchill (JAG/TI),Udækket hud - Windchill (JAG/TI),,,Utsatt hud - windchill (JAG/TI),,,,,
+str_ireq_iso,Body temperature - Cold  stress (IREQ ISO11079),Kropstemperatur - kuldestress (IREQ ISO11079),,,Kroppstemperatur,,,,,
+str_min_cloth_level,minimal clothing level,Minimal beklædningsisolans,,,Minimalt klesnivå,,,,,
+str_max_cloth_level,maximum clothing level,Maksimal beklædningsisolans,,,Maksimalt klesnivå,,,,,
+str_weather_report,weather report,Vejrudsigt,,,Værmelding,,,,,
+str_indoor,Indoor,Indendørs,,,Innendørs,,,,,
+str_outdoor,Outdoor,Udendørs,,,Utendørs,,,,,
+str_wind,Wind,Vind,,,Vind,,,,,
+str_update_weather,update weather,Opdatér vejr,,,Oppdater vær,,,,,
+str_age,Age,Alder,,,Alder,,,,,
+str_height,Height,Højde,,,Høyde,,,,,
+str_weight,Weight,Vægt,,,Vekt,,,,,
+str_gender,Gender,Køn,,,Kjønn,,,,,
+str_acclimatization,Acclimatization,Akklimatisering,,,Akklimatisering,,,,,
+str_advanced_personalization,Advanced personalization,Avanceret tilpasning,,,Avansert tillpasning,,,,,
+str_reset_preferences,Reset preferences,Nulstil foretrukne,,,Tilbakestill foretrukne,,,,,
+str_unit,Unit,Enhed,,,Enhet,,,,,
+str_notifications,Notifications (not functional yet),Notifikationer (virker ikke endnu),,,Varslinger,,,,,
+str_about,About,Om,,,Om,,,,,
+str_disclaimer_and_privacy,Disclaimer & privacy,Ansvarsfraskrivelse og datahåndtering,,,Ansvarsfraskrivelse og personvern,,,,,
+str_new_location,New location,Ny placering,,,Ny plassering,,,,,
+str_era4cs,What is the ERA4CS project?,Hvad er ERA4CS-projektet?,,,Hva er ERA4CS-prosjektet?,,,,,
+str_no_stress,no thermal stress,Ingen termisk stress,,,Ingen termisk stress,,,,,
+str_cold_minor,minor cold stress,Mindre kuldestress,,,Mindre kuldestress,,,,,
+str_cold_significant,significant cold stress,Væsentlig kuldestress,,,Betydelig kuldestress,,,,,
+str_cold_high,high cold stress,Højt kuldestress,,,Højt kuldestress,,,,,
+str_cold_severe,severe cold stress,Alvorlig kuldestress,,,Alvorlig kuldestress,,,,,
+str_cold_extreme,extreme cold stress,Ekstrem kuldestress,,,Ekstrem kuldestress,,,,,
+str_heat_minor,minor heat stress,Mindre varmestress,,,Mindre varmestress,,,,,
+str_heat_significant,significant heat stress,Væsentlig varmestress,,,Betydelig varmestress,,,,,
+str_heat_high,high heat stress,Højt varmestress,,,Høj varmestress,,,,,
+str_heat_severe,severe heat stress,Alvorlig varmestress,,,Alvorlig varmestress,,,,,
+str_heat_extreme,extreme heat stress,Ekstrem varmestress,,,Ekstrem varmestress,,,,,
+str_tomorrow,tomorrow,I morgen,,,I morgen,,,,,
+weather_sunny_clear,"Sunny, clear sky","Sol, klar himmel",,,"Sol, klar himmel",,,,,
+weather_broken_clouds,Broken clouds,Delvis skyet,,,Delvis skyet,,,,,
+weather_overcast_clouds,Overcast clouds,Overskyet,,,Overskyet,,,,,
+weather_light_rain,Light rain,Let regn,,,Lett regn,,,,,
+weather_light_rain_overcast,"Light rain, overcast","Let regn, overskyet",,,"Lett regn, overskyet",,,,,
+weather_shower_rain,Shower rain,Tung regn,,,Tung regn,,,,,
+weather_clear,Clear sky,Klart,,,Klart,,,,,
+indoor_open_windows,Open windows,Åbne vinduer,,,Åpne vinduer,,,,,
+indoor_no_open_windows,No open windows,Ingen åbne vinduer,,,Ingen åpne vinduer,,,,,
+str_yes,Yes,Ja,,,Ja,,,,,
+str_no,No,Nej,,,Nei,,,,,
+str_saved_location,Saved location,Gemt placering,,,Lagret plassering,,,,,
+str_years,years,år,,,år,,,,,
+str_activity_level,Activity level,Aktivitetsniveau,,,Aktivitetsnivå,,,,,
+str_clothing_level,Clothing level,Beklædningsniveau,,,Klesmengde,,,,,

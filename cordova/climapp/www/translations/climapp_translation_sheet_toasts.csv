@@ -1,22 +1,22 @@
-text_id,en,da,nl,sv,no
-code_error,Whoops... something went wrong at: ,Uups.. noget gik galt ved:,,,Uups.. noe gikk galt ved:
-adv_user,After 5 uses you are now considered an experienced user.,"Efter at du nu har brugt appen 5 gange, anses du for at være en erfaren bruger.",,,"Etter at du har brukt appen mere enn 5 ganger, er du nå en erfaren bruker. "
-default_values,Using default values in calculations.,Anvender standardværdier i beregninger,,,Bruker standardverdier i beregnigner
-adaptation_reset,Adaptation level reset to 0,Tilpasningsniveau nustillet,,,Tilpasningsnivå tilbakestilt til 0
-preferences_reset,Personal preferences reset,Personlige preferencer nulstillet,,,Foretrukte tilbakestilt.
-acclimatized,You are acclimatized to your working environment.,Du er akklimatiseret til dit arbejdsmiljø,,,Du er akklimatisert til arbeidsmiljøet ditt.
-not_acclimatized,You are not acclimatized to your working environment.,Du er ikke akklimatiseret til dit arbejdsmiljø,,,Du er ikke akklimatisert til arbeidsmiljøet ditt.
-notification_enabled,You are receiving notfications,Du modtager nu notifikationer,,,Du mottar varsler.
-notification_disabled,You will not receive notifications,Du vil ikke modtage notifikationer,,,Du mottar ikke varsler.
-location_enabled,Custom location is enabled,Brugerdefineret placering slået til,,,Tilpasset plassering aktivert.
-location_disabled,Custom location is disabled,Brugerdefineret placering slået fra,,,Tilpasset plassering deaktivert.
-indoor_enabled,Indoor mode enabled,Indendørs tilstand slået til,,,Innemodus aktivert
-indoor_disabled,Indoor mode disabled,Indendørs tilstand slået fra,,,Utemodus aktivert
-kb_updated,Knowledgebase updated to version: ,Vidensbase opdateret til:,,,Kunnskapsbase oppdatert til versjon:
-kb_loaded,Loaded knowledgebase version: ,"Vidensbase indlæst, version:",,,"Lastet inn kunnskapsbase, versjon:"
-kb_created,Created knowledge base version: ,"Oprettet vidensbase, version:",,,"Opprettet kunnskapsbase, versjon:"
-no_location,Could not retrieve location,Kunne ikke hente placering,,,Kunne ikke hente plassering.
-weather_fail,Failed to update weather,Kunne ikke opdatere vejrinformation,,,Kunne ikke oppdatere været.
-custom_location,Using custom location,Anvender brugerdefineret placering,,,Bruker tilpasset plassering.
-feedback_submitted,Feedback submitted!,Feedback sendt!,,,Tilbakemelding sendt!
-bad_location,"Custom location disabled, bad coordinates","Placering deaktiveret, fejl i koordinater",,,"Plassering deaktivert, feil i koordinater"
+text_id,en,da,nl,sv,no,el,it,de,es,fr
+code_error,Whoops... something went wrong at: ,Uups.. noget gik galt ved:,,,Uups.. noe gikk galt ved:,,,,,
+adv_user,After 5 uses you are now considered an experienced user.,"Efter at du nu har brugt appen 5 gange, anses du for at være en erfaren bruger.",,,"Etter at du har brukt appen mere enn 5 ganger, er du nå en erfaren bruker. ",,,,,
+default_values,Using default values in calculations.,Anvender standardværdier i beregninger,,,Bruker standardverdier i beregnigner,,,,,
+adaptation_reset,Adaptation level reset to 0,Tilpasningsniveau nustillet,,,Tilpasningsnivå tilbakestilt til 0,,,,,
+preferences_reset,Personal preferences reset,Personlige preferencer nulstillet,,,Foretrukte tilbakestilt.,,,,,
+acclimatized,You are acclimatized to your working environment.,Du er akklimatiseret til dit arbejdsmiljø,,,Du er akklimatisert til arbeidsmiljøet ditt.,,,,,
+not_acclimatized,You are not acclimatized to your working environment.,Du er ikke akklimatiseret til dit arbejdsmiljø,,,Du er ikke akklimatisert til arbeidsmiljøet ditt.,,,,,
+notification_enabled,You are receiving notfications,Du modtager nu notifikationer,,,Du mottar varsler.,,,,,
+notification_disabled,You will not receive notifications,Du vil ikke modtage notifikationer,,,Du mottar ikke varsler.,,,,,
+location_enabled,Custom location is enabled,Brugerdefineret placering slået til,,,Tilpasset plassering aktivert.,,,,,
+location_disabled,Custom location is disabled,Brugerdefineret placering slået fra,,,Tilpasset plassering deaktivert.,,,,,
+indoor_enabled,Indoor mode enabled,Indendørs tilstand slået til,,,Innemodus aktivert,,,,,
+indoor_disabled,Indoor mode disabled,Indendørs tilstand slået fra,,,Utemodus aktivert,,,,,
+kb_updated,Knowledgebase updated to version: ,Vidensbase opdateret til:,,,Kunnskapsbase oppdatert til versjon:,,,,,
+kb_loaded,Loaded knowledgebase version: ,"Vidensbase indlæst, version:",,,"Lastet inn kunnskapsbase, versjon:",,,,,
+kb_created,Created knowledge base version: ,"Oprettet vidensbase, version:",,,"Opprettet kunnskapsbase, versjon:",,,,,
+no_location,Could not retrieve location,Kunne ikke hente placering,,,Kunne ikke hente plassering.,,,,,
+weather_fail,"Failed to update weather, no app ID","Kunne ikke opdatere vejrinformation, mangler app ID",,,"Kunne ikke oppdatere været, mangler app ID",,,,,
+custom_location,Using custom location,Anvender brugerdefineret placering,,,Bruker tilpasset plassering.,,,,,
+feedback_submitted,Feedback submitted!,Feedback sendt!,,,Tilbakemelding sendt!,,,,,
+bad_location,"Custom location disabled, bad coordinates","Placering deaktiveret, fejl i koordinater",,,"Plassering deaktivert, feil i koordinater",,,,,
