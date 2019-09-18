@@ -1752,8 +1752,8 @@ var app = {
 			$("#about_acknowledge_fontawesome").html(this.translations.sentences.about_acknowledge_fontawesome[this.language]);
 			$("#str_app_info").html(this.translations.labels.str_app_info[this.language]);
 			
-			$("#app_version").html("App version: " + this.knowledgeBase.app_version);
-			$("#kb_version").html("Knowledge base version: " + this.knowledgeBase.version);
+			$("#app_version").html(this.translations.labels.str_app_version[this.language] + ": " + this.knowledgeBase.app_version);
+			$("#kb_version").html(this.translations.labels.str_kb_version[this.language] + ": " + this.knowledgeBase.version);
 		}
 		else if (this.currentPageID == "disclaimer") {
 			$(".navigation").hide();
