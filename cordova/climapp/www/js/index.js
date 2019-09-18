@@ -379,7 +379,7 @@ var app = {
 		$("div[data-listener='set_coordinates']").on("click", function () {
 
 			var rawCoordinates = document.getElementById("latlon").innerHTML;
-			$("#latlon").html("New location: " + rawCoordinates);
+			$("#latlon").html(rawCoordinates);
 			// Hack solution, I know. Will fix.
 			var lat = Number(rawCoordinates.split(",")[0].replace("(", ""));
 			var lon = Number(rawCoordinates.split(",")[1].replace(")", ""));
@@ -1776,6 +1776,7 @@ var app = {
 			$("#str_custom_location").html(this.translations.labels.str_custom_location[this.language]);
 			$("#str_input_custom_location").html(this.translations.labels.str_input_custom_location[this.language]);
 			$("#str_location").html(this.translations.labels.str_location[this.language]);
+			$("#str_set_location").html(this.translations.labels.str_set_location[this.language]);
 			
 			// Location
 			this.knowledgeBase.user.guards.customLocationEnabled ? $("#customLocationSection").show() : $("#customLocationSection").hide();
