@@ -327,7 +327,7 @@ var app = {
 				var isChecked = $(this).is(":checked");
 				self.knowledgeBase.user.settings.acclimatization = isChecked;
 				// Inform user about choice in toast
-				var accText = isChecked ? self.translations.toasts.acclimatized[self.language] : self.translations.toasts.not_acclimtized[self.language];
+				var accText = isChecked ? self.translations.toasts.acclimatized[self.language] : self.translations.toasts.not_acclimatized[self.language];
 				updateDBParam(self.knowledgeBase, "acclimatization");
 				showShortToast(accText);
 
@@ -1347,10 +1347,21 @@ var app = {
 
 		if (this.currentPageID == "onboarding") {
 			$(".navigation").hide();
+
+			// Setting page content
+			$("#str_welcome").html(this.translations.labels.str_welcome[this.language]);
+			$("#onboarding_to_settings").html(this.translations.sentences.onboarding_to_settings[this.language]);			
+			$("#str_settings").html(this.translations.labels.str_settings[this.language]);
+			$("#onboarding_to_dashboard").html(this.translations.sentences.onboarding_to_dashboard[this.language]);			
+			$("#str_dashboard").html(this.translations.labels.str_dashboard[this.language]);
 		}
 		else if (this.currentPageID == "error") {
 			$(".navigation").hide();
-			this.initErrorListeners();			
+			this.initErrorListeners();
+			
+			// Set page content
+			$("#error_retrieve_weather").html(this.translations.sentences.error_retrieve_weather[this.language]);
+			$("#str_try_again").html(this.translations.labels.str_try_again[this.language]);
 		}
 		else if (this.currentPageID == "dashboard") {
 			$(".navigation").show();
@@ -1401,8 +1412,67 @@ var app = {
 		else if (this.currentPageID == "details") {
 			$(".navigation").hide();
 			$(".navigation_back_dashboard").show();
-			var index = this.selectedWeatherID;
 
+			// Setting all page text content from translations sheet
+			$("#str_more_info").html(firstCharToUpper(this.translations.labels.str_more_info[this.language]));
+			$("#str_details").html(this.translations.labels.str_details[this.language]);
+			$("#details_desc").html(this.translations.sentences.details_desc[this.language]);
+			$("#str_weather").html(this.translations.labels.str_weather[this.language]);
+
+			$("#str_time").html(this.translations.labels.str_time[this.language]);
+			$("#str_air_temperature").html(this.translations.labels.str_air_temperature[this.language]);
+			$("#str_humidity").html(this.translations.labels.str_humidity[this.language]);
+			$("#str_cloud_cover").html(this.translations.labels.str_cloud_cover[this.language]);
+			$("#str_wind10").html(this.translations.labels.str_wind10[this.language]);
+			$("#str_wind2").html(this.translations.labels.str_wind2[this.language]);
+			$("#str_mrt").html(this.translations.labels.str_mrt[this.language]);
+			$("#str_globe_temperature").html(this.translations.labels.str_globe_temperature[this.language]);
+			$("#str_solar_irradiation").html(this.translations.labels.str_solar_irradiation[this.language]);
+			$("#str_wbgt").html(this.translations.labels.str_wbgt[this.language]);
+			$("#str_wbgt_effective").html(this.translations.labels.str_wbgt_effective[this.language]);
+			$("#str_aal").html(this.translations.labels.str_aal[this.language]);
+			$("#str_pal").html(this.translations.labels.str_pal[this.language]);
+			$("#str_windchill").html(this.translations.labels.str_windchill[this.language]);
+			$("#str_mr").html(this.translations.labels.str_mr[this.language]);
+			$("#str_surface_area").html(this.translations.labels.str_surface_area[this.language]);
+			$("#str_clo").html(this.translations.labels.str_clo[this.language]);
+			$("#str_wind_permeability").html(this.translations.labels.str_wind_permeability[this.language]);
+			$("#str_evaporative_permeability").html(this.translations.labels.str_evaporative_permeability[this.language]);
+
+			$("#str_user").html(this.translations.labels.str_user[this.language]);
+			$("#str_wbgt").html(this.translations.labels.str_wbgt[this.language]);
+			$("#str_wbgt_iso").html(this.translations.labels.str_wbgt_iso[this.language]);
+			$("#details_wbgt_desc_1").html(this.translations.sentences.details_wbgt_desc_1[this.language]);
+			$("#details_wbgt_desc_2").html(this.translations.sentences.details_wbgt_desc_1[this.language]);
+			
+			$("#str_phs_iso").html(this.translations.labels.str_phs_iso[this.language]);
+			$("#details_phs_desc_1").html(this.translations.sentences.details_phs_desc_1[this.language]);
+			$("#details_phs_desc_2").html(this.translations.sentences.details_phs_desc_2[this.language]);
+			$("#details_phs_desc_3").html(this.translations.sentences.details_phs_desc_3[this.language]);
+			
+			$("#str_windchill_jagti").html(this.translations.labels.str_windchill_jagti[this.language]);
+			$("#details_windchill_desc_1").html(this.translations.sentences.details_windchill_desc_1[this.language]);
+			$("#details_windchill_desc_2").html(this.translations.sentences.details_windchill_desc_2[this.language]);					
+			
+			$("#str_ireq_iso").html(this.translations.labels.str_ireq_iso[this.language]);
+			$("#details_ireq_desc").html(this.translations.sentences.details_ireq_desc[this.language]);
+			$("#details_ireq_desc_list1").html(this.translations.sentences.details_ireq_desc_list1[this.language]);
+			$("#details_ireq_desc_list2").html(this.translations.sentences.details_ireq_desc_list2[this.language]);
+			$("#details_ireq_desc_list3").html(this.translations.sentences.details_ireq_desc_list3[this.language]);
+
+			$("#details_ireq_clo_1").html(this.translations.sentences.details_ireq_clo_1[this.language]);
+			$("#details_ireq_clo_2").html(this.translations.sentences.details_ireq_clo_2[this.language]);
+			$("#details_ireq_clo_3").html(this.translations.sentences.details_ireq_clo_3[this.language]);
+			
+			$("#str_min_cloth_level").html(this.translations.labels.str_min_cloth_level[this.language]);
+			$("#str_max_cloth_level").html(this.translations.labels.str_max_cloth_level[this.language]);
+
+			$("#details_ireq_clo_dle_1").html(this.translations.sentences.details_ireq_clo_dle_1[this.language]);
+			$("#details_ireq_clo_dle_2").html(this.translations.sentences.details_ireq_clo_dle_2[this.language]);
+			$("#details_neutral").html(this.translations.sentences.details_neutral[this.language]);
+			
+			var index = this.selectedWeatherID;
+			
 			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, true).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {
 					let tair = 0;
@@ -1451,102 +1521,36 @@ var app = {
 						minute: '2-digit'
 					});
 
-					$("#str_more_info").html(firstCharToUpper(this.translations.labels.str_more_info[this.language]));
-					$("#str_details").html(this.translations.labels.str_details[this.language]);
-					$("#details_desc").html(this.translations.sentences.details_desc[this.language]);
-					$("#str_weather").html(this.translations.labels.str_weather[this.language]);
-
-					$("#str_time").html(this.translations.labels.str_time[this.language]);
 					$("#detail_time").html(local_time);
 
-					$("#str_air_temperature").html(this.translations.labels.str_air_temperature[this.language]);
 					$("#detail_airtemp").html(tair + "&deg;C");
-
-					$("#str_humidity").html(this.translations.labels.str_humidity[this.language]);
 					$("#detail_rh").html(rh + "%");
-
-					$("#str_cloud_cover").html(this.translations.labels.str_cloud_cover[this.language]);
 					$("#detail_clouds").html(clouds + "%");
 
-					$("#str_wind10").html(this.translations.labels.str_wind10[this.language]);
 					$("#detail_wind10m").html(vair10 + "m/s");
-
-					$("#str_wind2").html(this.translations.labels.str_wind2[this.language]);
 					$("#detail_wind2m").html(vair2 + "m/s");
 
-					$("#str_mrt").html(this.translations.labels.str_mrt[this.language]);
 					$("#detail_mrt").html(tmrt + "&deg;C");
 					
-					$("#str_globe_temperature").html(this.translations.labels.str_globe_temperature[this.language]);
 					$("#detail_tglobe").html(tglobe + "&deg;C");
 
-					$("#str_solar_irradiation").html(this.translations.labels.str_solar_irradiation[this.language]);
 					$("#detail_rad").html(rad + "W/m<sup>2</sup>");
 					
-					$("#str_wbgt").html(this.translations.labels.str_wbgt[this.language]);
 					$("#detail_wbgt").html(wbgt + "&deg;C");
-					
-					$("#str_wbgt_effective").html(this.translations.labels.str_wbgt_effective[this.language]);
 					$("#detail_wbgt_eff").html(wbgt_eff.toFixed(1) + "&deg;C");
 					
-					$("#str_aal").html(this.translations.labels.str_aal[this.language]);
 					$("#detail_ral").html(ral.toFixed(1) + "&deg;C");
-					
-					$("#str_pal").html(this.translations.labels.str_pal[this.language]);
 					$("#detail_ral_pal").html(ral.toFixed(1) + "&deg;C");
 
-					$("#str_windchill").html(this.translations.labels.str_windchill[this.language]);
 					$("#detail_windchill").html(windchill + "&deg;C");
 
-					$("#str_mr").html(this.translations.labels.str_mr[this.language]);
 					$("#detail_metabolic").html(M + "W/m<sup>2</sup>");
-
-					$("#str_surface_area").html(this.translations.labels.str_surface_area[this.language]);
 					$("#detail_area").html(A + "m<sup>2</sup>")
 
-					$("#str_clo").html(this.translations.labels.str_clo[this.language]);
 					$("#detail_icl").html(Icl + "m<sup>2</sup>K/W");
-					
-					$("#str_wind_permeability").html(this.translations.labels.str_wind_permeability[this.language]);
+				
 					$("#detail_p").html(p);
-
-					$("#str_evaporative_permeability").html(this.translations.labels.str_evaporative_permeability[this.language]);
 					$("#detail_im").html(im);
-
-					$("#str_user").html(this.translations.labels.str_user[this.language]);
-					$("#str_wbgt").html(this.translations.labels.str_wbgt[this.language]);
-					$("#str_wbgt_iso").html(this.translations.labels.str_wbgt_iso[this.language]);
-					$("#details_wbgt_desc_1").html(this.translations.sentences.details_wbgt_desc_1[this.language]);
-					$("#details_wbgt_desc_2").html(this.translations.sentences.details_wbgt_desc_1[this.language]);
-					
-					$("#str_phs_iso").html(this.translations.labels.str_phs_iso[this.language]);
-					$("#details_phs_desc_1").html(this.translations.sentences.details_phs_desc_1[this.language]);
-					$("#details_phs_desc_2").html(this.translations.sentences.details_phs_desc_2[this.language]);
-					$("#details_phs_desc_3").html(this.translations.sentences.details_phs_desc_3[this.language]);
-					
-					$("#str_windchill_jagti").html(this.translations.labels.str_windchill_jagti[this.language]);
-					$("#details_windchill_desc_1").html(this.translations.sentences.details_windchill_desc_1[this.language]);
-					$("#details_windchill_desc_2").html(this.translations.sentences.details_windchill_desc_2[this.language]);					
-					
-					$("#str_ireq_iso").html(this.translations.labels.str_ireq_iso[this.language]);
-					$("#details_ireq_desc").html(this.translations.sentences.details_ireq_desc[this.language]);
-					$("#details_ireq_desc_list1").html(this.translations.sentences.details_ireq_desc_list1[this.language]);
-					$("#details_ireq_desc_list2").html(this.translations.sentences.details_ireq_desc_list2[this.language]);
-					$("#details_ireq_desc_list3").html(this.translations.sentences.details_ireq_desc_list3[this.language]);
-
-					$("#details_ireq_clo_1").html(this.translations.sentences.details_ireq_clo_1[this.language]);
-					$("#details_ireq_clo_2").html(this.translations.sentences.details_ireq_clo_2[this.language]);
-					$("#details_ireq_clo_3").html(this.translations.sentences.details_ireq_clo_3[this.language]);
-					
-					$("#str_min_cloth_level").html(this.translations.labels.str_min_cloth_level[this.language]);
-					$("#str_max_cloth_level").html(this.translations.labels.str_max_cloth_level[this.language]);
-
-					$("#details_ireq_clo_dle_1").html(this.translations.sentences.details_ireq_clo_dle_1[this.language]);
-					$("#details_ireq_clo_dle_2").html(this.translations.sentences.details_ireq_clo_dle_2[this.language]);
-
-
-					$("#details_neutral").html(this.translations.sentences.details_neutral[this.language]);
-
 
 					let icl_min = this.knowledgeBase.thermalindices.ireq[index].ICLminimal;
 					let icl_worn = getClo(this.knowledgeBase);
@@ -1558,9 +1562,7 @@ var app = {
 					let draw_heat_gauge = this.isDrawHeatGauge(icl_min, heat_index, index);
 					let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 
-
 					$("#moreinformation").html(tip_html);
-
 
 					if (personalvalue <= -1) {
 						$("div[data-context='heat'],div[data-context='phs'],div[data-context='neutral']").hide();
@@ -1666,6 +1668,14 @@ var app = {
 			this.initFeedbackListeners();
 			this.knowledgeBase.user.guards.feedbackSliderChanged = 0;
 
+			// Set page content
+			$("#str_colder").html(this.translations.labels.str_colder[this.language]);			
+			$("#str_warmer").html(this.translations.labels.str_warmer[this.language]);			
+			$("#str_ok").html(this.translations.labels.str_ok[this.language]);			
+			$("#str_more_questions").html(this.translations.labels.str_more_questions[this.language]).toUpperCase();			
+			$("#str_submit_data").html(this.translations.labels.str_submit_data[this.language]);
+			// TODO - add text for feedback questions			
+
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want? -BK tricky tbd
 			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, false).then(
@@ -1710,6 +1720,21 @@ var app = {
 			this.initMenuListeners();
 			this.updateMenuItems();
 			let index = 0;//does not really matter, thermal and width are required
+
+			// Set page content
+			$("#str_forecast").html(this.translations.labels.str_forecast[this.language]);
+			$("#forecast_desc").html(this.translations.sentences.forecast_desc[this.language]);
+			$("#forecast_disclaimer").html(this.translations.sentences.forecast_disclaimer[this.language]);
+
+			$("#str_activity").html(this.translations.labels.str_activity[this.language]);
+			$("#str_clothing").html(this.translations.labels.str_clothing[this.language]);
+			$("#str_headgear").html(this.translations.labels.str_headgear[this.language]);
+
+			$("#str_activity_level").html(this.translations.labels.str_activity_level[this.language]);
+			$("#str_clothing_level").html(this.translations.labels.str_clothing_level[this.language]);
+			$("#head_gear").html(this.translations.labels.str_headgear[this.language]);
+			
+
 			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, false).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {
 					this.drawChart("forecast_canvas", width, thermal);
@@ -1733,6 +1758,13 @@ var app = {
 		else if (this.currentPageID == "disclaimer") {
 			$(".navigation").hide();
 			$(".navigation_back_settings").show();
+
+			// Setting page content
+			$("#str_disclaimer").html(this.translations.labels.str_disclaimer[this.language]);
+			$("#disclaimer_under_development").html(this.translations.sentences.disclaimer_under_development[this.language]);
+			$("#disclaimer_era4cs").html(this.translations.sentences.disclaimer_era4cs[this.language]);
+			$("#str_privacy").html(this.translations.labels.str_privacy[this.language]);
+			$("#disclaimer_privacy_policy").html(this.translations.sentences.disclaimer_privacy_policy[this.language]);
 		}
 		else if (this.currentPageID == "location") {
 			$("#custom_location_switch").show();
@@ -1741,7 +1773,9 @@ var app = {
 			$("#google_maps_elem").hide();
 			$("#coordinates").html("lat: " + this.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", lon: " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(4));
 			$("#choose_location").html(this.translations.labels.str_choose_location[this.language]);
-			console.log(this.translations.labels.str_choose_location[this.language]);
+			$("#str_custom_location").html(this.translations.labels.str_custom_location[this.language]);
+			$("#str_input_custom_location").html(this.translations.labels.str_input_custom_location[this.language]);
+			$("#str_location").html(this.translations.labels.str_location[this.language]);
 			
 			// Location
 			this.knowledgeBase.user.guards.customLocationEnabled ? $("#customLocationSection").show() : $("#customLocationSection").hide();
@@ -1765,6 +1799,16 @@ var app = {
 			this.initIndoorListeners();
 			var windowsOpen = this.knowledgeBase.user.settings.open_windows ? this.translations.labels.str_yes[this.language] : this.translations.labels.str_no[this.language];
 			
+			// Setting page content
+			$("#str_indoor_outdoor_mode").html(this.translations.labels.str_indoor_outdoor_mode[this.language]);
+			$("#str_thermostat").html(this.translations.labels.str_thermostat[this.language]);
+			$("#indoor_open_windows").html(this.translations.labels.indoor_open_windows[this.language]);
+			$("#str_wind_speed").html(this.translations.labels.str_wind_speed[this.language]);
+			$("#str_humidity").html(this.translations.labels.str_humidity[this.language]);
+			$("#str_continue").html(this.translations.labels.str_continue[this.language]);
+		
+
+			// Values
 			//var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
 			//$("#_temperature").html( this.knowledgeBase.user.settings._temperature + " &#xb0 " + tempUnit);
 			$("#windspeed").html(this.knowledgeBase.user.settings.windspeed);
