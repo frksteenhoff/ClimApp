@@ -20,6 +20,7 @@
 var app = {
 	language: undefined,
 	translations: undefined,
+	feedback_questions: undefined,
 	knowledgeBase: undefined,
 	pageMap: undefined,
 	currentPageID: undefined,
@@ -50,6 +51,20 @@ var app = {
 	// Update DOM on a Received Event
 	receivedEvent: function (id) {
 		self = this;
+		// Read in feedback questions (asynchronously)
+		$.getJSON("data/feedbackQuestions.json", function (json) {
+			try {
+				console.log("Feedback questions read: " + Object.keys(json));
+			} catch (error) {
+				console.log("Error in reading feedback questions: " + error);
+			}
+			}).fail(function (e) {
+				console.log("Failed to read translations " + e);
+			}).done(function (result){
+				self.feedback_questions = result;
+		});
+
+		// Read in translations (synchronously)
 		$.getJSON("translations/translations.json", function (json) {
 			try {
 				console.log("Translations read: " + Object.keys(json));
@@ -743,7 +758,7 @@ var app = {
 					"helmet": 0.1, //clo
 				}
 			},
-			"feedback": {
+			/*"feedback": {
 				"gauge": {
 					"text_top": "Your predicted score",
 					"text_bottom": "Tap the buttons to adjust the gauge to your thermal experience."
@@ -785,7 +800,7 @@ var app = {
 					},
 				},
 				"comment": ""
-			},
+			},*/
 			"thermalindices": {
 				"ireq": [],
 				"phs": [],

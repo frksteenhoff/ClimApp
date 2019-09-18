@@ -1,1 +1,40 @@
-text_id,en,da,nl,sv,no,el,it,de,es,fr
+text_id,color,outputkey,level,en,da,nl,sv,no,el,it,de,es,fr
+,green,Default,1,The green level means that low thermal stress is forecasted.,,,,,,,,,
+,green,Default,2,"The score will increase towards higher warning levels if the weatheragravates, your activity levelincreasesor your clothing level increases.",,,,,,,,,
+,green,heatshield,1,"Maintain normal working and
+ hydration procedures.",,,,,,,,,
+,green,heatshield,2,No significant heat stress is expected. No special precautions arerequiredand no further breaks than usual are needed.,,,,,,,,,
+,yellow,default,1,The yellow level means that moderate heat stress is expected.,,,,,,,,,
+,yellow,default,1,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,,,,
+,yellow,default,2,You should be able to maintain normal activities. You may experience higher thermal strain and more sweating than normal.,,,,,,,,,
+,yellow,default,2,"Consider clothing adjustments, more breaks and and drink more than normal; especially when the score approaches the red heat stress level.",,,,,,,,,
+,yellow,default,2,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,,,,
+,yellow,heatshield,1,"Pay attention to frequent drinking
+ and plan small breaks.",,,,,,,,,
+,yellow,heatshield,2,"Low heat stress is expected (pre-alarm, attention).
+ You should be able to maintain normal activities.
+ You may experience thermal strain (generally low)
+ and increased sweating. Consider clothing
+ adjustment and drink more than normal.",,,,,,,,,
+,red,default,1,The red level means that high heat stress is expected.,,,,,,,,,
+,red,default,1,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,,,,
+,red,default,2,Pay special attention to drinkingsufficientduring the first days with this heat stress.,,,,,,,,,
+,red,default,2,Consider adjusting activities (heavy physical tasks during periods of the day with lowest heat) and allow time to adapt.,,,,,,,,,
+,red,default,2,Be aware that thirst is usually not asufficientindicator when losses are high.,,,,,,,,,
+,red,default,2,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,,,,
+,red,default,2,"Resting may lower heat stress by "".$restpercent.""%.",,,,,,,,,
+,red,heatshield,1,Drink frequently and increase the number of breaks with cooling.,,,,,,,,,
+,red,heatshield,2,"Moderate heat stress is expected (alarm). Your water needs will be high. Increase the number of breaks (include small breaks with cooling) and drink frequently. Remember to rehydrate after work/exercise:be aware that thirst is usually not a
+ sufficientindicator when sweating is high. If this risk level is forecasted during the first summer days, pay extra attention to increase drinking and keep a good
+ hydration status (drink/rehydrate with your meals) outside the working hours. Consider adjusting activities (heavy physical tasks) during cooler period of the day.",,,,,,,,,
+,dark red,default,1,This level is associated with severe heat stress,,,,,,,,,
+,dark red,default,1,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,,,,
+,dark red,default,2,The heat will impact your physical performance.,,,,,,,,,
+,dark red,default,2,Adjusting activities and allowingsufficientbreaks will benefit your overall daily ability to cope with the heat,,,,,,,,,
+,dark red,default,2,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,,,,
+,dark red,default,2,"Resting may lower heat stress by "".$restpercent.""%.",,,,,,,,,
+,dark red,default,2,"You should drink about "".$sw_p_h."" liter per hour to compensate your sweat loss.",,,,,,,,,
+,dark red,heatshield,1,"Drink often, even more than 1 L/h and schedule frequent breaks in shadow or cooled area.",,,,,,,,,
+,dark red,heatshield,2,"High heat stress is expected (emergency). This level is associated with severe heat stress. It is strongly suggested to adjust work – use active cooling: schedule frequent breaks in shadow or cooled area where you can hydrate. Additional
+ drinking is required (water needs may be more than 1 L/h). If possible, after consulting your doctor, add salt to your meals. Consider adjusting activities
+ (moderate-heavy physical tasks) during cooler period of the day.",,,,,,,,,

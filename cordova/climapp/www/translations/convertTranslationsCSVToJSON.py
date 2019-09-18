@@ -12,6 +12,7 @@
 # * Labels:    `climapp_translation_sheet_labels.csv`
 # * Sentences: `climapp_translation_sheet_sentences.csv`
 # * API text:  `climapp_translation_sheet_api.csv` -- NOT IMPLEMENTED YET
+# * feedback:  `climapp_translation_sheet_feedback.csv` -- NOT IMPLEMENTED YET
 # 
 # #### Output
 # * `combined_object`: `translations.json`
@@ -231,6 +232,9 @@ print("Saving object to file as 'translations.json'.. ")
 with open('translations.json', 'w') as f:
     json.dump(combined_object, f)
     print("Conversion completed!")
+    print("---------------------------------------------------")
+    print("Remember to update the available languages in index.js, function: getLanguage, for the changes to take effect")
+    print("---------------------------------------------------")
 
 
 
