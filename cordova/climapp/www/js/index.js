@@ -157,7 +157,7 @@ var app = {
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					self.drawGauge('feedback_gauge', width, personalvalue, thermal);
-					$("#gauge_text_top_diff").html("Current personal alert level: 0");
+					$("#gauge_text_top_diff").html(this.translations.labels.str_personal[this.language] + " " + this.translations.labels.str_alert_limit[this.language] + ": 0");
 
 					// Set the value as the perceived value in knowledgebase
 					self.saveSettings();
@@ -186,7 +186,7 @@ var app = {
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//					
 					self.drawGauge('feedback_gauge', width, personalvalue, thermal);
-					$("#gauge_text_top_diff").html("Personal " + thermal + " alert level: " + currentPAL);
+					$("#gauge_text_top_diff").html(this.translations.labels.str_personal[this.language] + " " + thermal + " " + this.translations.labels.str_alert_limit[this.language] +": " + currentPAL);
 
 					// Set the value as the perceived value in knowledgebase
 					self.saveSettings();
@@ -223,14 +223,14 @@ var app = {
 			var rating_id = $(this).attr("id")[0];
 
 			if (rating_id === '1') {
-				self.knowledgeBase.feedback.question1.rating = target;
-				$("#ratingtext1").html(self.knowledgeBase.feedback.question1.ratingtext[self.knowledgeBase.feedback.question1.rating]);
+				self.feedback_questions.question1.rating = target;
+				$("#ratingtext1").html(self.feedback_questions.question1.ratingtext[self.feedback_questions.question1.rating]);
 			} else if (rating_id === '2') {
-				self.knowledgeBase.feedback.question2.rating = target;
-				$("#ratingtext2").html(self.knowledgeBase.feedback.question2.ratingtext[self.knowledgeBase.feedback.question2.rating]);
+				self.feedback_questions.question2.rating = target;
+				$("#ratingtext2").html(self.feedback_questions.question2.ratingtext[self.feedback_questions.question2.rating]);
 			} else {
-				self.knowledgeBase.feedback.question3.rating = target;
-				$("#ratingtext3").html(self.knowledgeBase.feedback.question3.ratingtext[self.knowledgeBase.feedback.question3.rating]);
+				self.feedback_questions.question3.rating = target;
+				$("#ratingtext3").html(self.feedback_questions.question3.ratingtext[self.feedback_questions.question3.rating]);
 			}
 			$("input[data-listener='feedback']").removeClass("checked");
 			self.saveSettings();
@@ -241,7 +241,7 @@ var app = {
 		$("div[data-listener='submit']").on("click", function () {
 			var target = $("#feedback_text").val();
 			let mode = self.knowledgeBase.user.adaptation.mode;
-			self.knowledgeBase.feedback.comment = target;
+			self.feedback_questions.comment = target;
 
 			/*
 			//BK: I commented out below code because adaptation[mode].diff is updated on click already - to be discussed further. 
@@ -782,7 +782,7 @@ var app = {
 				if(!'yearOfBirth' in this.knowledgeBase) {
 					this.knowledgeBase.user.settings.clothing_selected = "Summer_attire";
 					this.knowledgeBase.user.settings.headgear_selected = "none";
-					
+
 					var thisYear = new Date().getFullYear();
 					this.knowledgeBase.user.settings.yearOfBirth = thisYear - shadowKB.user.settings.age;
 				}
@@ -1612,7 +1612,6 @@ var app = {
 					this.saveSettings();
 					var diff_array = this.knowledgeBase.user.adaptation[thermal].diff;
 					// Set text around gauge and slider
-					$("#gauge_text_top").html(this.knowledgeBase.feedback.gauge.text_top);
 					if (diff_array.length >= 1) {
 						$("#gauge_text_top_diff").show();
 						$("#reset_icon").hide();
@@ -1620,24 +1619,17 @@ var app = {
 						$("#gauge_text_top_diff").html(this.translations.labels.str_personal[this.language] + " " + thermal + " " + this.translations.labels.str_alert_limit[this.language] +": " + diff_array[0].toFixed(1));
 					}
 
-					$("#gauge_text_bottom").html(this.knowledgeBase.feedback.gauge.text_bottom);
 
 					$("div[data-listener='adaptation']").attr("data-context", thermal);
 
 					// Question text
-					$("#question1").html(this.knowledgeBase.feedback.question1.text);
-					$("#question2").html(this.knowledgeBase.feedback.question2.text);
-					$("#question3").html(this.knowledgeBase.feedback.question3.text);
-
+					
 					// Set rating bar text (under feedback buttons) using last given feedback
-					$("#ratingtext1").html(this.knowledgeBase.feedback.question1.ratingtext[this.knowledgeBase.feedback.question1.rating]);
-					$("#ratingtext2").html(this.knowledgeBase.feedback.question2.ratingtext[this.knowledgeBase.feedback.question2.rating]);
-					$("#ratingtext3").html(this.knowledgeBase.feedback.question3.ratingtext[this.knowledgeBase.feedback.question3.rating]);
 
 					// Rating bar values -- still not setting the default color..
-					$("input[id='1star" + this.knowledgeBase.feedback.question1.rating + "']").attr("checked", true);
-					$("input[id='2star" + this.knowledgeBase.feedback.question2.rating + "']").attr("checked", true);
-					$("input[id='3star" + this.knowledgeBase.feedback.question3.rating + "']").attr("checked", true);
+					$("input[id='1star" + 3 + "']").attr("checked", true);
+					$("input[id='2star" + 3 + "']").attr("checked", true);
+					$("input[id='3star" + 3 + "']").attr("checked", true);
 				});
 		}
 		else if (this.currentPageID == "forecast") {
