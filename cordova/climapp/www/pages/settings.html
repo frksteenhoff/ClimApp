@@ -1,36 +1,40 @@
 <div class="panel settings" id="main_panel">
-	<p class="label">PERSONAL SETTINGS</p>
+	<p class="label" id="str_personal_settings"></p>
 	<div data-target="age" data-listener="wheel">
-		<p>Age<br><span class="settings" id="age"></span></p>
+		<p><span id="str_age"></span><br><span class="settings" id="age"></span></p>
 	</div>
 	<div data-target="height" data-listener="wheel">
-		<p>Height<br><span class="settings" id="height"></span> </p>
+		<p><span id="str_height"></span><br><span class="settings" id="height"></span> </p>
 	</div>
 	<div data-target="weight" data-listener="wheel">
-		<p>Weight<br><span class="settings" id="weight"></span></p>
+		<p><span id="str_weight"></span><br><span class="settings" id="weight"></span></p>
 	</div>
 	<div data-target="gender" data-listener="wheel">
-		<p>Gender<br><span class="settings" id="gender"></span></p>
+		<p><span id="str_gender"></span><br><span class="settings" id="gender"></span></p>
 	</div>
 	<div class="inlineitems line"> 
-		<p id="acc">Acclimatization</p>
+		<p id="str_acclimatization"></p>
 		<p class="totheright"><label class="switch">
 			<input type="checkbox" id="acclimatization_checkbox" data-target="acclimatization_switch" data-listener="toggle_switch">
 			<span class="slider round"></span>
 		  </label>
 		</p>
 	</div>
+	<div data-target="feedback" data-listener="tab">
+		<p id="str_advanced_personalization"></p> 
+	</div>
 	<div class="last" data-target="reset" data-listener="tab"> 
-		<p>Reset personal settings</p>
+		<p id="str_reset_preferences"></p>
 	</div>
 </div>
 <div class="panel settings">
-	<p class="label">PREFERENCES</p>
+	<p class="label" id="str_preferences"></p>
+	
 	<div data-target="unit" data-listener="wheel">
-		<p>Unit of measurements<br><span class="settings" id="unit"></span></p>
+		<p><span id="str_unit"></span><br><span class="settings" id="unit"></span></p>
 	</div>
 	<div class="inlineitems last"> 
-		<p id="notify">Notifications (not functional yet)</p>
+		<p id="str_notifications"></p>
 		<p class="totheright"><label class="switch">
 			<input type="checkbox" id="notification_checkbox" data-target="notification_switch" data-listener="toggle_switch">
 			<span class="slider round"></span>
@@ -39,14 +43,11 @@
 	</div>
 </div>
 <div class="panel settings_other">
-	<p class="label">OTHER</p>
+	<p class="label" id="str_other"></p>
 	<div data-target="about" data-listener="tab"> 
-		<p>About</p>
+		<p id="str_about"></p>
 	</div>
 	<div data-target="disclaimer" data-listener="tab"> 
-		<p>Disclaimer & Privacy</p>
-	</div>
-	<div class="last" data-target="feedback" data-listener="tab">
-		<p>Feedback</p> 
+		<p id="str_disclaimer_and_privacy"></p>
 	</div>
 </div>	

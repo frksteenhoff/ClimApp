@@ -1,65 +1,80 @@
 <div class="panel top">
-	<div class="feedbackgauge" id=gauge_div>
+	<div class="feedbackgauge" id="gauge_div">
 		<p class="strongtext" id="gauge_text_top"></p>
 		<p class="rating_text">
 			<span id="gauge_text_top_diff"></span> &nbsp;&nbsp; 
-			<i data-listener="reset_adaptation" class="fas fa-undo"></i>
+			<i id="reset_icon" data-listener="reset_adaptation" class="fas fa-undo"></i>
 		</p>
-		<canvas id="feedback_gauge"></canvas>
-		<p class="rating_text" id="gauge_text_top_current"> </p>
-		
+			<div class="center">
+				<canvas id="feedback_gauge"></canvas>
+			</div>
+		<br>
 		<div class="flexbox-2">
-			<div class="button" data-listener="adaptation" data-value="-0.25">&minus; colder</div>
-			<div class="button" data-listener="adaptation" data-value="0.25">&plus; warmer</div>
+			<div class="even">
+				<div class="button" data-listener="adaptation" data-context="unknown" data-value="-0.25">&minus; <span id="str_colder"></span></div>
+			</div>
+			<div class="even">
+				<div class="button" data-listener="adaptation" data-context="unknown" data-value="0.25">&plus; <span id="str_warmer"></span></div>
+			</div>
 		</div>
-		
+		<!--
 		<div class="slidecontainer">
 			<input type="range" min="-4" max="4" step="0.25" class="rangeslider" id="feedback_slider" data-listener="slider">
 		</div>
+		-->
 		<p class="rating_text" id="gauge_text_bottom"></p>
 	</div>
+</div>
 
-	<div class="feedbackpanel">
-		<p class="strongtext middle" id="question1"></p>
-		<br>
-			<div class="rating">
-				<input data-target='5' data-listener='feedback' type="radio" id="1star5" name="rating1" value="1" /><label for="1star5" title=""></label>
-				<input data-target='4' data-listener='feedback' type="radio" id="1star4" name="rating1" value="2" /><label for="1star4" title=""></label>
-				<input data-target='3' data-listener='feedback' type="radio" id="1star3" name="rating1" value="3" /><label for="1star3" title=""></label>
-				<input data-target='2' data-listener='feedback' type="radio" id="1star2" name="rating1" value="4" /><label for="1star2" title=""></label>
-				<input data-target='1' data-listener='feedback' type="radio" id="1star1" name="rating1" value="5" /><label for="1star1" title=""></label>
-			</div>
-		<p class="rating_text" data-listener='feedback' id="ratingtext1"></p>
+<div class="panel">
+	<div data-listener="toggle" data-target="detailedquestions">
+		<p class="label"><i class="fas fa-ellipsis-v"></i> <span id="str_more_questions"> </span></span>
 	</div>
-
-	<div class="feedbackpanel">
-		<p class="strongtext middle" id="question2"></p>
-		<br>
+	<div id="detailedquestions" class="hidden">
+		<div class="feedbackpanel">
+			<p class="strongtext middle" id="question1"></p>
 				<div class="rating">
-					<input data-target='5' data-listener='feedback' type="radio" id="2star5" name="rating2" value="1" /><label for="2star5" title=""></label>
-					<input data-target='4' data-listener='feedback' type="radio" id="2star4" name="rating2" value="2" /><label for="2star4" title=""></label>
-					<input data-target='3' data-listener='feedback' type="radio" id="2star3" name="rating2" value="3" /><label for="2star3" title=""></label>
-					<input data-target='2' data-listener='feedback' type="radio" id="2star2" name="rating2" value="4" /><label for="2star2" title=""></label>
-					<input data-target='1' data-listener='feedback' type="radio" id="2star1" name="rating2" value="5" /><label for="2star1" title=""></label>
+					<input data-target='5' data-listener='feedback' type="radio" id="1star5" name="rating1" value="1" /><label for="1star5" title=""></label>
+					<input data-target='4' data-listener='feedback' type="radio" id="1star4" name="rating1" value="2" /><label for="1star4" title=""></label>
+					<input data-target='3' data-listener='feedback' type="radio" id="1star3" name="rating1" value="3" /><label for="1star3" title=""></label>
+					<input data-target='2' data-listener='feedback' type="radio" id="1star2" name="rating1" value="4" /><label for="1star2" title=""></label>
+					<input data-target='1' data-listener='feedback' type="radio" id="1star1" name="rating1" value="5" /><label for="1star1" title=""></label>
 				</div>
-		<p class="rating_text" data-listener='feedback' id="ratingtext2"></p>
-	</div>
+			<p class="rating_text" data-listener='feedback' id="ratingtext1"></p>
+		</div>
 
-	<div class="feedbackpanel">
-		<p class="strongtext middle" id="question3"></p>
-		<br>
-				<div class="rating">
-					<input data-target='5' data-listener='feedback' type="radio" id="3star5" name="rating3" value="1" /><label for="3star5" title=""></label>
-					<input data-target='4' data-listener='feedback' type="radio" id="3star4" name="rating3" value="2" /><label for="3star4" title=""></label>
-					<input data-target='3' data-listener='feedback' type="radio" id="3star3" name="rating3" value="3" /><label for="3star3" title=""></label>
-					<input data-target='2' data-listener='feedback' type="radio" id="3star2" name="rating3" value="4" /><label for="3star2" title=""></label>
-					<input data-target='1' data-listener='feedback' type="radio" id="3star1" name="rating3" value="5" /><label for="3star1" title=""></label>
-				</div>
-		<p class="rating_text" id="ratingtext3"></p>
-	</div>
+		<div class="feedbackpanel">
+			<p class="strongtext middle" id="question2"></p>
+					<div class="rating">
+						<input data-target='5' data-listener='feedback' type="radio" id="2star5" name="rating2" value="1" /><label for="2star5" title=""></label>
+						<input data-target='4' data-listener='feedback' type="radio" id="2star4" name="rating2" value="2" /><label for="2star4" title=""></label>
+						<input data-target='3' data-listener='feedback' type="radio" id="2star3" name="rating2" value="3" /><label for="2star3" title=""></label>
+						<input data-target='2' data-listener='feedback' type="radio" id="2star2" name="rating2" value="4" /><label for="2star2" title=""></label>
+						<input data-target='1' data-listener='feedback' type="radio" id="2star1" name="rating2" value="5" /><label for="2star1" title=""></label>
+					</div>
+			<p class="rating_text" data-listener='feedback' id="ratingtext2"></p>
+		</div>
 
+		<div class="feedbackpanel">
+			<p class="strongtext middle" id="question3"></p>
+					<div class="rating">
+						<input data-target='5' data-listener='feedback' type="radio" id="3star5" name="rating3" value="1" /><label for="3star5" title=""></label>
+						<input data-target='4' data-listener='feedback' type="radio" id="3star4" name="rating3" value="2" /><label for="3star4" title=""></label>
+						<input data-target='3' data-listener='feedback' type="radio" id="3star3" name="rating3" value="3" /><label for="3star3" title=""></label>
+						<input data-target='2' data-listener='feedback' type="radio" id="3star2" name="rating3" value="4" /><label for="3star2" title=""></label>
+						<input data-target='1' data-listener='feedback' type="radio" id="3star1" name="rating3" value="5" /><label for="3star1" title=""></label>
+					</div>
+			<p class="rating_text" id="ratingtext3"></p>
+		</div>
+	</div>
+</div>
+
+<div class="panel">
+	<div data-listener="toggle" data-target="detailedquestions">
+		<p class="label" id="str_submit_data"> </p>
+	</div>
 	<div class="inputcontainer">
 		<!-- <input type="text" id="feedback_text" placeholder="Anything you would like to add?" name="feedback_comment"> -->
-		<div class="button" data-listener='submit'>Submit personalisation info</div>
+		<div class="button" data-listener='submit' id="str_ok"></div>
 	</div>
 </div>

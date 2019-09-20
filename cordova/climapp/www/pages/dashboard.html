@@ -1,6 +1,6 @@
 <div class="panel" id="main_panel" data-listener="panel" data-target="forecast">
-	<div class="flexbox-2">
-		<div><p class="label"><span id="current_time"></span> weather report</p></div>
+	<div class="flexbox-2" id="dashboard_header">
+		<div><p class="label" id="str_weather_report"><span id="current_time"></span></p></div>
 		<div data-listener="geolocation">
 			<p class="right label">
 				<i class="fas fa-map-marker-alt"></i>
@@ -10,6 +10,7 @@
 	</div>
 	<div class="flexbox-2">
 		<div class="left">
+			<p id="indoor_outdoor"></p><br>
 			<p><span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span><br><span id="temp_unit"></span></p>
 			<!--<p><i class="fas fa-cloud"></i> <span id="cloudiness"><i class="fas fa-spinner fa-pulse"></i></span> %</p>-->
 		</div>
@@ -20,11 +21,11 @@
 
 	<div>
 		<p class="label" id="dashboard_numbers">
-			<i class="fas fa-wind"></i> Wind <span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span> km/h
+			<i class="fas fa-wind"></i> <span id="windspeed_desc"></span> <span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span> <span id="windspeed_unit">km/h</span>
 			&nbsp; | &nbsp;
-			<i class="fas fa-tint"></i> Humidity <span id="humidity"><i class="fas fa-spinner fa-pulse"></i></span >%
+			<i class="fas fa-tint"></i> <span id="humidity"></span> <span id="humidity_value"><i class="fas fa-spinner fa-pulse"></i></span >%
 			&nbsp; | &nbsp;
-			<i id="icon-weather" class="fas fa-cloud-sun-rain"></i> Weather
+			<i id="icon-weather" class="fas fa-cloud-sun-rain"></i> <span class="label" id="weather_desc"></span>
 		</p>
 	</div>
 	
@@ -41,21 +42,24 @@
 <div class="panel" id="tip_panel" data-listener="panel" data-target="settings">
 	<div id="tip_detailed">
 		<div class="wide" id="tips"></div>
-		<div data-listener="navbar" data-target="details">
-			<p class="right"><i class="fas fa-info-circle"></i> <span>more info</span></p>
+		<div class="flexbox-2" >
+			<div class="even" data-target="feedback" data-listener="tab"><p><i class="fas fa-user"></i> <span id="str_personalise"></span></p></div>
+			<div class="even" data-listener="navbar" data-target="details">
+				<p class="right"><i class="fas fa-info-circle"></i> <span id="str_more_info"></span></p>
+			</div>
 		</div>
 	</div>
 </div>
 
 
 <div id="menu_flex" class="flexbox-3 white">
-	<div id="tabactivity" data-listener="menu" data-target="selectactivity" class="menuitem menufocus"><p class="label">Activity</p></div>
-	<div id="tabaclothingy" data-listener="menu" data-target="selectclothing" class="menuitem border"><p class="label">Clothing</p></div>
-	<div id="tabheadgear" data-listener="menu" data-target="selectheadgear" class="menuitem"><p class="label">Headgear</p></div>
+	<div id="tabactivity" data-listener="menu" data-target="selectactivity" class="menuitem menufocus"><p class="label" id="str_activity"></p></div>
+	<div id="tabaclothingy" data-listener="menu" data-target="selectclothing" class="menuitem border"><p class="label" id="str_clothing"></p></div>
+	<div id="tabheadgear" data-listener="menu" data-target="selectheadgear" class="menuitem"><p class="label" id="str_headgear"></p></div>
 </div>
 <div id="selectactivity" class="panelthick">
 	<div class="flexbox-2" data-listener="wheel" data-target="activity">
-		<div class="even"><p>Activity level</p></div>
+		<div class="even"><p id="str_activity_level"></p></div>
 		<div class="even">
 			<div class="button"><span class="score" id="dashboard_activity"></span></div>
 		</div>
@@ -66,7 +70,7 @@
 
 <div id="selectclothing" class="hidden panelthick">
 	<div class="flexbox-2" data-listener="wheel" data-target="clothing">
-		<div class="even"><p>Clothing level</p></div>
+		<div class="even"><p id="str_clothing_level"></p></div>
 		<div class="even">
 			<div class="button"><span class="score" id="dashboard_clothing"></span></div>
 		</div>
@@ -76,7 +80,7 @@
 
 <div id="selectheadgear" class="hidden panelthick">
 	<div class="flexbox-2" data-listener="wheel" data-target="headgear">
-		<div class="even"><p>Head gear</p></div>
+		<div class="even"><p id="head_gear"></p></div>
 		<div class="even">
 			<div class="button"><span class="score" id="dashboard_headgear"></span></div>
 		</div>

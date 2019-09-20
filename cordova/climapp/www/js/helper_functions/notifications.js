@@ -10,6 +10,6 @@ function getAllNotifications() {
 }
 
 function cancelAllNotifications() {
-    cordova.plugins.notification.local.clearAll([getAllNotifications()]);
-		console.log('All notifications canceled');
+	cordova.plugins.notification.local.clearAll([getAllNotifications()]);
+	console.log('All notifications canceled');
 }

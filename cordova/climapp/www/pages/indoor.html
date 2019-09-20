@@ -1,0 +1,34 @@
+<div class="panel settings" id="custom_switch">
+    <p class="label" id="str_indoor_outdoor_mode"></p>
+    <div class="inlineitems line last">
+        <p id="isIndoor"><span id="str_use_indoor_mode"></span></p>
+        <p class="totheright"><label class="switch">
+                <input type="checkbox" id="indoor_checkbox" data-target="indoor_switch" data-listener="toggle_switch">
+                <span class="slider round"></span>
+            </label>
+        </p>
+    </div>
+</div>
+
+<div class="panel settings" id="indoorSection">
+    <div class="input_section" data-target="thermostat_level" data-listener="wheel">
+        <p> <span id="str_thermostat"></span> <span id="temp"></span><br><span class="settings" id="thermostat_level"></span></p>
+    </div>
+    <div class="input_section" data-target="open_windows" data-listener="wheel">
+        <p><span id="indoor_open_windows">?</span> <span id="temp"></span><br><span class="settings" id="open_windows"></span></p>
+    </div>
+    <div class="input_section" data-target="windspeed" data-listener="wheel">
+        <p> <span id="str_wind_speed"></span> <span id="wind"></span><br><span class="settings" id="windspeed"></span></p>
+    </div>
+    <div class="input_section" data-target="_humidity" data-listener="wheel">
+        <p><span id="str_humidity"></span> <span id="temp"></span><br><span class="settings" id="_humidity"></span></p>
+    </div>
+    <!-- commented out, not needed -- maybe we will let the user input indoor temp at later point (right now using outdoor directly)
+        <div class="input_section" data-target="_temperature" data-listener="wheel">
+            <p>Indoor temperature <span id="temp"></span><br><span class="settings" id="_temperature"></span></p>
+        </div>
+        -->
+    <div class="inputcontainer last">
+        <div class="button" data-target="dashboard" data-listener='set_indoor_options' id="str_continue"></div>
+    </div>
+</div>

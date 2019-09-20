@@ -1,4 +1,4 @@
-[{ 
+{ 
     "question1": {
         "text": "How were your drinking needs?",
         "rating": 3,
@@ -34,5 +34,6 @@
             "4": "A little too much clothing",
             "5": "A lot more than needed"
         }
-    }
-}]
+    },
+    "comment" : ""
+}
