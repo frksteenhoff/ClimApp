@@ -657,39 +657,6 @@ var app = {
 				"windspeed": [-99],
 				"radiation": [-99]
 			},
-			"settings": {
-				"age": {
-					"title": translations.wheels.settings.age.title[language],
-					"unit": translations.labels.str_years[language]
-				},
-				"height": {
-					"title": translations.wheels.settings.height.title[language]
-				},
-				"weight": {
-					"title": translations.wheels.settings.weight.title[language]
-				},
-				"gender": {
-					"title": translations.wheels.settings.gender.title[language]
-				},
-				"unit": {
-					"title": translations.wheels.settings.unit.title[language]
-				},
-				"thermostat_level": {
-					"title": translations.wheels.settings.thermostat_level.title[language]
-				},
-				"open_windows": {
-					"title": translations.wheels.settings.open_windows.title[language]
-				},
-				"_temperature": {
-					"title": translations.wheels.settings._temperature.title[language]
-				},
-				"windspeed": {
-					"title": translations.wheels.settings.windspeed.title[language]
-				},
-				"_humidity": {
-					"title": translations.wheels.settings._humidity.title[language]
-				},
-			},
 			"activity": {
 				// Dependent on correct translation sheet labels (rest, low, medium, high, intense)
 				"values": {
@@ -767,6 +734,7 @@ var app = {
 		this.selectedWeatherID = 0;
 		this.maxForecast = 8; //8x3h = 24h
 		var shadowKB = this.initKnowledgeBase(this.translations, this.language);
+
 		this.language = this.getLanguage(navigator.language);
 		var msgString = ""; // String deciding message to show in console/toast
 
@@ -826,7 +794,13 @@ var app = {
 	/* Getting language based on locale, if language is not supported, English is chosen */
 	getLanguage: function (locale) {
 		var shortenedLanguageIndicator = locale.slice(0, 2); // first two characters of ISO 639-1 code (https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)
-		var availableLanguages = ["en", "da"];
+		
+		if(["nb","no","nn"].includes(shortenedLanguageIndicator)) {
+			// Norway does not completely follow the standard, handling that here.
+			shortenedLanguageIndicator = "no";
+		}
+
+		var availableLanguages = ["en", "da", "no"];
 
 		if (availableLanguages.includes(shortenedLanguageIndicator)) {
 			return shortenedLanguageIndicator;
