@@ -19,7 +19,7 @@ function gaugeTitleHeat(val) {
 }
 
 function getTemperatureUnit(unit) {
-    return unit === "US" ? "Fahrenheit" : "Celcius";
+    return unit === "US" ? "Fahrenheit" : "Celsius";
 }
 function getTemperatureValueInPreferredUnit(temp, unit) {
 	if(unit === "US") {
@@ -77,7 +77,7 @@ function getAirPermeability(kb){
 
 function getMoisturePermeability(kb){
 	let clokey = kb.user.settings.clothing_selected; //check vals with chuansi
-	let values = { "Summer_attire": 0.38, 
+	let values = { "Summer_attire": 0.45, 
 					"Business_suit": 0.38,
 					"Double_layer": 0.38,
 					"Cloth_coverall": 0.38,
@@ -118,12 +118,20 @@ function getWBGTeffective(wbgt, kb){
 	let caf = getCAF(kb);
 	return 1.0 * wbgt + caf;
 }
+
+function getPAV(kb, thermal){ //personal adjustment value 
+	return kb.user.adaptation[thermal].diff.length > 0 ? kb.user.adaptation[thermal].diff[0] : 0;
+}
+function calculatePAV(kb, thermal ){
+	
+}
 		   
-function WBGTrisk(wbgt, kb) {
+function WBGTrisk(wbgt, kb, isPersonalised ) {
 	let RAL_ = RAL(kb);
-					   
+	let PAV = isPersonalised ? getPAV(kb, "heat") : 0;//personal adjustment value
 	let wbgt_effective = getWBGTeffective(wbgt, kb);
-	let risk = wbgt_effective / RAL_; 
+	let RAL_effective = (RAL_ - PAV);
+	let risk = wbgt_effective / RAL_effective;  
 	
 	if( risk <= 0.8 ){
 		//class = "green";
@@ -139,7 +147,7 @@ function WBGTrisk(wbgt, kb) {
 	}
 	else{
 		//class = "darkred";
-		return 3 + (risk - 1.2); //scale between 2 and 3		
+		return 3 + (risk - 1.2); //scale 3 and beyond		
 	}
 }
 

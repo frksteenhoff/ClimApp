@@ -1,9 +1,18 @@
 <div class="panel top">
 	<div class="feedbackgauge" id=gauge_div>
 		<p class="strongtext" id="gauge_text_top"></p>
-		<p class="rating_text"><span id="gauge_text_top_diff"></span> &nbsp;&nbsp; <i data-listener="reset_adaptation" class="fas fa-undo"></i></p>
+		<p class="rating_text">
+			<span id="gauge_text_top_diff"></span> &nbsp;&nbsp; 
+			<i data-listener="reset_adaptation" class="fas fa-undo"></i>
+		</p>
 		<canvas id="feedback_gauge"></canvas>
 		<p class="rating_text" id="gauge_text_top_current"> </p>
+		
+		<div class="flexbox-2">
+			<div class="button" data-listener="adaptation" data-value="-0.25">&minus; colder</div>
+			<div class="button" data-listener="adaptation" data-value="0.25">&plus; warmer</div>
+		</div>
+		
 		<div class="slidecontainer">
 			<input type="range" min="-4" max="4" step="0.25" class="rangeslider" id="feedback_slider" data-listener="slider">
 		</div>
@@ -50,7 +59,7 @@
 	</div>
 
 	<div class="inputcontainer">
-		<input type="text" id="feedback_text" placeholder="Anything you would like to add?" name="feedback_comment">
-		<div class="button" data-listener='submit'>Submit feedback</div>
+		<!-- <input type="text" id="feedback_text" placeholder="Anything you would like to add?" name="feedback_comment"> -->
+		<div class="button" data-listener='submit'>Submit personalisation info</div>
 	</div>
 </div>

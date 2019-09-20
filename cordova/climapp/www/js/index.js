@@ -61,6 +61,8 @@ var app = {
 		// After 5 times opening the app, the user is seen as advanced
 		if(this.knowledgeBase.user.settings.level !== 2 && this.knowledgeBase.user.guards.appOpenedCount === 5) {
 			this.knowledgeBase.user.settings.level = 2;
+			showShortToast("After 5 uses you are now considered an experienced user.");
+			
 		}
 		this.updateLocation();
 		this.saveSettings();
@@ -112,7 +114,7 @@ var app = {
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want?
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
-				([width, value, thermal, tip_html]) => {//
+				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					self.drawGauge( 'feedback_gauge', width, slider_value , thermal );
 					$("#gauge_text_top_current").html("Difference from system prediction: " + getSliderDiffFromSystemPrediction(self.knowledgeBase, thermal, slider_value));
 
@@ -255,6 +257,7 @@ var app = {
 				var notificationText = isChecked ? "You are receiving notifications!" : "You will not receive notifications.";
 				showShortToast(notificationText);
 			}
+			self.saveSettings();
 		});
 		// Always add ability to swipe
 		$("div[data-listener='tab']").on("swipeleft", function(){
@@ -567,7 +570,7 @@ var app = {
 						 "details": "./pages/details.html",
 		 				 "about": "./pages/about.html"};
 		this.selectedWeatherID = 0;
-		this.maxForecast = 8;
+		this.maxForecast = 8; //8x3h = 24h
 		//localStorage.clear(); // Need to clear local storage when doing the update
 		var shadowKB = this.initKnowledgeBase();
 		var msgString = ""; // String deciding message to show in console/toast
@@ -675,9 +678,9 @@ var app = {
 			obj_array.push({description: "Male", value: "Male" } );
 		}
 		else if (key === "unit"){
-			obj_array.push({description: "SI: kg, cm, m/s, Celcius", value: "SI" } );
+			obj_array.push({description: "SI: kg, cm, m/s, Celsius", value: "SI" } );
 			obj_array.push({description: "US: lbs, inch, m/s, Fahrenheit", value: "US" } );
-			obj_array.push({description: "UK: stone, inch, m/s, Celcius", value: "UK" } );
+			obj_array.push({description: "UK: stone, inch, m/s, Celsius", value: "UK" } );
 		}
 		else if( key === "windspeed" ){
 			obj_array.push({description: "No wind", value: "No Wind" } );
@@ -753,7 +756,6 @@ var app = {
 						function( output ){//on success
 							try{
 								let weather = JSON.parse( output );
-								console.log( weather );
 								self.knowledgeBase.weather.station = weather.station;
 								self.knowledgeBase.weather.distance = weather.distance ? weather.distance : 0;
 								self.knowledgeBase.weather.utc = "utc" in weather ? weather.utc : weather.dt;
@@ -787,7 +789,9 @@ var app = {
 								
 								
 								self.knowledgeBase.weather.clouds = weather.clouds.map(Number);
+						
 								self.knowledgeBase.weather.clouds.unshift( Number( weather.currentweather.clouds ) );
+								
 								
 								
 								self.knowledgeBase.weather.humidity = weather.rh.map(Number);
@@ -1189,13 +1193,13 @@ var app = {
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want? -BK tricky tbd
 			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase).then( 
-				([width, value, thermal, tip_html]) => {//
+				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					$("#gauge_text_top_diff").hide();
-					this.drawGauge( 'feedback_gauge', width, value, thermal );
-					$("#feedback_slider").val(value);
+					this.drawGauge( 'feedback_gauge', width, personalvalue, thermal );
+					$("#feedback_slider").val(personalvalue);
 					this.knowledgeBase.user.adaptation.mode = thermal;
 					// Save current gauge value as original value
-					this.knowledgeBase.user.adaptation[thermal].predicted = value;
+					this.knowledgeBase.user.adaptation[thermal].predicted = modelvalue;
 					this.saveSettings();
 					var diff_array = this.knowledgeBase.user.adaptation[thermal].diff; 
 					// Set text around gauge and slider
@@ -1205,7 +1209,7 @@ var app = {
 						$("#gauge_text_top_diff").html("Current adaptation level: " + diff_array[0].toFixed(2));
 					}
 
-					$("#gauge_text_top_current").html("Difference from system prediction: " + getSliderDiffFromSystemPrediction(this.knowledgeBase, thermal, value));
+					$("#gauge_text_top_current").html("Difference from system prediction: " + getSliderDiffFromSystemPrediction(this.knowledgeBase, thermal, personalvalue));
 					$("#gauge_text_bottom").html(this.knowledgeBase.feedback.gauge.text_bottom);
 					
 					// Question text
@@ -1239,19 +1243,19 @@ var app = {
 		let icl_min = kb.thermalindices.ireq[index].ICLminimal;
 		let icl_worn = getClo(kb);
 		let cold_index = icl_min - icl_worn; // minimal - worn, if negative you do not wear enough clothing
-		let heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb );
+		let personal_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, true );
+		let model_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, false );
 		
-		let draw_cold_gauge = this.isDrawColdGauge( cold_index, heat_index, index );
-		let draw_heat_gauge = this.isDrawHeatGauge( cold_index, heat_index, index );
+		let draw_cold_gauge = this.isDrawColdGauge( cold_index, personal_heat_index, index );
+		let draw_heat_gauge = this.isDrawHeatGauge( cold_index, personal_heat_index, index );
 		let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 		let tip_html = "";
 		let thermal = draw_cold_gauge ? "cold" : "heat";
 		let level = kb.user.settings.level;
-		// Getting the latest diff for the relevant thermal situation -- do we agree?
-		let diff = this.getDiff(kb, thermal);
-		let value = this.determineThermalIndexValue( cold_index, heat_index, index, diff );
+		let personal_value = this.determineThermalIndexValue( cold_index, personal_heat_index, index );
+		let model_value = this.determineThermalIndexValue( cold_index, model_heat_index, index );
 	
-		if( draw_cold_gauge || ( isNeutral && cold_index > heat_index ) ) {
+		if( draw_cold_gauge || ( isNeutral && cold_index > personal_heat_index ) ) {
 			tip_html += coldLevelTips( index, level, kb, cold_index, this.currentPageID );
 		}
 		else{
@@ -1272,11 +1276,11 @@ var app = {
 				console.log("User has opted out of notifications.");
 			}
 		}
-		return [width, value, thermal, tip_html];
+		return [width, personal_value, model_value, thermal, tip_html];
 	},
 	getDiff: function(kb, thermal){
 		// This lgoci is also used in dashboard.js function: heatlevelTips
-		return kb.user.adaptation[thermal].diff.length > 0 ? kb.user.adaptation[thermal].diff[0] : 0;
+		getPAV( kb, thermal );
 	},
 	// ireq only valid with temperatures less than 10
 	isDrawColdGauge: function( cold, heat, index ){
@@ -1288,7 +1292,7 @@ var app = {
  	   return heat > cold
 		      && this.knowledgeBase.weather.wbgt[ index ] > 15;
 	},
-	determineThermalIndexValue: function( cold, heat, index, diff ){
+	determineThermalIndexValue: function( cold, heat, index ){
 		let value = cold > heat ? -cold : heat;
 		// why is the variable value used to calculate both cold and heat gauge?? faulty logic 
 		// (can you use the value as you overwrite it?)
@@ -1298,12 +1302,11 @@ var app = {
 		//by default it is the largest one (if cold > heat -> then cold etc)
 		value = this.isDrawColdGauge( cold, heat, index ) ? -cold : value;
 		value = this.isDrawHeatGauge( cold, heat, index ) ? heat : value;
-		console.log("personalized gauge value: " + (value + diff) + " actual: " + value + " diff: " + diff);
-		return Math.max( -4, Math.min( 4, value + diff ) );//value between -4 and +4
+		console.log("personalized gauge value: " + (value ) + " actual: " + value + " diff: " + diff);
+		return Math.max( -4, Math.min( 4, value  ) );//value between -4 and +4
 	},
 	updateInfo: function( index ){
 		var self = this;
-		this.selectedWeatherID = index;
 		if( this.knowledgeBase.thermalindices.ireq.length > 0 ){
 			let distance = parseFloat( this.knowledgeBase.weather.distance ).toFixed(0);
 			let utc_date = new Date( this.knowledgeBase.thermalindices.ireq[ index ].utc ); //
@@ -1419,10 +1422,10 @@ var app = {
 			$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
 		    
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase).then( 
-				([width, value, thermal, tip_html]) => {//
-					self.drawGauge( 'main_gauge', width, value, thermal );
+				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
+					self.drawGauge( 'main_gauge', width, personalvalue, thermal );
 					$("#tips").html( tip_html ); 
-					$("#circle_gauge_color").css("color", getCurrentGaugeColor(value));
+					$("#circle_gauge_color").css("color", getCurrentGaugeColor(personalvalue));
 					$("#main_panel").fadeIn(500);
 			});
 		}
