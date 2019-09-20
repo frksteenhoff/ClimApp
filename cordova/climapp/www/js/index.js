@@ -169,6 +169,7 @@ var app = {
 			var thermal = $(this).attr("data-context");
 			console.log("adaptation context: " + thermal);
 
+			// This causes errors.. the data context in feedback.html is unknown
 			var currentPAL_ = self.knowledgeBase.user.adaptation[thermal].diff;
 			var currentPAL = 0;
 			if (currentPAL_.length > 0) {
@@ -274,9 +275,9 @@ var app = {
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='wheel']").on("click", function () {
 			var target = $(this).attr("data-target");
-			let title_ = self.knowledgeBase.settings[target].title;
+			let title_ = self.translations.wheels.settings[target].title[self.language];
 			var items_ = self.getSelectables(target);
-			let currentValue = self.knowledgeBase.user.settings[target].toString();
+
 			var config = {
 				title: title_,
 				items: [[items_]],
@@ -416,8 +417,8 @@ var app = {
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='wheel']").on("click", function () {
 			var target = $(this).attr("data-target");
-			console.log(target);
-			let title_ = self.knowledgeBase.user.settings[target + "_text"];
+			let title_ = self.translations.wheels.settings[target].title[self.language];
+			console.log(title_ + " " + target);
 			var items_ = self.getSelectables(target);
 
 			var config = {
@@ -539,7 +540,8 @@ var app = {
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='wheel']").on("touchstart", function () {
 			var target = $(this).attr("data-target");
-			let title_ = self.knowledgeBase[target].title;
+			let title_ = self.translations.wheels[target].title[self.language];
+			console.log("target: " + target + " title " + title_);
 			var items_ = self.getSelectables(target);
 		
 			var config = {
@@ -606,7 +608,7 @@ var app = {
 					"thermostat_level": 3,
 					"open_windows": 0,
 					"_temperature": 20, // indoor temperature
-					"windspeed": "No wind",
+					"windspeed": "no_wind",
 					"_humidity": 0,
 
 					/* Custom location */
@@ -629,7 +631,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0462,
+			"version": 2.0467,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -681,30 +683,15 @@ var app = {
 				"_temperature": {
 					"title": translations.wheels.settings._temperature.title[language]
 				},
-				"windspeed_text": {
-					"title": translations.wheels.settings.windspeed_text.title[language]
+				"windspeed": {
+					"title": translations.wheels.settings.windspeed.title[language]
 				},
-				"_humidity_text": {
-					"title": translations.wheels.settings._humidity_text.title[language]
+				"_humidity": {
+					"title": translations.wheels.settings._humidity.title[language]
 				},
 			},
 			"activity": {
-				"title": translations.wheels.activity.title[language],
-				"description": {
-					"rest": translations.wheels.activity.description.rest[language],
-					"low": translations.wheels.activity.description.light[language],
-					"medium": translations.wheels.activity.description.medium[language],
-					"high": translations.wheels.activity.description.high[language],
-					"intense": translations.wheels.activity.description.intense[language]
-				},
-				"label": {
-					"rest": translations.wheels.activity.label.rest[language], //ISO 8896
-					"low": translations.wheels.activity.label.light[language],
-					"medium": translations.wheels.activity.label.medium[language],
-					"high": translations.wheels.activity.label.high[language],
-					"intense": translations.wheels.activity.label.intense[language]
-				},
-				// Only added in knowledgebase
+				// Dependent on correct translation sheet labels (rest, low, medium, high, intense)
 				"values": {
 					"rest": 115.0, //ISO 8896
 					"low": 180.0,
@@ -714,25 +701,6 @@ var app = {
 				}
 			},
 			"clothing": {
-				"title": translations.wheels.clothing.title[language],
-				"description": {
-					"Summer_attire": translations.wheels.clothing.description.Summer_attire[language],
-					"Business_suit": translations.wheels.clothing.description.Business_suit[language],
-					"Double_layer": translations.wheels.clothing.description.Double_layer[language],
-					"Cloth_coverall": translations.wheels.clothing.description.Cloth_coverall[language],
-					"Cloth_apron_long_sleeve": translations.wheels.clothing.description.Cloth_apron_long_sleeve[language],
-					"Vapour_barrier_coverall": translations.wheels.clothing.description.Vapour_barrier_coverall[language],
-					"Winter_attire": translations.wheels.clothing.description.Winter_attire[language]
-				},
-				"label": {
-					"Summer_attire": translations.wheels.clothing.label.Summer_attire[language], //ISO 8896
-					"Business_suit": translations.wheels.clothing.label.Business_suit[language],
-					"Double_layer": translations.wheels.clothing.label.Double_layer[language],
-					"Cloth_coverall": translations.wheels.clothing.label.Cloth_coverall[language],
-					"Cloth_apron_long_sleeve": translations.wheels.clothing.label.Cloth_apron_long_sleeve[language],
-					"Vapour_barrier_coverall": translations.wheels.clothing.label.Vapour_barrier_coverall[language],
-					"Winter_attire": translations.wheels.clothing.label.Winter_attire[language]
-				},
 				"values": {
 					"Summer_attire": 0.5, //clo
 					"Business_suit": 1.0,
@@ -744,63 +712,11 @@ var app = {
 				}
 			},
 			"headgear": {
-				"title": translations.wheels.headgear.title[language],
-				"description": {
-					"none": translations.wheels.headgear.description.none[language],
-					"helmet": translations.wheels.headgear.description.helmet[language],
-				},
-				"label": {
-					"none": translations.wheels.headgear.label.none[language], //ISO 8896
-					"helmet": translations.wheels.headgear.label.helmet[language],
-				},
 				"values": {
 					"none": 0, //clo
 					"helmet": 0.1, //clo
 				}
 			},
-			/*"feedback": {
-				"gauge": {
-					"text_top": "Your predicted score",
-					"text_bottom": "Tap the buttons to adjust the gauge to your thermal experience."
-				},
-				"question1": {
-					"text": "How were your drinking needs?",
-					"rating": 3,
-					"ratingtype": "ratingbar",
-					"ratingtext": {
-						"5": "Much higher than expected",
-						"4": "Higher than expected",
-						"3": "Normal",
-						"2": "Lower than expected",
-						"1": "Much lower than expected"
-					},
-				},
-				"question2": {
-					"text": "Did you take more breaks today than you expected?",
-					"rating": 3,
-					"ratingtype": "ratingbar",
-					"ratingtext": {
-						"5": "A lot more exhausted than usual",
-						"4": "More exhausted than usual",
-						"3": "Normal",
-						"2": "Less exhausted than usual",
-						"1": "Not exhausted at all",
-					},
-				},
-				"question3": {
-					"text": "How would you evaluate the amount of clothing you wore today?",
-					"rating": 3,
-					"ratingtype": "ratingbar",
-					"ratingtext": {
-						"5": "A lot more than needed",
-						"4": "A little too much clothing",
-						"3": "I wore the right amount of clothing",
-						"2": "Less than needed",
-						"1": "Much less than needed"
-					},
-				},
-				"comment": ""
-			},*/
 			"thermalindices": {
 				"ireq": [],
 				"phs": [],
@@ -907,7 +823,6 @@ var app = {
 		console.log("current language: " + this.language); // getting first two letters
 		console.log("User settings: \n" + JSON.stringify(this.knowledgeBase.user)); // Showing current user settings
 	},
-
 	/* Getting language based on locale, if language is not supported, English is chosen */
 	getLanguage: function (locale) {
 		var shortenedLanguageIndicator = locale.slice(0, 2); // first two characters of ISO 639-1 code (https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes)
@@ -965,9 +880,9 @@ var app = {
 			obj_array.push({ description: "UK: stone, inch, m/s, Celsius", value: "UK" });
 		}
 		else if (key === "windspeed") {
-			obj_array.push({ description: "No wind", value: "No Wind" });
-			obj_array.push({ description: "Some wind", value: "Some wind" });
-			obj_array.push({ description: "Strong wind", value: "Strong wind" });
+			obj_array.push({ description: this.translations.wheels.windspeed.description.no_wind[this.language], value: 1 });
+			obj_array.push({ description: this.translations.wheels.windspeed.description.some_wind[this.language], value: 2 });
+			obj_array.push({ description: this.translations.wheels.windspeed.description.strong_wind[this.language], value: 3 });
 		}
 		// Is this being used anywhere?
 		else if (key === "radiation") {
@@ -976,20 +891,17 @@ var app = {
 			obj_array.push({ description: "Direct sunlight", value: "Direct sunlight" });
 			obj_array.push({ description: "Extreme radiation", value: "Extreme radiation" });
 		}
-		else if (key === "clothing") {
-			$.each(this.knowledgeBase.clothing.label, function (key, val) {
-				obj_array.push({ description: val, value: key });
-			});
-		}
-		else if (key === "headgear") {
-			$.each(this.knowledgeBase.headgear.label, function (key, val) {
-				obj_array.push({ description: val, value: key });
-			});
-		}
-		else if (key === "activity") {
-			$.each(this.knowledgeBase.activity.label, function (key, val) {
-				obj_array.push({ description: val, value: key });
-			});
+		else if (["activity", "clothing", "headgear"].includes(key)) {
+			var numElements = Object.keys(this.translations.wheels[key].label).length;
+			var desc = "";
+			var value = "";
+			
+			for(var i = 0; i < numElements; i++) {
+			    desc = Object.keys(this.translations.wheels[key].label)[i];
+			    value = this.translations.wheels[key].label[Object.keys(this.translations.wheels[key].label)[i]][this.language]; // rest, light, medium, high, intense
+				console.log("desc: " + desc + " value: " + value);
+				obj_array.push({ description: value, value: desc});
+			}
 		}
 
 		/* CUSTOM INPUT */
@@ -1188,19 +1100,41 @@ var app = {
 			}); // Making code execution wait for app id retrieval
 		});
 	},
+	getWindspeedTextFromValue: function (val) {
+		self = this;
+		var text = "";
+		switch (val) {
+			case 1:
+				text = self.translations.wheels.windspeed.description.no_wind[self.language];
+				break;
+			case 2:
+				text = self.translations.wheels.windspeed.description.some_wind[self.language];	
+				break;
+			case 3:
+				text = self.translations.wheels.windspeed.description.strong_wind[self.language];		
+			default:
+				// To information for user with earlier version on knowledgebase
+				text = self.translations.wheels.windspeed.description.no_wind[self.language];
+				self.knowledgeBase.user.settings.windspeed = 1;
+				self.saveSettings();
+		}
+		return text;
+	},
 	translateTextToWindspeed: function (description) {
 		// Based on wind speeds from: https://www.google.com/url?sa=i&source=images&cd=&ved=2ahUKEwjSq7ndjrzkAhVmposKHboJAGYQjRx6BAgBEAQ&url=https%3A%2F%2Fearthscience.stackexchange.com%2Fquestions%2F12562%2Fwhat-wind-speeds-and-gusts-can-usually-damage-houses-or-trees&psig=AOvVaw2Z8Ea0UmXAVcEuFrzpHpyU&ust=1567856490789493
 		var windspeed = 0; // km/h
 		switch (description) {
-			case "No wind":
+			case 1:
 				windspeed = 1; // calm
 				break;
-			case "Some wind":
+			case 2:
 				windspeed = 15; // light breeze
 				break;
-			case "Strong wind":
+			case 3:
 				windspeed = 35; // fresh breeze
 				break;
+			default:
+				windspeed = 0; // something went wrong
 		}
 		return windspeed;
 	},
@@ -1385,11 +1319,13 @@ var app = {
 				this.updateInfo(this.selectedWeatherID);
 			}
 
+			var indoorOutdoorMode = this.knowledgeBase.user.guards.isIndoor ? this.translations.labels.str_indoor[this.language] : this.translations.labels.str_outdoor[this.language];
 			// Set dashboard content using translations sheet
 			$("#str_weather_report").html(this.translations.labels.str_weather_report[this.language]);
-			$("#indoor_outdoor").html(this.translations.labels.str_outdoor[this.language]);
+			$("#indoor_outdoor").html(indoorOutdoorMode);
 			$("#str_more_info").html(this.translations.labels.str_more_info[this.language]);
 			$("#str_personalise").html(this.translations.labels.str_personalise[this.language]);
+			
 			$("#str_activity_level").html(this.translations.labels.str_activity_level[this.language]);
 			$("#str_clothing_level").html(this.translations.labels.str_clothing_level[this.language]);
 			$("#str_activity").html(this.translations.labels.str_activity[this.language]);
@@ -1624,7 +1560,7 @@ var app = {
 			$("#str_personal_settings").html(this.translations.labels.str_personal_settings[this.language].toUpperCase());
 
 			$("#str_age").html(this.translations.labels.str_age[this.language]);
-			$("#age").html(this.knowledgeBase.user.settings.age + " " + this.knowledgeBase.settings.age.unit);
+			$("#age").html(this.knowledgeBase.user.settings.age + " " + this.translations.labels.str_years[this.language]);
 			
 			$("#str_height").html(this.translations.labels.str_height[this.language]);
 			$("#height").html(getCalculatedHeightValue(unit, height) + " " + getHeightUnit(unit));
@@ -1633,7 +1569,8 @@ var app = {
 			$("#weight").html(getCalculatedWeightValue(unit, weight) + " " + getWeightUnit(unit));
 			
 			$("#str_gender").html(this.translations.labels.str_gender[this.language]);
-			$("#gender").html(this.knowledgeBase.user.settings.gender);
+			var genderAsText = this.knowledgeBase.user.settings.gender == 0 ? this.translations.labels.str_female[this.language] : this.translations.labels.str_male[this.language];
+			$("#gender").html(genderAsText);
 			
 			$("#str_acclimatization").html(this.translations.labels.str_acclimatization[this.language]);
 			$("#acclimatization_checkbox").prop("checked", this.knowledgeBase.user.settings.acclimatization);
@@ -1643,7 +1580,7 @@ var app = {
 			
 			$("#str_preferences").html(this.translations.labels.str_preferences[this.language].toUpperCase());
 			$("#str_unit").html(this.translations.labels.str_unit[this.language]);
-			$("#unit").html(this.knowledgeBase.user.settings.unit + " units");
+			$("#unit").html(this.knowledgeBase.user.settings.unit + " " + this.translations.labels.str_units[this.language]);
 
 			$("#str_notifications").html(this.translations.labels.str_notifications[this.language]);
 			$("#notification_checkbox").prop("checked", this.knowledgeBase.user.guards.receivesNotifications);
@@ -1660,10 +1597,11 @@ var app = {
 			this.knowledgeBase.user.guards.feedbackSliderChanged = 0;
 
 			// Set page content
+			$("#gauge_text_top").html(this.translations.sentences.feedback_adaptation_score[this.language]);
 			$("#str_colder").html(this.translations.labels.str_colder[this.language]);			
 			$("#str_warmer").html(this.translations.labels.str_warmer[this.language]);			
 			$("#str_ok").html(this.translations.labels.str_ok[this.language]);			
-			$("#str_more_questions").html(this.translations.labels.str_more_questions[this.language]).toUpperCase();			
+			$("#str_more_questions").html(this.translations.labels.str_more_questions[this.language].toUpperCase());			
 			$("#str_submit_data").html(this.translations.labels.str_submit_data[this.language]);
 			// TODO - add text for feedback questions			
 
@@ -1672,6 +1610,8 @@ var app = {
 			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, false).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					$("#gauge_text_top_diff").hide();
+					$("#reset_icon").hide();
+					
 					this.drawGauge('feedback_gauge', width, personalvalue, thermal);
 					this.knowledgeBase.user.adaptation.mode = thermal;
 					// Save current gauge value as original value
@@ -1682,7 +1622,9 @@ var app = {
 					$("#gauge_text_top").html(this.knowledgeBase.feedback.gauge.text_top);
 					if (diff_array.length >= 1) {
 						$("#gauge_text_top_diff").show();
-						$("#gauge_text_top_diff").html("Personal " + thermal + " alert level: " + diff_array[0].toFixed(1));
+						$("#reset_icon").hide();
+						// Personal heat/cold alert limit: <value>
+						$("#gauge_text_top_diff").html(this.translations.labels.str_personal[this.language] + " " + thermal + " " + this.translations.labels.str_alert_limit[this.language] +": " + diff_array[0].toFixed(1));
 					}
 
 					$("#gauge_text_bottom").html(this.knowledgeBase.feedback.gauge.text_bottom);
@@ -1767,6 +1709,7 @@ var app = {
 			$("#str_input_custom_location").html(this.translations.labels.str_input_custom_location[this.language]);
 			$("#str_location").html(this.translations.labels.str_location[this.language]);
 			$("#str_set_location").html(this.translations.labels.str_set_location[this.language]);
+			$("#latlon_desc").html(this.translations.labels.str_new_location[this.language]);
 			
 			// Location
 			this.knowledgeBase.user.guards.customLocationEnabled ? $("#customLocationSection").show() : $("#customLocationSection").hide();
@@ -1791,6 +1734,7 @@ var app = {
 			
 			// Setting page content
 			$("#str_indoor_outdoor_mode").html(this.translations.labels.str_indoor_outdoor_mode[this.language]);
+			$("#str_use_indoor_mode").html(this.translations.labels.str_use_indoor_mode[this.language]);
 			$("#str_thermostat").html(this.translations.labels.str_thermostat[this.language]);
 			$("#indoor_open_windows").html(this.translations.labels.indoor_open_windows[this.language]);
 			$("#str_wind_speed").html(this.translations.labels.str_wind_speed[this.language]);
@@ -1800,7 +1744,7 @@ var app = {
 			// Values
 			//var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
 			//$("#_temperature").html( this.knowledgeBase.user.settings._temperature + " &#xb0 " + tempUnit);
-			$("#windspeed").html(this.knowledgeBase.user.settings.windspeed);
+			$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
 			$("#_humidity").html(this.knowledgeBase.user.settings._humidity + " %");
 			$("#thermostat_level").html(this.knowledgeBase.user.settings.thermostat_level);
 			$("#open_windows").html(windowsOpen);
@@ -1808,18 +1752,18 @@ var app = {
 	},
 	updateMenuItems: function () {
 		let selected = this.knowledgeBase.user.settings.activity_selected;
-		$("#dashboard_activity").html(this.knowledgeBase.activity.label[selected]);
-		let caption_ = this.knowledgeBase.activity.description[selected];
+		$("#dashboard_activity").html(this.translations.wheels.activity.label[selected][this.language]);
+		let caption_ = this.translations.wheels.activity.description[selected][this.language];
 		$("#activityCaption").html(caption_);
 
 		selected = this.knowledgeBase.user.settings.clothing_selected;
-		$("#dashboard_clothing").html(this.knowledgeBase.clothing.label[selected]);
-		caption_ = this.knowledgeBase.clothing.description[selected];
+		$("#dashboard_clothing").html(this.translations.wheels.clothing.label[selected][this.language]);
+		caption_ = this.translations.wheels.clothing.description[selected][this.language];
 		$("#clothingCaption").html(caption_);
 
 		selected = this.knowledgeBase.user.settings.headgear_selected;
-		$("#dashboard_headgear").html(this.knowledgeBase.headgear.label[selected]);
-		caption_ = this.knowledgeBase.headgear.description[selected];
+		$("#dashboard_headgear").html(this.translations.wheels.headgear.label[selected][this.language]);
+		caption_ = this.translations.wheels.headgear.description[selected][this.language];
 		$("#headgearCaption").html(caption_);
 	},
 	getDrawGaugeParamsFromIndex: async function (index, kb, leveloverride) {
@@ -2062,7 +2006,7 @@ var app = {
 		} else {
 			// Indoor mode
 			$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[index].Tair, this.knowledgeBase.user.settings.unit).toFixed(0));
-			$("#windspeed").html(this.knowledgeBase.user.settings.windspeed);
+			$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
 			$("#humidity").html(this.translations.labels.str_humidity[this.language]);
 			$("#humidity_value").html(this.knowledgeBase.user.settings._humidity);
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
