@@ -1619,12 +1619,19 @@ var app = {
 						$("#gauge_text_top_diff").html(this.translations.labels.str_personal[this.language] + " " + thermal + " " + this.translations.labels.str_alert_limit[this.language] +": " + diff_array[0].toFixed(1));
 					}
 
+					$("#gauge_text_bottom").html(this.translations.sentences.feedback_adaptation_colder_warmer[this.language]);
 
 					$("div[data-listener='adaptation']").attr("data-context", thermal);
 
 					// Question text
+					$("#question1").html(this.feedback_questions.question1.text);
+					$("#question2").html(this.feedback_questions.question2.text);
+					$("#question3").html(this.feedback_questions.question3.text);
 					
 					// Set rating bar text (under feedback buttons) using last given feedback
+					$("#ratingtext1").html(this.feedback_questions.question1.ratingtext[this.feedback_questions.question1.rating]);
+					$("#ratingtext2").html(this.feedback_questions.question2.ratingtext[this.feedback_questions.question2.rating]);
+					$("#ratingtext3").html(this.feedback_questions.question3.ratingtext[this.feedback_questions.question3.rating]);
 
 					// Rating bar values -- still not setting the default color..
 					$("input[id='1star" + 3 + "']").attr("checked", true);
