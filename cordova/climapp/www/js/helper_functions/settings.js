@@ -46,6 +46,3 @@ function deviceID() {
 function getGenderAsInteger(gender) {
     return typeof gender === 'number' ? gender : -1;
 }
-
-module.exports = { getCalculatedHeightValue, getHeightUnit, getCalculatedWeightValue, getWeightUnit, deviceID, getGenderAsInteger };
-
