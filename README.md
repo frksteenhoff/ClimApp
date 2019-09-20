@@ -49,16 +49,20 @@ Plugins
       ├── data/                                                   <-- additional data
       ├── img/                                                    <-- assets
       ├── js/                                                     <-- javascript files
+      |     ├── helper_functions/                                 <-- logic used in different pages in app
       │     ├── thresholds/ 
       │     ├── phs/
       │     ├── test/
       │     │     ├── functionality/                              <-- unit tests (jest)
       │     │     ├── ui_tests/                                   <-- ui/integration tests (mocha, chai, jasmine) 
-      │     ├── *.js
+      │     ├── index.js                                          <-- main app content -- where app runs from
+      │     ├── *.js                                              <-- logic and functionality files
       │     └── ..
       ├── pages/
       │     ├── *.html                                            <-- app screens
       │     └── ..
+      ├── translations/                                           <-- translation spreadsheets and JSON object 
+      ├── video/                                                  <-- video backgrounds
       ├── webfonts/                                               <-- fonts
       └── .. 
  ├── (platforms)                                                  <-- build versions (ignored)
