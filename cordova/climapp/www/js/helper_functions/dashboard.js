@@ -56,7 +56,7 @@ function BSA(kb) { //m2
 function M(kb) { //W/m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
         let ISO_selected = kb.user.settings.activity_selected;
-        return kb.activity.values[ ISO_selected ] / BSA(kb);
+		return kb.activity.values[ ISO_selected ] / BSA(kb);
     }
 }
 
