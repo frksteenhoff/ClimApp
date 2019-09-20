@@ -782,6 +782,7 @@ var app = {
 				if(!'yearOfBirth' in this.knowledgeBase) {
 					this.knowledgeBase.user.settings.clothing_selected = "Summer_attire";
 					this.knowledgeBase.user.settings.headgear_selected = "none";
+					
 					var thisYear = new Date().getFullYear();
 					this.knowledgeBase.user.settings.yearOfBirth = thisYear - shadowKB.user.settings.age;
 				}
