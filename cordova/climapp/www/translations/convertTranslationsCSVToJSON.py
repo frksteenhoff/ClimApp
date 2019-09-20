@@ -47,8 +47,9 @@ print("Moving old translation file to archive ..")
 datestr = strftime("%d%m%Y", gmtime()) 
 
 if os.path.isfile("translations.json"):
-    if not os.path.isfile("archive/translations.json"):
-        os.rename("translations.json", "archive/translations" + datestr + ".json")
+    archivePath = "archive/translations" + datestr + ".json"
+    if not os.path.isfile(archivePath):
+        os.rename("translations.json", archivePath)
         print("Old translations file moved to archive.")
     print("Translations file already moved to archive")
 else:
@@ -104,7 +105,7 @@ def convertCSVtoJSON_nested(df, availableLanguages):
 
 # #### Reading in file with general strings
 
-df = pd.read_csv("climapp_translation_sheet_labels.csv")
+df = pd.read_csv("climapp_translation_sheet - labels.csv")
 df.head()
 
 
@@ -149,7 +150,7 @@ if(troubleshoot):
 # #### Reading in file with toast text
 
 print("Converting sentences.. ")
-df = pd.read_csv("climapp_translation_sheet_sentences.csv")
+df = pd.read_csv("climapp_translation_sheet - sentences.csv")
 
 # **Showing basic content**
 df.head()
@@ -167,7 +168,7 @@ if(troubleshoot):
 # #### Reading in file with toast text
 
 print("Converting toasts.. ")
-df = pd.read_csv("climapp_translation_sheet_toasts.csv")
+df = pd.read_csv("climapp_translation_sheet - toasts.csv")
 
 # **Showing basic content**
 df.head()
@@ -185,7 +186,7 @@ if(troubleshoot):
 # #### Reading in file with wheels text
 
 print("Converting wheels (partial content).. ")
-df = pd.read_csv("climapp_translation_sheet_wheels.csv")
+df = pd.read_csv("climapp_translation_sheet - wheels.csv")
 df.head()
 
 
@@ -202,17 +203,17 @@ if(troubleshoot):
 
 # #### Reading in file with toast text
 
-print("Converting API text (not used in app).. ")
-df = pd.read_csv("climapp_translation_sheet_api.csv")
+#print("Converting API text (not used in app).. ")
+#df = pd.read_csv("climapp_translation_sheet - api.csv")
 
 # **Showing basic content**
-df.head()
+#df.head()
 
 
 # #### Converting csv content to JSON object
-api = convertCSVtoJSON_simple(df, availableLanguages)
-if(troubleshoot):
-    print(json.dumps(api, indent=4))
+#api = convertCSVtoJSON_simple(df, availableLanguages)
+#if(troubleshoot):
+#    print(json.dumps(api, indent=4))
 
 
 # ----------------------------------------------------------------
@@ -221,7 +222,7 @@ if(troubleshoot):
 
 # ## Combining all information in one JSON object
 print("Combining all json objects.. ")
-combined_object = {"labels" : labels, "sentences" : sentences, "wheels" : wheels, "toasts" : toasts, "api" : api}
+combined_object = {"labels" : labels, "sentences" : sentences, "wheels" : wheels, "toasts" : toasts}
 if(troubleshoot):
     print(json.dumps(combined_object, indent=4))
 
