@@ -6,7 +6,7 @@ activity,description,medium,"Walking 2.5 - 5.5km/h. Sustained arm and hand work:
 activity,description,high,"Intense arm and trunk work: carrying heavy material, shovelling, sawing, hand mowing, concrete block laying.","Intens aktivitet: bære tungt materiale, skovle, save, slå græs, lægge brosten.",,,"Intens armarbeid: bæring av tungt materiale, måking, saging, håndklipping, betongblokklegging.",,,,,
 activity,description,intense,"Very intense activity at fast maximum pace:\nworking with an ax, climbing stairs, running on level surface.","Meget intens aktivitet ved maksimalt tempo: \n arbejde med en økse, gå på trapper, løb på plan overflade.",,,"Veldig intens aktivitet i raskt maksimalt tempo: \n arbeider med en øks, klatrer trapper, løper på jevn overflate.",,,,,
 activity,label,rest,Rest ,Hvile,,,Hvile,,,,,
-activity,label,light,Light ,Let,,,Lett,,,,,
+activity,label,low,Light ,Let,,,Lett,,,,,
 activity,label,medium,Medium,Middel,,,Middel,,,,,
 activity,label,high,High,Høj,,,Høy,,,,,
 activity,label,intense,Intense,Intens,,,Intens,,,,,
