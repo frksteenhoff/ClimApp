@@ -401,3 +401,7 @@ function startIntro(translations, language) {
 function firstCharToUpper(word){
 	return word.charAt(0).toUpperCase() + word.slice(1);
 }
+
+function getAgeFromYearOfBirth(yob) {
+	return new Date().getFullYear() - yob;
+}

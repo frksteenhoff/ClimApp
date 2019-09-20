@@ -25,7 +25,7 @@ clothing,label,Cloth_coverall,Cloth coverall,Overtrækstøj,,,Kjeledress i stoff
 clothing,label,Cloth_apron_long_sleeve,Apron over coverall,Overtrækstøj med forklæde ud over,,,Kjeledress med forkle,,,,,
 clothing,label,Vapour_barrier_coverall,Vapour-barrier coverall,Overtrækstøj med dampbarriere,,,Kjeledress med dampsperre,,,,,
 clothing,label,Winter_attire,Winter attire,Vintertøj ,,,Vinterklær,,,,,
-settings,age,title,What is your age?,Hvad er din alder?,,,Hvor gammel er du?,,,,,
+settings,age,title,In what year were you born?,Hvilket år blev du født?,,,I hvilket år ble du født?,,,,,
 settings,height,title,How tall are you?,Hvor høj er du?,,,Hvor høy er du?,,,,,
 settings,weight,title,How much do you weigh?,Hvor meget vejer du?,,,Hvor mye veier du?,,,,,
 settings,gender,title,What is your gender?,Hvilket køn er du?,,,Hvilket kjønn er du?,,,,,

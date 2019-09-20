@@ -289,12 +289,19 @@ var app = {
 				]*/
 			};
 			window.SelectorCordovaPlugin.showSelector(config, function (result) {
-				self.knowledgeBase.user.settings[target] = items_[result[0].index].value;
-				if (["age", "gender", "height", "weight"].includes(target)) {
+				if (["gender", "height", "weight"].includes(target)) {
+					self.knowledgeBase.user.settings[target] = items_[result[0].index].value;
+					self.saveSettings();
+					updateDBParam(self.knowledgeBase, target);
+				} else if(target === "age") {
+					var thisYear = new Date().getFullYear();
+					// Set age based on year of birth
+					self.knowledgeBase.user.settings[target] = getAgeFromYearOfBirth(items_[result[0].index].value);
+					self.knowledgeBase.user.settings.yearOfBirth = items_[result[0].index].value;
+					self.saveSettings();
 					updateDBParam(self.knowledgeBase, target);
 				}
 				console.log(target + ": " + items_[result[0].index].value);
-				self.saveSettings();
 				self.updateUI();
 			}, function () {
 				console.log('Canceled');
@@ -311,6 +318,7 @@ var app = {
 			if (target === "reset") {
 				// Resetting values to default
 				self.knowledgeBase.user.settings.age = 30;
+				self.knowledgeBase.user.settings.yearOfBirth = 1990;
 				self.knowledgeBase.user.settings.gender = "undefined";
 				self.knowledgeBase.user.settings.height = 178;
 				self.knowledgeBase.user.settings.weight = 82;
@@ -576,7 +584,7 @@ var app = {
 			$("#" + target).removeClass("hidden");
 		});
 	},
-	initKnowledgeBase: function (translations, language) {
+	initKnowledgeBase: function () {
 		return {
 			/* --------------------------------------------------- */
 			// Should not be overwritten!
@@ -592,6 +600,7 @@ var app = {
 					"isIndoor": false
 				},
 				"settings": { // Using default values
+					"yearOfBirth" : 1990,
 					"age": 30,
 					"height": 178,
 					"weight": 82,
@@ -631,7 +640,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0467,
+			"version": 2.0468,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://192.38.64.244",
@@ -733,7 +742,7 @@ var app = {
 		//this.translations = getTranslations(); //check if it works from here	
 		this.selectedWeatherID = 0;
 		this.maxForecast = 8; //8x3h = 24h
-		var shadowKB = this.initKnowledgeBase(this.translations, this.language);
+		var shadowKB = this.initKnowledgeBase();
 
 		this.language = this.getLanguage(navigator.language);
 		var msgString = ""; // String deciding message to show in console/toast
@@ -767,6 +776,14 @@ var app = {
 				if (typeof this.knowledgeBase.user.adaptation.heat.diff === 'number' || typeof this.knowledgeBase.user.adaptation.cold.diff === 'number') {
 					this.knowledgeBase.user.adaptation.heat.diff = [];
 					this.knowledgeBase.user.adaptation.cold.diff = [];
+				}
+
+				// Setting values of variables that have changed types since last kb version
+				if(!'yearOfBirth' in this.knowledgeBase) {
+					this.knowledgeBase.user.settings.clothing_selected = "Summer_attire";
+					this.knowledgeBase.user.settings.headgear_selected = "none";
+					var thisYear = new Date().getFullYear();
+					this.knowledgeBase.user.settings.yearOfBirth = thisYear - shadowKB.user.settings.age;
 				}
 
 				msgString = this.translations.toasts.kb_updated[this.language];
@@ -818,8 +835,9 @@ var app = {
 		var obj_array = [];
 
 		if (key.slice(0, 3) === "age") {
-			for (var i = 0; i < 100; i++) {
-				obj_array.push({ description: (i + 12) + " " + this.translations.labels.str_years[this.language], value: (i + 12) });
+			var thisYear = new Date().getFullYear();
+			for (var i = (thisYear - 100); i < thisYear; i++) {
+				obj_array.push({ description: i, value: i });
 			}
 		}
 		else if (key === "height") {
@@ -1534,7 +1552,7 @@ var app = {
 			$("#str_personal_settings").html(this.translations.labels.str_personal_settings[this.language].toUpperCase());
 
 			$("#str_age").html(this.translations.labels.str_age[this.language]);
-			$("#age").html(this.knowledgeBase.user.settings.age + " " + this.translations.labels.str_years[this.language]);
+			$("#age").html(getAgeFromYearOfBirth(this.knowledgeBase.user.settings.yearOfBirth) + " " + this.translations.labels.str_years[this.language]);
 			
 			$("#str_height").html(this.translations.labels.str_height[this.language]);
 			$("#height").html(getCalculatedHeightValue(unit, height) + " " + getHeightUnit(unit));
