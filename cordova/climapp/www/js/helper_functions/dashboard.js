@@ -401,5 +401,3 @@ function startIntro(translations, language) {
 function firstCharToUpper(word){
 	return word.charAt(0).toUpperCase() + word.slice(1);
 }
-
-module.exports = {gaugeTitleCold, gaugeTitleHeat, getTemperatureUnit, getTemperatureValueInPreferredUnit, windchillRisk, BSA, M, RAL, WBGTrisk, neutralTips, heatLevelTips,coldLevelTips, getCurrentGaugeColor, getTranslations, getLocation, customLocationEnabled, startIntro, MergeRecursive, checkUserExistInDB, firstCharToUpper};
