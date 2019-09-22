@@ -846,7 +846,7 @@ var app = {
 		if (key.slice(0, 3) === "age") {
 			var thisYear = new Date().getFullYear();
 			for (var i = (thisYear - 100); i < thisYear; i++) {
-				obj_array.push({ description: i, value: i });
+				obj_array.push({ description: ""+i, value: i });
 			}
 		}
 		else if (key === "height") {
@@ -916,12 +916,12 @@ var app = {
 				// Fahrenheit
 				for (var i = 200; i >= -40; i--) {
 					let convertedTemp = getTemperatureValueInPreferredUnit(i, "US");
-					obj_array.push({ description: convertedTemp.toFixed(1) + " &#xb0 F", value: convertedTemp.toFixed(1) });
+					obj_array.push({ description: convertedTemp.toFixed(1) + " &#xb0; F", value: convertedTemp.toFixed(1) });
 				}
 			} else {
 				// Celcius
 				for (var j = -30; j <= 60; j++) {
-					obj_array.push({ description: j + " &#xb0 C", value: j });
+					obj_array.push({ description: j + " C", value: j });
 				}
 			}
 		}
@@ -935,7 +935,7 @@ var app = {
 		/* INDOOR MODE */
 		else if (key === "thermostat_level") {
 			for (var i = 1; i <= 5; i++) {
-				obj_array.push({ description: i, value: i });
+				obj_array.push({ description: ""+i, value: i });
 			}
 		}
 		// logic for windows in custom output section
@@ -1726,9 +1726,16 @@ var app = {
 			this.knowledgeBase.user.guards.customLocationEnabled ? $("#customLocationSection").show() : $("#customLocationSection").hide();
 			$("#custom_location_checkbox").prop("checked", this.knowledgeBase.user.guards.customLocationEnabled);
 			this.initLocationListeners();
-
+			
 			if (customLocationEnabled(this.knowledgeBase)) {
 				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.user.settings.station + " (" + this.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(4)  + ")");
+				
+				var [lat, lon] = getLocation(this.knowledgeBase);
+				var center = new google.maps.LatLng(lat, lon );
+				    // using global variable:
+				window.map.panTo(center);
+				google.maps.event.trigger(window.map, 'resize');
+				
 			} else {
 				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.position.lat + ", " + this.knowledgeBase.position.lng);
 			}
@@ -1841,7 +1848,7 @@ var app = {
 		let upperLimit = 2;
 		if (personal_value < lowerLimit || personal_value > upperLimit) {
 			if (kb.user.guards.receivesNotifications) {
-				//this.scheduleDefaultNotification();
+				//this.scheduleDefaultNotification(); //no local notification , agreed with lars
 			} else {
 				console.log("User has opted out of notifications.");
 			}
@@ -2274,6 +2281,7 @@ var app = {
 		});
 		gauge.draw();
 	},
+	/* No local notifications - agreed with Lars
 	scheduleDefaultNotification: function () {
 		var ClimAppNotifications = getAllNotifications();
 		if (ClimAppNotifications > 0) {
@@ -2308,7 +2316,7 @@ var app = {
 			]
 		});
 		console.log("Notification scheduled.");
-	}
+	}*/
 };
 
 app.initialize();

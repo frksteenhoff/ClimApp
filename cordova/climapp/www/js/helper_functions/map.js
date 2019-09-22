@@ -1,14 +1,20 @@
 function initMap() {
     // Coordinates for Copenhagen, Denmark
     // Would like to set these dynamically, but cannot reference kb outside DOM?
-    var currentCoordinates = { lat: 55.676098, lng: 12.568337 };
+	
+	//bk we could make kb global by putting it in window -> window.kb = ...
+    //var currentCoordinates = { lat: 55.676098, lng: 12.568337 };
 
     // Each marker is labeled with a single alphabetical character.
     var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     var labelIndex = 0;
 
-    var map;
     let options = { timeout: 30000 };
+	
+	/*
+	
+	there is no need to do this here. put the marker only when the map is shown in DOM, otherwise iOS only shows grey screen.
+	
     navigator.geolocation.getCurrentPosition(
         function (position) { //on success
             currentCoordinates = { lat: position.coords.latitude, lng: position.coords.longitude };
@@ -18,9 +24,10 @@ function initMap() {
         },
         options // here the timeout is introduced
     );
-
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: currentCoordinates,
+	*/
+	//window.map so map is available global scope
+    window.map = new google.maps.Map(document.getElementById('map'), { 
+        //center: currentCoordinates,
         zoom: 8
     });
 
