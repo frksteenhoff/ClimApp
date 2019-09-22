@@ -42,6 +42,10 @@ var app = {
 				showShortToast("Whoops... something went wrong at: " + lineNumber);
 		    }
 		this.receivedEvent('deviceready');
+		
+		if( device.platform === "iOS"){
+			window.FirebasePlugin.grantPermission();
+		}
 		app.bindNotificationEvents();
     },
 
