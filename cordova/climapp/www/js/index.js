@@ -44,7 +44,11 @@ var app = {
 		this.receivedEvent('deviceready');
 		
 		if( device.platform === "iOS"){
-			window.FirebasePlugin.grantPermission();
+			window.FirebasePlugin.hasPermission(function(data) { 
+				if( !data.isEnabled ){
+					window.FirebasePlugin.grantPermission();
+				}
+			});
 		}
 		app.bindNotificationEvents();
     },
