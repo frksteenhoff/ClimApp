@@ -196,6 +196,7 @@ function heatLevelTips( index, level, kb, pageID, translations, language){
 			"d_tre": kb.thermalindices.phs[ index].D_Tre,
 			"d_sw": kb.thermalindices.phs[ index].Dwl50,
 			"sw_tot_g": kb.thermalindices.phs[ index].SWtotg,
+			"lang": language, // locale
 		};
 		var url = "https://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
 		$.get( url, data).done( function(data, status, xhr){
