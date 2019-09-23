@@ -331,7 +331,6 @@ function getLocation(kb) {
 	if(customLocationEnabled(kb)) {
 		lat = kb.user.settings.coordinates_lat;
 		lon = kb.user.settings.coordinates_lon;
-		console.log("Custom location enabled: " + lat + ", " + lon);
 	} else {
 		lat = kb.position.lat;
 		lon = kb.position.lng;
@@ -339,13 +338,16 @@ function getLocation(kb) {
 	return [lat, lon];
 }
 
+// Returns true if coordinates have been saved or position is fetched from api
 function locationSetCorrectly(kb) {
 	// Both coordinates are numbers, and within ranges lat: 0-90, lon: 0-180
-	return (typeof kb.user.settings.coordinates_lat === 'number' && typeof kb.user.settings.coordinates_lon === 'number') 
-			&&  
-			(kb.user.settings.coordinates_lat > 0 && kb.user.settings.coordinates_lat <= 90)
-			&&
-			(kb.user.settings.coordinates_lon > 0 && kb.user.settings.coordinates_lat <= 180)
+	return coordsIsWithinRange(kb.user.settings.coordinates_lat, kb.user.settings.coordinates_lon);
+}
+
+function coordsIsWithinRange(lat, lon) {
+	return (typeof lat === 'number' && typeof lon === 'number') 
+	&& (lat > 0 && lat <= 90)
+	&& (lon > 0 && lon <= 180)
 }
 
 /* The introduction elements follows order of JSON array */
