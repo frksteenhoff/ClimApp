@@ -37,7 +37,7 @@ function initMap() {
     });
 
     // Add a marker at the center of the map.
-    addMarker(currentCoordinates, map);
+    //addMarker(currentCoordinates, map);
 
     // Adds a marker to the map.
     function addMarker(location, map) {
@@ -49,7 +49,6 @@ function initMap() {
             map: map
         });
 
-        document.getElementById("latlon_desc").innerHTML = "New location: ";
         // Setting the location based on location object type (apparently there are two)
         if(typeof location.lat === 'number'){ 
             document.getElementById("latlon").innerHTML ="(" + location.lat + ", " + location.lng + ")";
