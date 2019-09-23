@@ -956,6 +956,7 @@ var app = {
 				self.knowledgeBase.position.lng = position.coords.longitude;
 				self.knowledgeBase.position.timestamp = new Date(position.timestamp).toJSON();
 				console.log("loc found: " + position.coords.latitude + "," + position.coords.longitude);
+				self.saveSettings(); // ned to save before using coords in updateWeather
 				self.updateWeather();
 				//setTimeout( function(){ $('i.fa-sync-alt').toggleClass("fa-spin") }, 1000 );	
 			},
@@ -990,7 +991,7 @@ var app = {
 							try {
 								let weather = JSON.parse(output);
 
-								if(customLocationEnabled(self.knowledgeBase)) { 
+								if(self.knowledgeBase.user.guards.customLocationEnabled) { 
 									// Used to show last weather station
 									self.knowledgeBase.user.settings.station = weather.station;
 								}
@@ -1732,7 +1733,7 @@ var app = {
 				
 				var [lat, lon] = getLocation(this.knowledgeBase);
 				var center = new google.maps.LatLng(lat, lon );
-				    // using global variable:
+				// using global variable:
 				window.map.panTo(center);
 				google.maps.event.trigger(window.map, 'resize');
 				
