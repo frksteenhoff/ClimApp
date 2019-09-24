@@ -648,11 +648,11 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0468,
+			"version": 2.0469,
 			"app_version": "beta",
 			"server": {
-				"dtu_ip": "http://192.38.64.244",
-				"dtu_api_base_url": "/ClimAppAPI/v1/ClimAppApi.php?apicall="
+				"dtu_ip": "https://climapp.byg.dtu.dk",
+				"dtu_api_base_url": "/ClimAppAPI/v2/ClimAppApi.php?apicall="
 			},
 			"position": {
 				"lat": 0,
