@@ -102,6 +102,7 @@ function createUserRecord(kb) {
                 // Only update this value if user has been added to database
                 resolve(true);
             } else {
+                console.log("The user might already exist.");
                 reject(false);
             }
         });
@@ -145,20 +146,18 @@ function getIndoorPrediction(kb) {
             "no": 3, // number of occupants in room (1-5)
             "tao": kb.thermalindices.ireq[0].Tair, // outdoor temp (degrees celcius)
             "rho": kb.thermalindices.ireq[0].rh, // outdoor relative humidity %
-            "sr": kb.thermalindices.ireq[index].rad, // solar radiation W/m^2
+            "sr": kb.thermalindices.ireq[0].rad // solar radiation W/m^2
         }
-        
-        //@Henriette, .done is not always reached
-        $.get(url, user_data).done(function (data, status, xhr) {
+        $.post(url, user_data).done(function (data, status, xhr) {
             if (status === "success") {
                 let response = JSON.parse(data);
                 let indoorTemperature = response.temp;
-                console.log("Retrieved value from server: " + indoorTemperature);
+                console.log("Retrieved predicted temperature from server: " + indoorTemperature);
                 resolve(indoorTemperature);
             } else {
-                console.log("Failed to retrieve temperature from server.");
+                console.log("Failed to retrieve temperature prediction from server.");
                 reject(false);
             }
-        })
+        });
     })
 }

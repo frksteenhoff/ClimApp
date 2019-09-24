@@ -482,6 +482,11 @@ var app = {
 		$("div[data-listener='set_indoor_options']").on("click", function () {
 			// Load UI using indoor options
 			var target = $(this).attr("data-target");
+
+			// Get predicted indoor temperature from server
+			self.knowledgeBase.user.settings.temp_indoor_predicted = getIndoorPrediction(self.knowledgeBase);
+			self.saveSettings();
+
 			self.loadUI(target);
 		});
 	},
@@ -628,6 +633,8 @@ var app = {
 					"windspeed": "no_wind",
 					"_humidity": 0,
 
+					"temp_indoor_predicted": 0, // predicted indoor temp, false on error, otherwise double
+
 					/* Custom location */
 					"coordinates_lon": 0,
 					"coordinates_lat": 0,
@@ -648,10 +655,10 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0469,
+			"version": 2.0472,
 			"app_version": "beta",
 			"server": {
-				"dtu_ip": "https://climapp.byg.dtu.dk",
+				"dtu_ip": "http://climapp.byg.dtu.dk",
 				"dtu_api_base_url": "/ClimAppAPI/v2/ClimAppApi.php?apicall="
 			},
 			"position": {
@@ -1276,6 +1283,7 @@ var app = {
 				"utc": self.knowledgeBase.weather.utc[index],
 			};
 			self.knowledgeBase.thermalindices.phs.push(phs_object);
+			self.saveSettings();
 		});
 	},
 	updateUI: async function () {
@@ -1885,7 +1893,6 @@ var app = {
 	updateInfo: function (index) {
 		var self = this;
 		if (this.knowledgeBase.thermalindices.ireq.length > 0 && !this.knowledgeBase.user.guards.isIndoor) {
-			// Remove weather indication from dashboard
 			$("#icon-weather").show();
 			$("#weather_desc").show();
 
@@ -2031,24 +2038,37 @@ var app = {
 				});
 
 		} else {
-			// Indoor mode
-			$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[index].Tair, this.knowledgeBase.user.settings.unit).toFixed(0));
-			$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
-			$("#humidity").html(this.translations.labels.str_humidity[this.language]);
-			$("#humidity_value").html(this.knowledgeBase.user.settings._humidity);
-			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
+			if(this.knowledgeBase.thermalindices.ireq.length > 0) {
+				// Indoor mode
+				$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[index].Tair, this.knowledgeBase.user.settings.unit).toFixed(0));
+				$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
+				$("#humidity").html(this.translations.labels.str_humidity[this.language]);
+				$("#humidity_value").html(this.knowledgeBase.user.settings._humidity);
+				$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
+				
+				// Remove weather indication from dashboard // substitute with windows open/close
+				$("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
+				$("#weather_desc").html(this.knowledgeBase.user.settings.open_windows ? this.translations.labels.indoor_open_windows[this.language] : this.translations.labels.indoor_no_open_windows[this.language]);
+				
+				// Remove redundant wind speed information when indoor
+				$("#windspeed_desc").html("");
+				$("#windspeed_unit").html("");
+				
+				// Indicate indoor/outdoor mode on dashboard
+				let isIndoor = this.knowledgeBase.user.guards.isIndoor ? this.translations.labels.str_indoor[this.language] : this.translations.labels.str_outoor[this.language];
+				$("#indoor_outdoor").html(isIndoor.toUpperCase());
 
-			// Remove weather indication from dashboard // substitute with windows open/close
-			$("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
-			$("#weather_desc").html(this.knowledgeBase.user.settings.open_windows ? this.translations.labels.indoor_open_windows[this.language] : this.translations.labels.indoor_no_open_windows[this.language]);
-
-			// Remove redundant wind speed information when indoor
-			$("#windspeed_desc").html("");
-			$("#windspeed_unit").html("");
-			
-			// Indicate indoor/outdoor mode on dashboard
-			let isIndoor = this.knowledgeBase.user.guards.isIndoor ? this.translations.labels.str_indoor[this.language] : this.translations.labels.str_outoor[this.language];
-			$("#indoor_outdoor").html(isIndoor.toUpperCase());
+				// Draw gauge -- any values that needs to be changed?
+				self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
+					([width, personalvalue, modelvalue, thermal, tip_html]) => {//
+						console.log("update info draw gauge phase 2 " + [width, personalvalue, modelvalue, thermal, tip_html]);
+						self.drawGauge('main_gauge', width, personalvalue, thermal);
+	
+						$("#tips").html(tip_html);
+						$("#circle_gauge_color").css("color", getCurrentGaugeColor(personalvalue));
+						$("#main_panel").fadeIn(500);
+					});
+			}
 		}
 	},
 	convertWeatherToChartData: function () {
