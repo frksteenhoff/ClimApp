@@ -1,40 +1,22 @@
-text_id,color,outputkey,level,en,da,nl,sv,no,el,it,de,es,fr
-,green,Default,1,The green level means that low thermal stress is forecasted.,,,,,,,,,
-,green,Default,2,"The score will increase towards higher warning levels if the weatheragravates, your activity levelincreasesor your clothing level increases.",,,,,,,,,
-,green,heatshield,1,"Maintain normal working and
- hydration procedures.",,,,,,,,,
-,green,heatshield,2,No significant heat stress is expected. No special precautions arerequiredand no further breaks than usual are needed.,,,,,,,,,
-,yellow,default,1,The yellow level means that moderate heat stress is expected.,,,,,,,,,
-,yellow,default,1,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,,,,
-,yellow,default,2,You should be able to maintain normal activities. You may experience higher thermal strain and more sweating than normal.,,,,,,,,,
-,yellow,default,2,"Consider clothing adjustments, more breaks and and drink more than normal; especially when the score approaches the red heat stress level.",,,,,,,,,
-,yellow,default,2,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,,,,
-,yellow,heatshield,1,"Pay attention to frequent drinking
- and plan small breaks.",,,,,,,,,
-,yellow,heatshield,2,"Low heat stress is expected (pre-alarm, attention).
- You should be able to maintain normal activities.
- You may experience thermal strain (generally low)
- and increased sweating. Consider clothing
- adjustment and drink more than normal.",,,,,,,,,
-,red,default,1,The red level means that high heat stress is expected.,,,,,,,,,
-,red,default,1,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,,,,
-,red,default,2,Pay special attention to drinkingsufficientduring the first days with this heat stress.,,,,,,,,,
-,red,default,2,Consider adjusting activities (heavy physical tasks during periods of the day with lowest heat) and allow time to adapt.,,,,,,,,,
-,red,default,2,Be aware that thirst is usually not asufficientindicator when losses are high.,,,,,,,,,
-,red,default,2,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,,,,
-,red,default,2,"Resting may lower heat stress by "".$restpercent.""%.",,,,,,,,,
-,red,heatshield,1,Drink frequently and increase the number of breaks with cooling.,,,,,,,,,
-,red,heatshield,2,"Moderate heat stress is expected (alarm). Your water needs will be high. Increase the number of breaks (include small breaks with cooling) and drink frequently. Remember to rehydrate after work/exercise:be aware that thirst is usually not a
- sufficientindicator when sweating is high. If this risk level is forecasted during the first summer days, pay extra attention to increase drinking and keep a good
- hydration status (drink/rehydrate with your meals) outside the working hours. Consider adjusting activities (heavy physical tasks) during cooler period of the day.",,,,,,,,,
-,dark red,default,1,This level is associated with severe heat stress,,,,,,,,,
-,dark red,default,1,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,,,,
-,dark red,default,2,The heat will impact your physical performance.,,,,,,,,,
-,dark red,default,2,Adjusting activities and allowingsufficientbreaks will benefit your overall daily ability to cope with the heat,,,,,,,,,
-,dark red,default,2,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,,,,
-,dark red,default,2,"Resting may lower heat stress by "".$restpercent.""%.",,,,,,,,,
-,dark red,default,2,"You should drink about "".$sw_p_h."" liter per hour to compensate your sweat loss.",,,,,,,,,
-,dark red,heatshield,1,"Drink often, even more than 1 L/h and schedule frequent breaks in shadow or cooled area.",,,,,,,,,
-,dark red,heatshield,2,"High heat stress is expected (emergency). This level is associated with severe heat stress. It is strongly suggested to adjust work – use active cooling: schedule frequent breaks in shadow or cooled area where you can hydrate. Additional
- drinking is required (water needs may be more than 1 L/h). If possible, after consulting your doctor, add salt to your meals. Consider adjusting activities
- (moderate-heavy physical tasks) during cooler period of the day.",,,,,,,,,
+text_id,color,key,level,en,da,nl,sv,no,el,it,de,es,fr
+,green,default,1,The green level means that low thermal stress is forecasted.,"Når din score ligger i det grønne område indikerer det, at det forventede termiske stress er lavt.",,,Det grønne nivået betyr at lav termisk belastning er forventet.,,Il livello verde significa che è previsto un basso stress termico.,,,
+,green,default,2,"The score will increase towards higher warning levels if the weather aggravates, your activity level increases or your clothing level increases.","Scoren stiger mod højere advarselsniveauer, hvis vejret forværres, dit aktivitetsniveau falder eller du tager noget af dit tøj af",,,"Poengsummen vil øke mot høyere advarselsnivå hvis været forverres, aktivitetsnivået ditt synker eller mengden av klær du har på blir mindre",,"Il punteggio aumenterà verso maggiori livelli di allarme se il tempo atmosferico si aggraverà, se aumenterà la tua attività o il tuo livello di abbigliamento.",,,
+,yellow,default,1,The yellow level means that moderate heat stress is expected.,,,,,,Il livello giallo indica che è previsto un moderato stress termico da caldo.,,,
+,yellow,heattips_clothing,1,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,"Il tuo vestiario aumenta del "".$cafpercent.""% lo stress termico da caldo.",,,
+,yellow,heattips_drinking,2,You should be able to maintain normal activities. You may experience higher thermal strain and more sweating than normal.,,,,,,Dovresti essere in grado di mantenere le normali attività. Potresti riscontrare uno strain termico ed una sudorazione maggiori del normale.,,,
+,yellow,heattips_clothing,2,"Consider clothing adjustments, more breaks and and drink more than normal; especially when the score approaches the red heat stress level.",,,,,,"Considera di modificare il tuo abbigliamento, di effettuare più pause e bere più del normale; soprattutto quando il punteggio si avvicina al livello rosso di stress termico da caldo.",,,
+,yellow,heattips_clothing,2,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,"Il tuo abbigliamento aumenta del "".$cafpercent.""% lo stress termico da caldo.",,,
+,red,default,1,The red level means that high heat stress is expected.,,,,,,Il livello rosso significa che è possibile un elevato stress termico da caldo.,,,
+,red,heattips_clothing,1,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,"Il tuo abbigliamento aumenta "".$cafpercent.""% allo stress termico da caldo.",,,
+,red,heattips_drinking,2,Pay special attention to drinking sufficient during the first days with this heat stress.,,,,,,"Durante i primi giorni in cui è presente tale stress termico da caldo, presta particolare attenzione a bere sufficientemente",,,
+,red,default,2,Consider adjusting activities (heavy physical tasks during periods of the day with lowest heat) and allow time to adapt.,,,,,,Prendi in considerazione la possibilità di regolare le attività (attività fisiche pesanti durante le parti della giornata in cui è meno caldo) e concediti il tempo di adattarti.,,,
+,red,heattips_drinking,2,Be aware that thirst is usually not asufficientindicator when losses are high.,,,,,,"Sii consapevole del fatto che, quando le perdite sono elevate, di solito la sete non è un indicatore sufficiente.",,,
+,red,heattips_clothing,2,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,"Il tuo abbigliamento aumenta del "".$cafpercent.""% lo stress termico da caldo.",,,
+,red,default,2,"Resting may lower heat stress by "".$restpercent.""%.",,,,,,"Riposando potresti abbassare lo stress termico da caldo del "".$restpercent.""% ",,,
+,dark red,default,1,This level is associated with severe heat stress,,,,,,Questo livello è associato ad un grave stress termico da caldo,,,
+,dark red,heattips_clothing,1,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,"Il tuo abbigliamento aumenta del "".$cafpercent.""% lo stress termico da caldo.",,,
+,dark red,default,2,The heat will impact your physical performance.,,,,,,Il calore impatterà sulla tua performance fisica.,,,
+,dark red,default,2,Adjusting activities and allowingsufficientbreaks will benefit your overall daily ability to cope with the heat,,,,,,"Regolare le attività ed effettuare sufficienti interruzioni,  beneficierà sulle complessive capacità quotidiane di affrontare il caldo",,,
+,dark red,heattips_clothing,2,"Your clothing adds "".$cafpercent.""% to the heat stress.",,,,,,"Il tuo abbigliamento aumenta del "".$cafpercent.""% lo stress termico da caldo.",,,
+,dark red,default,2,"Resting may lower heat stress by "".$restpercent.""%.",,,,,,"Riposando potresti abbassare lo stress termico da caldo del "".$restpercent.""% ",,,
+,dark red,heattips_drinking,2,"You should drink about "".$sw_p_h."" liter per hour to compensate your sweat loss.",,,,,,"Dovresti bere circa "".$sw_p_h."" litri d'acqua all'ora per compensare la tua sudorazione.",,,
