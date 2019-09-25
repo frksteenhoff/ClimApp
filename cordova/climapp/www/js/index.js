@@ -1738,15 +1738,17 @@ var app = {
 			
 			if (customLocationEnabled(this.knowledgeBase)) {
 				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.user.settings.station + " (" + this.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(4)  + ")");
-				
 				var [lat, lon] = getLocation(this.knowledgeBase);
-				var center = new google.maps.LatLng(lat, lon );
+				var center = new google.maps.LatLng(lat, lon);
 				// using global variable:
 				window.map.panTo(center);
 				google.maps.event.trigger(window.map, 'resize');
-				
 			} else {
 				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.position.lat + ", " + this.knowledgeBase.position.lng);
+    			var center = new google.maps.LatLng(this.knowledgeBase.position.lat , this.knowledgeBase.position.lng);
+   				// using global variable:
+   				window.map.panTo(center);
+				google.maps.event.trigger(window.map, 'resize');
 			}
 		}
 		else if (this.currentPageID == "indoor") {
