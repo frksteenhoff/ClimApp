@@ -285,24 +285,23 @@ var app = {
 			var target = $(this).attr("data-target");
 			let title_ = self.translations.wheels.settings[target].title[self.language];
 			var items_ = self.getSelectables(target);
+			var currentValueAsString = getWheelStartingValueSettings(target, self.knowledgeBase, self.translations, self.language);
 
 			var config = {
 				title: title_,
 				items: [[items_]],
 				positiveButtonText: self.translations.labels.str_done[self.language],
 				negativeButtonText: self.translations.labels.str_cancel[self.language],
-				wrapWheelText: true,
-				/*defaultItems: [
-					{index: 0, value: currentValue}
-				]*/
+				defaultItems: {"0": currentValueAsString}, 
+				wrapWheelText: true
 			};
 			window.SelectorCordovaPlugin.showSelector(config, function (result) {
-				if (["gender", "height", "weight"].includes(target)) {
+				if (["gender", "height", "weight", "unit"].includes(target)) {
 					self.knowledgeBase.user.settings[target] = items_[result[0].index].value;
 					self.saveSettings();
 					updateDBParam(self.knowledgeBase, target);
+
 				} else if(target === "age") {
-					var thisYear = new Date().getFullYear();
 					// Set age based on year of birth
 					self.knowledgeBase.user.settings[target] = getAgeFromYearOfBirth(items_[result[0].index].value);
 					self.knowledgeBase.user.settings.yearOfBirth = items_[result[0].index].value;
@@ -436,12 +435,14 @@ var app = {
 			let title_ = self.translations.wheels.settings[target].title[self.language];
 			console.log(title_ + " " + target);
 			var items_ = self.getSelectables(target);
+			var currentValueAsString = getWheelStartingValueIndoor(target, self.knowledgeBase, self.translations, self.language);
 
 			var config = {
 				title: title_,
 				items: [[items_]],
 				positiveButtonText: self.translations.labels.str_done[self.language],
-				negativeButtonText: self.translations.labels.str_cancel[self.language]
+				negativeButtonText: self.translations.labels.str_cancel[self.language],
+				defaultItems: {"0": currentValueAsString}
 			};
 
 			window.SelectorCordovaPlugin.showSelector(config, function (result) {
@@ -564,12 +565,14 @@ var app = {
 			let title_ = self.translations.wheels[target].title[self.language];
 			console.log("target: " + target + " title " + title_);
 			var items_ = self.getSelectables(target);
+			var currentValueAsString = self.translations.wheels[target].label[self.knowledgeBase.user.settings[target+"_selected"]][self.language];
 		
 			var config = {
 				title: title_,
 				items: [[items_]],
 				positiveButtonText: self.translations.labels.str_done[self.language],
-				negativeButtonText: self.translations.labels.str_cancel[self.language]
+				negativeButtonText: self.translations.labels.str_cancel[self.language],
+				defaultItems: {"0": currentValueAsString}
 			};
 			window.SelectorCordovaPlugin.showSelector(config, function (result) {
 				self.knowledgeBase.user.settings[target + "_selected"] = items_[result[0].index].value;
@@ -630,7 +633,7 @@ var app = {
 					"thermostat_level": 3,
 					"open_windows": 0,
 					"_temperature": 20, // indoor temperature
-					"windspeed": "no_wind",
+					"windspeed": 1, // 1 no_wind, 2 some_wind, 3 strong_wind
 					"_humidity": 0,
 
 					"temp_indoor_predicted": 0, // predicted indoor temp, false on error, otherwise double
@@ -655,7 +658,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0472,
+			"version": 2.0473,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://climapp.byg.dtu.dk",
