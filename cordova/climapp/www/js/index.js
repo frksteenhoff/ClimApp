@@ -447,7 +447,6 @@ var app = {
 
 			window.SelectorCordovaPlugin.showSelector(config, function (result) {
 				self.knowledgeBase.user.settings[target] = items_[result[0].index].value;
-
 				console.log(target + ": " + items_[result[0].index].value);
 				self.saveSettings();
 				self.updateUI();
@@ -1133,12 +1132,14 @@ var app = {
 				text = self.translations.wheels.windspeed.description.some_wind[self.language];	
 				break;
 			case 3:
-				text = self.translations.wheels.windspeed.description.strong_wind[self.language];		
+				text = self.translations.wheels.windspeed.description.strong_wind[self.language];
+				break;		
 			default:
 				// To information for user with earlier version on knowledgebase
 				text = self.translations.wheels.windspeed.description.no_wind[self.language];
 				self.knowledgeBase.user.settings.windspeed = 1;
 				self.saveSettings();
+				break;
 		}
 		return text;
 	},
