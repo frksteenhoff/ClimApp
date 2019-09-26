@@ -38,6 +38,9 @@
     troubleshoot = False
 
 
+    # ----------------------------------------------------------------
+    # ## Moving old translation to archive
+    # ----------------------------------------------------------------
     print("Today's date: " + ctime())
 
     print("---------------------------------------------------")
@@ -60,11 +63,6 @@
     # ----------------------------------------------------------------
     # ## Functions
     # ----------------------------------------------------------------
-
-    # Definitions of the two functions used for conversion
-    # 
-    # * `toast` and `text` use **convertCSVtoJSON_simple**
-    # * `wheels` use **convertCSVtoJSON_nested**
 
     # Converting simple CSV structure to json
     # df                 - dataframe with csv content
@@ -111,14 +109,12 @@
 
 
     # #### **Available languages**
-    # NOTE: This information is used in all conversions, translations MUST be completed in the same languages for `text`, `toasts` and `wheels` for the program to work correctly.
+    # NOTE: This information is used in all conversions, translations MUST be completed in the same languages for all panes for the program to include it.
     # 
     # * all columns but the first contains languages, we only include those that have values for all keys.
     # * If there are ANY null values within the translations, the language will be escluded. 
     # * It is important only to include rows with values!
     # 
-    # 
-
 
     # Extracting available languages from the labels sheet
 
