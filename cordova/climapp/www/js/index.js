@@ -835,7 +835,7 @@ var app = {
 			shortenedLanguageIndicator = "no";
 		}
 
-		var availableLanguages = ["en", "da", "no", "it", "de"]; // list of all available languages, need to be updated manually
+		var availableLanguages = ["en", "da", "no", "it", "de", "fr"]; // list of all available languages, need to be updated manually
 
 		if (availableLanguages.includes(shortenedLanguageIndicator)) {
 			return shortenedLanguageIndicator;

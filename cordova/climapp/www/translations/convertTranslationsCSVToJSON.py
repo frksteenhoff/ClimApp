@@ -185,7 +185,7 @@ if(troubleshoot):
 
 # #### Reading in file with wheels text
 
-print("Converting wheels (partial content).. ")
+print("Converting wheels.. ")
 df = pd.read_csv("climapp_translation_sheet - wheels.csv")
 df.head()
 
