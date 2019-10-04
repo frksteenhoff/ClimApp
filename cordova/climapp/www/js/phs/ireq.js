@@ -98,9 +98,9 @@ heatindex.IREQ = ( function( options ){
 		if (M>=400) {
 			M=400; 
 		}
-		if (Ta>=10) {
-			Ta=10;
-		}
+		//if (Ta>=10) {
+		//	Ta=10;
+		//}
 		// Calculation of stationary w (m/s)
 		if (w<=0.0052*(M-58)) {
 			w=0.0052*(M-58);

@@ -1,0 +1,22 @@
+<div class="panel settings" id="custom_location_switch">
+    <p class="label" id="str_custom_location"></p>
+
+    <div class="inlineitems line last"> 
+        <p id="customLocationEnabled"><span id="str_input_custom_location"></span></p>
+        <p class="totheright"><label class="switch">
+        <input type="checkbox" id="custom_location_checkbox" data-target="custom_location_switch" data-listener="toggle_switch">
+        <span class="slider round"></span>
+        </label>
+        </p>
+    </div>
+</div>
+
+<div class="panel settings" id="customLocationSection">
+    <div class="input_section last">
+        <p><span id="str_location"></span><br><span class="settings" id="coordinates"></span></p>   
+    </div>
+    
+    <div class="inputcontainer last">
+        <div class="button" data-target="maps_overlay" data-listener='set_location' id="choose_location"></div>
+    </div>
+</div>

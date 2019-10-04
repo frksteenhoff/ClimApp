@@ -13,54 +13,109 @@
     Unless required by applicable law or agreed to in writing,
     software distributed under the License is distributed on an
     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
+    KIND, either express or implied.  See the License for the
     specific language governing permissions and limitations
     under the License.
 -->
 <html>
     <head>
         <!--
-        Customize this policy to fit your own app's needs. For more guidance, see:
+            Customize this policy to fit your own app's needs. For more guidance, see:
             https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-        Some notes:
+            Some notes:
             * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
             * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                * Enable inline JS: add 'unsafe-inline' to default-src
+            * Enable inline JS: add 'unsafe-inline' to default-src
         -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: content:; connect-src 'self' https://www.sensationmapps.com:* http://192.38.64.244/;">
+        <meta http-equiv="Content-Security-Policy" content="connect-src 'self' https://www.sensationmapps.com:* http://climapp.byg.dtu.dk https://maps.googleapis.com:* https://maps.gstatic.com/:*;">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, viewport-fit=cover">
         <link rel="stylesheet" type="text/css" href="css/index.css">
 		<link rel="stylesheet" type="text/css" href="css/fas.min.css">
+        <link rel="stylesheet" type="text/css" href="css/introjs.css">
         <title>Climapp</title>
     </head>
     <body>
         <div id="root" class="app">
-			<div class="navigation">
-				<div data-target="dashboard" data-listener="navbar">
-					<p><i class="fas fa-tachometer-alt fa-2x"></i> DASHBOARD</p>
-				</div>
-				<div data-target="settings" data-listener="navbar"> 
-					<p><i class="fas fa-cog fa-2x" ></i> SETTINGS</p>
+			<div class="navigation" id="nav">
+                <div data-target="settings" data-listener="navbar"> 
+                    <p><i class="fas fa-cog fa-2x" ></i></p>
                 </div>
-			</div>
-			</div>
-			<div id="content">
-			</div>
-        <!-- BK feb 6 2019: we use this div as our root, and dynamically populate it with the content we require.
-		-->    
+                <div data-target="dashboard" data-listener="navbar">
+					<p><i class="fas fa-tachometer-alt fa-2x"></i></p> 
+				</div>
+                <div data-target="forecast" data-listener="navbar">
+					<p><i class="fas fa-chart-line fa-2x"></i></p> 
+                </div>
+                <div data-target="location" data-listener="navbar">
+                    <p><i class="fas fa-map-marker-alt fa-2x"></i></p> 
+                </div>
+                <div data-target="indoor" data-listener="navbar">
+					<p><i class="fas fa-home fa-2x"></i></p> 
+				</div>
+            </div>
+            <div class="navigation_back_dashboard">
+                    <div data-target="dashboard" data-listener="navbar">
+                        <p><i class="fas fa-chevron-left fa-2x"></i></p> 
+                    </div>
+            </div>
+            <div class="navigation_back_settings">
+                <div data-target="settings" data-listener="navbar">
+                    <p><i class="fas fa-chevron-left fa-2x"></i></p> 
+                </div>
+            </div>
+            <div class="navigation_back_custom">
+                    <div data-target="location" data-listener="navbar">
+                        <p><i class="fas fa-chevron-left fa-2x"></i></p> 
+                    </div>
+            </div>
             
-        </div>
+            <div class="video-container">
+                <div class="video-background" >
+                    
+                    </div>
+                    <div class="video-foreground" id="content">
+                        <!-- BK feb 6 2019: we use this div as our root, and dynamically populate it with the content we require.
+                        -->
+                </div>
+                <div class="panel top hidden" id="google_maps_elem">
+                    <p class="header" id="location_header"></p>
+                    <div id="map"></div>
+                    <div><p id="location"></p></div>
+                    <div><p id="latlon_desc"></p></div>
+                    <div><p class="center" id="latlon"></p></div>
+
+                    <div class="inputcontainer last">
+                        <div class="button" id="str_set_location" data-target="dashboard" data-listener="set_coordinates"></div>
+                    </div>
+                </div>  
+                
+			
+			<div class="spacer"><p>&nbsp;</p></div><!-- &nbsp; so we have same style implementation for <p> as in header -->
+			  
+            </div>
         <script type="text/javascript" src="cordova.js"></script>
-		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-		<script type="text/javascript" src="js/raphael-2.1.4.min.js"></script>
-		<script type="text/javascript" src="js/justgage.js"></script>
+        <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="js/intro.js"></script>	
+        <!--<script tyep="text/javascript" src='js/weka-lib.js'></script>-->
+        <script type="text/javascript" src="js/helper_functions/dashboard.js"></script>
+        <script type="text/javascript" src="js/helper_functions/expert_dashboard.js"></script>
+        <script type="text/javascript" src="js/helper_functions/notifications.js"></script>
+        <script type="text/javascript" src="js/helper_functions/indoor.js"></script>
+        <script type="text/javascript" src="js/helper_functions/toasts.js"></script>
+        <script type="text/javascript" src="js/helper_functions/settings.js"></script>
+        <script type="text/javascript" src="js/helper_functions/feedback.js"></script>
+        <script type="text/javascript" src="js/helper_functions/dtu_database.js"></script>
+        <script type="text/javascript" src="js/helper_functions/map.js"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYMo6nfg5WlXwSpbHtl6ZIhnMBlz9jKow&callback=initMap" async defer></script>
+        <script type="text/javascript" src="translations/translations.json"></script>
+        <script type="text/javascript" src="js/Chart.bundle.min.js"></script>
+        <script type="text/javascript" src="js/gauge.min.js"></script>
 		<script type="text/javascript" src="js/phs/phs.js"></script>
 		<script type="text/javascript" src="js/phs/ireq.js"></script>
+        <script type="text/javascript" src="js/Tocca.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript" src="data/feedbackQuestions.json"></script>
-        <!-- Rating bar-->
     </body>
 </html>

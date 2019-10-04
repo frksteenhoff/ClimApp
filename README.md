@@ -2,27 +2,73 @@
 
 This is the codebase for the prototype and final app developed as a part of the ERA4CS ClimApp project. As the app is being developed the readme will be updated with necessary information.
 
-Follow the app development (with some delay) in this interactive screen visualization: [https://invis.io/W3EQCCGSN](https://invis.io/W3EQCCGSN)
+## Download ClimApp
+ClimApp is now freely available in Google Play and App Store, download it here:
 
-Note! Not all functionality is made available in the app, furthermore, the commits to the github prototype codebase will not be 1:1 with Invision App.
+* Google Play: https://play.google.com/store/apps/details?id=com.climapp.app&hl=en
+* App Store: https://apps.apple.com/us/app/climapp/id1458460604
+
+
+<img src="https://github.com/frksteenhoff/ClimApp/blob/master/Conceptual%20drawings/screens/Screenshot_20190630-194041.jpg" alt="drawing" width="250"/>  <img src="https://github.com/frksteenhoff/ClimApp/blob/master/Conceptual%20drawings/screens/Screenshot_20190630-193853.jpg" alt="drawing" width="250"/>  <img src="https://github.com/frksteenhoff/ClimApp/blob/master/Conceptual%20drawings/screens/Screenshot_20190630-193931.jpg" alt="drawing" width="250"/>  
 
 ## Requirements and installation
+### Android Studio project (in folder `ClimApp`)
 For all Java code you need to install [Java](https://java.com/en/download/) and [Android Studio](https://developer.android.com/studio/install.html) including different SDKs/JDKs and JRE. 
 
 For the best simulation of the app, use USB Debugging on your device (Developer mode).
 
 Inspection of the scripts in Jupyter Notebooks require an installation of Python 2.7.
 
+### Cordova project (in folder `cordova/climapp`)
+* `node`
+* `cordova`
 
-## App folder structure
-**ClimApp**
+Plugins
+* `cordova-android ^7.1.4`
+* `cordova-ios ^4.5.5`
+* `cordova-plugin-badge ^0.8.8`
+* `cordova-plugin-device ^2.0.2`
+* `cordova-plugin-geolocation ^4.0.1`
+* `cordova-plugin-local-notification ^0.9.0-beta.2`
+* `cordova-plugin-splashscreen ^5.0.2`
+* `cordova-plugin-statusbar ^2.4.2`
+* `cordova-plugin-whitelist ^1.3.3`
+* `cordova-plugin-x-toast ^2.7.2`
+* `cordova-wheel-selector-plugin ^1.1.2`
+* `tocca ^2.0.4` 
 
-Contains the Java code for the app
-
-Structure of the program files:
+## Structure of the program files:
 
 ``` 
- ./                                                               <-- Repository
+ cordova/climapp
+ ├── hooks    
+ ├── plugins                                                      <-- installed plugins
+ ├── res                                                          <-- assets
+ ├── www                                                          <-- source code
+      ├── css/                                                    <-- styling
+      ├── data/                                                   <-- additional data
+      ├── img/                                                    <-- assets
+      ├── js/                                                     <-- javascript files
+      |     ├── helper_functions/                                 <-- logic used in different pages in app
+      │     ├── thresholds/ 
+      │     ├── phs/
+      │     ├── test/
+      │     │     ├── functionality/                              <-- unit tests (jest)
+      │     │     ├── ui_tests/                                   <-- ui/integration tests (mocha, chai, jasmine) 
+      │     ├── index.js                                          <-- main app content -- where app runs from
+      │     ├── *.js                                              <-- logic and functionality files
+      │     └── ..
+      ├── pages/
+      │     ├── *.html                                            <-- app screens
+      │     └── ..
+      ├── translations/                                           <-- translation spreadsheets and JSON object 
+      ├── video/                                                  <-- video backgrounds
+      ├── webfonts/                                               <-- fonts
+      └── .. 
+ ├── (platforms)                                                  <-- build versions (ignored)
+ ├── (node_modules)                                               <-- modules (ignores)
+ ..
+ ClimApp                                                          <-- Android Repository (old)
  ├── ..
  ├── .idea/                                                                                                                             
  ├── app/release/                                                 <-- Application package (.apk) for Google Play

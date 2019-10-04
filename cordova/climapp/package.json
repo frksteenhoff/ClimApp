@@ -5,45 +5,40 @@
     "description": "A sample Apache Cordova application that responds to the deviceready event.",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "jest   "
     },
     "author": "Apache Cordova Team",
     "license": "Apache-2.0",
     "dependencies": {
-        "browser-sync": "^2.26.3",
-        "cheerio": "^0.19.0",
-        "cordova-android": "^7.1.4",
-        "cordova-browser": "6.0.0",
-        "cordova-ios": "^4.5.5",
-        "cordova-plugin-app-event": "^1.2.1",
-        "cordova-plugin-browsersync": "^1.1.0",
-        "cordova-plugin-device": "^2.0.2",
+        "cordova-android": "^8.0.0",
+        "cordova-ios": "^5.0.1",
+        "cordova-plugin-firebase-lib": "^5.1.1",
         "cordova-plugin-geolocation": "^4.0.1",
         "cordova-plugin-splashscreen": "^5.0.2",
+        "cordova-plugin-statusbar": "^2.4.2",
         "cordova-plugin-whitelist": "^1.3.3",
         "cordova-plugin-x-toast": "^2.7.2",
-        "cordova-wheel-selector-plugin": "^1.1.2",
-        "csp-parse": "0.0.2",
-        "de.appplant.cordova.plugin.local-notification": "^0.8.5",
-        "elementtree": "^0.1.7",
-        "glob": "^5.0.15",
-        "npm": "^2.15.12",
-        "plist": "^1.2.0",
-        "q": "^1.5.1"
+        "cordova-wheel-selector-plugin": "1.1.2",
+        "intro.js": "^2.9.3",
+        "tocca": "^2.0.4"
     },
     "cordova": {
         "plugins": {
-            "cordova-plugin-whitelist": {},
-            "cordova-plugin-geolocation": {},
             "cordova-plugin-device": {},
             "cordova-plugin-splashscreen": {},
+            "cordova-plugin-x-toast": {},
+            "cordova-plugin-whitelist": {},
+            "cordova-plugin-geolocation": {},
+            "cordova-plugin-statusbar": {},
             "cordova-wheel-selector-plugin": {},
-            "de.appplant.cordova.plugin.local-notification": {},
-            "cordova-plugin-x-toast": {}
+            "cordova-plugin-firebase-lib": {}
         },
         "platforms": [
-            "browser",
-            "ios"
+            "ios",
+            "android"
         ]
+    },
+    "devDependencies": {
+        "jest": "^24.7.1"
     }
 }
