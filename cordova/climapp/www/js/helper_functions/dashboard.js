@@ -201,7 +201,6 @@ function heatLevelTips( index, level, kb, pageID, translations, language){
 		var url = "https://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
 		$.get( url, data).done( function(data, status, xhr){
 			if(status === "success") {
-				// Need to be changed to follow translation structure
 				var header = pageID === "dashboard" ? "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i>" + gaugeTitleHeat(getPAL(kb, mode), translations, language) + "</p>" : ""; 
 				var str = header; // circle with gauge color
 				let tips = JSON.parse(data);

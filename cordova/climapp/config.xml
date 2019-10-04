@@ -37,6 +37,7 @@
         <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
             <string>Need location to get local weather reports</string>
         </edit-config>
+
         <icon height="57" src="res/icon/ios/icon-57.png" width="57" />
         <icon height="114" src="res/icon/ios/icon-57-2x.png" width="114" />
         <icon height="72" src="res/icon/ios/icon-72.png" width="72" />

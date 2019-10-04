@@ -285,24 +285,23 @@ var app = {
 			var target = $(this).attr("data-target");
 			let title_ = self.translations.wheels.settings[target].title[self.language];
 			var items_ = self.getSelectables(target);
+			var currentValueAsString = getWheelStartingValueSettings(target, self.knowledgeBase, self.translations, self.language);
 
 			var config = {
 				title: title_,
 				items: [[items_]],
 				positiveButtonText: self.translations.labels.str_done[self.language],
 				negativeButtonText: self.translations.labels.str_cancel[self.language],
-				wrapWheelText: true,
-				/*defaultItems: [
-					{index: 0, value: currentValue}
-				]*/
+				defaultItems: {"0": currentValueAsString}, 
+				wrapWheelText: true
 			};
 			window.SelectorCordovaPlugin.showSelector(config, function (result) {
-				if (["gender", "height", "weight"].includes(target)) {
+				if (["gender", "height", "weight", "unit"].includes(target)) {
 					self.knowledgeBase.user.settings[target] = items_[result[0].index].value;
 					self.saveSettings();
 					updateDBParam(self.knowledgeBase, target);
+
 				} else if(target === "age") {
-					var thisYear = new Date().getFullYear();
 					// Set age based on year of birth
 					self.knowledgeBase.user.settings[target] = getAgeFromYearOfBirth(items_[result[0].index].value);
 					self.knowledgeBase.user.settings.yearOfBirth = items_[result[0].index].value;
@@ -436,17 +435,18 @@ var app = {
 			let title_ = self.translations.wheels.settings[target].title[self.language];
 			console.log(title_ + " " + target);
 			var items_ = self.getSelectables(target);
+			var currentValueAsString = getWheelStartingValueIndoor(target, self.knowledgeBase, self.translations, self.language);
 
 			var config = {
 				title: title_,
 				items: [[items_]],
 				positiveButtonText: self.translations.labels.str_done[self.language],
-				negativeButtonText: self.translations.labels.str_cancel[self.language]
+				negativeButtonText: self.translations.labels.str_cancel[self.language],
+				defaultItems: {"0": currentValueAsString}
 			};
 
 			window.SelectorCordovaPlugin.showSelector(config, function (result) {
 				self.knowledgeBase.user.settings[target] = items_[result[0].index].value;
-
 				console.log(target + ": " + items_[result[0].index].value);
 				self.saveSettings();
 				self.updateUI();
@@ -482,6 +482,11 @@ var app = {
 		$("div[data-listener='set_indoor_options']").on("click", function () {
 			// Load UI using indoor options
 			var target = $(this).attr("data-target");
+
+			// Get predicted indoor temperature from server
+			self.knowledgeBase.user.settings.temp_indoor_predicted = getIndoorPrediction(self.knowledgeBase);
+			self.saveSettings();
+
 			self.loadUI(target);
 		});
 	},
@@ -559,12 +564,14 @@ var app = {
 			let title_ = self.translations.wheels[target].title[self.language];
 			console.log("target: " + target + " title " + title_);
 			var items_ = self.getSelectables(target);
+			var currentValueAsString = self.translations.wheels[target].label[self.knowledgeBase.user.settings[target+"_selected"]][self.language];
 		
 			var config = {
 				title: title_,
 				items: [[items_]],
 				positiveButtonText: self.translations.labels.str_done[self.language],
-				negativeButtonText: self.translations.labels.str_cancel[self.language]
+				negativeButtonText: self.translations.labels.str_cancel[self.language],
+				defaultItems: {"0": currentValueAsString}
 			};
 			window.SelectorCordovaPlugin.showSelector(config, function (result) {
 				self.knowledgeBase.user.settings[target + "_selected"] = items_[result[0].index].value;
@@ -625,8 +632,10 @@ var app = {
 					"thermostat_level": 3,
 					"open_windows": 0,
 					"_temperature": 20, // indoor temperature
-					"windspeed": "no_wind",
+					"windspeed": 1, // 1 no_wind, 2 some_wind, 3 strong_wind
 					"_humidity": 0,
+
+					"temp_indoor_predicted": 0, // predicted indoor temp, false on error, otherwise double
 
 					/* Custom location */
 					"coordinates_lon": 0,
@@ -648,11 +657,11 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0468,
+			"version": 2.0473,
 			"app_version": "beta",
 			"server": {
-				"dtu_ip": "http://192.38.64.244",
-				"dtu_api_base_url": "/ClimAppAPI/v1/ClimAppApi.php?apicall="
+				"dtu_ip": "http://climapp.byg.dtu.dk",
+				"dtu_api_base_url": "/ClimAppAPI/v2/ClimAppApi.php?apicall="
 			},
 			"position": {
 				"lat": 0,
@@ -826,7 +835,7 @@ var app = {
 			shortenedLanguageIndicator = "no";
 		}
 
-		var availableLanguages = ["en", "da", "no"];
+		var availableLanguages = ["en", "da", "no", "it", "de", "fr"]; // list of all available languages, need to be updated manually
 
 		if (availableLanguages.includes(shortenedLanguageIndicator)) {
 			return shortenedLanguageIndicator;
@@ -1123,12 +1132,14 @@ var app = {
 				text = self.translations.wheels.windspeed.description.some_wind[self.language];	
 				break;
 			case 3:
-				text = self.translations.wheels.windspeed.description.strong_wind[self.language];		
+				text = self.translations.wheels.windspeed.description.strong_wind[self.language];
+				break;		
 			default:
 				// To information for user with earlier version on knowledgebase
 				text = self.translations.wheels.windspeed.description.no_wind[self.language];
 				self.knowledgeBase.user.settings.windspeed = 1;
 				self.saveSettings();
+				break;
 		}
 		return text;
 	},
@@ -1276,6 +1287,7 @@ var app = {
 				"utc": self.knowledgeBase.weather.utc[index],
 			};
 			self.knowledgeBase.thermalindices.phs.push(phs_object);
+			self.saveSettings();
 		});
 	},
 	updateUI: async function () {
@@ -1730,15 +1742,17 @@ var app = {
 			
 			if (customLocationEnabled(this.knowledgeBase)) {
 				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.user.settings.station + " (" + this.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(4)  + ")");
-				
 				var [lat, lon] = getLocation(this.knowledgeBase);
-				var center = new google.maps.LatLng(lat, lon );
+				var center = new google.maps.LatLng(lat, lon);
 				// using global variable:
 				window.map.panTo(center);
 				google.maps.event.trigger(window.map, 'resize');
-				
 			} else {
 				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.position.lat + ", " + this.knowledgeBase.position.lng);
+    			var center = new google.maps.LatLng(this.knowledgeBase.position.lat , this.knowledgeBase.position.lng);
+   				// using global variable:
+   				window.map.panTo(center);
+				google.maps.event.trigger(window.map, 'resize');
 			}
 		}
 		else if (this.currentPageID == "indoor") {
@@ -1885,7 +1899,6 @@ var app = {
 	updateInfo: function (index) {
 		var self = this;
 		if (this.knowledgeBase.thermalindices.ireq.length > 0 && !this.knowledgeBase.user.guards.isIndoor) {
-			// Remove weather indication from dashboard
 			$("#icon-weather").show();
 			$("#weather_desc").show();
 
@@ -2031,24 +2044,37 @@ var app = {
 				});
 
 		} else {
-			// Indoor mode
-			$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[index].Tair, this.knowledgeBase.user.settings.unit).toFixed(0));
-			$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
-			$("#humidity").html(this.translations.labels.str_humidity[this.language]);
-			$("#humidity_value").html(this.knowledgeBase.user.settings._humidity);
-			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
+			if(this.knowledgeBase.thermalindices.ireq.length > 0) {
+				// Indoor mode
+				$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[index].Tair, this.knowledgeBase.user.settings.unit).toFixed(0));
+				$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
+				$("#humidity").html(this.translations.labels.str_humidity[this.language]);
+				$("#humidity_value").html(this.knowledgeBase.user.settings._humidity);
+				$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
+				
+				// Remove weather indication from dashboard // substitute with windows open/close
+				$("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
+				$("#weather_desc").html(this.knowledgeBase.user.settings.open_windows ? this.translations.labels.indoor_open_windows[this.language] : this.translations.labels.indoor_no_open_windows[this.language]);
+				
+				// Remove redundant wind speed information when indoor
+				$("#windspeed_desc").html("");
+				$("#windspeed_unit").html("");
+				
+				// Indicate indoor/outdoor mode on dashboard
+				let isIndoor = this.knowledgeBase.user.guards.isIndoor ? this.translations.labels.str_indoor[this.language] : this.translations.labels.str_outoor[this.language];
+				$("#indoor_outdoor").html(isIndoor.toUpperCase());
 
-			// Remove weather indication from dashboard // substitute with windows open/close
-			$("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
-			$("#weather_desc").html(this.knowledgeBase.user.settings.open_windows ? this.translations.labels.indoor_open_windows[this.language] : this.translations.labels.indoor_no_open_windows[this.language]);
-
-			// Remove redundant wind speed information when indoor
-			$("#windspeed_desc").html("");
-			$("#windspeed_unit").html("");
-			
-			// Indicate indoor/outdoor mode on dashboard
-			let isIndoor = this.knowledgeBase.user.guards.isIndoor ? this.translations.labels.str_indoor[this.language] : this.translations.labels.str_outoor[this.language];
-			$("#indoor_outdoor").html(isIndoor.toUpperCase());
+				// Draw gauge -- any values that needs to be changed?
+				self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
+					([width, personalvalue, modelvalue, thermal, tip_html]) => {//
+						console.log("update info draw gauge phase 2 " + [width, personalvalue, modelvalue, thermal, tip_html]);
+						self.drawGauge('main_gauge', width, personalvalue, thermal);
+	
+						$("#tips").html(tip_html);
+						$("#circle_gauge_color").css("color", getCurrentGaugeColor(personalvalue));
+						$("#main_panel").fadeIn(500);
+					});
+			}
 		}
 	},
 	convertWeatherToChartData: function () {
