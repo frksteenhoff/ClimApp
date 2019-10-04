@@ -63,9 +63,7 @@ var app = {
 		    console.log(token);
 		}, function(error) {
 		    console.error(error);
-		});
-		
-		
+		});		
 	},
 
 	// Update DOM on a Received Event
@@ -79,7 +77,7 @@ var app = {
 				console.log("Error in reading feedback questions: " + error);
 			}
 			}).fail(function (e) {
-				console.log("Failed to read translations " + e);
+				console.log("Failed to read translations " + JSON.stringify(e));
 			}).done(function (result){
 				self.feedback_questions = result;
 		});
@@ -92,7 +90,7 @@ var app = {
 				console.log("Error in reading translations: " + error);
 			}
 		}).fail(function (e) {
-			console.log("Failed to read translations " + e);
+			console.log("Failed to read translations " + JSON.stringify(e));
 		// Load settings after translations have been read
 		}).done(function (result) {
 			self.translations = result;
@@ -380,7 +378,7 @@ var app = {
 			$("#custom_location_switch").hide();
 			$("#customLocationSection").hide();
 			$("#google_maps_elem").fadeIn(500, function(){
-				window.map.setZoom( 8 );
+				google.maps.event.trigger(window.map, 'resize');
 			});
 			
 			$("#location_header").html(self.translations.labels.str_choose_location[self.language]);
@@ -501,7 +499,7 @@ var app = {
 	initGeolocationListeners: function () {
 		var self = this;
 		$("div[data-listener='geolocation']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='geolocation']").on("touchstart", function () {
+		$("div[data-listener='geolocation']").on("click", function () {
 			self.updateLocation();
 		});
 	},
@@ -567,7 +565,7 @@ var app = {
 	initActivityListeners: function () {
 		var self = this;
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='wheel']").on("touchstart", function () {
+		$("div[data-listener='wheel']").on("click", function () {
 			var target = $(this).attr("data-target");
 			let title_ = self.translations.wheels[target].title[self.language];
 			console.log("target: " + target + " title " + title_);
@@ -595,7 +593,7 @@ var app = {
 	initMenuListeners: function () {
 		var self = this;
 		$("div[data-listener='menu']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='menu']").on("touchstart", function () {
+		$("div[data-listener='menu']").on("click", function () {
 			var target = $(this).attr("data-target");
 			$("div.menuitem").removeClass("menufocus");
 			$(this).addClass("menufocus");
@@ -1076,7 +1074,6 @@ var app = {
 										var Tg = self.knowledgeBase.weather.globetemperature[key];
 										var Ta = self.knowledgeBase.weather.temperature[key];
 										var va = vair * Math.pow( 0.2, 0.25 ); //stability class D Liljgren 2008 Table 3
-										var va_ = Math.min( va, 0.2 ); //maximize to 1.5m/s (test for MRT )
 										/*
 										//kruger et al 2014
 										var D = 0.05; //diameter black globe (liljegren - ) --default value = 0.15
@@ -1091,7 +1088,7 @@ var app = {
 										console.log( "ClimateChip" );
 										
 										var WF1 = 0.4 * Math.pow( Math.abs( Tg - Ta ), 0.25 );
-										var WF2 = 2.5 * Math.pow( va_, 0.6 );
+										var WF2 = 2.5 * Math.pow( va, 0.6 );
 										var WF = WF1 > WF2 ? WF1 : WF2;
 										var Tmrt = 100.0 * Math.pow( Math.pow((Tg + 273.0) / 100.0, 4 ) + WF * (Tg - Ta), 0.25) - 273.0;
 										
@@ -1197,7 +1194,6 @@ var app = {
 	calcThermalIndices: function () {
 		this.knowledgeBase.thermalindices.ireq = [];
 		this.knowledgeBase.thermalindices.phs = [];
-
 		var options = {
 			air: {},
 			body: {
@@ -1224,8 +1220,10 @@ var app = {
 				"mod": 0
 			}
 		};
+		
 		var self = this;
 		$.each(this.knowledgeBase.weather.temperature, function (index, val) {
+			console.log( index + " val " + val);
 			options.air = {
 				"Tair": self.knowledgeBase.weather.temperature[index], 	//C
 				"rh": self.knowledgeBase.weather.humidity[index], 	//% relative humidity
@@ -1235,9 +1233,9 @@ var app = {
 				"v_air": self.knowledgeBase.weather.windspeed2m[index], 	//m/s air velocity at 2m.
 				"v_air10": self.knowledgeBase.weather.windspeed[index],  //m/s air velocity at 10m.
 			};
+			
 			heatindex.IREQ.set_options(options);
 			heatindex.IREQ.sim_run();
-
 			var ireq = heatindex.IREQ.current_result();
 			var ireq_object = {
 				"ICLminimal": ireq.ICLminimal,
@@ -1263,7 +1261,8 @@ var app = {
 				"utc": self.knowledgeBase.weather.utc[index],
 			};
 			self.knowledgeBase.thermalindices.ireq.push(ireq_object);
-
+			
+			
 			heatindex.PHS.set_options(options);
 			heatindex.PHS.sim_init();
 
@@ -1328,15 +1327,18 @@ var app = {
 			$(".navigation").show();
 			$("#main_panel").show();
 			$("#tip_panel").show();
-
 			this.initDashboardListeners();
+			
 			this.initGeolocationListeners();
+			
 			this.initActivityListeners();
+			
 			this.initMenuListeners();
+			
 			this.initToggleListeners();
-
+			
 			this.updateMenuItems();
-
+			
 			if (this.knowledgeBase.user.guards.isIndoor) {
 				// Hide forecast when custom input is used
 				$("#dashboard_header").hide();
@@ -1348,6 +1350,7 @@ var app = {
 				$("#dashboard_header").show();
 				$("#dashboard_forecast").show();
 				this.initDashboardSwipeListeners();
+				
 				this.updateInfo(this.selectedWeatherID);
 			}
 
@@ -1419,9 +1422,9 @@ var app = {
 			
 			$("#str_ireq_iso").html(this.translations.labels.str_ireq_iso[this.language]);
 			$("#details_ireq_desc").html(this.translations.sentences.details_ireq_desc[this.language]);
-			$("#details_ireq_desc_list1").html(this.translations.sentences.details_ireq_desc_list1[this.language]);
-			$("#details_ireq_desc_list2").html(this.translations.sentences.details_ireq_desc_list2[this.language]);
-			$("#details_ireq_desc_list3").html(this.translations.sentences.details_ireq_desc_list3[this.language]);
+			$("#details_ireq_list1").html(this.translations.sentences.details_ireq_desc_list1[this.language]);
+			$("#details_ireq_list2").html(this.translations.sentences.details_ireq_desc_list2[this.language]);
+			$("#details_ireq_list3").html(this.translations.sentences.details_ireq_desc_list3[this.language]);
 
 			$("#details_ireq_clo_1").html(this.translations.sentences.details_ireq_clo_1[this.language]);
 			$("#details_ireq_clo_2").html(this.translations.sentences.details_ireq_clo_2[this.language]);
@@ -1795,6 +1798,8 @@ var app = {
 		let selected = this.knowledgeBase.user.settings.activity_selected;
 		$("#dashboard_activity").html(this.translations.wheels.activity.label[selected][this.language]);
 		let caption_ = this.translations.wheels.activity.description[selected][this.language];
+		console.log(JSON.stringify( caption_ ));
+	
 		$("#activityCaption").html(caption_);
 
 		selected = this.knowledgeBase.user.settings.clothing_selected;
@@ -1897,6 +1902,7 @@ var app = {
 	},
 	updateInfo: function (index) {
 		var self = this;
+		console.log( "update info " + index + " " + this.knowledgeBase.thermalindices.ireq.length );
 		if (this.knowledgeBase.thermalindices.ireq.length > 0 && !this.knowledgeBase.user.guards.isIndoor) {
 			$("#icon-weather").show();
 			$("#weather_desc").show();
