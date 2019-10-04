@@ -53,7 +53,19 @@ var app = {
 				}
 			});
 		}
-		app.bindNotificationEvents();
+		window.FirebasePlugin.onNotificationOpen(function(notification) {
+			showShortToast( "Climapp has sent a notification: " + notification );
+			}, function(error) {
+		    console.error(error);
+		});
+		window.FirebasePlugin.onTokenRefresh(function(token) {
+		    // save this server-side and use it to push notifications to this device
+		    console.log(token);
+		}, function(error) {
+		    console.error(error);
+		});
+		
+		
 	},
 
 	// Update DOM on a Received Event
@@ -105,13 +117,6 @@ var app = {
 			}
 			self.updateLocation();
 			self.saveSettings();
-		});
-	},
-	bindNotificationEvents() {
-		// When user clicks "open" the feedback screen is opened
-		// This is the wanted behaviour, but currently not what happens.
-		cordova.plugins.notification.local.on('feedback_yes', function (notification, eopts) {
-			self.loadUI('feedback');
 		});
 	},
 	initNavbarListeners: function () {
@@ -374,7 +379,10 @@ var app = {
 			$(".navigation_back_custom").show();
 			$("#custom_location_switch").hide();
 			$("#customLocationSection").hide();
-			$("#google_maps_elem").fadeIn(500);
+			$("#google_maps_elem").fadeIn(500, function(){
+				window.map.setZoom( 8 );
+			});
+			
 			$("#location_header").html(self.translations.labels.str_choose_location[self.language]);
 		});
 
@@ -930,7 +938,7 @@ var app = {
 			} else {
 				// Celcius
 				for (var j = -30; j <= 60; j++) {
-					obj_array.push({ description: j + " C", value: j });
+					obj_array.push({ description: j + " &#xb0;C", value: j });
 				}
 			}
 		}
@@ -1068,7 +1076,7 @@ var app = {
 										var Tg = self.knowledgeBase.weather.globetemperature[key];
 										var Ta = self.knowledgeBase.weather.temperature[key];
 										var va = vair * Math.pow( 0.2, 0.25 ); //stability class D Liljgren 2008 Table 3
-										
+										var va_ = Math.min( va, 0.2 ); //maximize to 1.5m/s (test for MRT )
 										/*
 										//kruger et al 2014
 										var D = 0.05; //diameter black globe (liljegren - ) --default value = 0.15
@@ -1083,7 +1091,7 @@ var app = {
 										console.log( "ClimateChip" );
 										
 										var WF1 = 0.4 * Math.pow( Math.abs( Tg - Ta ), 0.25 );
-										var WF2 = 2.5 * Math.pow( va, 0.6 );
+										var WF2 = 2.5 * Math.pow( va_, 0.6 );
 										var WF = WF1 > WF2 ? WF1 : WF2;
 										var Tmrt = 100.0 * Math.pow( Math.pow((Tg + 273.0) / 100.0, 4 ) + WF * (Tg - Ta), 0.25) - 273.0;
 										
@@ -1746,14 +1754,14 @@ var app = {
 				var center = new google.maps.LatLng(lat, lon);
 				// using global variable:
 				window.map.panTo(center);
-				google.maps.event.trigger(window.map, 'resize');
 			} else {
 				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.position.lat + ", " + this.knowledgeBase.position.lng);
     			var center = new google.maps.LatLng(this.knowledgeBase.position.lat , this.knowledgeBase.position.lng);
    				// using global variable:
    				window.map.panTo(center);
-				google.maps.event.trigger(window.map, 'resize');
 			}
+			google.maps.event.trigger(window.map, 'resize');
+			
 		}
 		else if (this.currentPageID == "indoor") {
 			$(".navigation_back_settings").hide();
@@ -1776,11 +1784,11 @@ var app = {
 
 			// Values
 			//var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
-			//$("#_temperature").html( this.knowledgeBase.user.settings._temperature + " &#xb0 " + tempUnit);
-			$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
-			$("#_humidity").html(this.knowledgeBase.user.settings._humidity + " %");
-			$("#thermostat_level").html(this.knowledgeBase.user.settings.thermostat_level);
-			$("#open_windows").html(windowsOpen);
+			$("#_temperature").html( this.knowledgeBase.user.settings._temperature + " &#xb0 " + tempUnit);
+			//$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
+			//$("#_humidity").html(this.knowledgeBase.user.settings._humidity + " %");
+			//$("#thermostat_level").html(this.knowledgeBase.user.settings.thermostat_level);
+			//$("#open_windows").html(windowsOpen);
 		}
 	},
 	updateMenuItems: function () {
@@ -1858,16 +1866,7 @@ var app = {
 		let windowsize = $(window).width();
 		let width = windowsize / 2.5;
 
-		// Schedule a notification if weather conditions are out of the ordinary (more than 2 or ess -1)
-		let lowerLimit = -1; // TODO: we need to decide on these values
-		let upperLimit = 2;
-		if (personal_value < lowerLimit || personal_value > upperLimit) {
-			if (kb.user.guards.receivesNotifications) {
-				//this.scheduleDefaultNotification(); //no local notification , agreed with lars
-			} else {
-				console.log("User has opted out of notifications.");
-			}
-		}
+		
 		return [width, personal_value, model_value, thermal, tip_html];
 	},
 	getDiff: function (kb, thermal) {

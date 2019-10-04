@@ -37,7 +37,6 @@
         <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
             <string>Need location to get local weather reports</string>
         </edit-config>
-
         <icon height="57" src="res/icon/ios/icon-57.png" width="57" />
         <icon height="114" src="res/icon/ios/icon-57-2x.png" width="114" />
         <icon height="72" src="res/icon/ios/icon-72.png" width="72" />
@@ -56,6 +55,4 @@
     <plugin name="cordova-plugin-statusbar" spec="^2.4.2" />
     <plugin name="cordova-wheel-selector-plugin" spec="~1.1.2" />
     <plugin name="cordova-plugin-device" spec="^2.0.2" />
-    <engine name="ios" spec="^5.0.1" />
-    <engine name="android" spec="^8.0.0" />
 </widget>

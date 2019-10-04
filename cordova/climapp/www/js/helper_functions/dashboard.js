@@ -11,6 +11,7 @@ function gaugeTitleCold(val, translations, language) {
 }
 
 function gaugeTitleHeat(val, translations, language) {
+	console.log( val+  " " + language );
 	var labels = translations.labels;
     if ( val < 1 ) return labels.str_no_stress[language];
     else if ( val < 2 ) return labels.str_heat_minor[language];
@@ -199,9 +200,18 @@ function heatLevelTips( index, level, kb, pageID, translations, language){
 			"lang": language, // locale
 		};
 		var url = "https://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
+		console.log("getting riskval : ");
+		
+		var riskval = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, true );
+		console.log("riskval : "+ riskval);
+		
+		var risklabel = gaugeTitleHeat( riskval, translations, language);
+		console.log("risklabel : "+ risklabel);
+		
 		$.get( url, data).done( function(data, status, xhr){
 			if(status === "success") {
-				var header = pageID === "dashboard" ? "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i>" + gaugeTitleHeat(getPAL(kb, mode), translations, language) + "</p>" : ""; 
+				
+				var header = pageID === "dashboard" ? "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i>" + risklabel + "</p>" : ""; 
 				var str = header; // circle with gauge color
 				let tips = JSON.parse(data);
 				console.log(JSON.stringify(tips));
