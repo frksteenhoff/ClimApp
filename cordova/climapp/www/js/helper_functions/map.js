@@ -6,7 +6,7 @@ function initMap() {
     var currentCoordinates = { lat: 55.676098, lng: 12.568337 };
 
     // Each marker is labeled with a single alphabetical character.
-    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var labels = 'BCDEFGHIJKLMNOPQRSTUVWXYZ';
     var labelIndex = 0;
 
     let options = { timeout: 30000 };
@@ -27,7 +27,8 @@ function initMap() {
 	*/
 	//window.map so map is available global scope
     window.map = new google.maps.Map(document.getElementById('map'), { 
-        center: currentCoordinates,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+      	center: new google.maps.LatLng(55.676098, 12.568337),
         zoom: 8
     });
 

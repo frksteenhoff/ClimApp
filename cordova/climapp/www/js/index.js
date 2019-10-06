@@ -378,7 +378,17 @@ var app = {
 			$("#custom_location_switch").hide();
 			$("#customLocationSection").hide();
 			$("#google_maps_elem").fadeIn(500, function(){
-				google.maps.event.trigger(window.map, 'resize');
+				
+				console.log("a");
+				var [lat, lon] = getLocation(self.knowledgeBase);
+				var point = new google.maps.LatLng(lat, lon);
+		        var marker = new google.maps.Marker({
+		            position: point,
+		            label: "A",
+		            map: window.map
+		        });
+				console.log("b");
+			    window.map.panTo(point);
 			});
 			
 			$("#location_header").html(self.translations.labels.str_choose_location[self.language]);
@@ -464,7 +474,7 @@ var app = {
 		$("input[data-listener='toggle_switch']").off(); //prevent multiple instances of listeners on same object
 		$("input[data-listener='toggle_switch']").on("click", function () {
 			var target = $(this).attr("data-target");
-
+			/*
 			if (target === "indoor_switch") {
 				var isChecked = $(this).is(":checked");
 				self.knowledgeBase.user.guards.isIndoor = isChecked;
@@ -481,6 +491,9 @@ var app = {
 				}
 			}
 			showShortToast(customText);
+			*/
+			showShortToast("indoor mode update scheduled for october 15th");
+			
 			self.saveSettings();
 		});
 
