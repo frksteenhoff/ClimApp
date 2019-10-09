@@ -64,6 +64,7 @@ var app = {
 		}, function(error) {
 		    console.error(error);
 		});		
+		
 	},
 
 	// Update DOM on a Received Event
@@ -1703,20 +1704,27 @@ var app = {
 			let index = 0;//does not really matter, thermal and width are required
 
 			// Set page content
-			$("#str_forecast").html(this.translations.labels.str_forecast[this.language]);
-			$("#forecast_desc").html(this.translations.sentences.forecast_desc[this.language]);
-			$("#forecast_disclaimer").html(this.translations.sentences.forecast_disclaimer[this.language]);
-
-			$("#str_activity").html(this.translations.labels.str_activity[this.language]);
-			$("#str_clothing").html(this.translations.labels.str_clothing[this.language]);
-			$("#str_headgear").html(this.translations.labels.str_headgear[this.language]);
-
-			$("#str_activity_level").html(this.translations.labels.str_activity_level[this.language]);
-			$("#str_clothing_level").html(this.translations.labels.str_clothing_level[this.language]);
-			$("#head_gear").html(this.translations.labels.str_headgear[this.language]);
+			
 
 			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, false).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {
+					
+					$("#str_forecast").html(this.translations.labels.str_forecast[this.language]);
+					if( thermal === "heat" ){
+						$("#forecast_desc").html(this.translations.sentences.forecast_desc[this.language]);
+						$("#forecast_disclaimer").html(this.translations.sentences.forecast_disclaimer[this.language]);
+					}
+					else{
+						$("#forecast_desc").html( "The forecast of your expected cold stress is shown below"); //requires language edit
+					}
+
+					$("#str_activity").html(this.translations.labels.str_activity[this.language]);
+					$("#str_clothing").html(this.translations.labels.str_clothing[this.language]);
+					$("#str_headgear").html(this.translations.labels.str_headgear[this.language]);
+
+					$("#str_activity_level").html(this.translations.labels.str_activity_level[this.language]);
+					$("#str_clothing_level").html(this.translations.labels.str_clothing_level[this.language]);
+					$("#head_gear").html(this.translations.labels.str_headgear[this.language]);
 					this.drawChart("forecast_canvas", width, thermal);
 				});
 		}
@@ -1846,16 +1854,10 @@ var app = {
 		let icl_worn = getClo(kb);
 		let cold_index = this.calculateColdIndex( icl_neutral, icl_min, icl_worn); // minimal - worn, if negative you do not wear enough clothing
 		
-		console.log( "cold_index " + cold_index );
 		
 		let personal_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, true );
-		
-		console.log( "personal_heat_index " + personal_heat_index );
-		
 		let model_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, false );
-		
-		console.log( "model_heat_index " + model_heat_index );
-		
+				
 		
 		let draw_cold_gauge = this.isDrawColdGauge( cold_index, personal_heat_index, index );
 		let draw_heat_gauge = this.isDrawHeatGauge( cold_index, personal_heat_index, index );
@@ -1915,7 +1917,6 @@ var app = {
 	},
 	updateInfo: function (index) {
 		var self = this;
-		console.log( "update info " + index + " " + this.knowledgeBase.thermalindices.ireq.length );
 		if (this.knowledgeBase.thermalindices.ireq.length > 0 && !this.knowledgeBase.user.guards.isIndoor) {
 			$("#icon-weather").show();
 			$("#weather_desc").show();
@@ -2095,40 +2096,71 @@ var app = {
 			}
 		}
 	},
-	convertWeatherToChartData: function () {
-		var data = {
-			"labels": [],
-			"wbgt": { "points": [] },
-			"wbgt_max": { "points": [] },
-			"ral": { "points": [] },
-			"pal": { "points": [] },
-			"ymax": 0,
-		};
-		for (var i = 0; i < this.maxForecast; i++) {
-			var wbgt_min = this.knowledgeBase.thermalindices.phs[i].wbgt;
-			var wbgt_effective_min = getWBGTeffective(wbgt_min, this.knowledgeBase);
-
-			var item = {
-				x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
-				y: 1.0 * wbgt_effective_min
+	convertWeatherToChartData: function ( thermal ) {
+		var data;
+		if( thermal === "heat" ){
+			data = {
+				"labels": [],
+				"min": { "points": [] },
+				"max": { "points": [] },
+				"ral": { "points": [] },
+				"pal": { "points": [] },
+				"ymax": 0,
+				"ymin": 100,
 			};
+			for (var i = 0; i < this.maxForecast; i++) {
+				var wbgt_min = this.knowledgeBase.thermalindices.phs[i].wbgt;
+				var wbgt_effective_min = getWBGTeffective(wbgt_min, this.knowledgeBase);
 
-			data.labels.push(item.x);
-			data.wbgt.points.push(item);
+				var item = {
+					x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
+					y: 1.0 * wbgt_effective_min
+				};
 
-			var wbgt_max = this.knowledgeBase.thermalindices.phs[i].wbgt_max;
-			var wbgt_effective_max = getWBGTeffective(wbgt_max, this.knowledgeBase);
-			item = {
-				x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
-				y: 1.0 * wbgt_effective_max
+				data.labels.push(item.x);
+				data.min.points.push(item);
+
+				var wbgt_max = this.knowledgeBase.thermalindices.phs[i].wbgt_max;
+				var wbgt_effective_max = getWBGTeffective(wbgt_max, this.knowledgeBase);
+				item = {
+					x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
+					y: 1.0 * wbgt_effective_max
+				};
+				data.max.points.push(item);
+
+				data.ymax = Math.max( data.ymax, 1.0 * wbgt_effective_max );
+				data.ymin = Math.min( data.ymin, 1.0 * wbgt_effective_min );
+				
+			}
+		}
+		else{
+			console.log("populating cold arrays for graph");
+			data = {
+				"labels": [],
+				"coldindex": { "points": [] },//
+				"ymax": 0,
 			};
-			data.wbgt_max.points.push(item);
-
-			data.ymax = Math.max(data.ymax, 1.0 * wbgt_effective_max);
+			var icl_worn = getClo(this.knowledgeBase);
+			
+			for (var i = 0; i < this.maxForecast; i++) {
+				
+				var icl_min = this.knowledgeBase.thermalindices.ireq[i].ICLminimal;
+				var icl_neutral = this.knowledgeBase.thermalindices.ireq[i].ICLneutral;
+				var cold_index = this.calculateColdIndex(icl_neutral, icl_min, icl_worn); // minimal - worn, if negative you do not wear enough clothing
+				var item = {
+					x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
+					y: 1.0 * Math.max(0, cold_index ) //lower limit of green
+				};
+				data.labels.push(item.x);
+				data.coldindex.points.push(item);	
+				data.ymax = Math.max(data.ymax, 1.0 * cold_index);
+							
+			}
 		}
 		return data;
 	},
 	drawChart: function (id, width, thermal) {
+		console.log( thermal);
 		var ctx = document.getElementById(id).getContext('2d');
 
 		if (ctx.canvas.width !== width || ctx.canvas.height !== width) {
@@ -2136,85 +2168,140 @@ var app = {
 			ctx.canvas.width = 0.95 * $(window).width();
 		}
 
-		/*
-		var ral = RAL( this.knowledgeBase );
-		var pal = ral + getPAL( this.knowledgeBase, thermal );
-		*/
-		var data = this.convertWeatherToChartData();
+		var data = this.convertWeatherToChartData( thermal );
 
 		var x_from = data.labels[0];
 		var x_to = data.labels[data.labels.length - 1];
+		
+		var levels = [];
+		var max_y = 0;//cold level
+		var min_y = 0;
+		if( thermal === "heat" ){
+			
+			var ral = RAL(this.knowledgeBase);
+			var pal = ral - getPAL(this.knowledgeBase, thermal);
 
-		var ral = RAL(this.knowledgeBase);
-		var pal = ral - getPAL(this.knowledgeBase, thermal);
-
-		var green_y = 0.8 * pal;
-		var yellow_y = 1.0 * pal;
-		var orange_y = 1.2 * pal;
-		var red_y = Math.ceil(Math.max(1.5 * pal, data.ymax + 1));
-		console.log([green_y, yellow_y, orange_y, red_y]);
-
+			var green_y = 0.8 * pal;
+			var yellow_y = 1.0 * pal;
+			var orange_y = 1.2 * pal;
+			var red_y = Math.ceil(Math.max(1.5 * pal, data.ymax + 1));
+			max_y = red_y;
+			min_y = data.ymin - 1;
+			levels = [{
+								label: "wbgt",
+								backgroundColor: 'rgba(255,255,255,0.3)',
+								borderColor: 'rgba(255,255,255,1)',
+								borderWidth: 2,
+								fill: false,
+								data: data.min.points,
+								cubicInterpolationMode: 'monotone'
+							},
+							{
+								label: "wbgt max",
+								backgroundColor: 'rgba(255,255,255,0.7)',
+								borderColor: 'rgba(255,255,255,1)',
+								borderWidth: 2,
+								fill: '-1',
+								data: data.max.points,
+								cubicInterpolationMode: 'monotone'
+							},
+							{
+								label: "red",
+								backgroundColor: 'rgba(180,0,0,.5)',
+								borderColor: 'rgba(180,0,0,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: red_y }, { x: x_to, y: red_y }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0
+							},
+							{
+								label: "orange",
+								backgroundColor: 'rgba(255,125,0,.5)',
+								borderColor: 'rgba(255,125,0,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: orange_y }, { x: x_to, y: orange_y }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0
+							},
+							{
+								label: "yellow",
+								backgroundColor: 'rgba(255,255,0,.5)',
+								borderColor: 'rgba(255,255,0,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: yellow_y }, { x: x_to, y: yellow_y }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0
+							},
+							{
+								label: "green",
+								backgroundColor: 'rgba(0,255,0,.5)',
+								borderColor: 'rgba(0,255,0,1)',
+								borderWidth: 2,
+								fill: "origin",
+								data: [{ x: x_from, y: green_y }, { x: x_to, y: green_y }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0
+							} ];
+		}
+		else{		
+			max_y = Math.ceil( Math.max( 4, data.ymax + 1));	
+			levels = [	{
+								label: "coldrisk",
+								backgroundColor: 'rgba(255,255,255,0.3)',
+								borderColor: 'rgba(255,255,255,1)',
+								borderWidth: 2,
+								fill: false,
+								data: data.coldindex.points,
+								cubicInterpolationMode: 'monotone'
+							},
+							{
+								label: "darkblue",
+								backgroundColor: 'rgba(0,0,180,.5)',
+								borderColor: 'rgba(0,0,180,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: 4 }, { x: x_to, y: 4 }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0
+							},
+							{
+								label: "blue",
+								backgroundColor: 'rgba(0,100,255,.5)',
+								borderColor: 'rgba(0,100,255,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: 3 }, { x: x_to, y: 3 }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0
+							},
+							{
+								label: "cyan",
+								backgroundColor: 'rgba(0,180,180,.5)',
+								borderColor: 'rgba(0,180,180,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: 2 }, { x: x_to, y: 2 }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0
+							},
+							{
+								label: "green",
+								backgroundColor: 'rgba(0,255,0,.5)',
+								borderColor: 'rgba(0,255,0,1)',
+								borderWidth: 2,
+								fill: "origin",
+								data: [{ x: x_from, y: 1 }, { x: x_to, y: 1 }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0
+							} ];	
+		}
+		var ylabel = thermal === "heat" ? "Heat index" : "Cold index";
 		var chartData = {
 			labels: data.labels,
-			datasets: [{
-				label: "wbgt",
-				backgroundColor: 'rgba(255,255,255,0.3)',
-				borderColor: 'rgba(255,255,255,1)',
-				borderWidth: 2,
-				fill: false,
-				data: data.wbgt.points,
-				cubicInterpolationMode: 'monotone'
-			},
-			{
-				label: "wbgt max",
-				backgroundColor: 'rgba(255,255,255,0.7)',
-				borderColor: 'rgba(255,255,255,1)',
-				borderWidth: 2,
-				fill: '-1',
-				data: data.wbgt_max.points,
-				cubicInterpolationMode: 'monotone'
-			},
-			{
-				label: "red",
-				backgroundColor: 'rgba(180,0,0,.5)',
-				borderColor: 'rgba(180,0,0,1)',
-				borderWidth: 2,
-				fill: "+1",
-				data: [{ x: x_from, y: red_y }, { x: x_to, y: red_y }],
-				cubicInterpolationMode: 'monotone',
-				pointRadius: 0
-			},
-			{
-				label: "orange",
-				backgroundColor: 'rgba(255,125,0,.5)',
-				borderColor: 'rgba(255,125,0,1)',
-				borderWidth: 2,
-				fill: "+1",
-				data: [{ x: x_from, y: orange_y }, { x: x_to, y: orange_y }],
-				cubicInterpolationMode: 'monotone',
-				pointRadius: 0
-			},
-			{
-				label: "yellow",
-				backgroundColor: 'rgba(255,255,0,.5)',
-				borderColor: 'rgba(255,255,0,1)',
-				borderWidth: 2,
-				fill: "+1",
-				data: [{ x: x_from, y: yellow_y }, { x: x_to, y: yellow_y }],
-				cubicInterpolationMode: 'monotone',
-				pointRadius: 0
-			},
-			{
-				label: "green",
-				backgroundColor: 'rgba(0,255,0,.5)',
-				borderColor: 'rgba(0,255,0,1)',
-				borderWidth: 2,
-				fill: "origin",
-				data: [{ x: x_from, y: green_y }, { x: x_to, y: green_y }],
-				cubicInterpolationMode: 'monotone',
-				pointRadius: 0
-			}
-			]
+			datasets: levels
 		};
 		new Chart(ctx, {
 			type: 'line',
@@ -2232,14 +2319,15 @@ var app = {
 							fontSize: '16',
 							fontColor: 'rgba(255, 255, 255, 1)',
 							fontFamily: 'Lato',
-							max: red_y,
+							max: max_y,
+							min: min_y
 						},
 						gridLines: {
 							color: 'rgba(255, 255, 255, 1)'
 						},
 						scaleLabel: {
 							display: true,
-							labelString: "WBGT effective (\u{2103})",
+							labelString: ylabel,
 							fontColor: 'rgba(255, 255, 255, 1)',
 							fontFamily: 'Lato',
 							fontSize: '16',
