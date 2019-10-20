@@ -69,7 +69,7 @@ var app = {
 
 	// Update DOM on a Received Event
 	receivedEvent: function (id) {
-		self = this;
+		var self = this;
 		// Read in feedback questions (asynchronously)
 		$.getJSON("data/feedbackQuestions.json", function (json) {
 			try {
@@ -82,9 +82,14 @@ var app = {
 			}).done(function (result){
 				self.feedback_questions = result;
 		});
-
+		
 		// Read in translations (synchronously)
-		$.getJSON("translations/translations.json", function (json) {
+		this.loadTranslations("./translations/translations.json");
+		//"https://www.sensationmapps.com/WBGT/api/climapp/translations.json"
+	},
+	loadTranslations: function( url ){
+		var self = this;
+		$.getJSON( url, function (json) {
 			try {
 				console.log("Translations read: " + Object.keys(json));
 			} catch (error) {
@@ -92,12 +97,10 @@ var app = {
 			}
 		}).fail(function (e) {
 			console.log("Failed to read translations " + JSON.stringify(e));
+			//self.loadTranslations("./translations/translations.json");
 		// Load settings after translations have been read
 		}).done(function (result) {
-			
-			
 			self.translations = result;
-			console.log("result " + Object.keys(result));
 			self.loadSettings();
 			
 			if (self.knowledgeBase.user.guards.isFirstLogin) {//onboarding
@@ -1714,7 +1717,7 @@ var app = {
 						$("#forecast_disclaimer").html(this.translations.sentences.forecast_disclaimer[this.language]);
 					}
 					else{
-						$("#forecast_desc").html( "The forecast of your expected cold stress is shown below"); //requires language edit
+						//$("#forecast_desc").html( "The forecast of your expected cold stress is shown below"); //requires language edit
 					}
 
 					$("#str_activity").html(this.translations.labels.str_activity[this.language]);
@@ -2137,7 +2140,7 @@ var app = {
 			data = {
 				"labels": [],
 				"coldindex": { "points": [] },//
-				"ymax": 0,
+				"ymin": 99999,
 			};
 			var icl_worn = getClo(this.knowledgeBase);
 			
@@ -2145,14 +2148,14 @@ var app = {
 				
 				var icl_min = this.knowledgeBase.thermalindices.ireq[i].ICLminimal;
 				var icl_neutral = this.knowledgeBase.thermalindices.ireq[i].ICLneutral;
-				var cold_index = this.calculateColdIndex(icl_neutral, icl_min, icl_worn); // minimal - worn, if negative you do not wear enough clothing
+				var cold_index = -this.calculateColdIndex(icl_neutral, icl_min, icl_worn); // minimal - worn, if negative you do not wear enough clothing
 				var item = {
 					x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
-					y: 1.0 * Math.max(0, cold_index ) //lower limit of green
+					y: 1.0 * Math.min(0, cold_index ) //lower limit of green
 				};
 				data.labels.push(item.x);
 				data.coldindex.points.push(item);	
-				data.ymax = Math.max(data.ymax, 1.0 * cold_index);
+				data.ymin = Math.min(data.ymin, 1.0 * cold_index);
 							
 			}
 		}
@@ -2175,6 +2178,8 @@ var app = {
 		var levels = [];
 		var max_y = 0;//cold level
 		var min_y = 0;
+		 
+		
 		if( thermal === "heat" ){
 			
 			var ral = RAL(this.knowledgeBase);
@@ -2246,7 +2251,7 @@ var app = {
 							} ];
 		}
 		else{		
-			max_y = Math.ceil( Math.max( 4, data.ymax + 1));	
+			min_y = Math.ceil( Math.min( -4, data.ymin - 1));	
 			levels = [	{
 								label: "coldrisk",
 								backgroundColor: 'rgba(255,255,255,0.3)',
@@ -2257,12 +2262,22 @@ var app = {
 								cubicInterpolationMode: 'monotone'
 							},
 							{
-								label: "darkblue",
-								backgroundColor: 'rgba(0,0,180,.5)',
-								borderColor: 'rgba(0,0,180,1)',
+								label: "green",
+								backgroundColor: 'rgba(0,255,0,.5)',
+								borderColor: 'rgba(0,255,0,1)',
 								borderWidth: 2,
-								fill: "+1",
-								data: [{ x: x_from, y: 4 }, { x: x_to, y: 4 }],
+								fill: "origin",
+								data: [{ x: x_from, y: -1 }, { x: x_to, y: -1 }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0
+							}, 
+							{
+								label: "cyan",
+								backgroundColor: 'rgba(0,180,180,.5)',
+								borderColor: 'rgba(0,180,180,1)',
+								borderWidth: 2,
+								fill: "-1",
+								data: [{ x: x_from, y: -2 }, { x: x_to, y: -2 }],
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0
 							},
@@ -2271,37 +2286,36 @@ var app = {
 								backgroundColor: 'rgba(0,100,255,.5)',
 								borderColor: 'rgba(0,100,255,1)',
 								borderWidth: 2,
-								fill: "+1",
-								data: [{ x: x_from, y: 3 }, { x: x_to, y: 3 }],
+								fill: "-1",
+								data: [{ x: x_from, y: -3 }, { x: x_to, y: -3 }],
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0
 							},
 							{
-								label: "cyan",
-								backgroundColor: 'rgba(0,180,180,.5)',
-								borderColor: 'rgba(0,180,180,1)',
+								label: "darkblue",
+								backgroundColor: 'rgba(0,0,180,.5)',
+								borderColor: 'rgba(0,0,180,1)',
 								borderWidth: 2,
-								fill: "+1",
-								data: [{ x: x_from, y: 2 }, { x: x_to, y: 2 }],
+								fill: "-11",
+								data: [{ x: x_from, y: min_y }, { x: x_to, y: min_y }],
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0
-							},
-							{
-								label: "green",
-								backgroundColor: 'rgba(0,255,0,.5)',
-								borderColor: 'rgba(0,255,0,1)',
-								borderWidth: 2,
-								fill: "origin",
-								data: [{ x: x_from, y: 1 }, { x: x_to, y: 1 }],
-								cubicInterpolationMode: 'monotone',
-								pointRadius: 0
-							} ];	
+							}
+						];	
 		}
-		var ylabel = thermal === "heat" ? "Heat index" : "Cold index";
+		console.log("draw forecast: A");
+		
+		var tick_options = thermal === "heat" ? { fontSize: '16', fontColor: 'rgba(255, 255, 255, 1)', fontFamily: 'Lato', max: max_y, min: min_y } : { display: false } ;
+		console.log("draw forecast: B");
+		
+		var labelstr = thermal === "heat" ? this.translations.labels.str_heat_index[this.language]: this.translations.labels.str_cold_index[this.language];
+		console.log("draw forecast: C");
+		
 		var chartData = {
 			labels: data.labels,
 			datasets: levels
 		};
+		console.log("draw forecast: D");
 		new Chart(ctx, {
 			type: 'line',
 			data: chartData,
@@ -2314,19 +2328,13 @@ var app = {
 				legend: false,
 				scales: {
 					yAxes: [{
-						ticks: {
-							fontSize: '16',
-							fontColor: 'rgba(255, 255, 255, 1)',
-							fontFamily: 'Lato',
-							max: max_y,
-							min: min_y
-						},
+						ticks: tick_options,
 						gridLines: {
 							color: 'rgba(255, 255, 255, 1)'
 						},
 						scaleLabel: {
 							display: true,
-							labelString: ylabel,
+							labelString: labelstr,
 							fontColor: 'rgba(255, 255, 255, 1)',
 							fontFamily: 'Lato',
 							fontSize: '16',
