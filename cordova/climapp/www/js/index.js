@@ -94,6 +94,8 @@ var app = {
 			console.log("Failed to read translations " + JSON.stringify(e));
 		// Load settings after translations have been read
 		}).done(function (result) {
+			
+			
 			self.translations = result;
 			console.log("result " + Object.keys(result));
 			self.loadSettings();
@@ -493,7 +495,6 @@ var app = {
 			}
 			showShortToast(customText);
 			*/
-			showShortToast("indoor mode update scheduled for october 15th");
 			
 			self.saveSettings();
 		});
@@ -677,8 +678,8 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0473,
-			"app_version": "beta",
+			"version": 2.0474,
+			"app_version": "3.0.3",
 			"server": {
 				"dtu_ip": "http://climapp.byg.dtu.dk",
 				"dtu_api_base_url": "/ClimAppAPI/v2/ClimAppApi.php?apicall="
@@ -1632,9 +1633,7 @@ var app = {
 			$("#str_unit").html(this.translations.labels.str_unit[this.language]);
 			$("#unit").html(this.knowledgeBase.user.settings.unit + " " + this.translations.labels.str_units[this.language]);
 
-			$("#str_notifications").html(this.translations.labels.str_notifications[this.language]);
-			$("#notification_checkbox").prop("checked", this.knowledgeBase.user.guards.receivesNotifications);
-
+			
 			$("#str_other").html(this.translations.labels.str_other[this.language].toUpperCase());			
 			$("#str_about").html(this.translations.labels.str_about[this.language]);
 			$("#str_disclaimer_and_privacy").html(this.translations.labels.str_disclaimer_and_privacy[this.language]);

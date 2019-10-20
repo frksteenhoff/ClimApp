@@ -1,120 +1,122 @@
-text_id,en,da,nl,sv,no,el,it,de,es,fr
-str_dashboard,Dashboard,Instrumentbræt,,,Dashbord,,Dashboard,Instrumentenbrett,,Tableau de bord
-str_settings,Settings,Indstillinger,,,Innstillinger,,Impostazioni,Einstellungen,,Paramètres
-str_continue,Continue,Fortsæt,,,Fortsett,,Continua,Weitermachen,,Continuer
-str_colder,colder,koldere,,,kaldere,,più freddo,Kälter,,plus froid
-str_warmer,warmer,varmere,,,varmere,,più caldo,Wärmer,,plus chaud
-str_ok,OK,OK,,,OK,,OK,O.K.,,OK
-str_choose_location,Choose location,Vælg placering,,,Velg plasering,,Scegli la posizione,Lokalität auswählen,,Choisir emplacement
-str_personalise,personalise,tilpas,,,Tilpass,,Personalizza,Anpassen,,personnaliser
-str_more_info,more info,mere information,,,Mer informasjon,,Ulteriori informazioni,Weitere Information,,plus d'infos
-str_done,Done,Færdig,,,Ferdig,,Fatto,Fertig,,Terminé
-str_cancel,Cancel,Afbryd,,,Avbryt,,Cancella,Abbrechen,,Annuler
-str_set_location,Set location,Sæt placering,,,Sett plasering,,Fissa la posizione,Lokalität definieren,,Définir emplacement
-str_activity,Activity,Aktivitet,,,Aktivitet,,Attività,Aktivität,,Activité
-str_clothing,Clothing,Beklædning,,,Antrekk,,Abbigliamento,Kleidung,,Vêtements
-str_headgear,Headgear,Hovedbeskyttelse,,,Hodebeskyttelse,,Copricapo,Kopfbedeckung,,Chapeau
-str_img_cred,Image credits,Kilde,,,Kilde,,Fonte,Quelle,,Crédits images
-str_app_info,App information,Information,,,Informasjon,,Informazioni,App Information,,Information de l'app
-str_welcome,Welcome,Velkommen,,,Velkommen,,Benvenuto,Willkommen,,Bienvenue
-str_personal_settings,Personal settings,Personlige indstillinger,,,Personlige innstillinger,,Impostazioni personali,Persönliche Einstellungen,,Paramètres personnels
-str_preferences,Preferences,Foretrukne,,,Preferanser,,Preferenze,Präferenzen,,Préférences
-str_other,Other,Andet,,,Annet,,Altro,Sonstiges,,Autre
-str_indoor_outdoor_mode,Indoor/outdoor mode,Indendørs/udendørs tilstand,,,Innendørs/utendørs,,Modalità interno/esterno,Innen/außen mode,,Mode intérieur/extérieur
-str_forecast,Forecast,Vejrudsigt,,,Værmelding,,Previsioni,Vorhersage,,Prévisions
-str_more_questions,More questions,Flere spørgsmål,,,Flere spørgsmål,,Altre domande,Weitere Fragen,,Plus de questions
-str_submit_data,Submit data,Send data,,,Send data,,Invia dati,Daten übertragen,,Soumettre les données
-str_custom_location,Custom location,Valgfri placering,,,Valgfri plassering,,Posizionamento personalizzato,Wahlfreie Lokalität,,Emplacement personnalisé
-str_location,Location,Placering,,,Plassering,,Posizione,Lokalität,,Emplacement
-str_disclaimer,Disclaimer,Ansvarsfraskrivelse,,,Ansvarsfraskrivelse,,Dichiarazione di non responsabilità,Verantwortungsverzicht,,Avertissement
-str_privacy,Privacy,Datasikkerhed,,,Personvern,,Privacy,Privatleben,,Confidentialité
-str_details,Details,Detaljer,,,Detaljer,,Dettagli,Detaillen,,Détails
-str_weather,Weather,Vejr,,,Vær,,Tempo atmosferico,Wetter,,Météo
-str_user,User,Bruger,,,Bruker,,Utente,Benutzer,,Utilisateur
-str_custom,Custom,Tilpasset,,,Tilpasset,,Posizionamento personalizzato,Angepasst,,Habitude
-str_thermostat,Thermostat,Termostat,,,Termostat,,Termostato,Thermostat,,Thermostat
-str_windows,Windows,Vinduer,,,Vinduer,,Finestre,Fenstern,,Fenêtres
-str_wind_speed,Wind speed,Vindhastighed,,,Vindfart,,Velocità del vento,Windgeschwindigkeit,,Vitesse du vent
-str_humidity,Humidity,Luftfugtighed,,,Luftfuktighet,,Umidità,Luftfeuchtigkeit,,Humidité
-str_input_custom_location,Input custom location?,Angiv placering,,,Input plassering,,Specifica il posizionamento personalizzato,Input Lokalität,,Entrer emplacement personnalisé ?
-str_current_location,Current location,Nuværende placering,,,Nåværende plassering,,Posizione attuale,Jetzige Lokalität,,Emplacement actuel
-str_time,Time,Klokkeslæt,,,Klokkeslett,,Ora,Uhrzeit,,Heure
-str_air_temperature,Air temperature,Lufttemperatur,,,Luftemperatur,,Temperatura dell'aria,Lufttemperatur,,Température de l'air
-str_cloud_cover,Cloud cover,Skydække,,,Skydekke,,Copertura nuvolosa,Wolkendecke,,Couverture nuageuse
-str_solar_irradiation,Solar irradiation,Solstråling,,,Solbestråling,,Radiazione solare,Sonnenstrahlung,,Rayonnement solaire
-str_wind10,Windspeed at 10m,Vindhastighed ved 10m,,,Vindfart ved 2m,,Velocità del vento a 10m,Windgeschwindigkeit bei 2m,,Vitesse du vent à 10m
-str_wind2,Windspeed at 2m,Vindhastighed ved 2m,,,Vindfart ved 10m,,Velocità del vento a 2m,Windgeschwindigkeit bei 10m,,Vitesse du vent à 2m
-str_globe_temperature,Globe temperature,Globetemperatur,,,Klodetemperatur,,Temperatura di globo,Temperatur der Erde,,Température au thermomètre-globe
-str_mrt,Mean radiant temperature,Gennemsnitlig strålingstemperatur,,,Gjennomsnittlig strålingstemperatur,,Temperatura media radiante,Durchschnittliche Strahlungstemperatur,,Température radiante moyenne
-str_wbgt,WBGT,WBGT,,,WBGT,,WBGT,WBGT,,WBGT (température au thermomètre-globe mouillé)
-str_wbgt_effective,WBGT effective,Effektiv WBGT,,,Effektiv WBGT,,WBGT effettiva,Effektive WBGT,,WBGT effective
-str_aal,Average alert limit,Gennemsnitlig alarmgrænse,,,Gjennomsnittlig varslingsgrense,,Limite medio di allerta,Durchschnittliche Warnungsgrenze ,,Limite d'alerte moyenne
-str_pal,Personal alert limit,Personlig alarmgrænse,,,Personlig varslingsgrense,,Limite di allerta personale,Persönliche Warnungsgrenze,,Limite d'alerte personnelle
-str_windchill,Windchill,Windchill,,,Windchill,,Windchill,Windchill,,Refroidissement éolien
-str_mr,Metabolic rate,Stofskifte,,,Metabolsk nivå,,Tasso metabolico,Metabolisches Niveau,,Métabolisme
-str_surface_area,Surface area,Overfladeareal,,,Flateareal,,Area superficiale,Oberflächeninhalt,,Superficie
-str_clo,Clothing insulation,Beklædningsisolans,,,Klesisolasjon,,Isolamento dell'abbigliamento,Wärmedämmung der Kleider,,Isolation vestimentaire
-str_wind_permeability,Wind permeability,Beklædningens luftgennemtrængelighed,,,Vindpermeabilitet,,Permeabilità al vento,Windpermeabilität,,Perméabilité au vent
-str_evaporative_permeability,Evaporative permeability,Fordampningpermeabilitet,,,Fordampnings permeabilitet,,Permeabilità all'evaporazione,Verdampfungspermeabilität,,Perméabilité à l'eau 
-str_wbgt_iso,Wet Bulb Globe Temperature (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO07243),,,Wet Bulb Globe Temperature (WBGT ISO07243),,Wet Bulb Globe Temperature (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO 07243),,Température au thermomètre-globe mouillé (WBGT ISO 07243)
-str_phs_iso,Heat Strain (PHS ISO07933),Varmestress (PHS ISO07933),,,Varmestress,,Strain termico,Hitzeebelastung (PHS ISO07933),,Contrainte thermique (PHS ISO07933)
-str_windchill_jagti,Exposed skin - Windchill (JAG/TI),Udækket hud - Windchill (JAG/TI),,,Utsatt hud - windchill (JAG/TI),,Pelle esposta - Windchill (JAG/TI),Exponierte Haut - Windchill (JAG/TI),,Peau exposée - Température ressentie (JAG/TI)
-str_ireq_iso,Body temperature - Cold  stress (IREQ ISO11079),Kropstemperatur - kuldestress (IREQ ISO11079),,,Kroppstemperatur,,Temperatura corporea - Stress termico da freddo,Körpertemperatur - Kältebelastung (IREQ ISO11079),,Température corporelle - Hypothermie (IREQ IS011079)
-str_min_cloth_level,minimal clothing level,Minimal beklædningsisolans,,,Minimalt klesnivå,,Livello di abbigliamento minimo,Minimales Kleidungsniveau,,niveau de protection vestimentaire minimal
-str_max_cloth_level,maximum clothing level,Maksimal beklædningsisolans,,,Maksimalt klesnivå,,Livello di abbigliamento massimo,Maximales Kleidungsniveau,,niveau de protection vestimentaire maximal
-str_weather_report,weather report,Vejrudsigt,,,Værmelding,,Relazione meteo,Wetterbericht,,bulletin météo
-str_indoor,Indoor,Indendørs,,,Innendørs,,Interno,Innen,,Intérieur
-str_outdoor,Outdoor,Udendørs,,,Utendørs,,Esterno,Außen,,Extérieur
-str_wind,Wind,Vind,,,Vind,,Vento,Wind,,Vent
-str_update_weather,update weather,opdatér vejr,,,oppdater vær,,aggiorna meteo,wetter aktualisieren,,mise à jour météo
-str_age,Age,Alder,,,Alder,,Età,Alter,,Âge
-str_height,Height,Højde,,,Høyde,,Altezza,Höhe,,Taille
-str_weight,Weight,Vægt,,,Vekt,,Peso,Gewicht,,Poids
-str_gender,Gender,Køn,,,Kjønn,,Genere,Geschlecht,,Sexe
-str_acclimatization,Acclimatization,Akklimatisering,,,Akklimatisering,,Acclimatamento,Akklimatisierung,,Acclimatation
-str_advanced_personalization,Advanced personalization,Avanceret tilpasning,,,Avansert tillpasning,,Personalizzazione avanzata,Fortschrittliche anpassung,,Personnalisation avancée
-str_reset_preferences,Reset preferences,Nulstil foretrukne,,,Tilbakestill foretrukne,,Resettare preferenze,Nullstellung der Präferenzen,,Réinitialiser préférences
-str_unit_of_measurement,Unit of measurements,Måleenheder,,,Måleenheter,,Unità di misura,Maßeinheit ,,Unité de mesure
-str_unit,Unit,Enhed,,,Enhet,,Unità,Einheit,,Unité
-str_units,Units,Enheder,,,Enheter,,Unità,Einheiten,,Unités
-str_notifications,Notifications (not functional yet),Notifikationer (virker ikke endnu),,,Varslinger,,Notifiche,Benachrichtigung (Funktioniert noch nicht) ,,Notifications (pas encore fonctionnelles)
-str_about,About,Om,,,Om,,Ulteriori informazioni,Um,,A propos
-str_disclaimer_and_privacy,Disclaimer & privacy,Ansvarsfraskrivelse og datahåndtering,,,Ansvarsfraskrivelse og personvern,,Dichiarazione di non responsabilità & privacy,Verantwortungsverzicht & Privatleben,,Averetissement & confidentialité
-str_new_location,New location,Ny placering,,,Ny plassering,,Nuova posizione,Neue Lokalität,,Nouvel emplacement
-str_era4cs,What is the ERA4CS project?,Hvad er ERA4CS-projektet?,,,Hva er ERA4CS-prosjektet?,,Cos'è il progetto ERA4CS?,Was ist das ERA4CS-Projekt?,,Qu'est-ce que le projet ERA4CS ?
-str_no_stress,no thermal stress,Ingen termisk stress,,,Ingen termisk stress,,Nessuno stress termico,Keine thermishe Belastung,,pas de stress thermique
-str_cold_minor,minor cold stress,Mindre kuldestress,,,Mindre kuldestress,,Lieve stress termico da freddo,Minimale Kältebelastung,,stress hypothermique mineur
-str_cold_significant,significant cold stress,Væsentlig kuldestress,,,Betydelig kuldestress,,significativo stress termico da freddo,Signifikante Kältebelastung,,stress hypothermique significatif
-str_cold_high,high cold stress,Højt kuldestress,,,Højt kuldestress,,elevato stress termico da freddo,Hohe Kältebelastung,,stress hypothermique élevé
-str_cold_severe,severe cold stress,Alvorlig kuldestress,,,Alvorlig kuldestress,,grave stress termico da freddo,Ernsthafte Kältebelastung,,stress hypothermique sévère
-str_cold_extreme,extreme cold stress,Ekstrem kuldestress,,,Ekstrem kuldestress,,estremo stress termico da freddo,Extreme Kältebelastung,,stress hypothermique extrême
-str_heat_minor,minor heat stress,Mindre varmestress,,,Mindre varmestress,,Lieve stress termico da caldo,Minimale Hitzebelastung,,stress hyperthermique mineur
-str_heat_significant,significant heat stress,Væsentlig varmestress,,,Betydelig varmestress,,significativo stress termico da caldo,Signifikante Hitzebelastung,,stress hyperthermique significatif
-str_heat_high,high heat stress,Højt varmestress,,,Høj varmestress,,elevato stress termico da caldo,Hohe Hitzebelastung,,stress hyperthermique élevé
-str_heat_severe,severe heat stress,Alvorlig varmestress,,,Alvorlig varmestress,,grave stress termico da caldo,Ernsthafte Hitzebelastung,,stress hyperthermique sévère
-str_heat_extreme,extreme heat stress,Ekstrem varmestress,,,Ekstrem varmestress,,estremo stress termico da caldo,Extreme Hitzebelastung,,stress hyperthermique extrême
-str_tomorrow,tomorrow,I morgen,,,I morgen,,domani,Morgen,,demain
-weather_sunny_clear,"Sunny, clear sky","Sol, klar himmel",,,"Sol, klar himmel",,"Sereno, cielo limpido","Sonne, wolkenlos",,"Ensoleillé, ciel dégagé"
-weather_broken_clouds,Broken clouds,Delvis skyet,,,Delvis skyet,,Parzialmente nuvoloso,Teilweis bewölkt,,Nuages clairsemés
-weather_overcast_clouds,Overcast clouds,Overskyet,,,Overskyet,,Cielo coperto,Bewölkt,,Ciel couvert
-weather_light_rain,Light rain,Let regn,,,Lett regn,,Pioggia leggera,Leichter Regen,,Pluie faible
-weather_light_rain_overcast,"Light rain, overcast","Let regn, overskyet",,,"Lett regn, overskyet",,"Pioggia leggera, coperto","Leichter Regen, bewölkt",,"Pluie faible, couvert"
-weather_shower_rain,Shower rain,Tung regn,,,Tung regn,,Acquazzone,Starker Regen,,Averses
-weather_clear,Clear sky,Klart,,,Klart,,Cielo lipido,Klarer Himmel,,Ciel dégagé
-indoor_open_windows,Open windows,Åbne vinduer,,,Åpne vinduer,,Finestre aperte,Offene Fenster,,Fenêtres ouvertes
-indoor_no_open_windows,No open windows,Ingen åbne vinduer,,,Ingen åpne vinduer,,Nessuna finestra aperta,Keine offenen Fenstern,,Pas de fenêtres ouvertes
-str_yes,Yes,Ja,,,Ja,,Sì,Ja,,Oui
-str_no,No,Nej,,,Nei,,No,Nein,,Non
-str_saved_location,Saved location,Gemt placering,,,Lagret plassering,,Posizione salvata,Gelagerte Lokalitäten,,Emplacement enregistré
-str_years,years,år,,,år,,Anni,Jahre,,années
-str_activity_level,Activity level,Aktivitetsniveau,,,Aktivitetsnivå,,Livello di attività,Aktivitätsebene,,Niveau d'activité
-str_clothing_level,Clothing level,Beklædningsniveau,,,Klesmengde,,Livello di abbigliamento,Kleidungsniveau,,Niveau de protection vestimentaire
-str_try_again,Try again?,Prøv igen?,,,Prøve igjen?,,Provare ancora?,Noch mal versuchen?,,Réessayer ?
-str_app_version,App version,App version,,,Appversjon,,Versione dell'app,Appversion,,Version de l'app
-str_kb_version,Knowledgebase version,Version af vidensbase,,,Versjon av kunnskapsbase,,Database,Version der Wissensbase,,Version de la base de connaissances
-str_male,Male,Mand,,,Mann,,Maschio,Mann,,Homme 
-str_female,Female,Kvinde,,,Kvinne,,Femmina,Frau,,Femme
-str_your_predicted_score,Your predicted score,Din forudsagte score,,,Din forutsagte verdi,,Il tuo punteggio previsto,Ihre vorausgesate Punktzahl,,Votre score attendu
-str_personal,Personal,Personlig,,,Personlig,,Personale,Persönlich,,Personnel
-str_alert_level,alert limit,alarmgrænse,,,Alarmgrense,,limite di allerta,Alarmgrenze,,limite d'alerte
-str_use_indoor_mode,Use indoor mode?,Slå indendørtilstand til?,,,Bruk innemodus?,,Utilizzare la modalità interna?,Innenmodus anwenden?,,Utiliser le mode intérieur ?
+﻿text_id,en,da,nl,sv,no,el,it,de,es,fr
+str_dashboard,Dashboard,Dashboard,Dashboard,,Dashbord,,Dashboard,Instrumentenbrett,,Tableau de bord
+str_settings,Settings,Indstillinger,Instellingen,,Innstillinger,,Impostazioni,Einstellungen,,Paramètres
+str_continue,Continue,Fortsæt,Verder,,Fortsett,,Continua,Weitermachen,,Continuer
+str_colder,colder,koldere,kouder,,kaldere,,più freddo,Kälter,,plus froid
+str_warmer,warmer,varmere,warmer,,varmere,,più caldo,Wärmer,,plus chaud
+str_ok,OK,OK,OK,,OK,,OK,O.K.,,OK
+str_choose_location,Choose location,Vælg placering,Kies locatie,,Velg plasering,,Scegli la posizione,Lokalität auswählen,,Choisir emplacement
+str_personalise,personalise,tilpas,Personaliseren,,Tilpass,,Personalizza,Anpassen,,personnaliser
+str_more_info,more info,mere information,Meer info,,Mer informasjon,,Ulteriori informazioni,Weitere Information,,plus d'infos
+str_done,Done,Færdig,Klaar,,Ferdig,,Fatto,Fertig,,Terminé
+str_cancel,Cancel,Afbryd,Annuleren,,Avbryt,,Cancella,Abbrechen,,Annuler
+str_set_location,Set location,Sæt placering,Stel locatie in,,Sett plasering,,Fissa la posizione,Lokalität definieren,,Définir emplacement
+str_activity,Activity,Aktivitet,Activiteit,,Aktivitet,,Attività,Aktivität,,Activité
+str_clothing,Clothing,Beklædning,Kleding,,Antrekk,,Abbigliamento,Kleidung,,Vêtements
+str_headgear,Headgear,Hovedbeskyttelse,Hoofdbedekking,,Hodebeskyttelse,,Copricapo,Kopfbedeckung,,Chapeau
+str_img_cred,Image credits,Kilde,Erkenning,,Kilde,,Fonte,Quelle,,Crédits images
+str_app_info,App information,Information,Informatie,,Informasjon,,Informazioni,App Information,,Information de l'app
+str_welcome,Welcome,Velkommen,Welkom,,Velkommen,,Benvenuto,Willkommen,,Bienvenue
+str_personal_settings,Personal settings,Personlige indstillinger,Persoonlijke instellingen,,Personlige innstillinger,,Impostazioni personali,Persönliche Einstellungen,,Paramètres personnels
+str_preferences,Preferences,Foretrukne,Voorkeuren,,Preferanser,,Preferenze,Präferenzen,,Préférences
+str_other,Other,Andet,Anders,,Annet,,Altro,Sonstiges,,Autre
+str_indoor_outdoor_mode,Indoor/outdoor mode,Indendørs/udendørs tilstand,Binnen/buiten modus,,Innendørs/utendørs,,Modalità interno/esterno,Innen/außen mode,,Mode intérieur/extérieur
+str_forecast,Forecast,Vejrudsigt,Voorspelling,,Værmelding,,Previsioni,Vorhersage,,Prévisions
+str_more_questions,More questions,Flere spørgsmål,Meer vragen,,Flere spørgsmål,,Altre domande,Weitere Fragen,,Plus de questions
+str_submit_data,Submit data,Send data,Verzenden,,Send data,,Invia dati,Daten übertragen,,Soumettre les données
+str_custom_location,Custom location,Valgfri placering,Eigen locatie,,Valgfri plassering,,Posizionamento personalizzato,Wahlfreie Lokalität,,Emplacement personnalisé
+str_location,Location,Placering,Locatie,,Plassering,,Posizione,Lokalität,,Emplacement
+str_disclaimer,Disclaimer,Disclaimer,Disclaimer,,Ansvarsfraskrivelse,,Dichiarazione di non responsabilità,Verantwortungsverzicht,,Avertissement
+str_privacy,Privacy,Datasikkerhed,Privacy,,Personvern,,Privacy,Privatleben,,Confidentialité
+str_details,Details,Detaljer,Details,,Detaljer,,Dettagli,Detaillen,,Détails
+str_weather,Weather,Vejr,Weer,,Vær,,Tempo atmosferico,Wetter,,Météo
+str_user,User,Bruger,Gebruiker,,Bruker,,Utente,Benutzer,,Utilisateur
+str_custom,Custom,Tilpasset,Aangepast,,Tilpasset,,Posizionamento personalizzato,Angepasst,,Habitude
+str_thermostat,Thermostat,Termostat,Thermostaat,,Termostat,,Termostato,Thermostat,,Thermostat
+str_windows,Windows,Vinduer,Ramen,,Vinduer,,Finestre,Fenstern,,Fenêtres
+str_wind_speed,Wind speed,Vindhastighed,Windsnelheid,,Vindfart,,Velocità del vento,Windgeschwindigkeit,,Vitesse du vent
+str_humidity,Humidity,Luftfugtighed,Luchtvochtigheid,,Luftfuktighet,,Umidità,Luftfeuchtigkeit,,Humidité
+str_input_custom_location,Input custom location?,Angiv placering,Locatie kiezen?,,Input plassering,,Specifica il posizionamento personalizzato,Input Lokalität,,Entrer emplacement personnalisé ?
+str_current_location,Current location,Nuværende placering,Huidige locatie,,Nåværende plassering,,Posizione attuale,Jetzige Lokalität,,Emplacement actuel
+str_time,Time,Klokkeslæt,Tijd,,Klokkeslett,,Ora,Uhrzeit,,Heure
+str_air_temperature,Air temperature,Lufttemperatur,Luchttemperatuur,,Luftemperatur,,Temperatura dell'aria,Lufttemperatur,,Température de l'air
+str_cloud_cover,Cloud cover,Skydække,Bewolking,,Skydekke,,Copertura nuvolosa,Wolkendecke,,Couverture nuageuse
+str_solar_irradiation,Solar irradiation,Solstråling,Zonnestraling,,Solbestråling,,Radiazione solare,Sonnenstrahlung,,Rayonnement solaire
+str_wind10,Windspeed at 10m,Vindhastighed ved 10m,Windsnelheid op 10m,,Vindfart ved 2m,,Velocità del vento a 10m,Windgeschwindigkeit bei 2m,,Vitesse du vent à 10m
+str_wind2,Windspeed at 2m,Vindhastighed ved 2m,Windsnelheid op 2m,,Vindfart ved 10m,,Velocità del vento a 2m,Windgeschwindigkeit bei 10m,,Vitesse du vent à 2m
+str_globe_temperature,Globe temperature,Globetemperatur,Bol temperatuur,,Klodetemperatur,,Temperatura di globo,Temperatur der Erde,,Température au thermomètre-globe
+str_mrt,Mean radiant temperature,Gennemsnitlig strålingstemperatur,Gemiddelde stralingstemperatuur,,Gjennomsnittlig strålingstemperatur,,Temperatura media radiante,Durchschnittliche Strahlungstemperatur,,Température radiante moyenne
+str_wbgt,WBGT,WBGT,WBGT,,WBGT,,WBGT,WBGT,,WBGT (température au thermomètre-globe mouillé)
+str_wbgt_effective,WBGT effective,Effektiv WBGT,WBGT effectief,,Effektiv WBGT,,WBGT effettiva,Effektive WBGT,,WBGT effective
+str_aal,Average alert limit,Gennemsnitlig alarmgrænse,Gemiddelde waarschuwingslimiet,,Gjennomsnittlig varslingsgrense,,Limite medio di allerta,Durchschnittliche Warnungsgrenze,,Limite d'alerte moyenne
+str_pal,Personal alert limit,Personlig alarmgrænse,Persoonlijke waarschuwingslimiet,,Personlig varslingsgrense,,Limite di allerta personale,Persönliche Warnungsgrenze,,Limite d'alerte personnelle
+str_windchill,Windchill,Windchill,Gevoelstemperatuur,,Windchill,,Windchill,Windchill,,Refroidissement éolien
+str_mr,Metabolic rate,Stofskifte,Warmteproductie,,Metabolsk nivå,,Tasso metabolico,Metabolisches Niveau,,Métabolisme
+str_surface_area,Surface area,Overfladeareal,Lichaamsoppervlak,,Flateareal,,Area superficiale,Oberflächeninhalt,,Superficie
+str_clo,Clothing insulation,Beklædningsisolans,Kledingisolatie,,Klesisolasjon,,Isolamento dell'abbigliamento,Wärmedämmung der Kleider,,Isolation vestimentaire
+str_wind_permeability,Wind permeability,Beklædningens luftgennemtrængelighed,Winddoorlaatbaarheid,,Vindpermeabilitet,,Permeabilità al vento,Windpermeabilität,,Perméabilité au vent
+str_evaporative_permeability,Evaporative permeability,Fordampningpermeabilitet,Dampdoorlaatbaarheid,,Fordampnings permeabilitet,,Permeabilità all'evaporazione,Verdampfungspermeabilität,,Perméabilité à l'eau
+str_wbgt_iso,Wet Bulb Globe Temperature (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO07243),Wet Bulb Globe Temperature (WBGT ISO07243),,Wet Bulb Globe Temperature (WBGT ISO07243),,Wet Bulb Globe Temperature (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO 07243),,Température au thermomètre-globe mouillé (WBGT ISO 07243)
+str_phs_iso,Heat Strain (PHS ISO07933),Varmestress (PHS ISO07933),Heat Straing (PHS ISO07933),,Varmestress,,Strain termico,Hitzeebelastung (PHS ISO07933),,Contrainte thermique (PHS ISO07933)
+str_windchill_jagti,Exposed skin - Windchill (JAG/TI),Udækket hud - Windchill (JAG/TI),Blootgestelde huid - Gevoelstemperatuur (JAG/TI),,Utsatt hud - windchill (JAG/TI),,Pelle esposta - Windchill (JAG/TI),Exponierte Haut - Windchill (JAG/TI),,Peau exposée - Température ressentie (JAG/TI)
+str_ireq_iso,Body temperature - Cold stress (IREQ ISO11079),Kropstemperatur - kuldestress (IREQ ISO11079),Lichaamstemperatuur - Koude stress (IREQ ISO11079),,Kroppstemperatur,,Temperatura corporea - Stress termico da freddo,Körpertemperatur - Kältebelastung (IREQ ISO11079),,Température corporelle - Hypothermie (IREQ IS011079)
+str_min_cloth_level,minimal clothing level,Minimal beklædningsisolans,Minimale kledingsniveau,,Minimalt klesnivå,,Livello di abbigliamento minimo,Minimales Kleidungsniveau,,niveau de protection vestimentaire minimal
+str_max_cloth_level,maximum clothing level,Maksimal beklædningsisolans,Maximale kledingsniveau,,Maksimalt klesnivå,,Livello di abbigliamento massimo,Maximales Kleidungsniveau,,niveau de protection vestimentaire maximal
+str_weather_report,weather report,Vejrudsigt,Weerbericht,,Værmelding,,Relazione meteo,Wetterbericht,,bulletin météo
+str_indoor,Indoor,Indendørs,Binnen,,Innendørs,,Interno,Innen,,Intérieur
+str_outdoor,Outdoor,Udendørs,Buiten,,Utendørs,,Esterno,Außen,,Extérieur
+str_wind,Wind,Vind,Wind,,Vind,,Vento,Wind,,Vent
+str_update_weather,update weather,opdatér vejrudsigt,Verversen,,oppdater vær,,aggiorna meteo,wetter aktualisieren,,mise à jour météo
+str_age,Age,Alder,Leeftijd,,Alder,,Età,Alter,,Âge
+str_height,Height,Højde,Lengte,,Høyde,,Altezza,Höhe,,Taille
+str_weight,Weight,Vægt,Gewicht,,Vekt,,Peso,Gewicht,,Poids
+str_gender,Gender,Køn,Geslacht,,Kjønn,,Genere,Geschlecht,,Sexe
+str_acclimatization,Acclimatisation,Akklimatisering,Acclimatisatie,,Akklimatisering,,Acclimatamento,Akklimatisierung,,Acclimatation
+str_advanced_personalization,Advanced personalisation,Individualisering (avancerede indstillinger),Geavanceerde instellingen,,Avansert tillpasning,,Personalizzazione avanzata,Fortschrittliche anpassung,,Personnalisation avancée
+str_reset_preferences,Reset preferences,Nulstil foretrukne,Herstel instellingen,,Tilbakestill foretrukne,,Resettare preferenze,Nullstellung der Präferenzen,,Réinitialiser préférences
+str_unit_of_measurement,Unit of measurements,Måleenheder,Eenheden,,Måleenheter,,Unità di misura,Maßeinheit,,Unité de mesure
+str_unit,Unit,Enhed,Eenheid,,Enhet,,Unità,Einheit,,Unité
+str_units,Units,Enheder,Eenheden,,Enheter,,Unità,Einheiten,,Unités
+str_notifications,Notifications,Notifikationer (virker ikke endnu),Notificaties,,Varslinger,,Notifiche,Benachrichtigung (Funktioniert noch nicht),,Notifications (pas encore fonctionnelles)
+str_about,About,Om,Over,,Om,,Ulteriori informazioni,Um,,A propos
+str_disclaimer_and_privacy,Disclaimer & privacy,Disclaimer og datahåndtering,Disclaimer & privacy,,Ansvarsfraskrivelse og personvern,,Dichiarazione di non responsabilità & privacy,Verantwortungsverzicht & Privatleben,,Averetissement & confidentialité
+str_new_location,New location,Ny placering,Nieuwe locatie,,Ny plassering,,Nuova posizione,Neue Lokalität,,Nouvel emplacement
+str_era4cs,What is the ERA4CS project?,Hvad er ERA4CS-projektet?,Wat is het ERA4CS project,,Hva er ERA4CS-prosjektet?,,Cos'è il progetto ERA4CS?,Was ist das ERA4CS-Projekt?,,Qu'est-ce que le projet ERA4CS ?
+str_no_stress,no thermal stress,Intet termisk stress,Geen thermische stress,,Ingen termisk stress,,Nessuno stress termico,Keine thermishe Belastung,,pas de stress thermique
+str_cold_minor,minor cold stress,Mindre kuldestress,Milde kou,,Mindre kuldestress,,Lieve stress termico da freddo,Minimale Kältebelastung,,stress hypothermique mineur
+str_cold_significant,significant cold stress,Væsentlig kuldestress,Koud,,Betydelig kuldestress,,significativo stress termico da freddo,Signifikante Kältebelastung,,stress hypothermique significatif
+str_cold_high,high cold stress,Højt kuldestress,Flink koud,,Højt kuldestress,,elevato stress termico da freddo,Hohe Kältebelastung,,stress hypothermique élevé
+str_cold_severe,severe cold stress,Alvorlig kuldestress,Zeer koud,,Alvorlig kuldestress,,grave stress termico da freddo,Ernsthafte Kältebelastung,,stress hypothermique sévère
+str_cold_extreme,extreme cold stress,Ekstrem kuldestress,Extreem koud,,Ekstrem kuldestress,,estremo stress termico da freddo,Extreme Kältebelastung,,stress hypothermique extrême
+str_heat_minor,minor heat stress,Mindre varmestress,Mild warm,,Mindre varmestress,,Lieve stress termico da caldo,Minimale Hitzebelastung,,stress hyperthermique mineur
+str_heat_significant,significant heat stress,Moderatvarmestress,Warm,,Betydelig varmestress,,significativo stress termico da caldo,Signifikante Hitzebelastung,,stress hyperthermique significatif
+str_heat_high,high heat stress,Højt varmestress,Heet,,Høj varmestress,,elevato stress termico da caldo,Hohe Hitzebelastung,,stress hyperthermique élevé
+str_heat_severe,severe heat stress,Alvorlig varmestress,Zeer heet,,Alvorlig varmestress,,grave stress termico da caldo,Ernsthafte Hitzebelastung,,stress hyperthermique sévère
+str_heat_extreme,extreme heat stress,Ekstrem varmestress,Extreem heet,,Ekstrem varmestress,,estremo stress termico da caldo,Extreme Hitzebelastung,,stress hyperthermique extrême
+str_tomorrow,tomorrow,I morgen,morgen,,I morgen,,domani,Morgen,,demain
+weather_sunny_clear,"Sunny, clear sky","Sol, klar himmel","Zonnig, heldere hemel",,"Sol, klar himmel",,"Sereno, cielo limpido","Sonne, wolkenlos",,"Ensoleillé, ciel dégagé"
+weather_broken_clouds,Broken clouds,Delvis skyet,Licht bewolkt,,Delvis skyet,,Parzialmente nuvoloso,Teilweis bewölkt,,Nuages clairsemés
+weather_overcast_clouds,Overcast clouds,Overskyet,Bewolkt,,Overskyet,,Cielo coperto,Bewölkt,,Ciel couvert
+weather_light_rain,Light rain,Let regn,Lichte regen,,Lett regn,,Pioggia leggera,Leichter Regen,,Pluie faible
+weather_light_rain_overcast,"Light rain, overcast","Let regn, overskyet","Lichte regen, bewolkt",,"Lett regn, overskyet",,"Pioggia leggera, coperto","Leichter Regen, bewölkt",,"Pluie faible, couvert"
+weather_shower_rain,Shower rain,Tung regn,Regen,,Tung regn,,Acquazzone,Starker Regen,,Averses
+weather_clear,Clear sky,Klart,Heldere hemel,,Klart,,Cielo lipido,Klarer Himmel,,Ciel dégagé
+indoor_open_windows,Open windows,Åbne vinduer,Ramen open,,Åpne vinduer,,Finestre aperte,Offene Fenster,,Fenêtres ouvertes
+indoor_no_open_windows,No open windows,Ingen åbne vinduer,Ramen dicht,,Ingen åpne vinduer,,Nessuna finestra aperta,Keine offenen Fenstern,,Pas de fenêtres ouvertes
+str_yes,Yes,Ja,Ja,,Ja,,Sì,Ja,,Oui
+str_no,No,Nej,Nee,,Nei,,No,Nein,,Non
+str_saved_location,Saved location,Gemt placering,Opgeslagen locatie,,Lagret plassering,,Posizione salvata,Gelagerte Lokalitäten,,Emplacement enregistré
+str_years,years,år,jaar,,år,,Anni,Jahre,,années
+str_activity_level,Activity level,Aktivitetsniveau,Activiteitsniveau,,Aktivitetsnivå,,Livello di attività,Aktivitätsebene,,Niveau d'activité
+str_clothing_level,Clothing level,Beklædningsniveau,Kledingsniveau,,Klesmengde,,Livello di abbigliamento,Kleidungsniveau,,Niveau de protection vestimentaire
+str_try_again,Try again?,Prøv igen?,Opnieuw?,,Prøve igjen?,,Provare ancora?,Noch mal versuchen?,,Réessayer ?
+str_app_version,App version,App version,App versie,,Appversjon,,Versione dell'app,Appversion,,Version de l'app
+str_kb_version,Knowledgebase version,Version af database,Kennisbasis versie,,Versjon av kunnskapsbase,,Database,Version der Wissensbase,,Version de la base de connaissances
+str_male,Male,Mand,Man,,Mann,,Maschio,Mann,,Homme
+str_female,Female,Kvinde,Vrouw,,Kvinne,,Femmina,Frau,,Femme
+str_your_predicted_score,Your predicted score,Din estimeredescore,Voorspelde score,,Din forutsagte verdi,,Il tuo punteggio previsto,Ihre vorausgesate Punktzahl,,Votre score attendu
+str_personal,Personal,Personlig,Persoonlijk,,Personlig,,Personale,Persönlich,,Personnel
+str_alert_level,alert limit,alarmgrænse,waarschuwingslimiet,,Alarmgrense,,limite di allerta,Alarmgrenze,,limite d'alerte
+str_use_indoor_mode,Use indoor mode?,Slå indendørtilstand til?,Voor binnen gebruiken?,,Bruk innemodus?,,Utilizzare la modalità interna?,Innenmodus anwenden?,,Utiliser le mode intérieur ?
+str_cold_index,Cold index,kulde indeks,Koude index,,,,,,,
+str_heat_index,Heat index,varme indeks,Hitte index,,,,,,,
