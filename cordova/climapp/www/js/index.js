@@ -1295,7 +1295,7 @@ var app = {
 				"rh": rh_indoor, 	//% relative humidity
 				"Pw_air": self.knowledgeBase.weather.watervapourpressure[index],   //kPa partial water vapour pressure
 				"Trad": T_indoor, 	//C mean radiant temperature
-				"v_air": 0.1,
+				"v_air": v_indoor,
 				"v_air10": self.knowledgeBase.weather.windspeed[index],  //m/s air velocity at 10m.
 			};
 			
