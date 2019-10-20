@@ -84,20 +84,24 @@ var app = {
 		});
 		
 		// Read in translations (synchronously)
-		this.loadTranslations("./translations/translations.json");
-		//"https://www.sensationmapps.com/WBGT/api/climapp/translations.json"
+		this.loadTranslations("http://www.hittewijzer.nl/translations/translations.json");
+		//
 	},
 	loadTranslations: function( url ){
 		var self = this;
 		$.getJSON( url, function (json) {
 			try {
-				console.log("Translations read: " + Object.keys(json));
+				console.log("Translations read from : "+url+" - " + Object.keys(json));
 			} catch (error) {
 				console.log("Error in reading translations: " + error);
 			}
-		}).fail(function (e) {
-			console.log("Failed to read translations " + JSON.stringify(e));
-			//self.loadTranslations("./translations/translations.json");
+		}).fail(function (jqXHR, textStatus, errorThrown) {
+			console.log("Failed to read translations " + JSON.stringify(jqXHR));
+			console.log("Failed to read translations " + JSON.stringify(textStatus));
+			console.log("Failed to read translations " + JSON.stringify(errorThrown));
+			
+			
+			self.loadTranslations("./translations/translations.json");
 		// Load settings after translations have been read
 		}).done(function (result) {
 			self.translations = result;
@@ -174,7 +178,9 @@ var app = {
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					self.drawGauge('feedback_gauge', width, personalvalue, thermal);
-					$("#gauge_text_top_diff").html(this.translations.labels.str_personal[this.language] + " " + this.translations.labels.str_alert_limit[this.language] + ": 0");
+					console.log("reset_adaptation - A ");
+					$("#gauge_text_top_diff").html(self.translations.labels.str_personal[self.language] + " " + self.translations.labels.str_alert_level[self.language] + ": 0");
+					console.log("reset_adaptation - B ");
 
 					// Set the value as the perceived value in knowledgebase
 					self.saveSettings();
@@ -186,50 +192,27 @@ var app = {
 			var thermal = $(this).attr("data-context");
 			console.log("adaptation context: " + thermal);
 
-			// This causes errors.. the data context in feedback.html is unknown
 			var currentPAL_ = self.knowledgeBase.user.adaptation[thermal].diff;
 			var currentPAL = 0;
 			if (currentPAL_.length > 0) {
 				currentPAL = currentPAL_[0];
 			}
-			console.log("OLD PAL : " + currentPAL);
 
 			currentPAL += 1.0 * $(this).attr("data-value");
 			self.knowledgeBase.user.adaptation[thermal].diff = [currentPAL];
-			console.log("new PAL : " + currentPAL);
 
 			// Draw gauge with current index value 
 			let index = 0; // 0 = current situation -- is this what we want?
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//					
 					self.drawGauge('feedback_gauge', width, personalvalue, thermal);
-					$("#gauge_text_top_diff").html(this.translations.labels.str_personal[this.language] + " " + thermal + " " + this.translations.labels.str_alert_limit[this.language] +": " + currentPAL);
+					$("#gauge_text_top_diff").html(self.translations.labels.str_personal[self.language] + " " + thermal + " " + self.translations.labels.str_alert_level[self.language] +": " + currentPAL);
 
 					// Set the value as the perceived value in knowledgebase
 					self.saveSettings();
 				});
 		});
-		$("input[data-listener='slider']").off(); //prevent multiple instances of listeners on same object
-		$("input[data-listener='slider']").change(function () {
-
-			var slider_value = this.value;
-			self.knowledgeBase.user.guards.feedbackSliderChanged = 1;
-
-			// Draw gauge with current index value 
-			let index = 0; // 0 = current situation -- is this what we want?
-			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
-				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
-					self.drawGauge('feedback_gauge', width, slider_value, thermal);
-
-					// Not used anymore?
-					$("#gauge_text_top_current").html(self.translations.sentences.feedback_diff_sys_pred[self.language] + ": " + getSliderDiffFromSystemPrediction(self.knowledgeBase, thermal, slider_value));
-
-					// Set the value as the perceived value in knowledgebase
-					self.knowledgeBase.user.adaptation[thermal].perceived = slider_value;
-					self.saveSettings();
-				});
-			self.saveSettings();
-		});
+	
 
 		// When user rates the feedback questions
 		$("input[data-listener='feedback']").off();
@@ -258,27 +241,14 @@ var app = {
 		$("div[data-listener='submit']").on("click", function () {
 			var target = $("#feedback_text").val();
 			let mode = self.knowledgeBase.user.adaptation.mode;
+			
 			self.feedback_questions.comment = target;
-
-			/*
-			//BK: I commented out below code because adaptation[mode].diff is updated on click already - to be discussed further. 
-			
-			// Only push diff to array on submit, otherwise we assume user is content with adaptation level
-			perceived_predicted_diff = (self.knowledgeBase.user.adaptation[mode].perceived -
-			                            self.knowledgeBase.user.adaptation[mode].predicted);
-			
-			var diff_array = self.knowledgeBase.user.adaptation[mode].diff;
-
-			if(perceived_predicted_diff !== "NaN") {
-				diff_array.unshift(perceived_predicted_diff); 
-			}
-			*/
 
 			// If user not in database, add user to database
 			self.checkIfUserExistInDB();
 
 			// Add feedback to database
-			addFeedbackToDB(self.knowledgeBase, self.translations, self.language);
+			addFeedbackToDB(self.knowledgeBase, self.feedback_questions, self.translations, self.language);
 
 			// reset values
 			$('#feedback_text').val("");
@@ -324,10 +294,8 @@ var app = {
 			});
 		});
 
-		console.log("adding settingslisteners on div[data-listener='tab']")
 		$("div[data-listener='tab']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='tab']").on("click", function () {
-			console.log("clicked");
 
 			var target = $(this).attr("data-target");
 			console.log(target);
@@ -383,17 +351,16 @@ var app = {
 			$(".navigation_back_custom").show();
 			$("#custom_location_switch").hide();
 			$("#customLocationSection").hide();
+			
 			$("#google_maps_elem").fadeIn(500, function(){
 				
-				console.log("a");
 				var [lat, lon] = getLocation(self.knowledgeBase);
 				var point = new google.maps.LatLng(lat, lon);
 		        var marker = new google.maps.Marker({
 		            position: point,
-		            label: "A",
+		            label: "",
 		            map: window.map
 		        });
-				console.log("b");
 			    window.map.panTo(point);
 			});
 			
@@ -480,7 +447,7 @@ var app = {
 		$("input[data-listener='toggle_switch']").off(); //prevent multiple instances of listeners on same object
 		$("input[data-listener='toggle_switch']").on("click", function () {
 			var target = $(this).attr("data-target");
-			/*
+			
 			if (target === "indoor_switch") {
 				var isChecked = $(this).is(":checked");
 				self.knowledgeBase.user.guards.isIndoor = isChecked;
@@ -497,18 +464,19 @@ var app = {
 				}
 			}
 			showShortToast(customText);
-			*/
+			
 			
 			self.saveSettings();
 		});
 
 		$("div[data-listener='set_indoor_options']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='set_indoor_options']").on("click", function () {
+		$("div[data-listener='set_indoor_options']").on("click", async function () {
 			// Load UI using indoor options
 			var target = $(this).attr("data-target");
 
 			// Get predicted indoor temperature from server
-			self.knowledgeBase.user.settings.temp_indoor_predicted = getIndoorPrediction(self.knowledgeBase);
+			//self.knowledgeBase.user.settings.temp_indoor_predicted = await getIndoorPrediction(self.knowledgeBase);
+			self.calcThermalIndices();
 			self.saveSettings();
 
 			self.loadUI(target);
@@ -681,8 +649,8 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0474,
-			"app_version": "3.0.3",
+			"version": 2.0475,
+			"app_version": "3.0.4",
 			"server": {
 				"dtu_ip": "http://climapp.byg.dtu.dk",
 				"dtu_api_base_url": "/ClimAppAPI/v2/ClimAppApi.php?apicall="
@@ -737,6 +705,7 @@ var app = {
 			"thermalindices": {
 				"ireq": [],
 				"phs": [],
+				"pmv": [],
 			},
 			"gauge": {
 				"highlights": [//color also in CSS, keep consistent
@@ -947,14 +916,14 @@ var app = {
 		else if (key === "_temperature") {
 			if (this.knowledgeBase.user.settings.unit !== "SI") {
 				// Fahrenheit
-				for (var i = 200; i >= -40; i--) {
+				for (var i = 59; i <= 83; i++) {
 					let convertedTemp = getTemperatureValueInPreferredUnit(i, "US");
-					obj_array.push({ description: convertedTemp.toFixed(1) + " &#xb0; F", value: convertedTemp.toFixed(1) });
+					obj_array.push({ description: convertedTemp.toFixed(1) + " F", value: convertedTemp.toFixed(1) });
 				}
 			} else {
 				// Celcius
-				for (var j = -30; j <= 60; j++) {
-					obj_array.push({ description: j + " &#xb0;C", value: j });
+				for (var j = 15; j <= 28; j++) {
+					obj_array.push({ description: j + " C", value: j });
 				}
 			}
 		}
@@ -1055,23 +1024,16 @@ var app = {
 								self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
 								self.knowledgeBase.weather.windchill.unshift(Number(weather.currentweather.windchill));
 
-								// Using custom input, when custom is enabled (indoor mode)
-								if (self.knowledgeBase.user.guards.isIndoor) {
-									//self.knowledgeBase.weather.temperature = self.knowledgeBase.user.settings._temperature;
-									self.knowledgeBase.weather.humidity = self.knowledgeBase.user.settings._humidity;
-									self.knowledgeBase.weather.windspeed = self.translateTextToWindspeed(self.knowledgeBase.user.settings.windspeed);
-								}
-								else {
-									// Otherwise use weather service info
-									self.knowledgeBase.weather.temperature = weather.tair.map(Number);
-									self.knowledgeBase.weather.temperature.unshift(Number(weather.currentweather.tair));
+								
+								self.knowledgeBase.weather.temperature = weather.tair.map(Number);
+								self.knowledgeBase.weather.temperature.unshift(Number(weather.currentweather.tair));
 
-									self.knowledgeBase.weather.humidity = weather.rh.map(Number);
-									self.knowledgeBase.weather.humidity.unshift(Number(weather.currentweather.rh));
+								self.knowledgeBase.weather.humidity = weather.rh.map(Number);
+								self.knowledgeBase.weather.humidity.unshift(Number(weather.currentweather.rh));
 
-									self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
-									self.knowledgeBase.weather.windspeed.unshift(Number(weather.currentweather.vair));
-								}
+								self.knowledgeBase.weather.windspeed = weather.vair.map(Number);
+								self.knowledgeBase.weather.windspeed.unshift(Number(weather.currentweather.vair));
+								
 
 								self.knowledgeBase.weather.globetemperature = weather.tglobe_clouds.map(Number);
 								self.knowledgeBase.weather.globetemperature.unshift(Number(weather.currentweather.tglobe_clouds));
@@ -1186,13 +1148,17 @@ var app = {
 	},
 	loadUI: function (pageid) {
 		var self = this;
-		console.log(this.pageMap[pageid]);
-		$.get(this.pageMap[pageid], function (content) {
-			console.log("loaded: " + pageid);
-			self.currentPageID = pageid;
-			$("#content").html(content);
-			self.updateUI();
-		})
+		if( this.knowledgeBase.user.guards.isIndoor && pageid === "feedback" ){
+			showShortToast("No personalisation possible for indoor mode.");
+		}
+		else{
+			$.get(this.pageMap[pageid], function (content) {
+				console.log("loaded: " + pageid);
+				self.currentPageID = pageid;
+				$("#content").html(content);
+				self.updateUI();
+			});
+		}
 	},
 	checkIfUserExistInDB: async function () {
 		var self = this;
@@ -1212,6 +1178,8 @@ var app = {
 	calcThermalIndices: function () {
 		this.knowledgeBase.thermalindices.ireq = [];
 		this.knowledgeBase.thermalindices.phs = [];
+		this.knowledgeBase.thermalindices.pmv = [];
+		
 		var options = {
 			air: {},
 			body: {
@@ -1312,6 +1280,50 @@ var app = {
 				"utc": self.knowledgeBase.weather.utc[index],
 			};
 			self.knowledgeBase.thermalindices.phs.push(phs_object);
+			
+			//pmv indoor
+			
+			//Pw_air assumed equal indoor and outdoor, RH different because of temperature difference.
+			//let wvp = 0.1 * (val * 0.01) * Math.exp(18.965 - 4030 / (T + 235));
+			var rh_outdoor = options.air.Pw_air / ( 0.1 *0.01 * Math.exp(18.965 - 4030 / (options.air.Tair + 235)) );
+			var T_indoor = self.knowledgeBase.user.settings._temperature;
+			var rh_indoor = Math.round( options.air.Pw_air / ( 0.1 *0.01 * Math.exp(18.965 - 4030 / (T_indoor + 235)) ) );
+			
+			var v_indoor = self.knowledgeBase.user.settings.open_windows ? 0.25 * self.knowledgeBase.weather.windspeed[index] : 0.1;
+			options.air = {
+				"Tair": T_indoor, 	//C
+				"rh": rh_indoor, 	//% relative humidity
+				"Pw_air": self.knowledgeBase.weather.watervapourpressure[index],   //kPa partial water vapour pressure
+				"Trad": T_indoor, 	//C mean radiant temperature
+				"v_air": 0.1,
+				"v_air10": self.knowledgeBase.weather.windspeed[index],  //m/s air velocity at 10m.
+			};
+			
+			heatindex.PMV.set_options(options);
+			heatindex.PMV.sim_run();
+			var pmv = heatindex.PMV.current_result();
+			var pmv_object = {
+				"PMV": pmv.PMV,
+				"PPD": pmv.PPD,
+				"M": options.body.M,
+				"Icl": options.cloth.Icl,
+				"p": options.cloth.p,
+				"im_st": options.cloth.im_st,
+				"Tair": options.air.Tair,
+				"rh": options.air.rh,
+				"v_air": options.air.v_air, //@2m
+				"v_air10": options.air.v_air10, //@10m
+				"Trad": options.air.Trad,
+				"Tglobe": options.air.Trad,
+				"clouds": self.knowledgeBase.weather.clouds[index],
+				"rain": self.knowledgeBase.weather.rain[index],
+				"rad": self.knowledgeBase.weather.radiation[index],
+				"wbgt": self.knowledgeBase.weather.wbgt[index],
+				"wbgt_max": self.knowledgeBase.weather.wbgt_max[index],
+				"windchill": self.knowledgeBase.weather.windchill[index],
+				"utc": self.knowledgeBase.weather.utc[index],
+			}
+			self.knowledgeBase.thermalindices.pmv.push(pmv_object);
 			self.saveSettings();
 		});
 	},
@@ -1359,20 +1371,25 @@ var app = {
 			
 			if (this.knowledgeBase.user.guards.isIndoor) {
 				// Hide forecast when custom input is used
+				$("#navbar-forecast").hide();
+				$("#navbar-location").hide();
+				
 				$("#dashboard_header").hide();
 				$("#dashboard_forecast").hide();
 
 				this.updateInfo(0);
 
 			} else {
+				$("#navbar-forecast").show();
+				$("#navbar-location").show();
 				$("#dashboard_header").show();
 				$("#dashboard_forecast").show();
 				this.initDashboardSwipeListeners();
 				
 				this.updateInfo(this.selectedWeatherID);
 			}
-
 			var indoorOutdoorMode = this.knowledgeBase.user.guards.isIndoor ? this.translations.labels.str_indoor[this.language] : this.translations.labels.str_outdoor[this.language];
+
 			// Set dashboard content using translations sheet
 			$("#str_weather_report").html(this.translations.labels.str_weather_report[this.language]);
 			$("#indoor_outdoor").html(indoorOutdoorMode);
@@ -1462,25 +1479,29 @@ var app = {
 					let tair = 0;
 					let rh = 0;
 					let vair2 = 0;
-
-					// IS THIS THE CORRECT WAY TO DO IT ?
+					let tglobe = 0;
+					let tmrt = 0;
+					console.log("updateInfo Details - A");
+					
 					if (this.knowledgeBase.user.guards.isIndoor) {
-						//tair = this.knowledgeBase.user.settings._temperature;
-						rh = this.knowledgeBase.user.settings._humidity;
-						vair2 = this.knowledgeBase.user.settings.windspeed;
+						tair = this.knowledgeBase.user.settings._temperature;
+						rh = this.knowledgeBase.thermalindices.pmv[index].rh.toFixed(0);
+						vair2 = this.knowledgeBase.thermalindices.pmv[index].v_air.toFixed(1);
+						tmrt = this.knowledgeBase.thermalindices.pmv[index].Trad.toFixed(1);
+						tglobe = this.knowledgeBase.thermalindices.pmv[index].Tglobe.toFixed(1);
 					} else {
 						rh = this.knowledgeBase.thermalindices.phs[index].rh.toFixed(0);
 						vair2 = this.knowledgeBase.thermalindices.phs[index].v_air.toFixed(1);
+						tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
+						tmrt = this.knowledgeBase.thermalindices.phs[index].Trad.toFixed(1);
+						tglobe = this.knowledgeBase.thermalindices.phs[index].Tglobe.toFixed(1);
 					}
-					tair = this.knowledgeBase.thermalindices.phs[index].Tair.toFixed(1);
+					console.log("updateInfo Details - B");
 					let clouds = this.knowledgeBase.thermalindices.phs[index].clouds.toFixed(0);
 
 					let rad = this.knowledgeBase.thermalindices.phs[index].rad.toFixed(0);
-					// Which of the air velocities should I use? (I took 2m as an example)
 					let vair10 = this.knowledgeBase.thermalindices.phs[index].v_air10.toFixed(1);
-					let tmrt = this.knowledgeBase.thermalindices.phs[index].Trad.toFixed(1);
-					let tglobe = this.knowledgeBase.thermalindices.phs[index].Tglobe.toFixed(1);
-
+					 
 					let wbgt = this.knowledgeBase.thermalindices.phs[index].wbgt.toFixed(1);
 					let wbgt_eff = getWBGTeffective(wbgt, this.knowledgeBase);
 					let ral = RAL(this.knowledgeBase);
@@ -1518,14 +1539,33 @@ var app = {
 					$("#detail_tglobe").html(tglobe + "&deg;C");
 
 					$("#detail_rad").html(rad + "W/m<sup>2</sup>");
+					console.log("updateInfo Details - C");
 					
-					$("#detail_wbgt").html(wbgt + "&deg;C");
-					$("#detail_wbgt_eff").html(wbgt_eff.toFixed(1) + "&deg;C");
+					if( this.knowledgeBase.user.guards.isIndoor ){
+						$("div[data-group='wbgt']").hide();
+						$("div[data-group='ireq']").hide();
+					}
+					else{
+						if( thermal === "heat" ){
+							$("div[data-group='wbgt']").show();
+							$("div[data-group='ireq']").hide();
+						
+							$("#detail_wbgt").html(wbgt + "&deg;C");
+							$("#detail_wbgt_eff").html(wbgt_eff.toFixed(1) + "&deg;C");
 					
-					$("#detail_ral").html(ral.toFixed(1) + "&deg;C");
-					$("#detail_ral_pal").html(ral.toFixed(1) + "&deg;C");
-
-					$("#detail_windchill").html(windchill + "&deg;C");
+							$("#detail_ral").html(ral.toFixed(1) + "&deg;C");
+							$("#detail_ral_pal").html(personal_ral.toFixed(1) + "&deg;C");
+						}
+						else{
+							$("div[data-group='wbgt']").hide();
+							$("div[data-group='ireq']").show();
+							$("#detail_windchill").html(windchill + "&deg;C");						
+						}
+					}
+					
+						
+					console.log("updateInfo Details - D");
+					
 
 					$("#detail_metabolic").html(M + "W/m<sup>2</sup>");
 					$("#detail_area").html(A + "m<sup>2</sup>")
@@ -1534,73 +1574,78 @@ var app = {
 				
 					$("#detail_p").html(p);
 					$("#detail_im").html(im);
-			
-					let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
-					let icl_neutral = this.knowledgeBase.thermalindices.ireq[ index].ICLneutral;
-					let icl_worn = getClo(this.knowledgeBase);
-					let cold_index = this.calculateColdIndex(icl_neutral, icl_min, icl_worn); // minimal - worn, if negative you do not wear enough clothing
-	
-					let heat_index = WBGTrisk( wbgt, this.knowledgeBase );
-			
-					let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
-					let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
-					let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
-			
 					
 					$("#moreinformation").html( tip_html );
-				
-					if( personalvalue <= -1 ){
-						$("div[data-context='heat'],div[data-context='phs'],div[data-context='neutral']").hide();
-						$("div[data-context='cold']").show();
-				
-						let windrisk = windchillRisk( windchill );
-						let windriskcat = windrisk ? "a risk of frostbite in" : "no risk of frostbite";
-						$("#detail_exposed_windchill").html( windchill );
-						$("#detail_exposed_windriskcat").html( windriskcat );
-						if( windrisk ){
-							$("#detail_exposed_windrisk").html( windrisk + " minutes");
-						}
-
-						let icl_max = this.knowledgeBase.thermalindices.ireq[index].ICLneutral;
-
-						let dle_min = 60 * this.knowledgeBase.thermalindices.ireq[index].DLEminimal;
-						dle_min = dle_min.toFixed(0);
-
-						let activity = this.knowledgeBase.user.settings.activity_selected;
-						$("#detail_activity_ireq").html(activity);
-						$("#detail_icl_max").html(icl_max);
-						$("#detail_icl_min").html(icl_min);
-
-						let minicon = clothingIcon(icl_min);
-						let maxicon = clothingIcon(icl_max);
-
-						$("#detail_min_clo").html("<img src='" + minicon + "' class='small'/>");
-						$("#detail_max_clo").html("<img src='" + maxicon + "' class='small'/>");
-
-						$("#detail_dle_ireq").html(dle_min);
+					console.log("updateInfo Details - E");
+					
+					if( this.knowledgeBase.user.guards.isIndoor ){
+						$("div[data-context='heat'],div[data-context='phs'],div[data-context='neutral'],div[data-context='cold']").hide();
 					}
-					else if (personalvalue >= 1) {
-						$("div[data-context='cold'],div[data-context='phs'],div[data-context='neutral']").hide();
-						$("div[data-context='heat']").show();
+					else{
+						let icl_min = this.knowledgeBase.thermalindices.ireq[ index].ICLminimal;
+						let icl_neutral = this.knowledgeBase.thermalindices.ireq[ index].ICLneutral;
+						let icl_worn = getClo(this.knowledgeBase);
+						let cold_index = this.calculateColdIndex(icl_neutral, icl_min, icl_worn, true); // minimal - worn, if negative you do not wear enough clothing
+	
+						let heat_index = WBGTrisk( wbgt, this.knowledgeBase );
+			
+						let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
+						let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
+						let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
+					
+						if( personalvalue <= -1 ){
+							$("div[data-context='heat'],div[data-context='phs'],div[data-context='neutral']").hide();
+							$("div[data-context='cold']").show();
+				
+							let windrisk = windchillRisk( windchill );
+							let windriskcat = windrisk ? "a risk of frostbite in" : "no risk of frostbite";
+							$("#detail_exposed_windchill").html( windchill );
+							$("#detail_exposed_windriskcat").html( windriskcat );
+							if( windrisk ){
+								$("#detail_exposed_windrisk").html( windrisk + " minutes");
+							}
 
-						$("#detail_wbgt_iso7243").html(wbgt_eff.toFixed(1));
-						$("#detail_ral_iso7243").html(ral.toFixed(1));
+							let icl_max = this.knowledgeBase.thermalindices.ireq[index].ICLneutral;
 
-						if (wbgt_eff >= (ral - pav)) {
-							$("div[data-context='phs']").show();
-							let d_tre = this.knowledgeBase.thermalindices.phs[index].D_Tre ? this.knowledgeBase.thermalindices.phs[index].D_Tre : ">120";
-							let d_sw = this.knowledgeBase.thermalindices.phs[index].Dwl50;
-							let sw_tot_per_hour = 0.001 * this.knowledgeBase.thermalindices.phs[index].SWtotg /
-								(this.knowledgeBase.sim.duration / 60); //liter per hour
-							sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
+							let dle_min = 60 * this.knowledgeBase.thermalindices.ireq[index].DLEminimal;
+							dle_min = dle_min.toFixed(0);
 
-							$("#detail_sweat").html(sw_tot_per_hour);
-							$("#detail_dle_phs").html(d_tre);
+							let activity = this.knowledgeBase.user.settings.activity_selected;
+							$("#detail_activity_ireq").html(activity);
+							$("#detail_icl_max").html(icl_max);
+							$("#detail_icl_min").html(icl_min);
+
+							let minicon = clothingIcon(icl_min);
+							let maxicon = clothingIcon(icl_max);
+
+							$("#detail_min_clo").html("<img src='" + minicon + "' class='small'/>");
+							$("#detail_max_clo").html("<img src='" + maxicon + "' class='small'/>");
+
+							$("#detail_dle_ireq").html(dle_min);
 						}
-					}
-					else {
-						$("div[data-context='cold'],div[data-context='phs'],div[data-context='heat']").hide();
-						$("div[data-context='neutral']").show();
+						else if (personalvalue >= 1) {
+							$("div[data-context='cold'],div[data-context='phs'],div[data-context='neutral']").hide();
+							$("div[data-context='heat']").show();
+
+							$("#detail_wbgt_iso7243").html(wbgt_eff.toFixed(1));
+							$("#detail_ral_iso7243").html(ral.toFixed(1));
+
+							if (wbgt_eff >= (ral - pav)) {
+								$("div[data-context='phs']").show();
+								let d_tre = this.knowledgeBase.thermalindices.phs[index].D_Tre ? this.knowledgeBase.thermalindices.phs[index].D_Tre : ">120";
+								let d_sw = this.knowledgeBase.thermalindices.phs[index].Dwl50;
+								let sw_tot_per_hour = 0.001 * this.knowledgeBase.thermalindices.phs[index].SWtotg /
+									(this.knowledgeBase.sim.duration / 60); //liter per hour
+								sw_tot_per_hour = sw_tot_per_hour.toFixed(1);
+
+								$("#detail_sweat").html(sw_tot_per_hour);
+								$("#detail_dle_phs").html(d_tre);
+							}
+						}
+						else {
+							$("div[data-context='cold'],div[data-context='phs'],div[data-context='heat']").hide();
+							$("div[data-context='neutral']").show();
+						}
 					}
 				})
 		}
@@ -1661,26 +1706,33 @@ var app = {
 			let index = 0; // 0 = current situation -- is this what we want? -BK tricky tbd
 			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, false).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
+									
 					$("#gauge_text_top_diff").hide();
 					$("#reset_icon").hide();
 					
 					this.drawGauge('feedback_gauge', width, personalvalue, thermal);
+					
 					this.knowledgeBase.user.adaptation.mode = thermal;
+					
 					// Save current gauge value as original value
 					this.knowledgeBase.user.adaptation[thermal].predicted = modelvalue;
+					
 					this.saveSettings();
 					var diff_array = this.knowledgeBase.user.adaptation[thermal].diff;
+					
+					$("div[data-listener='adaptation']").attr("data-context", thermal);
+					
 					// Set text around gauge and slider
 					if (diff_array.length >= 1) {
 						$("#gauge_text_top_diff").show();
-						$("#reset_icon").hide();
+						
+						$("#reset_icon").show();
 						// Personal heat/cold alert limit: <value>
-						$("#gauge_text_top_diff").html(this.translations.labels.str_personal[this.language] + " " + thermal + " " + this.translations.labels.str_alert_limit[this.language] +": " + diff_array[0].toFixed(1));
+						
+						$("#gauge_text_top_diff").html(this.translations.labels.str_personal[this.language] + " " + thermal + " " + this.translations.labels.str_alert_level[this.language] +": " + diff_array[0].toFixed(1));						
 					}
-
 					$("#gauge_text_bottom").html(this.translations.sentences.feedback_adaptation_colder_warmer[this.language]);
 
-					$("div[data-listener='adaptation']").attr("data-context", thermal);
 
 					// Question text
 					$("#question1").html(this.feedback_questions.question1.text);
@@ -1712,12 +1764,14 @@ var app = {
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {
 					
 					$("#str_forecast").html(this.translations.labels.str_forecast[this.language]);
+					
 					if( thermal === "heat" ){
-						$("#forecast_desc").html(this.translations.sentences.forecast_desc[this.language]);
+						$("#forecast_desc").html(this.translations.sentences.forecast_desc_heat[this.language]);
 						$("#forecast_disclaimer").html(this.translations.sentences.forecast_disclaimer[this.language]);
 					}
 					else{
-						//$("#forecast_desc").html( "The forecast of your expected cold stress is shown below"); //requires language edit
+						$("#forecast_desc").html(this.translations.sentences.forecast_desc_cold[this.language]);
+						$("#forecast_disclaimer").html("");		
 					}
 
 					$("#str_activity").html(this.translations.labels.str_activity[this.language]);
@@ -1727,6 +1781,7 @@ var app = {
 					$("#str_activity_level").html(this.translations.labels.str_activity_level[this.language]);
 					$("#str_clothing_level").html(this.translations.labels.str_clothing_level[this.language]);
 					$("#head_gear").html(this.translations.labels.str_headgear[this.language]);
+					
 					this.drawChart("forecast_canvas", width, thermal);
 				});
 		}
@@ -1778,18 +1833,19 @@ var app = {
 				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.user.settings.station + " (" + this.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(4)  + ")");
 				var [lat, lon] = getLocation(this.knowledgeBase);
 				var center = new google.maps.LatLng(lat, lon);
+				
 				// using global variable:
 				window.map.panTo(center);
+				
 			} else {
 				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.position.lat + ", " + this.knowledgeBase.position.lng);
     			var center = new google.maps.LatLng(this.knowledgeBase.position.lat , this.knowledgeBase.position.lng);
    				// using global variable:
    				window.map.panTo(center);
-			}
-			google.maps.event.trigger(window.map, 'resize');
-			
+			}			
 		}
 		else if (this.currentPageID == "indoor") {
+			
 			$(".navigation_back_settings").hide();
 			$(".navigation_back_dashboard").hide();
 			$(".navigation_back_custom").hide();
@@ -1797,6 +1853,8 @@ var app = {
 			$("#indoor_checkbox").prop("checked", this.knowledgeBase.user.guards.isIndoor);
 			this.knowledgeBase.user.guards.isIndoor ? $("#indoorSection").show() : $("#indoorSection").hide();
 			this.initIndoorListeners();
+			
+			
 			var windowsOpen = this.knowledgeBase.user.settings.open_windows ? this.translations.labels.str_yes[this.language] : this.translations.labels.str_no[this.language];
 			
 			// Setting page content
@@ -1809,12 +1867,12 @@ var app = {
 			$("#str_continue").html(this.translations.labels.str_continue[this.language]);
 
 			// Values
-			//var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
+			var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
 			$("#_temperature").html( this.knowledgeBase.user.settings._temperature + " &#xb0 " + tempUnit);
 			//$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
 			//$("#_humidity").html(this.knowledgeBase.user.settings._humidity + " %");
 			//$("#thermostat_level").html(this.knowledgeBase.user.settings.thermostat_level);
-			//$("#open_windows").html(windowsOpen);
+			$("#open_windows").html(windowsOpen);
 		}
 	},
 	updateMenuItems: function () {
@@ -1835,9 +1893,11 @@ var app = {
 		caption_ = this.translations.wheels.headgear.description[selected][this.language];
 		$("#headgearCaption").html(caption_);
 	},
-	calculateColdIndex: function( icl_neutral, icl_min, icl_worn ){
+	calculateColdIndex: function( icl_neutral, icl_min, icl_worn, isPersonalised ){
 		var value = 0;
 		
+		var PAL = isPersonalised ? this.knowledgeBase.user.adaptation["cold"].diff[0] : 0;
+		icl_worn = icl_worn + PAL;
 		if( icl_worn < icl_min ){
 			value = 1 +  icl_min - icl_worn;
 		}
@@ -1850,41 +1910,53 @@ var app = {
 	},
 	getDrawGaugeParamsFromIndex: async function(index, kb, leveloverride ) {
 		
+		
 		console.log( "getDrawGaugeParamsFromIndex " + index );
 		var icl_min = kb.thermalindices.ireq[index].ICLminimal;
 		var icl_neutral = kb.thermalindices.ireq[index].ICLneutral;
-		let icl_worn = getClo(kb);
-		let cold_index = this.calculateColdIndex( icl_neutral, icl_min, icl_worn); // minimal - worn, if negative you do not wear enough clothing
+		var icl_worn = getClo(kb);
 		
+		var personal_cold_index = this.calculateColdIndex( icl_neutral, icl_min, icl_worn, true); 
+		var model_cold_index = this.calculateColdIndex( icl_neutral, icl_min, icl_worn, false); 
+	
+		var personal_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, true );
+		var model_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, false );	
 		
-		let personal_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, true );
-		let model_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, false );
-				
+		var pmv_index = kb.thermalindices.pmv[index].PMV;
 		
-		let draw_cold_gauge = this.isDrawColdGauge( cold_index, personal_heat_index, index );
-		let draw_heat_gauge = this.isDrawHeatGauge( cold_index, personal_heat_index, index );
+		var isIndoor = this.knowledgeBase.user.guards.isIndoor;
+		if( isIndoor ){
+			personal_heat_index = pmv_index;
+			model_heat_index = pmv_index;
+			personal_cold_index = pmv_index;
+			model_cold_index = pmv_index;
+		}
+		
+		let draw_cold_gauge = this.isDrawColdGauge( model_cold_index, model_heat_index, index );
+		let draw_heat_gauge = this.isDrawHeatGauge( model_cold_index, model_heat_index, index );
 
 		let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 		let tip_html = "";
 		let thermal = draw_cold_gauge ? "cold" : "heat";
 		let level = leveloverride ? 2 : kb.user.settings.level;
-
-		console.log("level " + level);
-
-		let personal_value = this.determineThermalIndexValue(cold_index, personal_heat_index, index);
-		let model_value = this.determineThermalIndexValue(cold_index, model_heat_index, index);
-
-		console.log("personal_value " + personal_value);
-		console.log("model_value " + model_value);
-
-		if (draw_cold_gauge || (isNeutral && cold_index > personal_heat_index)) {
-			tip_html += coldLevelTips(index, level, kb, cold_index, this.currentPageID, this.translations, this.language);
+		
+		let personal_value = this.determineThermalIndexValue(personal_cold_index, personal_heat_index, index, isIndoor);
+		let model_value = this.determineThermalIndexValue(model_cold_index, model_heat_index, index, isIndoor);
+		
+		
+		if( this.knowledgeBase.user.guards.isIndoor ){
+			tip_html += indoorTips( kb, this.translations, this.language);
 		}
-		else {
-			var fromThermalAdvisor = await heatLevelTips(index, level, kb, this.currentPageID, this.translations, this.language);
-			tip_html += fromThermalAdvisor;
+		else{
+			if (draw_cold_gauge || (isNeutral && cold_index > personal_heat_index)) {
+				tip_html += coldLevelTips(index, level, kb, personal_cold_index, this.currentPageID, this.translations, this.language);
+			}
+			else {
+				var fromThermalAdvisor = await heatLevelTips(index, level, kb, this.currentPageID, this.translations, this.language);
+				tip_html += fromThermalAdvisor;
+			}
 		}
-		console.log("tips " + tip_html);
+		
 		let windowsize = $(window).width();
 		let width = windowsize / 2.5;
 
@@ -1902,19 +1974,20 @@ var app = {
 		this.knowledgeBase.thermalindices.ireq[ index].Tair <= 15; //ireq only from <10 however, 15 can already be cold with 0.5 clo
 	},
 	isDrawHeatGauge: function (cold, heat, index) {
-		return heat > cold
-			&& this.knowledgeBase.weather.wbgt[index] > 15;
+		return heat > cold;
 	},
-	determineThermalIndexValue: function (cold, heat, index) {
-		let value = cold > heat ? -cold : heat;
-		// why is the variable value used to calculate both cold and heat gauge?? faulty logic 
-		// (can you use the value as you overwrite it?)
-
-		//bk: the thermal index is either a hot or cold one, both are defined differntly. 
-		// this function unifies the thermal index value. it is either -cold if it is cold, or heat if it is hot.
-		//by default it is the largest one (if cold > heat -> then cold etc)
-		value = this.isDrawColdGauge(cold, heat, index) ? -cold : value;
-		value = this.isDrawHeatGauge(cold, heat, index) ? heat : value;
+	determineThermalIndexValue: function (cold, heat, index, isIndoor) {
+		
+		if( isIndoor ){
+			return cold; //return pmv value 
+		}
+		else{
+			let value = cold > heat ? -cold : heat;
+		
+			value = this.isDrawColdGauge(cold, heat, index) ? -cold : value;
+			value = this.isDrawHeatGauge(cold, heat, index) ? heat : value;
+		}
+		
 		return Math.max(-4, Math.min(4, value));//value between -4 and +4
 	},
 	updateInfo: function (index) {
@@ -1983,7 +2056,7 @@ var app = {
 			$("#station").html(this.knowledgeBase.weather.station + " (" + distance + " km)" + isCustomLocation);
 
 			$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[index].Tair, this.knowledgeBase.user.settings.unit).toFixed(0) + "&#xb0");
-			let ws = this.knowledgeBase.thermalindices.ireq[index].v_air10 * 3.6; //m/s to km/h
+			let ws = this.knowledgeBase.thermalindices.ireq[index].v_air10; //m/s to km/h
 			$("#windspeed").html(ws.toFixed(0));
 			$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
 			$("#humidity").html(this.translations.labels.str_humidity[this.language]);
@@ -2064,13 +2137,15 @@ var app = {
 					$("#main_panel").fadeIn(500);
 				});
 
-		} else {
-			if(this.knowledgeBase.thermalindices.ireq.length > 0) {
+		} 
+		else {
+			console.log("updateInfo isIndoor");
+			if(this.knowledgeBase.thermalindices.phs.length > 0) {
 				// Indoor mode
-				$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[index].Tair, this.knowledgeBase.user.settings.unit).toFixed(0));
+				$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.pmv[0].Tair, this.knowledgeBase.user.settings.unit).toFixed(0));
 				$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
 				$("#humidity").html(this.translations.labels.str_humidity[this.language]);
-				$("#humidity_value").html(this.knowledgeBase.user.settings._humidity);
+				$("#humidity_value").html(this.knowledgeBase.thermalindices.pmv[0].rh);
 				$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
 				
 				// Remove weather indication from dashboard // substitute with windows open/close
@@ -2088,7 +2163,8 @@ var app = {
 				// Draw gauge -- any values that needs to be changed?
 				self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
 					([width, personalvalue, modelvalue, thermal, tip_html]) => {//
-						console.log("update info draw gauge phase 2 " + [width, personalvalue, modelvalue, thermal, tip_html]);
+						console.log("update indoor draw gauge phase 2 " + [width, personalvalue, modelvalue, thermal, tip_html]);
+						
 						self.drawGauge('main_gauge', width, personalvalue, thermal);
 	
 						$("#tips").html(tip_html);
@@ -2132,11 +2208,9 @@ var app = {
 
 				data.ymax = Math.max( data.ymax, 1.0 * wbgt_effective_max );
 				data.ymin = Math.min( data.ymin, 1.0 * wbgt_effective_min );
-				
 			}
 		}
 		else{
-			console.log("populating cold arrays for graph");
 			data = {
 				"labels": [],
 				"coldindex": { "points": [] },//
@@ -2148,7 +2222,7 @@ var app = {
 				
 				var icl_min = this.knowledgeBase.thermalindices.ireq[i].ICLminimal;
 				var icl_neutral = this.knowledgeBase.thermalindices.ireq[i].ICLneutral;
-				var cold_index = -this.calculateColdIndex(icl_neutral, icl_min, icl_worn); // minimal - worn, if negative you do not wear enough clothing
+				var cold_index = -this.calculateColdIndex(icl_neutral, icl_min, icl_worn, true); // minimal - worn, if negative you do not wear enough clothing
 				var item = {
 					x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
 					y: 1.0 * Math.min(0, cold_index ) //lower limit of green
@@ -2251,6 +2325,7 @@ var app = {
 							} ];
 		}
 		else{		
+			
 			min_y = Math.ceil( Math.min( -4, data.ymin - 1));	
 			levels = [	{
 								label: "coldrisk",
@@ -2296,17 +2371,15 @@ var app = {
 								backgroundColor: 'rgba(0,0,180,.5)',
 								borderColor: 'rgba(0,0,180,1)',
 								borderWidth: 2,
-								fill: "-11",
+								fill: "-1",
 								data: [{ x: x_from, y: min_y }, { x: x_to, y: min_y }],
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0
 							}
 						];	
 		}
-		console.log("draw forecast: A");
 		
-		var tick_options = thermal === "heat" ? { fontSize: '16', fontColor: 'rgba(255, 255, 255, 1)', fontFamily: 'Lato', max: max_y, min: min_y } : { display: false } ;
-		console.log("draw forecast: B");
+		var tick_options = thermal === "heat" ? { fontSize: '16', fontColor: 'rgba(255, 255, 255, 1)', fontFamily: 'Lato', max: max_y, min: min_y } : { display:false, callback: function(value, index, values) { return '' + value; },max: max_y, min: min_y } ;
 		
 		var labelstr = thermal === "heat" ? this.translations.labels.str_heat_index[this.language]: this.translations.labels.str_cold_index[this.language];
 		console.log("draw forecast: C");
@@ -2421,42 +2494,6 @@ var app = {
 		});
 		gauge.draw();
 	},
-	/* No local notifications - agreed with Lars
-	scheduleDefaultNotification: function () {
-		var ClimAppNotifications = getAllNotifications();
-		if (ClimAppNotifications > 0) {
-			cancelAllNotifications();
-			console.log("All previous notifications cancelled.");
-		} else {
-			console.log("No previous notifications scheduled");
-		}
-
-		// Set notification time and date today @ 4.30PM
-		var today = new Date();
-		today.setDate(today.getDate());
-		today.setHours(16);
-		today.setMinutes(30);
-		today.setSeconds(0);
-		var today_at_4_30_pm = new Date(today);
-
-		// Notification which is triggered 16.30 every weekday
-		cordova.plugins.notification.local.schedule({
-			id: 1,
-			title: 'Feedback',
-			text: 'How was your day?',
-			icon: 'res://icon',
-			smallIcon: 'res://icon-stencil',
-			trigger: {
-				type: "fix",
-				at: today_at_4_30_pm.getTime()
-			},
-			actions: [
-				{ id: 'feedback_yes', title: 'Open' },
-				{ id: 'no', title: 'Dismiss' }
-			]
-		});
-		console.log("Notification scheduled.");
-	}*/
 };
 
 app.initialize();

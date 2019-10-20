@@ -231,6 +231,15 @@ function heatLevelTips( index, level, kb, pageID, translations, language){
 	});
 }
 
+function indoorTips( kb, translations, language){
+	let str = "";
+
+	let pps = 100.0 - kb.thermalindices.pmv[ 0 ].PPD;
+	
+	str += "<p>"+pps.toFixed(0)+"% is satisfied with this indoor environment.</p>";
+	return str;
+}
+
 function coldLevelTips( index, level, kb, cold_index, pageID, translations, language){
 	let str = "";
 	
@@ -267,24 +276,24 @@ function coldLevelTips( index, level, kb, cold_index, pageID, translations, lang
 	}
 	else if( level === 2 ){ //experienced user // or more info requested
 		if( cold_index <= 1 ){
-			str += translations.sentences.dash_tip_general_1[language] + "</p>";
-			str += translations.sentences.dash_tip_general_2[language] + "</p>";
-			str += translations.sentences.dash_tip_general_3[language] + "</p>";
+			str += "<p>" + translations.sentences.dash_tip_general_1[language] + "</p>";
+			str += "<p>" + translations.sentences.dash_tip_general_2[language] + "</p>";
+			str += "<p>" + translations.sentences.dash_tip_general_3[language] + "</p>";
 		}
 		else if( cold_index <= 2 && isWindstopperUseful ){
-			str += translations.sentences.dash_tip_normal[language] + "</p>";
-			str += translations.sentences.dash_tip_windchill_significant_1[language] + " " + windchill.toFixed(0) + "&deg;, " + translations.sentences.dash_tip_windchill_significant_2[language] + "</p>";
+			str += "<p>" + translations.sentences.dash_tip_normal[language] + "</p>";
+			str += "<p>" + translations.sentences.dash_tip_windchill_significant_1[language] + " " + windchill.toFixed(0) + "&deg;, " + translations.sentences.dash_tip_windchill_significant_2[language] + "</p>";
 		}
 		else if( cold_index <= 2 ){
-			str += translations.sentences.dash_tip_increase_insulation[language] + "</p>";
+			str += "<p>" + translations.sentences.dash_tip_increase_insulation[language] + "</p>";
 		}
 		else if( cold_index > 2 ){
-			str += translations.sentences.dash_tip_extra_attention[language] + "</p>";
+			str += "<p>" + translations.sentences.dash_tip_extra_attention[language] + "</p>";
 			if( isWindstopperUseful ){
-				str += translations.sentences.dash_tip_windchill_significant_1[language] + " " + windchill.toFixed(0) + "&deg;, " + translations.sentences.dash_tip_windchill_significant_2[language] + "</p>";
+				str += "<p>" + translations.sentences.dash_tip_windchill_significant_1[language] + " " + windchill.toFixed(0) + "&deg;, " + translations.sentences.dash_tip_windchill_significant_2[language] + "</p>";
 			}
 			if( windrisk ){
-				str += translations.sentences.dash_tip_windchill_1[language] + " " + windchill.toFixed(0) + "&deg; " + translations.sentences.dash_tip_windchill_2[language] + " " + windrisk + " " + translations.sentences.dash_tip_windchill_3[language] + "</p>";
+				str += "<p>" + translations.sentences.dash_tip_windchill_1[language] + " " + windchill.toFixed(0) + "&deg; " + translations.sentences.dash_tip_windchill_2[language] + " " + windrisk + " " + translations.sentences.dash_tip_windchill_3[language] + "</p>";
 			}
 		}
 	}

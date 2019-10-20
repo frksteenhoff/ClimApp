@@ -470,16 +470,22 @@ div.panel.settings div.input_section.last {
 
 /* Google Maps Styling */
 #map {
-    height: 400px;
+    height: 50vh;
     width: 100%;
     margin: 0;
     padding: 0;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
   }
 
 #location_footer {
     margin: 0.5em;
     position: relative;
     display: inline-block;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;         /* Opera/IE 8+ */
 }
 
 /*

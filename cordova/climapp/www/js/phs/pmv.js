@@ -24,7 +24,7 @@ heatindex.PMV = ( function( options ){
 										"Tair": 	0, 	//C
 										"rh": 	60, 	//% relative humidity
 										"Trad": 	0, 	//C mean radiant temperature
-										"v_air": 	0.4, 	//m/s air velocity
+										"v_air": 	0.2, 	//m/s air velocity
 								},
 								body:{
 										"M": 		150, 	//W/m2 
@@ -103,7 +103,8 @@ heatindex.PMV = ( function( options ){
 
 		// *** Calculation of Dlimneutral and Dlimminimal *** 
 		// Calculation of S (W/m2),fcl (n.d.), hr W/m2C with stepwise iteration 
-		var Tcl=Ta; 
+		var Tcl=Ta;
+		var Tr=air.Trad;
 		var hr=3; 
 		var S=0; 
 		var ArAdu=0.77;
@@ -124,7 +125,7 @@ heatindex.PMV = ( function( options ){
 			hc=12.1*Math.pow(air.v_air,0.5);
 			R=fcl*hr*(Tcl-Tr);
 			C=fcl*hc*(Tcl-Ta);
-			balance=M-W-E-Ediff-Hres-R-C-S;  
+			balance=body.M-body.work-E-Ediff-Hres-R-C-S;  
 			if (balance>0)  {
 				S=S+factor;
 				factor=factor/2;
@@ -132,12 +133,12 @@ heatindex.PMV = ( function( options ){
 			else {
 				S=S-factor;
 			}     
-		} while (Math.abs(Balance) > 0.01);
+		} while (Math.abs(balance) > 0.01);
 		
 		S = body.M-body.work-E-Ediff-Hres-R-C;
 
-		limit.PMV=(0.303*Math.exp(-0.036*body.M)+0.028)*S
-		limit.PPD=100-95*Math.exp(-0.03353*Math.pow(PMV,4)-0.2179*Math.pow(PMV,2))
+		limit.PMV=(0.303*Math.exp(-0.036*body.M)+0.028)*S;
+		limit.PPD= 100-95*Math.exp(-0.03353*Math.pow(limit.PMV,4)-0.2179*Math.pow(limit.PMV,2))
 
 	}
 
