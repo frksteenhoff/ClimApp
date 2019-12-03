@@ -212,19 +212,20 @@ var app = {
 		$("input[data-listener='feedback']").off();
 		$("input[data-listener='feedback']").on("click", function () {
 			var target = $(this).attr("data-target");
+			console.log("target: " + target);
 
 			// Updating rating bar using first char in ID
 			var rating_id = $(this).attr("id")[0];
 
 			if (rating_id === '1') {
-				self.translations.feedback.question1.rating = target;
-				$("#ratingtext1").html(self.translations.feedback.question1.ratingtext[self.translations.feedback.question1.rating]);
+				self.knowledgeBase.feedback.question1 = target + ".0"; // this is how the integers in feedback are read from the translations sheet "x.0" 
+				$("#ratingtext1").html(self.translations.feedback.question1.ratingtext[self.knowledgeBase.feedback.question1][self.language]);
 			} else if (rating_id === '2') {
-				self.translations.feedback.question2.rating = target;
-				$("#ratingtext2").html(self.translations.feedback.question2.ratingtext[self.translations.feedback.question2.rating]);
+				self.knowledgeBase.feedback.question2 = target + ".0";
+				$("#ratingtext2").html(self.translations.feedback.question2.ratingtext[self.knowledgeBase.feedback.question2][self.language]);
 			} else {
-				self.translations.feedback.question3.rating = target;
-				$("#ratingtext3").html(self.translations.feedback.question3.ratingtext[self.translations.feedback.question3.rating]);
+				self.knowledgeBase.feedback.question3 = target + ".0";
+				$("#ratingtext3").html(self.translations.feedback.question3.ratingtext[self.knowledgeBase.feedback.question3][self.language]);
 			}
 			$("input[data-listener='feedback']").removeClass("checked");
 			self.saveSettings();
@@ -813,7 +814,6 @@ var app = {
 			msgString = this.translations.toasts.kb_created[this.language];
 		}
 
-		console.log(msgString + " " + this.knowledgeBase.version);
 		showShortToast(msgString + this.knowledgeBase.version);
 		this.saveSettings();
 
@@ -1660,16 +1660,16 @@ var app = {
 					$("div[data-listener='adaptation']").attr("data-context", thermal);
 
 					// Question text
-					$("#question1").html(this.translations.feedback.question1.text);
-					$("#question2").html(this.translations.feedback.question2.text);
-					$("#question3").html(this.translations.feedback.question3.text);
+					$("#question1").html(this.translations.feedback.question1.text[this.language]);
+					$("#question2").html(this.translations.feedback.question2.text[this.language]);
+					$("#question3").html(this.translations.feedback.question3.text[this.language]);
 					
 					// Set rating bar text (under feedback buttons) using last given feedback
-					$("#ratingtext1").html(this.translations.feedback.question1.ratingtext[this.translations.feedback.question1.rating]);
-					$("#ratingtext2").html(this.translations.feedback.question2.ratingtext[this.translations.feedback.question2.rating]);
-					$("#ratingtext3").html(this.translations.feedback.question3.ratingtext[this.translations.feedback.question3.rating]);
+					$("#ratingtext1").html(self.translations.feedback.question1.ratingtext[self.knowledgeBase.feedback.question1][this.language]);
+					$("#ratingtext2").html(self.translations.feedback.question2.ratingtext[self.knowledgeBase.feedback.question2][this.language]);
+					$("#ratingtext3").html(self.translations.feedback.question3.ratingtext[self.knowledgeBase.feedback.question3][this.language]);
 
-					// Rating bar values -- still not setting the default color..
+					// Rating bar values
 					$("input[id='1star" + 3 + "']").attr("checked", true);
 					$("input[id='2star" + 3 + "']").attr("checked", true);
 					$("input[id='3star" + 3 + "']").attr("checked", true);
