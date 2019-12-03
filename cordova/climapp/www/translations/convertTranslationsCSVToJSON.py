@@ -196,6 +196,22 @@ wheels = convertCSVtoJSON_nested(df, availableLanguages)
 if(troubleshoot):
     print(json.dumps(wheels, indent=4))
 
+# ----------------------------------------------------------------
+# ## Feedback
+# ----------------------------------------------------------------
+
+# #### Reading in file with feedback text
+
+print("Converting feedback questions.. ")
+df = pd.read_csv("climapp_translation_sheet - feedback.csv")
+df.head()
+
+
+# #### Converting csv content to JSON object
+feedback = convertCSVtoJSON_nested(df, availableLanguages)
+# Use to check the result
+if(troubleshoot):
+    print(json.dumps(feedback, indent=4))
 
 # ----------------------------------------------------------------
 # ## API
@@ -222,7 +238,7 @@ if(troubleshoot):
 
 # ## Combining all information in one JSON object
 print("Combining all json objects.. ")
-combined_object = {"labels" : labels, "sentences" : sentences, "wheels" : wheels, "toasts" : toasts}
+combined_object = {"labels" : labels, "sentences" : sentences, "wheels" : wheels, "toasts" : toasts, "feedback" : feedback}
 if(troubleshoot):
     print(json.dumps(combined_object, indent=4))
 
