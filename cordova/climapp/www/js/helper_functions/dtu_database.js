@@ -5,7 +5,7 @@
  */
 
 // kb - shorthand for self.knowledgeBase 
-function addFeedbackToDB(kb, translations, language) {
+function addFeedbackToDB(kb, feedback_questions, translations, language) {
     let apicall = "createExtendedFeedbackRecord";
     let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
     let thermal_mode = kb.user.adaptation.mode;
@@ -15,7 +15,7 @@ function addFeedbackToDB(kb, translations, language) {
         "rating1": kb.feedback.question1,
         "rating2": kb.feedback.question2,
         "rating3": kb.feedback.question3,
-        "txt": kb.feedback.comment === "" ? "_" : kb.feedback.comment,
+        "txt": "NA",
         "predicted": kb.user.adaptation[thermal_mode].predicted,
         "perceived": kb.user.adaptation[thermal_mode].perceived,
         "diff": kb.user.adaptation[thermal_mode].diff[0],

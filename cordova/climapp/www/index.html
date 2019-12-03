@@ -28,7 +28,7 @@
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
             * Enable inline JS: add 'unsafe-inline' to default-src
         -->
-        <meta http-equiv="Content-Security-Policy" content="connect-src 'self' https://www.sensationmapps.com:* http://climapp.byg.dtu.dk https://maps.googleapis.com:* https://maps.gstatic.com/:*;">
+        <meta http-equiv="Content-Security-Policy" content="connect-src 'self' https://www.sensationmapps.com:* http://climapp.byg.dtu.dk https://maps.googleapis.com:* https://maps.gstatic.com/:* http://www.hittewijzer.nl:*;">
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, viewport-fit=cover">
@@ -46,10 +46,10 @@
                 <div data-target="dashboard" data-listener="navbar">
 					<p><i class="fas fa-tachometer-alt fa-2x"></i></p> 
 				</div>
-                <div data-target="forecast" data-listener="navbar">
+                <div data-target="forecast" id="navbar-forecast" data-listener="navbar">
 					<p><i class="fas fa-chart-line fa-2x"></i></p> 
                 </div>
-                <div data-target="location" data-listener="navbar">
+                <div data-target="location" id="navbar-location" data-listener="navbar">
                     <p><i class="fas fa-map-marker-alt fa-2x"></i></p> 
                 </div>
                 <div data-target="indoor" data-listener="navbar">
@@ -97,7 +97,7 @@
 			  
             </div>
         <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
         <script type="text/javascript" src="js/intro.js"></script>	
         <!--<script tyep="text/javascript" src='js/weka-lib.js'></script>-->
         <script type="text/javascript" src="js/helper_functions/dashboard.js"></script>
@@ -110,9 +110,9 @@
         <script type="text/javascript" src="js/helper_functions/dtu_database.js"></script>
         <script type="text/javascript" src="js/helper_functions/map.js"></script>
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBYMo6nfg5WlXwSpbHtl6ZIhnMBlz9jKow&callback=initMap" async defer></script>
-        <script type="text/javascript" src="translations/translations.json"></script>
         <script type="text/javascript" src="js/Chart.bundle.min.js"></script>
         <script type="text/javascript" src="js/gauge.min.js"></script>
+		<script type="text/javascript" src="js/phs/pmv.js"></script>
 		<script type="text/javascript" src="js/phs/phs.js"></script>
 		<script type="text/javascript" src="js/phs/ireq.js"></script>
         <script type="text/javascript" src="js/Tocca.js"></script>

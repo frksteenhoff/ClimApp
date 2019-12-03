@@ -110,7 +110,7 @@ df.head()
 
 
 # #### **Available languages**
-# NOTE: This information is used in all conversions, translations MUST be completed in the same languages for `text`, `toasts` and `wheels` for the program to work correctly.
+# NOTE: This information is used in all conversions, translations MUST be completed in the same languages for `labels`, `sentences`, `toasts` `feedback` and `wheels` for the program to work correctly.
 # 
 # * all columns but the first contains languages, we only include those that have values for all keys.
 # * If there are ANY null values within the translations, the language will be escluded. 
@@ -122,11 +122,13 @@ df.head()
 # Extracting available languages from the labels sheet
 
 availableLanguages = []
+df2 = pd.read_csv("climapp_translation_sheet - feedback.csv") # Using feedback file to check whether all translations are added
 
-print("All languages declared in sheet: ", df.columns[1:].values, "\n")
+print("All languages declared in sheet: ", df.columns[1:].values, "\n") # Using labels file
 
-for lang in df.columns[1:]:
-    if(not pd.isnull(df[lang]).any()):
+# from column starting with 'en'
+for lang in df2.columns[3:]:
+    if(not pd.isnull(df2[lang]).any()):
         print("'" + lang + "' translations are added correctly")
         availableLanguages.append(lang)
     else:

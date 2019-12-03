@@ -11,6 +11,7 @@ function gaugeTitleCold(val, translations, language) {
 }
 
 function gaugeTitleHeat(val, translations, language) {
+	console.log( val+  " " + language );
 	var labels = translations.labels;
     if ( val < 1 ) return labels.str_no_stress[language];
     else if ( val < 2 ) return labels.str_heat_minor[language];
@@ -199,9 +200,18 @@ function heatLevelTips( index, level, kb, pageID, translations, language){
 			"lang": language, // locale
 		};
 		var url = "https://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
+		console.log("getting riskval : ");
+		
+		var riskval = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, true );
+		console.log("riskval : "+ riskval);
+		
+		var risklabel = gaugeTitleHeat( riskval, translations, language);
+		console.log("risklabel : "+ risklabel);
+		
 		$.get( url, data).done( function(data, status, xhr){
 			if(status === "success") {
-				var header = pageID === "dashboard" ? "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i>" + gaugeTitleHeat(getPAL(kb, mode), translations, language) + "</p>" : ""; 
+				
+				var header = pageID === "dashboard" ? "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i>" + risklabel + "</p>" : ""; 
 				var str = header; // circle with gauge color
 				let tips = JSON.parse(data);
 				console.log(JSON.stringify(tips));
@@ -221,6 +231,15 @@ function heatLevelTips( index, level, kb, pageID, translations, language){
 	});
 }
 
+function indoorTips( kb, translations, language){
+	let str = "";
+
+	let pps = 100.0 - kb.thermalindices.pmv[ 0 ].PPD;
+	
+	str += "<p>"+pps.toFixed(0)+"% is satisfied with this indoor environment.</p>";
+	return str;
+}
+
 function coldLevelTips( index, level, kb, cold_index, pageID, translations, language){
 	let str = "";
 	
@@ -237,7 +256,7 @@ function coldLevelTips( index, level, kb, cold_index, pageID, translations, lang
 		
 	if( level === 1 ){ //beginner, early user
 		if( cold_index <= 1 ){
-			str += "<p>" + translations.sentences.dash_tip_green[language] + ".</p>";
+			str += "<p>" + translations.sentences.dash_tip_green[language] + "</p>";
 		}
 		else if( cold_index <= 2 ){
 			str += "<p>" + translations.sentences.dash_tip_cyan[language] + "</p>";
@@ -245,36 +264,36 @@ function coldLevelTips( index, level, kb, cold_index, pageID, translations, lang
 		else if( cold_index <= 3 ){
 			str += "<p>" + translations.sentences.dash_tip_blue[language] + "</p>";
 			if( windrisk ){
-				str += "<p>" + translations.sentences.dash_tip_windchill_1[language] + " " + windchill.toFixed(0) + "&deg; " + translations.sentences.dash_tip_windchill_2[language] + " " + windrisk + " " + translations.dash_tip_windchill_3[language] + ".</p>";
+				str += "<p>" + translations.sentences.dash_tip_windchill_1[language] + " " + windchill.toFixed(0) + "&deg; " + translations.sentences.dash_tip_windchill_2[language] + " " + windrisk + " " + translations.dash_tip_windchill_3[language] + "</p>";
 			}
 		}
 		else if( cold_index > 3){
-			str += "<p>" + translations.sentences.dash_tip_severe_cold[language] + ".</p>";
+			str += "<p>" + translations.sentences.dash_tip_severe_cold[language] + "</p>";
 			if( windrisk ){
-				str += "<p>" + translations.sentences.dash_tip_windchill_1[language] + " " + windchill.toFixed(0) + "&deg; " + translations.sentences.dash_tip_windchill_2[language] + " " + windrisk + " " + translations.sentences.dash_tip_windchill_3[language] + ".</p>";
+				str += "<p>" + translations.sentences.dash_tip_windchill_1[language] + " " + windchill.toFixed(0) + "&deg; " + translations.sentences.dash_tip_windchill_2[language] + " " + windrisk + " " + translations.sentences.dash_tip_windchill_3[language] + "</p>";
 			}
 		}
 	}
 	else if( level === 2 ){ //experienced user // or more info requested
 		if( cold_index <= 1 ){
-			str += translations.sentences.dash_tip_general_1[language] + ".</p>";
-			str += translations.sentences.dash_tip_general_2[language] + ".</p>";
-			str += translations.sentences.dash_tip_general_3[language] + ".</p>";
+			str += "<p>" + translations.sentences.dash_tip_general_1[language] + "</p>";
+			str += "<p>" + translations.sentences.dash_tip_general_2[language] + "</p>";
+			str += "<p>" + translations.sentences.dash_tip_general_3[language] + "</p>";
 		}
 		else if( cold_index <= 2 && isWindstopperUseful ){
-			str += translations.sentences.dash_tip_normal[language] + ".</p>";
-			str += translations.sentences.dash_tip_windchill_significant_1[language] + " " + windchill.toFixed(0) + "&deg;, " + translations.sentences.dash_tip_windchill_significant_2[language] + ".</p>";
+			str += "<p>" + translations.sentences.dash_tip_normal[language] + "</p>";
+			str += "<p>" + translations.sentences.dash_tip_windchill_significant_1[language] + " " + windchill.toFixed(0) + "&deg;, " + translations.sentences.dash_tip_windchill_significant_2[language] + "</p>";
 		}
 		else if( cold_index <= 2 ){
-			str += translations.sentences.dash_tip_increase_insulation[language] + ".</p>";
+			str += "<p>" + translations.sentences.dash_tip_increase_insulation[language] + "</p>";
 		}
 		else if( cold_index > 2 ){
-			str += translations.sentences.dash_tip_extra_attention[language] + ".</p>";
+			str += "<p>" + translations.sentences.dash_tip_extra_attention[language] + "</p>";
 			if( isWindstopperUseful ){
-				str += translations.sentences.dash_tip_windchill_significant_1[language] + " " + windchill.toFixed(0) + "&deg;, " + translations.sentences.dash_tip_windchill_significant_2[language] + ".</p>";
+				str += "<p>" + translations.sentences.dash_tip_windchill_significant_1[language] + " " + windchill.toFixed(0) + "&deg;, " + translations.sentences.dash_tip_windchill_significant_2[language] + "</p>";
 			}
 			if( windrisk ){
-				str += translations.sentences.dash_tip_windchill_1[language] + " " + windchill.toFixed(0) + "&deg; " + translations.sentences.dash_tip_windchill_2[language] + " " + windrisk + " " + translations.sentences.dash_tip_windchill_3[language] + ".</p>";
+				str += "<p>" + translations.sentences.dash_tip_windchill_1[language] + " " + windchill.toFixed(0) + "&deg; " + translations.sentences.dash_tip_windchill_2[language] + " " + windrisk + " " + translations.sentences.dash_tip_windchill_3[language] + "</p>";
 			}
 		}
 	}

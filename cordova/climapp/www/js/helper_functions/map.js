@@ -3,10 +3,10 @@ function initMap() {
     // Would like to set these dynamically, but cannot reference kb outside DOM?
 	
 	//bk we could make kb global by putting it in window -> window.kb = ...
-    //var currentCoordinates = { lat: 55.676098, lng: 12.568337 };
+    var currentCoordinates = { lat: 55.676098, lng: 12.568337 };
 
     // Each marker is labeled with a single alphabetical character.
-    var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    var labels = 'BCDEFGHIJKLMNOPQRSTUVWXYZ';
     var labelIndex = 0;
 
     let options = { timeout: 30000 };
@@ -27,7 +27,8 @@ function initMap() {
 	*/
 	//window.map so map is available global scope
     window.map = new google.maps.Map(document.getElementById('map'), { 
-        //center: currentCoordinates,
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+      	center: new google.maps.LatLng(55.676098, 12.568337),
         zoom: 8
     });
 
@@ -82,5 +83,5 @@ function initMap() {
         });
     }*/
 
-    google.maps.event.addDomListener(window, 'load', initMap);
+    //google.maps.event.addDomListener(window, 'load', initMap);
 }
