@@ -20,7 +20,6 @@
 var app = {
 	language: undefined,
 	translations: undefined,
-	feedback_questions: undefined,
 	knowledgeBase: undefined,
 	pageMap: undefined,
 	currentPageID: undefined,
@@ -59,19 +58,6 @@ var app = {
 	// Update DOM on a Received Event
 	receivedEvent: function (id) {
 		self = this;
-		// Read in feedback questions (asynchronously)
-		$.getJSON("data/feedbackQuestions.json", function (json) {
-			try {
-				console.log("Feedback questions read: " + Object.keys(json));
-			} catch (error) {
-				console.log("Error in reading feedback questions: " + error);
-			}
-			}).fail(function (e) {
-				console.log("Failed to read translations " + e);
-			}).done(function (result){
-				self.feedback_questions = result;
-		});
-
 		// Read in translations (synchronously)
 		$.getJSON("translations/translations.json", function (json) {
 			try {
@@ -231,14 +217,14 @@ var app = {
 			var rating_id = $(this).attr("id")[0];
 
 			if (rating_id === '1') {
-				self.feedback_questions.question1.rating = target;
-				$("#ratingtext1").html(self.feedback_questions.question1.ratingtext[self.feedback_questions.question1.rating]);
+				self.translations.feedback.question1.rating = target;
+				$("#ratingtext1").html(self.translations.feedback.question1.ratingtext[self.translations.feedback.question1.rating]);
 			} else if (rating_id === '2') {
-				self.feedback_questions.question2.rating = target;
-				$("#ratingtext2").html(self.feedback_questions.question2.ratingtext[self.feedback_questions.question2.rating]);
+				self.translations.feedback.question2.rating = target;
+				$("#ratingtext2").html(self.translations.feedback.question2.ratingtext[self.translations.feedback.question2.rating]);
 			} else {
-				self.feedback_questions.question3.rating = target;
-				$("#ratingtext3").html(self.feedback_questions.question3.ratingtext[self.feedback_questions.question3.rating]);
+				self.translations.feedback.question3.rating = target;
+				$("#ratingtext3").html(self.translations.feedback.question3.ratingtext[self.translations.feedback.question3.rating]);
 			}
 			$("input[data-listener='feedback']").removeClass("checked");
 			self.saveSettings();
@@ -249,7 +235,7 @@ var app = {
 		$("div[data-listener='submit']").on("click", function () {
 			var target = $("#feedback_text").val();
 			let mode = self.knowledgeBase.user.adaptation.mode;
-			self.feedback_questions.comment = target;
+			self.translations.feedback.comment = target;
 
 			/*
 			//BK: I commented out below code because adaptation[mode].diff is updated on click already - to be discussed further. 
@@ -659,7 +645,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0476,
+			"version": 2.0477,
 			"app_version": "beta",
 			"server": {
 				"dtu_ip": "http://climapp.byg.dtu.dk",
@@ -709,7 +695,8 @@ var app = {
 			"feedback": {
 				"question1": 0,
 				"question2": 0,
-				"question3": 0
+				"question3": 0,
+				"comment": ""
 			},
 			"headgear": {
 				"values": {
@@ -1348,18 +1335,10 @@ var app = {
 				$("#open_windows").html(this.knowledgeBase.user.settings.open_windows);
 				$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
 
-				self.getDrawGaugeParamsFromIndex(0, self.knowledgeBase, false).then(
-					([width, personalvalue, modelvalue, thermal, tip_html]) => {//
-						self.drawGauge('main_gauge', width, personalvalue, thermal);
-	
-						$("#tips").html(tip_html);
-						$("#circle_gauge_color").css("color", getCurrentGaugeColor(personalvalue));
-						$("#main_panel").fadeIn(500);
-					});
-
 				// Remove weather indication from dashboard // substitute with windows open/close
                 $("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
 				$("#weather_desc").html(this.knowledgeBase.user.settings.open_windows ? this.translations.labels.indoor_open_windows[this.language] : this.translations.labels.indoor_no_open_windows[this.language]);
+				this.updateInfo(0);
 				
 			} else {
 				$("#dashboard_header").show();
@@ -1681,14 +1660,14 @@ var app = {
 					$("div[data-listener='adaptation']").attr("data-context", thermal);
 
 					// Question text
-					$("#question1").html(this.feedback_questions.question1.text);
-					$("#question2").html(this.feedback_questions.question2.text);
-					$("#question3").html(this.feedback_questions.question3.text);
+					$("#question1").html(this.translations.feedback.question1.text);
+					$("#question2").html(this.translations.feedback.question2.text);
+					$("#question3").html(this.translations.feedback.question3.text);
 					
 					// Set rating bar text (under feedback buttons) using last given feedback
-					$("#ratingtext1").html(this.feedback_questions.question1.ratingtext[this.feedback_questions.question1.rating]);
-					$("#ratingtext2").html(this.feedback_questions.question2.ratingtext[this.feedback_questions.question2.rating]);
-					$("#ratingtext3").html(this.feedback_questions.question3.ratingtext[this.feedback_questions.question3.rating]);
+					$("#ratingtext1").html(this.translations.feedback.question1.ratingtext[this.translations.feedback.question1.rating]);
+					$("#ratingtext2").html(this.translations.feedback.question2.ratingtext[this.translations.feedback.question2.rating]);
+					$("#ratingtext3").html(this.translations.feedback.question3.ratingtext[this.translations.feedback.question3.rating]);
 
 					// Rating bar values -- still not setting the default color..
 					$("input[id='1star" + 3 + "']").attr("checked", true);
@@ -1923,7 +1902,6 @@ var app = {
 	},
 	updateInfo: function (index) {
 		var self = this;
-		console.log("index: " +index);
 		if (this.knowledgeBase.thermalindices.ireq.length > 0 && !this.knowledgeBase.user.guards.isIndoor) {
 			$("#icon-weather").show();
 			$("#weather_desc").show();
@@ -2070,10 +2048,9 @@ var app = {
 				});
 
 		} else {
-			console.log("here! "+ self.knowledgeBase.thermalindices.ireq.length > 0 + " UNIT " + self.knowledgeBase.user.settings.unit);
-			if(!(self.knowledgeBase.thermalindices.ireq.length > 0)) {
+			if((self.knowledgeBase.thermalindices.ireq.length > 0)) {
 				// Indoor mode
-				$("#temperature").html(getTemperatureValueInPreferredUnit(self.knowledgeBase.thermalindices.ireq[index].Tair, self.knowledgeBase.user.settings.unit).toFixed(0) + "&#xb0");
+				$("#temperature").html(getTemperatureValueInPreferredUnit(self.knowledgeBase.user.settings.temp_indoor_predicted, self.knowledgeBase.user.settings.unit) + "&#xb0");
 				$("#windspeed").html(self.getWindspeedTextFromValue(self.knowledgeBase.user.settings.windspeed));
 				$("#humidity").html(self.translations.labels.str_humidity[self.language]);
 				$("#humidity_value").html(self.knowledgeBase.user.settings._humidity);
@@ -2094,7 +2071,6 @@ var app = {
 				// Draw gauge -- any values that needs to be changed?
 				self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
 					([width, personalvalue, modelvalue, thermal, tip_html]) => {//
-						console.log("update info draw gauge phase 2 " + [width, personalvalue, modelvalue, thermal, tip_html]);
 						self.drawGauge('main_gauge', width, personalvalue, thermal);
 	
 						$("#tips").html(tip_html);

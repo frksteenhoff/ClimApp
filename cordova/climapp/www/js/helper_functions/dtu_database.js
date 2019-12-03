@@ -139,7 +139,7 @@ function getIndoorPrediction(kb) {
         let apicall = "getIndoorPrediction";
         let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
         let user_data = {
-            "rho": kb.thermalindices.ireq[0].rh, // outdoor relative humidity %
+            "rho": kb.user.settings._humidity, // outdoor relative humidity %
             "sr": kb.thermalindices.ireq[0].rad, // solar radiation W/m^2
             "tao": kb.thermalindices.ireq[0].Tair, // outdoor temp (degrees celcius)
             "wo": kb.user.settings.open_windows, // window opening 0/1
