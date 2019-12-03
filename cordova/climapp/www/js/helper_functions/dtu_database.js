@@ -12,9 +12,9 @@ function addFeedbackToDB(kb, translations, language) {
     let user_data = {
         "user_id": deviceID(),
         "question_combo_id": 1, // will be changed when more sophisticated solution is implemented
-        "rating1": kb.feedback.question1.rating,
-        "rating2": kb.feedback.question2.rating,
-        "rating3": kb.feedback.question3.rating,
+        "rating1": kb.feedback.question1,
+        "rating2": kb.feedback.question2,
+        "rating3": kb.feedback.question3,
         "txt": kb.feedback.comment === "" ? "_" : kb.feedback.comment,
         "predicted": kb.user.adaptation[thermal_mode].predicted,
         "perceived": kb.user.adaptation[thermal_mode].perceived,
@@ -84,7 +84,7 @@ function addWeatherDataToDB(kb) {
 * Synchronous functions
 */
 // Create user record in dtu database, kb shorthand for self.knowledgebase
-function createUserRecord(kb) {
+async function createUserRecord(kb) {
     return new Promise((resolve, reject) => {
         let apicall = "createUserRecord";
         let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
@@ -139,14 +139,14 @@ function getIndoorPrediction(kb) {
         let apicall = "getIndoorPrediction";
         let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
         let user_data = {
+            "rho": kb.thermalindices.ireq[0].rh, // outdoor relative humidity %
+            "sr": kb.thermalindices.ireq[0].rad, // solar radiation W/m^2
+            "tao": kb.thermalindices.ireq[0].Tair, // outdoor temp (degrees celcius)
             "wo": kb.user.settings.open_windows, // window opening 0/1
             "trv": kb.user.settings.thermostat_level, // heating setpoint (radiator valve/thermostat)
             "cy": 1950, // building construction year [1920,1930 .. 2010]
             "fa": 40, // floor area 5-200m^2 
-            "no": 3, // number of occupants in room (1-5)
-            "tao": kb.thermalindices.ireq[0].Tair, // outdoor temp (degrees celcius)
-            "rho": kb.thermalindices.ireq[0].rh, // outdoor relative humidity %
-            "sr": kb.thermalindices.ireq[0].rad // solar radiation W/m^2
+            "no": 3 // number of occupants in room (1-5)
         }
         $.post(url, user_data).done(function (data, status, xhr) {
             if (status === "success") {
