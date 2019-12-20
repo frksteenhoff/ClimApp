@@ -457,9 +457,13 @@ var app = {
 					self.knowledgeBase.user.guards.customLocationEnabled = false;
 					customText = self.translations.toasts.indoor_enabled[self.language];
 					$("#indoorSection").show();
+					$("#navbar-forecast").hide();
+					$("#navbar-location").hide();
 				} else {
 					customText = self.translations.toasts.indoor_disabled[self.language];
 					$("#indoorSection").hide();
+					$("#navbar-forecast").show();
+					$("#navbar-location").show();
 					self.updateUI();
 				}
 			}
@@ -639,7 +643,7 @@ var app = {
 					"heat": {
 						"predicted": 0,
 						"perceived": 0,
-						"diff": [] // perceived - predicted
+						"diff": [0] // perceived - predicted
 					},
 					"cold": {
 						"predicted": 0,
@@ -650,7 +654,7 @@ var app = {
 			},
 			/* --------------------------------------------------- */
 			"version": 2.0475,
-			"app_version": "3.0.4",
+			"app_version": "3.0.7",
 			"server": {
 				"dtu_ip": "http://climapp.byg.dtu.dk",
 				"dtu_api_base_url": "/ClimAppAPI/v2/ClimAppApi.php?apicall="
@@ -1564,7 +1568,6 @@ var app = {
 					}
 					
 						
-					console.log("updateInfo Details - D");
 					
 
 					$("#detail_metabolic").html(M + "W/m<sup>2</sup>");
@@ -1895,8 +1898,8 @@ var app = {
 	},
 	calculateColdIndex: function( icl_neutral, icl_min, icl_worn, isPersonalised ){
 		var value = 0;
-		
-		var PAL = isPersonalised ? this.knowledgeBase.user.adaptation["cold"].diff[0] : 0;
+		[0]
+		var PAL = (this.knowledgeBase.user.adaptation["cold"].diff.length>0 && isPersonalised) ? this.knowledgeBase.user.adaptation["cold"].diff[0] : 0;
 		icl_worn = icl_worn + PAL;
 		if( icl_worn < icl_min ){
 			value = 1 +  icl_min - icl_worn;
@@ -1915,12 +1918,12 @@ var app = {
 		var icl_min = kb.thermalindices.ireq[index].ICLminimal;
 		var icl_neutral = kb.thermalindices.ireq[index].ICLneutral;
 		var icl_worn = getClo(kb);
-		
 		var personal_cold_index = this.calculateColdIndex( icl_neutral, icl_min, icl_worn, true); 
 		var model_cold_index = this.calculateColdIndex( icl_neutral, icl_min, icl_worn, false); 
+		
 	
 		var personal_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, true );
-		var model_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, false );	
+		var model_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, false );			
 		
 		var pmv_index = kb.thermalindices.pmv[index].PMV;
 		
@@ -1932,23 +1935,27 @@ var app = {
 			model_cold_index = pmv_index;
 		}
 		
+		
 		let draw_cold_gauge = this.isDrawColdGauge( model_cold_index, model_heat_index, index );
 		let draw_heat_gauge = this.isDrawHeatGauge( model_cold_index, model_heat_index, index );
 
 		let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 		let tip_html = "";
-		let thermal = draw_cold_gauge ? "cold" : "heat";
+		let thermal = model_cold_index >= model_heat_index? "cold" : "heat";
 		let level = leveloverride ? 2 : kb.user.settings.level;
+		
 		
 		let personal_value = this.determineThermalIndexValue(personal_cold_index, personal_heat_index, index, isIndoor);
 		let model_value = this.determineThermalIndexValue(model_cold_index, model_heat_index, index, isIndoor);
 		
 		
-		if( this.knowledgeBase.user.guards.isIndoor ){
+		if( isIndoor ){
 			tip_html += indoorTips( kb, this.translations, this.language);
 		}
 		else{
-			if (draw_cold_gauge || (isNeutral && cold_index > personal_heat_index)) {
+			
+			if (draw_cold_gauge || (isNeutral && personal_cold_index > personal_heat_index)) {
+				
 				tip_html += coldLevelTips(index, level, kb, personal_cold_index, this.currentPageID, this.translations, this.language);
 			}
 			else {
@@ -1977,12 +1984,11 @@ var app = {
 		return heat > cold;
 	},
 	determineThermalIndexValue: function (cold, heat, index, isIndoor) {
-		
 		if( isIndoor ){
 			return cold; //return pmv value 
 		}
 		else{
-			let value = cold > heat ? -cold : heat;
+			var value = cold > heat ? -cold : heat;
 		
 			value = this.isDrawColdGauge(cold, heat, index) ? -cold : value;
 			value = this.isDrawHeatGauge(cold, heat, index) ? heat : value;
@@ -2163,8 +2169,6 @@ var app = {
 				// Draw gauge -- any values that needs to be changed?
 				self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
 					([width, personalvalue, modelvalue, thermal, tip_html]) => {//
-						console.log("update indoor draw gauge phase 2 " + [width, personalvalue, modelvalue, thermal, tip_html]);
-						
 						self.drawGauge('main_gauge', width, personalvalue, thermal);
 	
 						$("#tips").html(tip_html);

@@ -250,7 +250,6 @@ function coldLevelTips( index, level, kb, cold_index, pageID, translations, lang
 	let threshold = kb.thresholds.windchill.deltaT;
 	
 	let windrisk = windchillRisk( windchill );
-	
 	let isWindstopperUseful = ( tair - threshold ) > windchill;
 	pageID === "dashboard" ? str += "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i>" + gaugeTitleCold(cold_index, translations, language) + "</p>" : str += "";
 		
