@@ -20,7 +20,6 @@
 var app = {
 	language: undefined,
 	translations: undefined,
-	feedback_questions: undefined,
 	knowledgeBase: undefined,
 	pageMap: undefined,
 	currentPageID: undefined,
@@ -82,7 +81,7 @@ var app = {
 			}).done(function (result){
 				self.feedback_questions = result;
 		});
-		
+
 		// Read in translations (synchronously)
 		this.loadTranslations("http://www.hittewijzer.nl/translations/translations.json");
 		//
@@ -178,10 +177,8 @@ var app = {
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					self.drawGauge('feedback_gauge', width, personalvalue, thermal);
-					console.log("reset_adaptation - A ");
-					$("#gauge_text_top_diff").html(self.translations.labels.str_personal[self.language] + " " + self.translations.labels.str_alert_level[self.language] + ": 0");
-					console.log("reset_adaptation - B ");
 
+					$("#gauge_text_top_diff").html(self.translations.labels.str_personal[self.language] + " " + self.translations.labels.str_alert_level[self.language] + ": 0");
 					// Set the value as the perceived value in knowledgebase
 					self.saveSettings();
 				});
@@ -207,7 +204,6 @@ var app = {
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//					
 					self.drawGauge('feedback_gauge', width, personalvalue, thermal);
 					$("#gauge_text_top_diff").html(self.translations.labels.str_personal[self.language] + " " + thermal + " " + self.translations.labels.str_alert_level[self.language] +": " + currentPAL);
-
 					// Set the value as the perceived value in knowledgebase
 					self.saveSettings();
 				});
@@ -218,19 +214,20 @@ var app = {
 		$("input[data-listener='feedback']").off();
 		$("input[data-listener='feedback']").on("click", function () {
 			var target = $(this).attr("data-target");
+			console.log("target: " + target);
 
 			// Updating rating bar using first char in ID
 			var rating_id = $(this).attr("id")[0];
 
 			if (rating_id === '1') {
-				self.feedback_questions.question1.rating = target;
-				$("#ratingtext1").html(self.feedback_questions.question1.ratingtext[self.feedback_questions.question1.rating]);
+				self.knowledgeBase.feedback.question1 = target + ".0"; // this is how the integers in feedback are read from the translations sheet "x.0" 
+				$("#ratingtext1").html(self.translations.feedback.question1.ratingtext[self.knowledgeBase.feedback.question1][self.language]);
 			} else if (rating_id === '2') {
-				self.feedback_questions.question2.rating = target;
-				$("#ratingtext2").html(self.feedback_questions.question2.ratingtext[self.feedback_questions.question2.rating]);
+				self.knowledgeBase.feedback.question2 = target + ".0";
+				$("#ratingtext2").html(self.translations.feedback.question2.ratingtext[self.knowledgeBase.feedback.question2][self.language]);
 			} else {
-				self.feedback_questions.question3.rating = target;
-				$("#ratingtext3").html(self.feedback_questions.question3.ratingtext[self.feedback_questions.question3.rating]);
+				self.knowledgeBase.feedback.question3 = target + ".0";
+				$("#ratingtext3").html(self.translations.feedback.question3.ratingtext[self.knowledgeBase.feedback.question3][self.language]);
 			}
 			$("input[data-listener='feedback']").removeClass("checked");
 			self.saveSettings();
@@ -241,8 +238,10 @@ var app = {
 		$("div[data-listener='submit']").on("click", function () {
 			var target = $("#feedback_text").val();
 			let mode = self.knowledgeBase.user.adaptation.mode;
-			
-			self.feedback_questions.comment = target;
+
+			self.translations.feedback.comment = target;
+
+     		self.feedback_questions.comment = target;
 
 			// If user not in database, add user to database
 			self.checkIfUserExistInDB();
@@ -479,11 +478,12 @@ var app = {
 			var target = $(this).attr("data-target");
 
 			// Get predicted indoor temperature from server
-			//self.knowledgeBase.user.settings.temp_indoor_predicted = await getIndoorPrediction(self.knowledgeBase);
-			self.calcThermalIndices();
-			self.saveSettings();
-
-			self.loadUI(target);
+			getIndoorPrediction(self.knowledgeBase).then((temp) => {
+				self.knowledgeBase.user.settings.temp_indoor_predicted = temp;
+				self.saveSettings();
+				//self.updateInfo();
+				self.loadUI(target);
+			});
 		});
 	},
 	initGeolocationListeners: function () {
@@ -653,8 +653,8 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0475,
-			"app_version": "3.0.7",
+			"version": 2.0477,
+			"app_version": "3.0.8", //cannot be beta - because it will be rejected by iOS then.
 			"server": {
 				"dtu_ip": "http://climapp.byg.dtu.dk",
 				"dtu_api_base_url": "/ClimAppAPI/v2/ClimAppApi.php?apicall="
@@ -699,6 +699,12 @@ var app = {
 					"Vapour_barrier_coverall": 1.1,
 					"Winter_attire": 2.5
 				}
+			},
+			"feedback": {
+				"question1": 0,
+				"question2": 0,
+				"question3": 0,
+				"comment": ""
 			},
 			"headgear": {
 				"values": {
@@ -816,7 +822,6 @@ var app = {
 			msgString = this.translations.toasts.kb_created[this.language];
 		}
 
-		console.log(msgString + " " + this.knowledgeBase.version);
 		showShortToast(msgString + this.knowledgeBase.version);
 		this.saveSettings();
 
@@ -1028,9 +1033,21 @@ var app = {
 								self.knowledgeBase.weather.windchill = weather.windchill.map(Number);
 								self.knowledgeBase.weather.windchill.unshift(Number(weather.currentweather.windchill));
 
-								
-								self.knowledgeBase.weather.temperature = weather.tair.map(Number);
-								self.knowledgeBase.weather.temperature.unshift(Number(weather.currentweather.tair));
+								// Using custom input, when custom is enabled (indoor mode)
+								if (self.knowledgeBase.user.guards.isIndoor) {
+									// Get predicted indoor temperature from server
+									getIndoorPrediction(self.knowledgeBase).then((temp) => {
+										self.knowledgeBase.user.settings.temp_indoor_predicted = Number(temp);
+									});
+									self.knowledgeBase.weather.humidity = self.knowledgeBase.user.settings._humidity; //calculate humidity from outdoor vapour pressure and indoor air temperature
+									self.knowledgeBase.weather.windspeed = 0.2; //default assume indoor windspeed always to 0.2m/s - communication with Jorn Toftum dec 2019
+								}
+								else {
+									// Otherwise use weather service info
+									self.knowledgeBase.weather.temperature = weather.tair.map(Number);
+									self.knowledgeBase.weather.temperature.unshift(Number(weather.currentweather.tair));
+								}
+
 
 								self.knowledgeBase.weather.humidity = weather.rh.map(Number);
 								self.knowledgeBase.weather.humidity.unshift(Number(weather.currentweather.rh));
@@ -1079,7 +1096,6 @@ var app = {
 										self.knowledgeBase.weather.meanradianttemperature.push( Tmrt );
 										self.knowledgeBase.weather.windspeed2m.push( va );
 								} );
-								
 
 								self.knowledgeBase.weather.watervapourpressure = [];
 								$.each(self.knowledgeBase.weather.humidity,
@@ -1380,9 +1396,17 @@ var app = {
 				
 				$("#dashboard_header").hide();
 				$("#dashboard_forecast").hide();
+				$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.user.settings.temp_indoor_predicted, this.knowledgeBase.user.settings.unit) + "&#xb0");
+				$("#humidity_value").html(this.knowledgeBase.user.settings._humidity);
+				$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
+				$("#open_windows").html(this.knowledgeBase.user.settings.open_windows);
+				$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
 
+				// Remove weather indication from dashboard // substitute with windows open/close
+                $("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
+				$("#weather_desc").html(this.knowledgeBase.user.settings.open_windows ? this.translations.labels.indoor_open_windows[this.language] : this.translations.labels.indoor_no_open_windows[this.language]);
 				this.updateInfo(0);
-
+				
 			} else {
 				$("#navbar-forecast").show();
 				$("#navbar-location").show();
@@ -1730,24 +1754,24 @@ var app = {
 						$("#gauge_text_top_diff").show();
 						
 						$("#reset_icon").show();
-						// Personal heat/cold alert limit: <value>
-						
+						// Personal heat/cold alert limit: <value>		
 						$("#gauge_text_top_diff").html(this.translations.labels.str_personal[this.language] + " " + thermal + " " + this.translations.labels.str_alert_level[this.language] +": " + diff_array[0].toFixed(1));						
+
 					}
 					$("#gauge_text_bottom").html(this.translations.sentences.feedback_adaptation_colder_warmer[this.language]);
 
 
 					// Question text
-					$("#question1").html(this.feedback_questions.question1.text);
-					$("#question2").html(this.feedback_questions.question2.text);
-					$("#question3").html(this.feedback_questions.question3.text);
+					$("#question1").html(this.translations.feedback.question1.text[this.language]);
+					$("#question2").html(this.translations.feedback.question2.text[this.language]);
+					$("#question3").html(this.translations.feedback.question3.text[this.language]);
 					
 					// Set rating bar text (under feedback buttons) using last given feedback
-					$("#ratingtext1").html(this.feedback_questions.question1.ratingtext[this.feedback_questions.question1.rating]);
-					$("#ratingtext2").html(this.feedback_questions.question2.ratingtext[this.feedback_questions.question2.rating]);
-					$("#ratingtext3").html(this.feedback_questions.question3.ratingtext[this.feedback_questions.question3.rating]);
+					$("#ratingtext1").html(self.translations.feedback.question1.ratingtext[self.knowledgeBase.feedback.question1][this.language]);
+					$("#ratingtext2").html(self.translations.feedback.question2.ratingtext[self.knowledgeBase.feedback.question2][this.language]);
+					$("#ratingtext3").html(self.translations.feedback.question3.ratingtext[self.knowledgeBase.feedback.question3][this.language]);
 
-					// Rating bar values -- still not setting the default color..
+					// Rating bar values
 					$("input[id='1star" + 3 + "']").attr("checked", true);
 					$("input[id='2star" + 3 + "']").attr("checked", true);
 					$("input[id='3star" + 3 + "']").attr("checked", true);
@@ -2142,7 +2166,6 @@ var app = {
 					$("#circle_gauge_color").css("color", getCurrentGaugeColor(personalvalue));
 					$("#main_panel").fadeIn(500);
 				});
-
 		} 
 		else {
 			console.log("updateInfo isIndoor");
@@ -2156,14 +2179,14 @@ var app = {
 				
 				// Remove weather indication from dashboard // substitute with windows open/close
 				$("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
-				$("#weather_desc").html(this.knowledgeBase.user.settings.open_windows ? this.translations.labels.indoor_open_windows[this.language] : this.translations.labels.indoor_no_open_windows[this.language]);
+				$("#weather_desc").html(self.knowledgeBase.user.settings.open_windows ? self.translations.labels.indoor_open_windows[self.language] : self.translations.labels.indoor_no_open_windows[self.language]);
 				
 				// Remove redundant wind speed information when indoor
 				$("#windspeed_desc").html("");
 				$("#windspeed_unit").html("");
 				
 				// Indicate indoor/outdoor mode on dashboard
-				let isIndoor = this.knowledgeBase.user.guards.isIndoor ? this.translations.labels.str_indoor[this.language] : this.translations.labels.str_outoor[this.language];
+				let isIndoor = self.knowledgeBase.user.guards.isIndoor ? self.translations.labels.str_indoor[self.language] : self.translations.labels.str_outoor[self.language];
 				$("#indoor_outdoor").html(isIndoor.toUpperCase());
 
 				// Draw gauge -- any values that needs to be changed?

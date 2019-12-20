@@ -15,7 +15,7 @@ function addFeedbackToDB(kb, feedback_questions, translations, language) {
         "rating1": feedback_questions.question1.rating,
         "rating2": feedback_questions.question2.rating,
         "rating3": feedback_questions.question3.rating,
-        "txt": "NA",
+        "txt": "_",
         "predicted": kb.user.adaptation[thermal_mode].predicted,
         "perceived": kb.user.adaptation[thermal_mode].perceived,
         "diff": kb.user.adaptation[thermal_mode].diff[0],
@@ -84,7 +84,7 @@ function addWeatherDataToDB(kb) {
 * Synchronous functions
 */
 // Create user record in dtu database, kb shorthand for self.knowledgebase
-function createUserRecord(kb) {
+async function createUserRecord(kb) {
     return new Promise((resolve, reject) => {
         let apicall = "createUserRecord";
         let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
@@ -139,14 +139,14 @@ function getIndoorPrediction(kb) {
         let apicall = "getIndoorPrediction";
         let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
         let user_data = {
+            "rho": kb.user.settings._humidity, // outdoor relative humidity %
+            "sr": kb.thermalindices.ireq[0].rad, // solar radiation W/m^2
+            "tao": kb.thermalindices.ireq[0].Tair, // outdoor temp (degrees celcius)
             "wo": kb.user.settings.open_windows, // window opening 0/1
             "trv": kb.user.settings.thermostat_level, // heating setpoint (radiator valve/thermostat)
             "cy": 1950, // building construction year [1920,1930 .. 2010]
             "fa": 40, // floor area 5-200m^2 
-            "no": 3, // number of occupants in room (1-5)
-            "tao": kb.thermalindices.ireq[0].Tair, // outdoor temp (degrees celcius)
-            "rho": kb.thermalindices.ireq[0].rh, // outdoor relative humidity %
-            "sr": kb.thermalindices.ireq[0].rad // solar radiation W/m^2
+            "no": 3 // number of occupants in room (1-5)
         }
         $.post(url, user_data).done(function (data, status, xhr) {
             if (status === "success") {
