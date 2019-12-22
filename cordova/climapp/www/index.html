@@ -46,9 +46,6 @@
                 <div data-target="dashboard" data-listener="navbar">
 					<p><i class="fas fa-tachometer-alt fa-2x"></i></p> 
 				</div>
-                <div data-target="forecast" id="navbar-forecast" data-listener="navbar">
-					<p><i class="fas fa-chart-line fa-2x"></i></p> 
-                </div>
                 <div data-target="location" id="navbar-location" data-listener="navbar">
                     <p><i class="fas fa-map-marker-alt fa-2x"></i></p> 
                 </div>
@@ -73,10 +70,8 @@
             </div>
             
             <div class="video-container">
-                <div class="video-background" >
-                    
-                    </div>
-                    <div class="video-foreground" id="content">
+                <div class="video-background"> </div>
+                <div class="video-foreground" id="content">
                         <!-- BK feb 6 2019: we use this div as our root, and dynamically populate it with the content we require.
                         -->
                 </div>
@@ -91,11 +86,12 @@
                         <div class="button" id="str_set_location" data-target="dashboard" data-listener="set_coordinates"></div>
                     </div>
                 </div>  
-                
+            </div>   
 			
 			<div class="spacer"><p>&nbsp;</p></div><!-- &nbsp; so we have same style implementation for <p> as in header -->
 			  
             </div>
+		</div>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
         <script type="text/javascript" src="js/intro.js"></script>	

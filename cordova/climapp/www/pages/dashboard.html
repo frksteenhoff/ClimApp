@@ -9,26 +9,28 @@
 		</div>
 	</div>
 	<div class="flexbox-2">
-		<div class="left">
-			<p id="indoor_outdoor"></p><br>
-			<p><span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span><br><span id="temp_unit"></span></p>
-			<!--<p><i class="fas fa-cloud"></i> <span id="cloudiness"><i class="fas fa-spinner fa-pulse"></i></span> %</p>-->
-		</div>
-		<div class="center" id="gauge_div" data-target="feedback" data-listener="tab">
+		<div class="center" id="gauge_div">
 			<canvas id="main_gauge"></canvas>
 		</div>
 	</div>
 
-	<div>
-		<p class="label" id="dashboard_numbers">
-			<i class="fas fa-wind"></i> <span id="windspeed_desc"></span> <span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span> <span id="windspeed_unit">m/s</span>
-			&nbsp; | &nbsp;
-			<i class="fas fa-tint"></i> <span id="humidity"></span> <span id="humidity_value"><i class="fas fa-spinner fa-pulse"></i></span >%
-			&nbsp; | &nbsp;
-			<i id="icon-weather" class="fas fa-cloud-sun-rain"></i> <span class="label" id="weather_desc"></span>
-		</p>
+	<div class="flexbox-5">
+		<div><p class="label" id="indoor_outdoor"></p></div>
+		<div class="border"><p class="label"><i class="fas fa-temperature-low"></i><br><span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span> <span id="temp_unit"></span></p></div>
+		<div class="border">
+			<p class="label">
+				<i class="fas fa-wind"></i><br><span id="windspeed_desc"></span><br><span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span> <span id="windspeed_unit">m/s</span>
+			</p>
+		</div>
+		<div class="border">
+			<p class="label"><i class="fas fa-tint"></i><br><span id="humidity"></span><br><span id="humidity_value"><i class="fas fa-spinner fa-pulse"></i></span >%</p>
+		</div>
+		<div class="border">
+			<p class="label"><i id="icon-weather" class="fas fa-cloud-sun-rain"></i><br><span class="label" id="weather_desc"></span></p>
+		</div>
 	</div>
 	
+	<!--
 	<div class="flexbox-2" id="dashboard_forecast">
 		<div>
 			<p id="forecast_left" class="left label"><i class="fas fa-chevron-left"></i> <span id="swipe_left_time"></span></p>
@@ -37,6 +39,7 @@
 			<p id="forecast_right" class="right label"><span id="swipe_right_time"></span> <i class="fas fa-chevron-right"></i></p>
 		</div>
 	</div>
+	-->
 </div>
 
 <div class="panel" id="tip_panel" data-listener="panel" data-target="settings">

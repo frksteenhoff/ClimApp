@@ -22,7 +22,7 @@ function gaugeTitleHeat(val, translations, language) {
 }
 
 function getTemperatureUnit(unit) {
-    return unit === "US" ? "Fahrenheit" : "Celsius";
+    return unit === "US" ? "&#8457;" : "&#8451;";
 }
 function getTemperatureValueInPreferredUnit(temp, unit) {
 	if(unit === "US") {

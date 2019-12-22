@@ -136,6 +136,7 @@ function getAppIDFromDB(kb) {
 
 function getIndoorPrediction(kb) {
     return new Promise((resolve, reject) => {
+		console.log("getting indoor prediction A");
         let apicall = "getIndoorPrediction";
         let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
         let user_data = {
