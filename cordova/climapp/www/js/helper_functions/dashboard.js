@@ -21,6 +21,9 @@ function gaugeTitleHeat(val, translations, language) {
     else return labels.str_heat_extreme[language];
 }
 
+function getWindspeedUnit(unit) {
+    return unit === "US" ? "m/s" : "m/s";
+}
 function getTemperatureUnit(unit) {
     return unit === "US" ? "&#8457;" : "&#8451;";
 }

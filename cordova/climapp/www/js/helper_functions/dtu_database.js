@@ -58,7 +58,6 @@ function addWeatherDataToDB(kb) {
     let apicall = "createWeatherRecord";
     let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
     let acc = kb.user.acclimatization ? 1 : 0;
-
     let user_data = {
         "_id": deviceID(),
         "longitude": kb.weather.lat,
