@@ -30,9 +30,19 @@ settings,height,title,How tall are you?,Hvor høj er du?,How tall are you?,How t
 settings,weight,title,How much do you weigh?,Hvor meget vejer du?,How much do you weigh?,How much do you weigh?,Hvor mye veier du?,Ποιο είναι το βάρος σας;,Quanto pesi?,Was ist Ihr Gewicht?,¿Cuánto pesas?,Quel est votre poids ?
 settings,gender,title,What is your gender?,Hvilket køn er du?,What is your gender?,What is your gender?,Hvilket kjønn er du?,Ποιο είναι το φύλο σας;,Qual è il tuo genere?,Was ist Ihr Geschlecht?,¿Cuál es tu género?,Quel est votre sexe ?
 settings,unit,title,Which units of measurements would you prefer?,Hvilket enheder foretrækker du?,Which units of measurements would you prefer?,Which units of measurements would you prefer?,Hvilke enheter foretrekker du?,Ποιες μονάδες μέτρησεις προτειμάτε;,Che unità di misura preferisci?,Welche Einheiten vorziehen Sie?,¿Qué unidades de medida prefieres?,Quelles unités de mesure préférez-vous ?
-settings,thermostat_level,title,What is the set point of the radiator valve in the room?,Hvad er din thermostat sat til?,What is the set point of the radiator valve in the room?,What is the set point of the radiator valve in the room?,Hva er termostaten din satt til?,Που είναι ορισμένος ο θερμοστάτης σας;,Per cosa è impostato il tuo termostato?,Auf was ist der Thermostat gesetzt?,¿Cuál es el punto de ajuste de la válvula del radiador en la habitación?,Sur quoi votre thermostat est-il réglé ?
+settings,thermostat_level,title,"Thermostat level?
+","Thermostat level?
+","Thermostat level?
+","Thermostat level?
+","Thermostat level?
+","Thermostat level?
+","Thermostat level?
+","Thermostat level?
+","Thermostat level?
+","Thermostat level?
+"
 settings,open_windows,title,Are there any open windows in the room?,Er der nogle åbne vinduer i rummet?,Are there any open windows in the room?,Are there any open windows in the room?,Finns det noen åpne vinduer i rommet?,Υπάρχουν καθόλου ανοικτά παράθυρα στο δωμάτιο;,Ci sono finestre aperte nella tua stanza?,Gibt es offene Fenster im Raum?,¿Hay ventanas abiertas en la habitación?,Y a-t-il des fenêtres ouvertes dans la pièce ?
-settings,_temperature,title,Input the outdoor temperature you would like to use,Angiv den udendørs temperatur du kunne tænke dig at benytte,Input the outdoor temperature you would like to use,Input the outdoor temperature you would like to use,Spesifiser den utendørstemperaturen du ønsker å bruke,Εισάγετε την εξωτερική θερμοκρασία που θα θέλατε να χρησιμοποιήσετε.,Specificare la temperatura esterna che si desidera utilizzare,"Geben Sie die Außentemperatur ein, die Sie verwenden wollen",Ingresa la temperatura exterior que te gustaría usar,Entrer la température extérieure que vous souhaitez utiliser
+settings,_temperature,title,Indoor temperature?,Indoor temperature?,Indoor temperature?,Indoor temperature?,Indoor temperature?,Indoor temperature?,Indoor temperature?,Indoor temperature?,Indoor temperature?,Indoor temperature?
 settings,windspeed,title,Input the windspeed you would like to use,Angiv den vindhastighed du kunne tænke dig at benytte,Input the windspeed you would like to use,Input the windspeed you would like to use,Spesifiser den vindfarten du ønsker å bruke,Εισάγεται την ταχύτητα του ανέμου που θα θέλατε να χρησιμοποιήσετε,Specificare la velocità del vento che si desidera utilizzare,"Geben Sie die Windgeschwindigkeit ein, die Sie verwenden wollen",Ingresa la velocidad del viento que te gustaría usar,Entrer la vitesse du vent que vous souhaitez utiliser
 settings,_humidity,title,Input the humidity you would like to use,Angiv den luftfugtighed du kunne tænke dig at benytte,Input the humidity you would like to use,Input the humidity you would like to use,Spesifiser den luftfuktigheten du ønsker å bruke,Εισάγεται την υγρασία που θα θέλατε να χρησιμοποιήσετε,Specificare l'umidità che si desidera utilizzare,"Geben Sie die Luftfeuchtigkeit ein, die Sie verwenden wollen",Ingresa la humedad exterior que te gustaría usar,Entrer l'humidité que vous souhaitez utiliser
 headgear,title,,Are you wearing any headgear?,Bærer du hovedbeklædning?,Are you wearing any headgear?,Are you wearing any headgear?,Har du på deg hodeplagg?,Φοράτε κάτι στο κεφάλι σας;,Stai indossando un qualunque tipo di copricapo?,Tragen Sie Kopfbedeckung?,¿Tienes puesto o estás usando algo para la cabeza?,Portez-vous un chapeau ?

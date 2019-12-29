@@ -1,35 +1,23 @@
-function initMap() {
-    // Coordinates for Copenhagen, Denmark
-    // Would like to set these dynamically, but cannot reference kb outside DOM?
-	
-	//bk we could make kb global by putting it in window -> window.kb = ...
-    var currentCoordinates = { lat: 55.676098, lng: 12.568337 };
+function initMap(lat, lon, kb) {
+   
+    var currentCoordinates = { lat: lat, lng: lon };
 
     // Each marker is labeled with a single alphabetical character.
     var labels = 'BCDEFGHIJKLMNOPQRSTUVWXYZ';
     var labelIndex = 0;
-
-    let options = { timeout: 30000 };
 	
-	/*
-	
-	there is no need to do this here. put the marker only when the map is shown in DOM, otherwise iOS only shows grey screen.
-	
-    navigator.geolocation.getCurrentPosition(
-        function (position) { //on success
-            currentCoordinates = { lat: position.coords.latitude, lng: position.coords.longitude };
-        },
-        function (error) { //on error
-            console.log(error);
-        },
-        options // here the timeout is introduced
-    );
-	*/
 	//window.map so map is available global scope
     window.map = new google.maps.Map(document.getElementById('map'), { 
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-      	center: new google.maps.LatLng(55.676098, 12.568337),
+      	center: new google.maps.LatLng(lat, lon),
         zoom: 8
+    });
+	
+	var point = new google.maps.LatLng(lat, lon);
+    var marker = new google.maps.Marker({
+        position: point,
+        label: "",
+        map: window.map
     });
 
     // This event listener calls addMarker() when the map is clicked.
@@ -49,15 +37,10 @@ function initMap() {
             label: labels[labelIndex++ % labels.length],
             map: map
         });
-
-        // Setting the location based on location object type (apparently there are two)
-        if(typeof location.lat === 'number'){ 
-            document.getElementById("latlon").innerHTML ="(" + location.lat + ", " + location.lng + ")";
-        } else if(typeof location.lat === 'function'){
-            document.getElementById("latlon").innerHTML = location;
-        } else {
-
-        }
+		kb.user.settings.coordinates_lat = marker.getPosition().lat();
+		kb.user.settings.coordinates_lon = marker.getPosition().lng();
+		$( "#marker_lat" ).html( kb.user.settings.coordinates_lat.toFixed(2) );
+		$( "#marker_lon" ).html( kb.user.settings.coordinates_lon.toFixed(2) );
     }
 
 

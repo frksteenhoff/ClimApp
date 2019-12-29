@@ -26,7 +26,6 @@ var app = {
 	selectedWeatherID: undefined,
 	maxForecast: undefined,
 	radialgauge: undefined,
-	clothingImages: undefined,
 
 
 	// Application Constructor
@@ -142,6 +141,7 @@ var app = {
 			if( self.knowledgeBase.user.guards.isIndoor && target === "indoor"){
 				self.updateIndoorPrediction();
 			}
+			
 			self.loadUI(target);
 		});
 	},
@@ -349,27 +349,6 @@ var app = {
 	},
 	initLocationListeners: function () {
 		var self = this;
-		$("div[data-listener='set_location']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='set_location']").on("click", function () {
-			// Load Google Maps UI to set location on map
-			$(".navigation_back_custom").show();
-			$("#custom_location_switch").hide();
-			$("#customLocationSection").hide();
-			
-			$("#google_maps_elem").fadeIn(500, function(){
-				
-				var [lat, lon] = getLocation(self.knowledgeBase);
-				var point = new google.maps.LatLng(lat, lon);
-		        var marker = new google.maps.Marker({
-		            position: point,
-		            label: "",
-		            map: window.map
-		        });
-			    window.map.panTo(point);
-			});
-			
-			$("#location_header").html(self.translations.labels.str_choose_location[self.language]);
-		});
 
 		$("input[data-listener='toggle_switch']").off(); //prevent multiple instances of listeners on same object
 		$("input[data-listener='toggle_switch']").on("click", function () {
@@ -382,10 +361,8 @@ var app = {
 				if (isChecked) {
 					self.knowledgeBase.user.guards.isIndoor = false;
 					customText = self.translations.toasts.location_enabled[self.language];
-					$("#customLocationSection").show();
 				} else {
 					customText = self.translations.toasts.location_disabled[self.language];
-					$("#customLocationSection").hide();
 					self.updateLocation();
 				}
 			}
@@ -395,27 +372,10 @@ var app = {
 
 		$("div[data-listener='set_coordinates']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='set_coordinates']").on("click", function () {
-
-			var rawCoordinates = document.getElementById("latlon").innerHTML;
-			$("#latlon").html(rawCoordinates);
-			// Hack solution, I know. Will fix.
-			var lat = Number(rawCoordinates.split(",")[0].replace("(", ""));
-			var lon = Number(rawCoordinates.split(",")[1].replace(")", ""));
-			console.log("coordinates:  " + lat + " " + lon + " typeof " + typeof lat);
-			
-			if (typeof lat === "number" && typeof lon === "number") {
-				self.knowledgeBase.user.settings.coordinates_lat = lat;
-				self.knowledgeBase.user.settings.coordinates_lon = lon;
-				self.saveSettings();
-				self.updateLocation();
-				customText = self.translations.toasts.custom_location[self.language] + ": ";
-			} else {
-				customText = self.translations.toasts.bad_location[self.language] + ": ";
-				self.knowledgeBase.user.guards.customLocationEnabled = false;
-				self.saveSettings();
-			}
-
-			customText +=  + self.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", " + self.knowledgeBase.user.settings.coordinates_lon.toFixed(4);
+			self.saveSettings();
+			self.updateWeather();
+			var	customText = self.translations.toasts.custom_location[self.language] + ": ";
+			customText +=  self.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", " + self.knowledgeBase.user.settings.coordinates_lon.toFixed(4);
 			self.loadUI("dashboard");
 			showShortToast(customText);
 		});
@@ -570,9 +530,21 @@ var app = {
 			$(this).addClass("menufocus");
 
 			//reset tab panels
-			$("#selectactivity").removeClass("hidden").addClass("hidden");
-			$("#selectclothing").removeClass("hidden").addClass("hidden");
-			$("#selectheadgear").removeClass("hidden").addClass("hidden");
+			var level = $(this).attr("data-level");
+			if( level == "0" ){
+				$("#selectwork").removeClass("hidden").addClass("hidden");
+				$("#selectchildren").removeClass("hidden").addClass("hidden");
+				$("#selectleisure").removeClass("hidden").addClass("hidden");
+				
+				$("#selectactivity").removeClass("hidden").addClass("hidden");
+				$("#selectclothing").removeClass("hidden").addClass("hidden");
+				$("#selectheadgear").removeClass("hidden").addClass("hidden");
+			}
+			else if( level == "1" ){
+				$("#selectactivity").removeClass("hidden").addClass("hidden");
+				$("#selectclothing").removeClass("hidden").addClass("hidden");
+				$("#selectheadgear").removeClass("hidden").addClass("hidden");
+			}
 			$("#" + target).removeClass("hidden");
 		});
 	},
@@ -634,7 +606,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0481,
+			"version": 2.0482,
 			"app_version": "3.0.8", //cannot be beta - because it will be rejected by iOS then.
 			"server": {
 				"dtu_ip": "http://climapp.byg.dtu.dk",
@@ -643,7 +615,7 @@ var app = {
 			"position": {
 				"lat": 0,
 				"lng": 0,
-				"timestamp": ""
+				"timestamp": "",
 			},
 			"weather": {
 				"station": "",
@@ -837,7 +809,7 @@ var app = {
 			shortenedLanguageIndicator = "no";
 		}
 
-		var availableLanguages = ["en", "da", "no", "it", "de", "fr"]; // list of all available languages, need to be updated manually
+		var availableLanguages = ['en', 'da', 'nl', 'sv', 'no', 'el', 'it', 'de', 'es', 'fr']; // list of all available languages, need to be updated manually
 
 		if (availableLanguages.includes(shortenedLanguageIndicator)) {
 			return shortenedLanguageIndicator;
@@ -1353,13 +1325,13 @@ var app = {
 		self.saveSettings();
 	},
 	updateUI: async function () {
-		console.log( "UPDATING UI - " + this.currentPageID );
 		// context dependent filling of content
 		this.initNavbarListeners();
 		$(".navigation_back_settings").hide();
 		$(".navigation_back_dashboard").hide();
 		$(".navigation_back_custom").hide();
 		$("#google_maps_elem").hide();
+		var self = this;
 
 		if (this.currentPageID == "onboarding") {
 			$(".navigation").hide();
@@ -1751,7 +1723,6 @@ var app = {
 					var diff_array = this.knowledgeBase.user.adaptation[thermal].diff;
 					
 					$("div[data-listener='adaptation']").attr("data-context", thermal);
-					console.log("feedback - C");
 					
 					// Set text around gauge and slider
 					if (diff_array.length >= 1) {
@@ -1764,7 +1735,6 @@ var app = {
 					}
 					$("#gauge_text_bottom").html(this.translations.sentences.feedback_adaptation_colder_warmer[this.language]);
 
-					console.log("feedback - D");
 					// Question text
 					$("#question1").html(this.translations.feedback.question1.text[this.language]);
 					$("#question2").html(this.translations.feedback.question2.text[this.language]);
@@ -1843,36 +1813,34 @@ var app = {
 			$("#disclaimer_privacy_policy").html(this.translations.sentences.disclaimer_privacy_policy[this.language]);
 		}
 		else if (this.currentPageID == "location") {
-			$("#custom_location_switch").show();
-			$("#customLocationSection").show();
-			$(".navigation_back_custom").hide();
-			$("#google_maps_elem").hide();
-			$("#coordinates").html("lat: " + this.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", lon: " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(4));
-			$("#choose_location").html(this.translations.labels.str_choose_location[this.language]);
+			//$("#custom_location_switch").show();
+			$("#google_maps_elem").fadeIn(100, function(){
+				var [lat, lon] = getLocation(self.knowledgeBase);
+				initMap(lat,lon, self.knowledgeBase);
+			});
+			//$("#customLocationSection").show();
+			//$(".navigation_back_custom").hide();
+			//$("#coordinates").html("lat: " + this.knowledgeBase.user.settings.coordinates_lat.toFixed(2) + ", lon: " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(2));
+			//$("#choose_location").html(this.translations.labels.str_choose_location[this.language]);
 			$("#str_custom_location").html(this.translations.labels.str_custom_location[this.language]);
 			$("#str_input_custom_location").html(this.translations.labels.str_input_custom_location[this.language]);
-			$("#str_location").html(this.translations.labels.str_location[this.language]);
+			//$("#str_location").html(this.translations.labels.str_location[this.language]);
 			$("#str_set_location").html(this.translations.labels.str_set_location[this.language]);
+			$("#location_header").html(this.translations.labels.str_choose_location[this.language]);
 			$("#latlon_desc").html(this.translations.labels.str_new_location[this.language]);
 			
 			// Location
-			this.knowledgeBase.user.guards.customLocationEnabled ? $("#customLocationSection").show() : $("#customLocationSection").hide();
+			//this.knowledgeBase.user.guards.customLocationEnabled ? $("#customLocationSection").show() : $("#customLocationSection").hide();
 			$("#custom_location_checkbox").prop("checked", this.knowledgeBase.user.guards.customLocationEnabled);
 			this.initLocationListeners();
-			
 			if (customLocationEnabled(this.knowledgeBase)) {
-				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.user.settings.station + " (" + this.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(4)  + ")");
-				var [lat, lon] = getLocation(this.knowledgeBase);
-				var center = new google.maps.LatLng(lat, lon);
-				
-				// using global variable:
-				window.map.panTo(center);
+				var station = this.knowledgeBase.user.settings.station.indexOf( "<br>" ) > -1 ? this.knowledgeBase.user.settings.station.substring(this.knowledgeBase.user.settings.station.indexOf("<br>") + 4 ): this.knowledgeBase.user.settings.station;
+
+				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + station );
 				
 			} else {
-				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.position.lat + ", " + this.knowledgeBase.position.lng);
-    			var center = new google.maps.LatLng(this.knowledgeBase.position.lat , this.knowledgeBase.position.lng);
-   				// using global variable:
-   				window.map.panTo(center);
+				$("#location").html(this.translations.labels.str_saved_location[this.language] + ": " + this.knowledgeBase.position.lat.toFixed(2) + ", " + this.knowledgeBase.position.lng.toFixed(2));
+
 			}			
 		}
 		else if (this.currentPageID == "indoor") {
@@ -1891,13 +1859,14 @@ var app = {
 			$("#str_indoor_outdoor_mode").html(this.translations.labels.str_indoor_outdoor_mode[this.language]);
 			$("#str_use_indoor_mode").html(this.translations.labels.str_use_indoor_mode[this.language]);
 			$("#str_thermostat").html(this.translations.labels.str_thermostat[this.language]);
+			$("#str_temperature").html(this.translations.labels.str_indoor_temperature[this.language]);
 			$("#indoor_open_windows").html(this.translations.labels.indoor_open_windows[this.language]);
 			//$("#str_wind_speed").html(this.translations.labels.str_wind_speed[this.language]);
 			//$("#str_humidity").html(this.translations.labels.str_humidity[this.language]);
 			//$("#str_continue").html(this.translations.labels.str_continue[this.language]);
 
 			// Values
-			var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "F" : "C";
+			var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "&#176;F" : "&#176;C";
 			$("#_temperature").html( this.knowledgeBase.user.settings._temperature  + tempUnit);
 			//$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
 			//$("#_humidity").html(this.knowledgeBase.user.settings._humidity + " %");
@@ -2077,7 +2046,7 @@ var app = {
 
 			
 			this.updateWeatherDetails(index);
-			
+			console.log("calling getgaugeparams");
 			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					//console.log("update info draw gauge phase 2 " + [width, personalvalue, modelvalue, thermal, tip_html]);
@@ -2131,11 +2100,11 @@ var app = {
 			minute: '2-digit'
 		});
 		$("#current_time").html(local_time);
-		
 		var isCustomLocation = customLocationEnabled(this.knowledgeBase) ? ", " + this.translations.labels.str_custom[this.language] : "";
 		$("#station").html(this.knowledgeBase.weather.station + " (" + distance + " km)" + isCustomLocation);
-
+		
 		$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.thermalindices.ireq[index].Tair, this.knowledgeBase.user.settings.unit).toFixed(0) );
+		
 		$("#temperature_desc").html(this.translations.labels.str_temperature[this.language]);
 		$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
 		
@@ -2208,6 +2177,8 @@ var app = {
 				$("#weather_desc").html(this.translations.labels.weather_shower_rain[this.language]);
 			}
 		}
+		console.log("updateWeatherDetails C " + icon_weather);
+		
 		$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
 	},
 	getWeatherIcon: function(index){
@@ -2361,7 +2332,9 @@ var app = {
 								borderWidth: 2,
 								fill: false,
 								data: data.min.points,
-								cubicInterpolationMode: 'monotone'
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 5,
+								pointHoverRadius: 20
 							},
 							{
 								label: "wbgt max",
@@ -2370,7 +2343,9 @@ var app = {
 								borderWidth: 2,
 								fill: '-1',
 								data: data.max.points,
-								cubicInterpolationMode: 'monotone'
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 5,
+								pointHoverRadius: 20
 							},
 							{
 								label: "red",
@@ -2380,7 +2355,8 @@ var app = {
 								fill: "+1",
 								data: [{ x: x_from, y: red_y }, { x: x_to, y: red_y }],
 								cubicInterpolationMode: 'monotone',
-								pointRadius: 0
+								pointRadius: 0,
+								pointHoverRadius: 0
 							},
 							{
 								label: "orange",
@@ -2390,7 +2366,8 @@ var app = {
 								fill: "+1",
 								data: [{ x: x_from, y: orange_y }, { x: x_to, y: orange_y }],
 								cubicInterpolationMode: 'monotone',
-								pointRadius: 0
+								pointRadius: 0,
+								pointHoverRadius: 0
 							},
 							{
 								label: "yellow",
@@ -2400,7 +2377,8 @@ var app = {
 								fill: "+1",
 								data: [{ x: x_from, y: yellow_y }, { x: x_to, y: yellow_y }],
 								cubicInterpolationMode: 'monotone',
-								pointRadius: 0
+								pointRadius: 0,
+								pointHoverRadius: 0
 							},
 							{
 								label: "green",
@@ -2410,7 +2388,8 @@ var app = {
 								fill: "origin",
 								data: [{ x: x_from, y: green_y }, { x: x_to, y: green_y }],
 								cubicInterpolationMode: 'monotone',
-								pointRadius: 0
+								pointRadius: 0,
+								pointHoverRadius: 0
 							} ];
 		}
 		else{		
@@ -2587,10 +2566,6 @@ var app = {
 	  							ctx.fillText(temperature, bar._model.x, bar._model.y + 2*offset_y); //below								
 	  			            });
 						})
-			           
-
-			            
-			           
 			        }
 				}
 			}
@@ -2598,6 +2573,7 @@ var app = {
 		ctx.canvas.onclick = function(event){
 			var firstPoint = myChart.getElementAtEvent(event)[0];	
 			if( firstPoint ){
+				self.selectedWeatherID = firstPoint._index;
 				self.updateInfo( firstPoint._index, false );
 			}
 		}

@@ -18,7 +18,7 @@ function addFeedbackToDB(kb, feedback_questions, translations, language) {
         "txt": "_",
         "predicted": kb.user.adaptation[thermal_mode].predicted,
         "perceived": kb.user.adaptation[thermal_mode].perceived,
-        "diff": kb.user.adaptation[thermal_mode].diff[0],
+        "diff": kb.user.adaptation[thermal_mode].predicted - kb.user.adaptation[thermal_mode].perceived,
         "mode": thermal_mode
     }
     $.post(url, user_data).done(function (data, status, xhr) {
@@ -58,11 +58,12 @@ function addWeatherDataToDB(kb) {
     let apicall = "createWeatherRecord";
     let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
     let acc = kb.user.acclimatization ? 1 : 0;
+	let station = kb.weather.station.indexOf( "<br>" ) > -1 ? kb.weather.station.substring(kb.weather.station.indexOf("<br>") + 4 ): kb.weather.station;
     let user_data = {
         "_id": deviceID(),
         "longitude": kb.weather.lat,
         "latitude": kb.weather.lng,
-        "city": kb.weather.station,
+        "city": station,
         "temperature": kb.weather.temperature[0],
         "wind_speed": kb.weather.windspeed[0],
         "humidity": kb.weather.humidity[0] / 100,

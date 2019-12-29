@@ -383,8 +383,9 @@ function startIntro(translations, language) {
 				position: "left"
 			  },
 			  {
-                element: '#gauge_div',
-				intro: "<p>" + translations.sentences.intro_gauge[language] + ".</p>" /*+ 
+                element: '#dashboard_header',
+				intro: "<p>" + translations.sentences.intro_gauge[language] + ".</p>",
+			    position: 'middle' /*+ 
 						"<p>The positive values indicate the level of heat stress and the negative values the level of cold stress.</p>"*/
 			  },
 			  {
@@ -392,21 +393,9 @@ function startIntro(translations, language) {
 				intro: translations.sentences.intro_range[language] + ".",
 				position: 'bottom'
               },
-			  {
-                element: '#dashboard_forecast',
-				intro: translations.sentences.intro_forecast_1[language] + ".</p>" + 
-						"<p>" + translations.sentences.intro_forecast_2[language] + ".",
-				position: 'bottom'
-              },
-              {
-                element: '#tips',
-				intro: "<p>" + translations.sentences.intro_tips[language] + ".",
-                position: 'bottom'
-              },
               {
                 element: '#tip_detailed',
-				intro: "<p>" + translations.sentences.intro_details_1[language] + ".</p>" + 
-						"<p>" + translations.sentences.intro_details_2[language] + ".</p>",
+				intro: "<p>" + translations.sentences.intro_details_1[language] + ".</p>",
                 position: 'bottom'
               },
               {

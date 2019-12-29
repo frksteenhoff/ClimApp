@@ -397,9 +397,10 @@ div.panel.settings div.input_section.last {
   /*background: -moz-linear-gradient(top, #52A5D5 0%, #A1D4F2 100%); /* FF3.6-15 */
   /*background: -webkit-linear-gradient(top, #52A5D5 0%,#A1D4F2 100%); /* Chrome10-25,Safari5.1-6 */
   /*background: linear-gradient(to bottom, #52A5D5 0%,#A1D4F2 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-  display: -webkit-box;
-  display: -moz-box;
-  display: -ms-flexbox;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box; 
+  
   display: -webkit-flex;
   display: flex;
   -webkit-flex-flow: row wrap;
@@ -436,18 +437,27 @@ div.panel.settings div.input_section.last {
 
 /* ONBOARDING */
 .onboarding div{
-	display: border-box;
 	margin: auto;
+    width: 80%;
+    margin: auto;	
+    margin-bottom: 0.5em;
+	color: #000;
+	background: #ffffff;
+	border-radius: 0.2em;
+	padding:0.25em;
+	text-align:center;
+	border: 1px solid rgba(200, 200, 200, 0.8);
+	box-shadow: 3px 3px rgba(155, 155, 155, 0.2);
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box; 
+	
 }
 
 .onboarding i{
     vertical-align: middle; /* | top | bottom */
 }
 
-.onboarding p {
-    padding: 0.5em;
-    background: #C0C0C0;
-}
 
 #onboarding_settings, 
 #onboarding_dashboard {

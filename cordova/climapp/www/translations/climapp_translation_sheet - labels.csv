@@ -41,7 +41,7 @@ str_current_location,Current location,Nuværende placering,Huidige locatie,Curre
 str_time,Time,Klokkeslæt,Tijd,Time,Klokkeslett,Ώρα,Ora,Uhrzeit,Hora,Heure
 str_air_temperature,Air temperature,Lufttemperatur,Luchttemperatuur,Air temperature,Luftemperatur,Θερμοκρασία αέρα,Temperatura dell'aria,Lufttemperatur,Temperatura del aire,Température de l'air
 str_cloud_cover,Cloud cover,Skydække,Bewolking,Cloud cover,Skydekke,Κάλυχη από σύννεφα,Copertura nuvolosa,Wolkendecke,Cubierto de nubes,Couverture nuageuse
-str_solar_irradiation,Solar irradiation,Solstråling,Zonnestraling,Solar irradiation,Solbestråling,Ηλιακή ακτινοβολία,Radiazione solare,Sonnenstrahlung,Radiación solar,Rayonnement solaire
+str_solar_irradiation,Solar radiation,Solstråling,Zonnestraling,Solar radiation,Solbestråling,Ηλιακή ακτινοβολία,Radiazione solare,Sonnenstrahlung,Radiación solar,Rayonnement solaire
 str_wind10,Windspeed at 10m,Vindhastighed ved 10m,Windsnelheid op 10m,Windspeed at 10m,Vindfart ved 2m,Ταχύτητα ανέμου στα 10 μέτρα,Velocità del vento a 10m,Windgeschwindigkeit bei 2m,Velocidad del viento a 10m,Vitesse du vent à 10m
 str_wind2,Windspeed at 2m,Vindhastighed ved 2m,Windsnelheid op 2m,Windspeed at 2m,Vindfart ved 10m,ταχύτητα ανέμου στα 2 μέτρα,Velocità del vento a 2m,Windgeschwindigkeit bei 10m,Velocidad del viento a 2m,Vitesse du vent à 2m
 str_globe_temperature,Globe temperature,Globetemperatur,Bol temperatuur,Globe temperature,Klodetemperatur,Θερμοκρασία πλανήτη,Temperatura di globo,Temperatur der Erde,Temperatura de globo,Température au thermomètre-globe
@@ -120,4 +120,9 @@ str_alert_level,alert limit,alarmgrænse,waarschuwingslimiet,alert limit,Alarmgr
 str_use_indoor_mode,Use indoor mode?,Slå indendørtilstand til?,Voor binnen gebruiken?,Use indoor mode?,Bruk innemodus?,Χρήση εσωτερικής λειτουργίας;,Utilizzare la modalità interna?,Innenmodus anwenden?,¿Usar modo interior?,Utiliser le mode intérieur ?
 str_cold_index,Climapp Cold index,kulde indeks,Koude index,Climapp Cold index,Climapp Cold index,Cold index,Climapp Cold index,Climapp Cold index,Climapp Cold index,Climapp Cold index
 str_heat_index,Climapp Heat index,varme indeks,Hitte index,Climapp Heat index,Climapp Heat index,Heat index,Climapp Heat index,Climapp Heat index,Climapp Heat index,Climapp Heat index
-str_temperature,Temperature,Temperature,Temperatuur,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature
+str_indoor_temperature,Indoor temperature,"Temperature
+","Temperatuur
+","Temperature
+","Temperature
+",Temperature,Temperature,Temperature,Temperature,Temperature
+str_temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature
