@@ -1,6 +1,7 @@
 <div class="panel" id="main_panel" data-listener="panel" data-target="forecast">
 	<div class="flexbox-2" id="dashboard_header">
-		<div><p class="label" id="str_weather_report"><span id="current_time"></span></p></div>
+		<div><p class="label" ><span id="indoor_outdoor"></span><br><span id="current_time"></span></p>
+		</div>
 		<div data-listener="geolocation">
 			<p class="right label">
 				<i class="fas fa-map-marker-alt"></i>
@@ -14,18 +15,17 @@
 		</div>
 	</div>
 
-	<div class="flexbox-5">
-		<div><p class="label" id="indoor_outdoor"></p></div>
-		<div class="border"><p class="label"><i class="fas fa-temperature-low"></i><br><span id="temperature_desc"></span><br><span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span> <span id="temp_unit"></span></p></div>
-		<div class="border">
+	<div class="flexbox-4">
+		<div class=""><p class="label"><i class="fas fa-temperature-low"></i><br><span id="temperature_desc"></span><br><span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span> <span id="temp_unit"></span></p></div>
+		<div class="">
 			<p class="label">
 				<i class="fas fa-wind"></i><br><span id="windspeed_desc"></span><br><span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span> <span id="windspeed_unit">m/s</span>
 			</p>
 		</div>
-		<div class="border">
+		<div class="">
 			<p class="label"><i class="fas fa-tint"></i><br><span id="humidity"></span><br><span id="humidity_value"><i class="fas fa-spinner fa-pulse"></i></span >%</p>
 		</div>
-		<div class="border">
+		<div class="">
 			<p class="label"><i id="icon-weather" class="fas fa-cloud-sun-rain"></i><br><span class="label" id="weather_desc"></span></p>
 		</div>
 	</div>
@@ -44,13 +44,13 @@
 
 <div class="panel" id="tip_panel" data-listener="panel" data-target="settings">
 	<div id="tip_detailed">
-		<div class="wide" id="tips"></div>
 		<div class="flexbox-2">
 			<div class="even" data-target="feedback" data-listener="tab"><p><i class="fas fa-user"></i> <span id="str_personalise"></span></p></div>
 			<div class="even" data-listener="navbar" data-target="details">
 				<p class="right"><i class="fas fa-info-circle"></i> <span id="str_more_info"></span></p>
 			</div>
 		</div>
+		<div class="wide" id="tips"></div>
 	</div>
 </div>
 

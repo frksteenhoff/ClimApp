@@ -168,7 +168,7 @@ canvas{
 }
 
 
-.flexbox, .flexbox-5, .flexbox-2, .flexbox-3{
+.flexbox,.flexbox-4, .flexbox-5, .flexbox-2, .flexbox-3{
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -230,6 +230,15 @@ canvas{
 	align-self: flex-end;
 }
 
+.flexbox-4 div{
+	margin: auto;
+	flex-basis: 24%;
+    text-align: center;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
 .flexbox-5 div{
 	margin: auto;
 	flex-basis: 18%;
@@ -260,6 +269,18 @@ canvas{
 .flexbox-5 div.selected{
     color: #ffffff;
     background: #7EBFE5; /* Old browsers */
+}
+
+div.tooltip{
+    background: rgba(120, 120, 120,0.8);
+	color: rgba(255,255,255,1);
+	border-radius: 0.1em;
+	padding:0.25em;
+	border: 1px solid rgba(80, 80, 80, 0.8);
+	box-shadow: 3px 3px rgba(155, 155, 155, 0.2);
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
 }
 
 p {

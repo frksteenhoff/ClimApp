@@ -182,7 +182,6 @@ function neutralTips() {
 }
 
 function heatLevelTips( index, level, kb, pageID, translations, language){
-	console.log( "heatLevelTips");
     return new Promise((resolve, reject) => {
 		var mode = "heat";
 		var pav = getPAL( kb, mode);

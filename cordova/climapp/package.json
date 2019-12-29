@@ -11,7 +11,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "cordova-android": "^8.0.0",
-        "cordova-ios": "^5.0.1",
+        "cordova-ios": "^5.1.1",
         "cordova-plugin-firebase-lib": "^5.1.1",
         "cordova-plugin-geolocation": "^4.0.1",
         "cordova-plugin-splashscreen": "^5.0.2",
@@ -34,8 +34,8 @@
             "cordova-plugin-firebase-lib": {}
         },
         "platforms": [
-            "ios",
-            "android"
+            "android",
+            "ios"
         ]
     },
     "devDependencies": {
