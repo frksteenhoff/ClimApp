@@ -216,6 +216,10 @@ canvas{
 .flexbox-2 div.wide{
 	flex-basis: 70%;
 }
+.flexbox-2 div.border{
+	border-left: 1px solid #fff;
+}
+
 .flexbox-3 div{
 	margin: auto;
 	flex-basis: 33%;
@@ -232,6 +236,9 @@ canvas{
 
 .flexbox-4 div{
 	margin: auto;
+	white-space: nowrap; 
+	overflow: hidden;
+	text-overflow: ellipsis;
 	flex-basis: 24%;
     text-align: center;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */

@@ -27,7 +27,6 @@ var app = {
 	maxForecast: undefined,
 	radialgauge: undefined,
 
-
 	// Application Constructor
 	initialize: function () {
 		document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
@@ -526,26 +525,39 @@ var app = {
 		$("div[data-listener='menu']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='menu']").on("click", function () {
 			var target = $(this).attr("data-target");
-			$("div.menuitem").removeClass("menufocus");
-			$(this).addClass("menufocus");
-
-			//reset tab panels
-			var level = $(this).attr("data-level");
-			if( level == "0" ){
-				$("#selectwork").removeClass("hidden").addClass("hidden");
-				$("#selectchildren").removeClass("hidden").addClass("hidden");
-				$("#selectleisure").removeClass("hidden").addClass("hidden");
+			var targetgroup = $(this).attr("data-targetgroup");
+			$("div[data-menuitem='true']div[data-menugroup='"+targetgroup+"']").removeClass("hidden").addClass("hidden");
+			
+			if( $(this).hasClass("menufocus") ){
+				$("div[data-listener='menu']div[data-targetgroup='"+targetgroup+"']").removeClass("menufocus");	
+			}
+			else{
+				$("div[data-listener='menu']div[data-targetgroup='"+targetgroup+"']").removeClass("menufocus");
+				$(this).addClass("menufocus");
+				$("#" + target).removeClass("hidden");
+			}
+			
+			if( target === "selectutci" ){
 				
-				$("#selectactivity").removeClass("hidden").addClass("hidden");
-				$("#selectclothing").removeClass("hidden").addClass("hidden");
-				$("#selectheadgear").removeClass("hidden").addClass("hidden");
+				if( self.knowledgeBase.thermalindices.utci.length == self.maxForecast ){
+					$("#selectwork").hide();
+					$("#personalisation_item").hide();
+					self.knowledgeBase.user.settings.index = "UTCI";
+				}
+				else{
+					showShortToast("UTCI unavailable");
+				}
 			}
-			else if( level == "1" ){
-				$("#selectactivity").removeClass("hidden").addClass("hidden");
-				$("#selectclothing").removeClass("hidden").addClass("hidden");
-				$("#selectheadgear").removeClass("hidden").addClass("hidden");
+			else{
+				$("#selectwork").show();
+				$("#personalisation_item").show();
+				self.knowledgeBase.user.settings.index = "Climapp";
 			}
-			$("#" + target).removeClass("hidden");
+			
+			if( targetgroup=="modelgroup" ){
+				self.updateUI();
+			}
+			
 		});
 	},
 	initKnowledgeBase: function () {
@@ -590,6 +602,9 @@ var app = {
 					"coordinates_lon": 0,
 					"coordinates_lat": 0,
 					"station": "Unknown",
+					
+					/* preferred index*/
+					"index": "Climapp"
 				},
 				"adaptation": {
 					"mode": "undefined",
@@ -606,7 +621,7 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.0482,
+			"version": 2.051,
 			"app_version": "3.0.8", //cannot be beta - because it will be rejected by iOS then.
 			"server": {
 				"dtu_ip": "http://climapp.byg.dtu.dk",
@@ -669,6 +684,7 @@ var app = {
 				"ireq": [],
 				"phs": [],
 				"pmv": [],
+				"utci": [],
 			},
 			"gauge": {
 				"highlights": [//color also in CSS, keep consistent
@@ -1029,7 +1045,8 @@ var app = {
 
 								self.knowledgeBase.weather.meanradianttemperature = [];
 								self.knowledgeBase.weather.windspeed2m = [];
-
+								
+								
 								$.each( self.knowledgeBase.weather.windspeed, function(key, vair){
 										var Tg = self.knowledgeBase.weather.globetemperature[key];
 										var Ta = self.knowledgeBase.weather.temperature[key];
@@ -1063,12 +1080,11 @@ var app = {
 										self.knowledgeBase.weather.watervapourpressure.push(wvp);
 									});
 								
-								self.saveSettings();
 								
 								self.calcThermalIndices();
-								
-								self.updateUI();
-								
+								self.updateUTCI(0);
+								self.saveSettings();
+															
 								// Only update when weather data has been received - and when external DB record is present.
 								if (self.knowledgeBase.user.guards.hasExternalDBRecord) {									
 									addWeatherDataToDB(self.knowledgeBase);
@@ -1171,7 +1187,6 @@ var app = {
 		}
 	},
 	calcThermalIndices: function () {
-		
 		
 		this.knowledgeBase.thermalindices.ireq = [];
 		this.knowledgeBase.thermalindices.phs = [];
@@ -1410,12 +1425,7 @@ var app = {
 			$("#str_headgear").html(this.translations.labels.str_headgear[this.language]);
 			$("#head_gear").html(this.translations.labels.str_headgear[this.language]);
 			
-			// Giving the user an introduction of the dashbord on first login
-			if (!this.knowledgeBase.user.guards.introductionCompleted) {
-				startIntro(this.translations, this.language);
-				this.knowledgeBase.user.guards.introductionCompleted = 1;
-				this.saveSettings();
-			}
+			
 		}
 		else if (this.currentPageID == "details") {
 			$(".navigation").hide();
@@ -1796,6 +1806,16 @@ var app = {
 			$("#str_img_cred").html(this.translations.labels.str_img_cred[this.language]);
 			$("#about_acknowledge_flaticon").html(this.translations.sentences.about_acknowledge_flaticon[this.language]);
 			$("#about_acknowledge_fontawesome").html(this.translations.sentences.about_acknowledge_fontawesome[this.language]);
+			
+			$("#about_acknowledge_human_heat_exchange").html(this.translations.sentences.about_acknowledge_human_heat_exchange[this.language]);
+			$("#about_acknowledge_openweathermap").html(this.translations.sentences.about_acknowledge_openweathermap[this.language]);
+			
+			$("#about_josh_foster").html(this.translations.sentences.about_josh_foster[this.language]);
+			$("#about_nick_ravanelli").html(this.translations.sentences.about_nick_ravanelli[this.language]);
+			$("#about_climapp_team").html(this.translations.sentences.about_climapp_team[this.language]);
+			
+			
+			
 			$("#str_app_info").html(this.translations.labels.str_app_info[this.language]);
 			
 			$("#app_version").html(this.translations.labels.str_app_version[this.language] + ": " + this.knowledgeBase.app_version);
@@ -1992,7 +2012,7 @@ var app = {
 		if (this.knowledgeBase.thermalindices.ireq.length > 0 && !this.knowledgeBase.user.guards.isIndoor) {
 			$("#icon-weather").show();
 			$("#weather_desc").show();
-
+			
 			
 			/*
 			let next = index + 1;
@@ -2046,17 +2066,46 @@ var app = {
 
 			
 			this.updateWeatherDetails(index);
-			console.log("calling getgaugeparams");
-			self.getDrawGaugeParamsFromIndex(index, self.knowledgeBase, false).then(
+			
+			
+			
+			$("#utci_head").html( this.knowledgeBase.thermalindices.utci[index].utci_head );
+			$("#utci_message").html( this.knowledgeBase.thermalindices.utci[index].utci_message );
+			
+			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, false).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
 					//console.log("update info draw gauge phase 2 " + [width, personalvalue, modelvalue, thermal, tip_html]);
 					//self.drawGauge('main_gauge', width, personalvalue, thermal);
 					if( isDrawChart ){
 						self.drawChart('main_gauge', width, thermal, true );
-					}
-					//$("#tips").html(tip_html);
+					}					
+					var labelstr = thermal === "heat" ? self.translations.labels.str_heat_index[self.language]: self.translations.labels.str_cold_index[self.language];
+					
+					$("#climapp_thermal").html( labelstr );
+					$("#tips").html(tip_html);
 					$("#circle_gauge_color").css("color", getCurrentGaugeColor(personalvalue));
 					$("#main_panel").fadeIn(500);
+					
+					
+					$("div[data-listener='menu']div[data-targetgroup='modelgroup']").removeClass("menufocus");	
+					if( this.knowledgeBase.user.settings.index === "Climapp" ){
+						$("#tabclimapp").addClass("menufocus");
+						$("#selectwork").show();
+						$("#personalisation_item").show();
+					}
+					else{
+						$("#tabutci").addClass("menufocus");
+						$("#selectwork").hide();
+						$("#personalisation_item").hide();
+					}
+					
+					// Giving the user an introduction of the dashbord on first login
+					if (!this.knowledgeBase.user.guards.introductionCompleted) {
+						startIntro(this.translations, this.language);
+						this.knowledgeBase.user.guards.introductionCompleted = 1;
+						this.saveSettings();
+					}
+
 				});
 		} 
 		else {
@@ -2177,7 +2226,6 @@ var app = {
 				$("#weather_desc").html(this.translations.labels.weather_shower_rain[this.language]);
 			}
 		}
-		console.log("updateWeatherDetails C " + icon_weather);
 		
 		$("#icon-weather").removeClass().addClass("fas").addClass(icon_weather);
 	},
@@ -2231,65 +2279,126 @@ var app = {
 		}
 		return icon_weather;
 	},
+	updateUTCI: function(index){
+		
+		if( index === 0 ){
+			this.knowledgeBase.thermalindices.utci = [];
+		}
+		console.log( "updateUTCI #"+index);
+		var url="https://www.humanheat.exchange/api/get.php";
+		var self = this;
+		var data = {"models":"UTCI",
+					"Tair": this.knowledgeBase.thermalindices.phs[index].Tair,
+					"Trad": this.knowledgeBase.thermalindices.phs[index].Trad,
+					"RH": this.knowledgeBase.thermalindices.phs[index].rh,
+					"Vair": this.knowledgeBase.thermalindices.phs[index].v_air10,
+					"api_key": "efb3f37f9952c58d2c7f47a08f2c2a62"};
+		var utci_object = { "Tair": data.Tair,
+							"utci_head": "UTCI unavailable",
+							"utci_message":  "",
+							"utci_temperature": 0,
+							"utc": this.knowledgeBase.thermalindices.phs[index].utc};
+		$.get( url, data, function( result ){
+			var answer = JSON.parse( result );
+			if( answer.status_code == 200 ){
+				utci_object = { "Tair": answer.input.environment.Tair,
+								"utci_head": answer.results.UTCI.utci_head,
+								"utci_message":  answer.results.UTCI.utci_message,
+				 				"utci_temperature": answer.results.UTCI.utci_temperature};
+			}
+			self.knowledgeBase.thermalindices.utci[index] = utci_object;
+			
+			if( self.knowledgeBase.thermalindices.utci.length === self.maxForecast ){
+				self.updateUI();
+			}
+			else{
+				self.updateUTCI(index+1);
+			}
+		});
+		
+	},
 	convertWeatherToChartData: function ( thermal ) {
 		var data;
-		if( thermal === "heat" ){
-			data = {
-				"labels": [],
-				"min": { "points": [] },
-				"max": { "points": [] },
-				"ral": { "points": [] },
-				"pal": { "points": [] },
-				"ymax": 0,
-				"ymin": 100,
-			};
-			for (var i = 0; i < this.maxForecast; i++) {
-				var wbgt_min = this.knowledgeBase.thermalindices.phs[i].wbgt;
-				var wbgt_effective_min = getWBGTeffective(wbgt_min, this.knowledgeBase);
-
-				var item = {
-					x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
-					y: 1.0 * wbgt_effective_min
+		if( this.knowledgeBase.user.settings.index === "Climapp" ){
+			if( thermal === "heat" ){
+				data = {
+					"labels": [],
+					"min": { "points": [] },
+					"max": { "points": [] },
+					"ral": { "points": [] },
+					"pal": { "points": [] },
+					"ymax": 0,
+					"ymin": 100,
 				};
+				for (var i = 0; i < this.maxForecast; i++) {
+					var wbgt_min = this.knowledgeBase.thermalindices.phs[i].wbgt;
+					var wbgt_effective_min = getWBGTeffective(wbgt_min, this.knowledgeBase);
 
-				data.labels.push(item.x);
-				data.min.points.push(item);
+					var item = {
+						x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
+						y: 1.0 * wbgt_effective_min
+					};
 
-				var wbgt_max = this.knowledgeBase.thermalindices.phs[i].wbgt_max;
-				var wbgt_effective_max = getWBGTeffective(wbgt_max, this.knowledgeBase);
-				item = {
-					x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
-					y: 1.0 * wbgt_effective_max
+					data.labels.push(item.x);
+					data.min.points.push(item);
+
+					var wbgt_max = this.knowledgeBase.thermalindices.phs[i].wbgt_max;
+					var wbgt_effective_max = getWBGTeffective(wbgt_max, this.knowledgeBase);
+					item = {
+						x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
+						y: 1.0 * wbgt_effective_max
+					};
+					data.max.points.push(item);
+
+					data.ymax = Math.max( data.ymax, 1.0 * wbgt_effective_max );
+					data.ymin = Math.min( data.ymin, 1.0 * wbgt_effective_min );
+				}
+			}
+			else{
+				data = {
+					"labels": [],
+					"coldindex": { "points": [] },//
+					"ymin": 99999,
 				};
-				data.max.points.push(item);
-
-				data.ymax = Math.max( data.ymax, 1.0 * wbgt_effective_max );
-				data.ymin = Math.min( data.ymin, 1.0 * wbgt_effective_min );
+				var icl_worn = getClo(this.knowledgeBase);
+			
+				for (var i = 0; i < this.maxForecast; i++) {
+				
+					var icl_min = this.knowledgeBase.thermalindices.ireq[i].ICLminimal;
+					var icl_neutral = this.knowledgeBase.thermalindices.ireq[i].ICLneutral;
+					var cold_index = -this.calculateColdIndex(icl_neutral, icl_min, icl_worn, true); // minimal - worn, if negative you do not wear enough clothing
+					var item = {
+						x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
+						y: 1.0 * Math.min(0, cold_index ) //lower limit of green
+					};
+					data.labels.push(item.x);
+					data.coldindex.points.push(item);	
+					data.ymin = Math.min(data.ymin, 1.0 * cold_index);
+							
+				}
 			}
 		}
-		else{
+		else{ //UTCI
 			data = {
 				"labels": [],
-				"coldindex": { "points": [] },//
+				"utci": { "points": [] },//
 				"ymin": 99999,
+				"ymax": -99999,
 			};
-			var icl_worn = getClo(this.knowledgeBase);
 			
 			for (var i = 0; i < this.maxForecast; i++) {
-				
-				var icl_min = this.knowledgeBase.thermalindices.ireq[i].ICLminimal;
-				var icl_neutral = this.knowledgeBase.thermalindices.ireq[i].ICLneutral;
-				var cold_index = -this.calculateColdIndex(icl_neutral, icl_min, icl_worn, true); // minimal - worn, if negative you do not wear enough clothing
+				var utci = this.knowledgeBase.thermalindices.utci[i].utci_temperature;
 				var item = {
 					x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
-					y: 1.0 * Math.min(0, cold_index ) //lower limit of green
+					y: 1.0 * utci
 				};
 				data.labels.push(item.x);
-				data.coldindex.points.push(item);	
-				data.ymin = Math.min(data.ymin, 1.0 * cold_index);
-							
+				data.utci.points.push(item);	
+				data.ymin = Math.min(data.ymin, 1.0 * utci);
+				data.ymax = Math.max(data.ymax, 1.0 * utci);
 			}
 		}
+		
 		return data;
 	},
 	drawChart: function (id, width, thermal, isDashboard) {
@@ -2303,7 +2412,6 @@ var app = {
 			ctx.canvas.height = 0.75 * $(window).width();
 			ctx.canvas.width = 0.95 * $(window).width();
 		}
-
 		var data = this.convertWeatherToChartData( thermal );
 
 		var x_from = data.labels[0];
@@ -2313,69 +2421,191 @@ var app = {
 		var max_y = 0;//cold level
 		var min_y = 0;
 		 
-		
-		if( thermal === "heat" ){
+		if( this.knowledgeBase.user.settings.index === "Climapp" ){
+			if( thermal === "heat" ){
 			
-			var ral = RAL(this.knowledgeBase);
-			var pal = ral - getPAL(this.knowledgeBase, thermal);
+				var ral = RAL(this.knowledgeBase);
+				var pal = ral - getPAL(this.knowledgeBase, thermal);
 
-			var green_y = 0.8 * pal;
-			var yellow_y = 1.0 * pal;
-			var orange_y = 1.2 * pal;
-			var red_y = Math.ceil(Math.max(1.5 * pal, data.ymax + 1));
+				var green_y = 0.8 * pal;
+				var yellow_y = 1.0 * pal;
+				var orange_y = 1.2 * pal;
+				var red_y = Math.ceil(Math.max(1.5 * pal, data.ymax + 1));
+				max_y = red_y;
+				min_y = data.ymin - 1;
+				levels = [{
+									label: "wbgt",
+									backgroundColor: 'rgba(255,255,255,0.3)',
+									borderColor: 'rgba(255,255,255,1)',
+									borderWidth: 2,
+									fill: false,
+									data: data.min.points,
+									cubicInterpolationMode: 'monotone',
+									pointRadius: 5,
+									pointHoverRadius: 20
+								},
+								{
+									label: "wbgt max",
+									backgroundColor: 'rgba(255,255,255,0.7)',
+									borderColor: 'rgba(255,255,255,1)',
+									borderWidth: 2,
+									fill: '-1',
+									data: data.max.points,
+									cubicInterpolationMode: 'monotone',
+									pointRadius: 5,
+									pointHoverRadius: 20
+								},
+								{
+									label: "red",
+									backgroundColor: 'rgba(180,0,0,.5)',
+									borderColor: 'rgba(180,0,0,1)',
+									borderWidth: 2,
+									fill: "+1",
+									data: [{ x: x_from, y: red_y }, { x: x_to, y: red_y }],
+									cubicInterpolationMode: 'monotone',
+									pointRadius: 0,
+									pointHoverRadius: 0
+								},
+								{
+									label: "orange",
+									backgroundColor: 'rgba(255,125,0,.5)',
+									borderColor: 'rgba(255,125,0,1)',
+									borderWidth: 2,
+									fill: "+1",
+									data: [{ x: x_from, y: orange_y }, { x: x_to, y: orange_y }],
+									cubicInterpolationMode: 'monotone',
+									pointRadius: 0,
+									pointHoverRadius: 0
+								},
+								{
+									label: "yellow",
+									backgroundColor: 'rgba(255,255,0,.5)',
+									borderColor: 'rgba(255,255,0,1)',
+									borderWidth: 2,
+									fill: "+1",
+									data: [{ x: x_from, y: yellow_y }, { x: x_to, y: yellow_y }],
+									cubicInterpolationMode: 'monotone',
+									pointRadius: 0,
+									pointHoverRadius: 0
+								},
+								{
+									label: "green",
+									backgroundColor: 'rgba(0,255,0,.5)',
+									borderColor: 'rgba(0,255,0,1)',
+									borderWidth: 2,
+									fill: "origin",
+									data: [{ x: x_from, y: green_y }, { x: x_to, y: green_y }],
+									cubicInterpolationMode: 'monotone',
+									pointRadius: 0,
+									pointHoverRadius: 0
+								} ];
+			}
+			else{		
+			
+				min_y = Math.ceil( Math.min( -4, data.ymin - 1));	
+				levels = [	{
+									label: "coldrisk",
+									backgroundColor: 'rgba(255,255,255,0.3)',
+									borderColor: 'rgba(255,255,255,1)',
+									borderWidth: 2,
+									fill: false,
+									data: data.coldindex.points,
+									cubicInterpolationMode: 'monotone',
+									pointRadius: 5,
+									pointHoverRadius: 20
+								},
+								{
+									label: "green",
+									backgroundColor: 'rgba(0,255,0,.5)',
+									borderColor: 'rgba(0,255,0,1)',
+									borderWidth: 2,
+									fill: "origin",
+									data: [{ x: x_from, y: -1 }, { x: x_to, y: -1 }],
+									cubicInterpolationMode: 'monotone',
+									pointRadius: 0,
+									pointHoverRadius: 0
+								}, 
+								{
+									label: "cyan",
+									backgroundColor: 'rgba(0,180,180,.5)',
+									borderColor: 'rgba(0,180,180,1)',
+									borderWidth: 2,
+									fill: "-1",
+									data: [{ x: x_from, y: -2 }, { x: x_to, y: -2 }],
+									cubicInterpolationMode: 'monotone',
+									pointRadius: 0,
+									pointHoverRadius: 0
+								},
+								{
+									label: "blue",
+									backgroundColor: 'rgba(0,100,255,.5)',
+									borderColor: 'rgba(0,100,255,1)',
+									borderWidth: 2,
+									fill: "-1",
+									data: [{ x: x_from, y: -3 }, { x: x_to, y: -3 }],
+									cubicInterpolationMode: 'monotone',
+									pointRadius: 0,
+									pointHoverRadius: 0
+								},
+								{
+									label: "darkblue",
+									backgroundColor: 'rgba(0,0,180,.5)',
+									borderColor: 'rgba(0,0,180,1)',
+									borderWidth: 2,
+									fill: "-1",
+									data: [{ x: x_from, y: min_y }, { x: x_to, y: min_y }],
+									cubicInterpolationMode: 'monotone',
+									pointRadius: 0,
+									pointHoverRadius: 0
+								}
+							];	
+			}
+		}
+		else{//UTCI
+						
+			min_y = Math.ceil( Math.min( -40, data.ymin - 1));
+			var red_y = Math.ceil(Math.max(46, data.ymax + 1 ));
 			max_y = red_y;
-			min_y = data.ymin - 1;
-			levels = [{
-								label: "wbgt",
+			levels = [	{
+								label: "utci",
 								backgroundColor: 'rgba(255,255,255,0.3)',
 								borderColor: 'rgba(255,255,255,1)',
 								borderWidth: 2,
 								fill: false,
-								data: data.min.points,
+								data: data.utci.points,
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 5,
 								pointHoverRadius: 20
 							},
 							{
-								label: "wbgt max",
-								backgroundColor: 'rgba(255,255,255,0.7)',
-								borderColor: 'rgba(255,255,255,1)',
-								borderWidth: 2,
-								fill: '-1',
-								data: data.max.points,
-								cubicInterpolationMode: 'monotone',
-								pointRadius: 5,
-								pointHoverRadius: 20
-							},
-							{
-								label: "red",
-								backgroundColor: 'rgba(180,0,0,.5)',
-								borderColor: 'rgba(180,0,0,1)',
+								label: "darkred",
+								backgroundColor: 'rgba(125,0,0,.5)',
+								borderColor: 'rgba(125,0,0,1)',
 								borderWidth: 2,
 								fill: "+1",
-								data: [{ x: x_from, y: red_y }, { x: x_to, y: red_y }],
+								data: [{ x: x_from, y: max_y }, { x: x_to, y: max_y }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0,
+								pointHoverRadius: 0
+							}, 
+							{
+								label: "red",
+								backgroundColor: 'rgba(255,0,0,.5)',
+								borderColor: 'rgba(255,0,0,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: 38 }, { x: x_to, y: 38 }],
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
 							},
 							{
 								label: "orange",
-								backgroundColor: 'rgba(255,125,0,.5)',
-								borderColor: 'rgba(255,125,0,1)',
+								backgroundColor: 'rgba(255,165,0,.5)',
+								borderColor: 'rgba(255,165,0,1)',
 								borderWidth: 2,
 								fill: "+1",
-								data: [{ x: x_from, y: orange_y }, { x: x_to, y: orange_y }],
-								cubicInterpolationMode: 'monotone',
-								pointRadius: 0,
-								pointHoverRadius: 0
-							},
-							{
-								label: "yellow",
-								backgroundColor: 'rgba(255,255,0,.5)',
-								borderColor: 'rgba(255,255,0,1)',
-								borderWidth: 2,
-								fill: "+1",
-								data: [{ x: x_from, y: yellow_y }, { x: x_to, y: yellow_y }],
+								data: [{ x: x_from, y: 32 }, { x: x_to, y: 32 }],
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
@@ -2385,78 +2615,80 @@ var app = {
 								backgroundColor: 'rgba(0,255,0,.5)',
 								borderColor: 'rgba(0,255,0,1)',
 								borderWidth: 2,
-								fill: "origin",
-								data: [{ x: x_from, y: green_y }, { x: x_to, y: green_y }],
+								fill: "+1",
+								data: [{ x: x_from, y: 26 }, { x: x_to, y: 26 }],
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
-							} ];
-		}
-		else{		
-			
-			min_y = Math.ceil( Math.min( -4, data.ymin - 1));	
-			levels = [	{
-								label: "coldrisk",
-								backgroundColor: 'rgba(255,255,255,0.3)',
-								borderColor: 'rgba(255,255,255,1)',
-								borderWidth: 2,
-								fill: false,
-								data: data.coldindex.points,
-								cubicInterpolationMode: 'monotone',
-								pointRadius: 5,
-								pointHoverRadius: 20
 							},
-							{
-								label: "green",
-								backgroundColor: 'rgba(0,255,0,.5)',
-								borderColor: 'rgba(0,255,0,1)',
-								borderWidth: 2,
-								fill: "origin",
-								data: [{ x: x_from, y: -1 }, { x: x_to, y: -1 }],
-								cubicInterpolationMode: 'monotone',
-								pointRadius: 0,
-								pointHoverRadius: 0
-							}, 
 							{
 								label: "cyan",
-								backgroundColor: 'rgba(0,180,180,.5)',
-								borderColor: 'rgba(0,180,180,1)',
+								backgroundColor: 'rgba(0,255,255,.5)',
+								borderColor: 'rgba(0,255,255,1)',
 								borderWidth: 2,
-								fill: "-1",
-								data: [{ x: x_from, y: -2 }, { x: x_to, y: -2 }],
+								fill: "+1",
+								data: [{ x: x_from, y: 9 }, { x: x_to, y: 9 }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0,
+								pointHoverRadius: 0
+							},
+							{
+								label: "lightblue",
+								backgroundColor: 'rgba(0,80,255,.5)',
+								borderColor: 'rgba(0,80,255,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: 0 }, { x: x_to, y: 0 }],
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
 							},
 							{
 								label: "blue",
-								backgroundColor: 'rgba(0,100,255,.5)',
-								borderColor: 'rgba(0,100,255,1)',
+								backgroundColor: 'rgba(0,0,255,.5)',
+								borderColor: 'rgba(0,0,255,1)',
 								borderWidth: 2,
-								fill: "-1",
-								data: [{ x: x_from, y: -3 }, { x: x_to, y: -3 }],
+								fill: "+1",
+								data: [{ x: x_from, y: -13 }, { x: x_to, y: -13 }],
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
 							},
 							{
-								label: "darkblue",
-								backgroundColor: 'rgba(0,0,180,.5)',
-								borderColor: 'rgba(0,0,180,1)',
+								label: "strongblue",
+								backgroundColor: 'rgba(0,0,165,.5)',
+								borderColor: 'rgba(0,0,165,1)',
 								borderWidth: 2,
-								fill: "-1",
+								fill: "+1",
+								data: [{ x: x_from, y: -27 }, { x: x_to, y: -27 }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0,
+								pointHoverRadius: 0
+							},
+							{
+								label: "deepblue",
+								backgroundColor: 'rgba(0,0,80,.5)',
+								borderColor: 'rgba(0,0,80,1)',
+								borderWidth: 2,
+								fill: "+1",
 								data: [{ x: x_from, y: min_y }, { x: x_to, y: min_y }],
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
 							}
-						];	
+							
+						];
 		}
+		
 		
 		var fontsize = isDashboard ? '12' : '16';
 		var tick_options = thermal === "heat" ? { fontSize: fontsize, fontColor: 'rgba(255, 255, 255, 1)', fontFamily: 'Lato', max: max_y, min: min_y } : { display:true, fontSize: fontsize, fontColor: 'rgba(255, 255, 255, 1)', fontFamily: 'Lato', callback: function(value, index, values) { return '' + value; },max: max_y, min: min_y } ;
 		var labelstr = thermal === "heat" ? this.translations.labels.str_heat_index[this.language]: this.translations.labels.str_cold_index[this.language];
 		
+		if( this.knowledgeBase.user.settings.index !== "Climapp" ){
+			tick_options = { fontSize: fontsize, fontColor: 'rgba(255, 255, 255, 1)', fontFamily: 'Lato', max: max_y, min: min_y };
+			labelstr = this.translations.labels.str_utci[this.language];
+		}
 		var chartData = {
 			labels: data.labels,
 			datasets: levels
@@ -2545,7 +2777,7 @@ var app = {
 			            var chartInstance = this.chart,
 			                ctx = chartInstance.ctx;
 						var fontsize = '14px';
-						const font = '400 '+fontsize+' "Font Awesome 5 Free"';
+						const font = '900 '+fontsize+' "Font Awesome 5 Free"';
 						var onCompleteSelf = this;
 			            ctx.textAlign = 'center';
 			            ctx.textBaseline = 'bottom';

@@ -253,7 +253,7 @@ function coldLevelTips( index, level, kb, cold_index, pageID, translations, lang
 	
 	let windrisk = windchillRisk( windchill );
 	let isWindstopperUseful = ( tair - threshold ) > windchill;
-	pageID === "dashboard" ? str += "<p class='label'><i id='circle_gauge_color' class='fas fa-circle'></i>" + gaugeTitleCold(cold_index, translations, language) + "</p>" : str += "";
+	pageID === "dashboard" ? str += "<p class='label'><i id='circle_gauge_color' class='fas fa-dot-circle'></i>" + gaugeTitleCold(cold_index, translations, language) + "</p>" : str += "";
 		
 	if( level === 1 ){ //beginner, early user
 		if( cold_index <= 1 ){
@@ -383,9 +383,9 @@ function startIntro(translations, language) {
 				position: "left"
 			  },
 			  {
-                element: '#dashboard_header',
+                element: '#gauge_div',
 				intro: "<p>" + translations.sentences.intro_gauge[language] + ".</p>",
-			    position: 'middle' /*+ 
+			    position: 'bottom' /*+ 
 						"<p>The positive values indicate the level of heat stress and the negative values the level of cold stress.</p>"*/
 			  },
 			  {
@@ -399,10 +399,10 @@ function startIntro(translations, language) {
                 position: 'bottom'
               },
               {
-                element: '#menu_flex',
+                element: '#selectwork',
 				intro: "<p>" + translations.sentences.intro_wheels_1[language] + ".</p>" +
 				"<p>" + translations.sentences.intro_wheels_2[language] + ".</p>",
-                position: 'middle'
+                position: 'bottom'
               }
             ]
           });
