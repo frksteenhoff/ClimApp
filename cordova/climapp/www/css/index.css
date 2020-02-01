@@ -236,8 +236,8 @@ canvas{
 
 .flexbox-4 div{
 	margin: auto;
-	white-space: nowrap; 
-	overflow: hidden;
+	white-space: normal; 
+	overflow: auto;
 	text-overflow: ellipsis;
 	flex-basis: 24%;
     text-align: center;

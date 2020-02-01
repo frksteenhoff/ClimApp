@@ -1809,12 +1809,10 @@ var app = {
 			
 			$("#about_acknowledge_human_heat_exchange").html(this.translations.sentences.about_acknowledge_human_heat_exchange[this.language]);
 			$("#about_acknowledge_openweathermap").html(this.translations.sentences.about_acknowledge_openweathermap[this.language]);
-			
+			$("#acknowledgement_utci").html(this.translations.sentences.acknowledgement_utci[this.language]);
 			$("#about_josh_foster").html(this.translations.sentences.about_josh_foster[this.language]);
 			$("#about_nick_ravanelli").html(this.translations.sentences.about_nick_ravanelli[this.language]);
-			$("#about_climapp_team").html(this.translations.sentences.about_climapp_team[this.language]);
-			
-			
+			$("#about_climapp_team").html(this.translations.sentences.about_climapp_team[this.language]);	
 			
 			$("#str_app_info").html(this.translations.labels.str_app_info[this.language]);
 			

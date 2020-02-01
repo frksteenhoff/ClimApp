@@ -360,14 +360,14 @@ function getLocation(kb) {
 
 // Returns true if coordinates have been saved or position is fetched from api
 function locationSetCorrectly(kb) {
-	// Both coordinates are numbers, and within ranges lat: 0-90, lon: 0-180
+	// Both coordinates are numbers, and within ranges lat: -90-90, lon: -180 - 180
 	return coordsIsWithinRange(kb.user.settings.coordinates_lat, kb.user.settings.coordinates_lon);
 }
 
 function coordsIsWithinRange(lat, lon) {
 	return (typeof lat === 'number' && typeof lon === 'number') 
-	&& (lat > 0 && lat <= 90)
-	&& (lon > 0 && lon <= 180)
+	&& (lat > -89 && lat <= 89)
+	&& (lon > -180 && lon <= 180)
 }
 
 /* The introduction elements follows order of JSON array */
