@@ -43,7 +43,7 @@ var app = {
 			showShortToast("Whoops... something went wrong at: " + lineNumber);
 		}
 		this.receivedEvent('deviceready');
-		
+		/*
 		if( device.platform === "iOS"){
 			window.FirebasePlugin.hasPermission(function(data) { 
 				if( !data.isEnabled ){
@@ -62,7 +62,7 @@ var app = {
 		}, function(error) {
 		    console.error(error);
 		});		
-		
+		*/
 	},
 
 	// Update DOM on a Received Event
@@ -140,7 +140,6 @@ var app = {
 			if( self.knowledgeBase.user.guards.isIndoor && target === "indoor"){
 				self.updateIndoorPrediction();
 			}
-			
 			self.loadUI(target);
 		});
 	},
@@ -262,6 +261,42 @@ var app = {
 	},
 	initSettingsListeners: function () {
 		var self = this;
+		console.log("initSettingsListeners");
+		$("input[data-listener='slider']").off(); // this type of slider expects a key value
+		$("input[data-listener='slider']").on("change", function(event ){
+						
+			var selected = parseInt( $(this).val() );
+			var target = $(this).attr("data-target");
+			
+			var keys = Object.keys( self.knowledgeBase[target].values );
+			self.knowledgeBase.user.settings[ target + "_selected"] = keys[ selected ];
+			if( target == "clothing"){
+				self.knowledgeBase.user.settings.insulation_selected = self.knowledgeBase.clothing.values[ keys[ selected ] ].Icl;
+				self.knowledgeBase.user.settings.windpermeability_selected = self.knowledgeBase.clothing.values[ keys[ selected ] ].p;
+				self.knowledgeBase.user.settings.vapourpermeability_selected = self.knowledgeBase.clothing.values[ keys[ selected ] ].im;
+			}
+			
+			self.saveSettings();
+			
+			self.calcThermalIndices();
+			
+			self.updateUI();
+			
+		});
+		
+		$("input[data-listener='valueslider']").off(); // this type of directly inputs a value
+		$("input[data-listener='valueslider']").on("change", function(event ){
+			var value = parseFloat( $(this).val() ) ;
+			var target = $(this).attr("data-target");
+			
+			
+			self.knowledgeBase.user.settings[ target + "_selected"] = value;
+			self.saveSettings();
+			self.calcThermalIndices();
+			self.updateUI();
+		});
+		
+		
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='wheel']").on("click", function () {
 			var target = $(this).attr("data-target");
@@ -520,6 +555,14 @@ var app = {
 			});
 		});
 	},
+	initResearchListeners: function () {
+		var self = this;
+		$("div[data-listener='submit']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='submit']").on("click", function () {
+			addUseDataToDB( self.knowledgeBase, self );
+			self.loadUI("dashboard");
+		});
+	},
 	initMenuListeners: function () {
 		var self = this;
 		$("div[data-listener='menu']").off(); //prevent multiple instances of listeners on same object
@@ -557,6 +600,9 @@ var app = {
 			if( targetgroup=="modelgroup" ){
 				self.updateUI();
 			}
+			else{
+				self.initSettingsListeners();
+			}
 			
 		});
 	},
@@ -586,6 +632,12 @@ var app = {
 					"activity_selected": "medium",
 					"clothing_selected": "Summer_attire",
 					"headgear_selected": "none",
+					"insulation_selected": 0.5,//clo
+					"windpermeability_selected": 50,//clo
+					"vapourpermeability_selected": 0.38,//clo
+					"vapourbarrier_selected": false,
+					"windstopper_selected": false,
+					"gloves_selected": false,
 					"explore": false, // currently not used
 					"level": 1, // 1 - beginner, 2 - advanced
 
@@ -616,13 +668,13 @@ var app = {
 					"cold": {
 						"predicted": 0,
 						"perceived": 0,
-						"diff": [] // perceived - predicted
+						"diff": [0] // perceived - predicted
 					}
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.051,
-			"app_version": "3.0.8", //cannot be beta - because it will be rejected by iOS then.
+			"version": 2.057,
+			"app_version": "3.0.10", //cannot be beta - because it will be rejected by iOS then.
 			"server": {
 				"dtu_ip": "http://climapp.byg.dtu.dk",
 				"dtu_api_base_url": "/ClimAppAPI/v2/ClimAppApi.php?apicall="
@@ -650,22 +702,23 @@ var app = {
 			"activity": {
 				// Dependent on correct translation sheet labels (rest, low, medium, high, intense)
 				"values": {
-					"rest": 115.0, //ISO 8896
-					"low": 180.0,
-					"medium": 300.0,
-					"high": 415.0,
-					"intense": 520.0
+					"rest": {i:0, val:115.0}, //ISO 8896
+					"low": {i:1, val:180.0},
+					"medium": {i:2, val:300.0},
+					"high": {i:3, val:415.0},
+					"intense": {i:4, val:520.0}
 				}
 			},
 			"clothing": {
 				"values": {
-					"Summer_attire": 0.5, //clo
-					"Business_suit": 1.0,
-					"Double_layer": 1.5,
-					"Cloth_coverall": 1.0,
-					"Cloth_apron_long_sleeve": 1.2,
-					"Vapour_barrier_coverall": 1.1,
-					"Winter_attire": 2.5
+					"Summer_attire": { i:0, Icl: 0.5, p: 200.0, im: 0.45, CAV: -3 },  //clo
+					"Casual_business": { i:1, Icl: 0.8, p: 100.0, im: 0.38, CAV: 0 },
+					"Business_suit": { i:2, Icl: 1.0, p: 50, im: 0.38, CAV: 0 },
+					"Double_layer": { i:3, Icl: 1.5, p: 10, im: 0.38, CAV: 0 },
+					//"Cloth_coverall": 1.0,
+					//"Cloth_apron_long_sleeve": 1.2,
+					//"Vapour_barrier_coverall": 1.1,
+					"Winter_attire": { i:4, Icl: 2.5, p: 5, im: 0.38, CAV: 0 },
 				}
 			},
 			"feedback": {
@@ -729,6 +782,7 @@ var app = {
 			"about": "./pages/about.html",
 			"location": "./pages/location.html",
 			"indoor": "./pages/indoor.html",
+			"research": "./pages/research.html",
 			"error": "./pages/error.html"
 		};
 		//this.translations = getTranslations(); //check if it works from here	
@@ -971,7 +1025,7 @@ var app = {
 
 		self.checkIfUserExistInDB().then((result) => {
 			getAppIDFromDB(self.knowledgeBase).then((appidFromServer) => {
-				console.log(" update Weather - getting weather with appid : " + appidFromServer);
+				//console.log(" update Weather - getting weather with appid : " + appidFromServer);
 				if (appidFromServer) {
 					let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
 					var [lat, lon] = getLocation(this.knowledgeBase); // Custom or GPS
@@ -1079,9 +1133,8 @@ var app = {
 										let wvp = 0.1 * (val * 0.01) * Math.exp(18.965 - 4030 / (T + 235));
 										self.knowledgeBase.weather.watervapourpressure.push(wvp);
 									});
-								
-								
 								self.calcThermalIndices();
+								self.updateUI();
 								self.updateUTCI(0);
 								self.saveSettings();
 															
@@ -1191,7 +1244,6 @@ var app = {
 		this.knowledgeBase.thermalindices.ireq = [];
 		this.knowledgeBase.thermalindices.phs = [];
 		this.knowledgeBase.thermalindices.pmv = [];
-		
 		var options = {
 			air: {},
 			body: {
@@ -1234,6 +1286,7 @@ var app = {
 			heatindex.IREQ.set_options(options);
 			heatindex.IREQ.sim_run();
 			var ireq = heatindex.IREQ.current_result();
+			
 			var ireq_object = {
 				"ICLminimal": ireq.ICLminimal,
 				"DLEminimal": ireq.DLEminimal,
@@ -1267,7 +1320,9 @@ var app = {
 			for (var i = 1; i <= simduration; i++) {
 				var res = heatindex.PHS.time_step();
 			}
+			
 			var phs = heatindex.PHS.current_result();
+			
 			var phs_object = {
 				"D_Tre": phs.D_Tre,
 				"Dwl50": phs.Dwl50,
@@ -1337,6 +1392,7 @@ var app = {
 			}			
 			self.knowledgeBase.thermalindices.pmv.push(pmv_object);
 		});
+		
 		self.saveSettings();
 	},
 	updateUI: async function () {
@@ -1423,7 +1479,8 @@ var app = {
 			$("#str_activity").html(this.translations.labels.str_activity[this.language]);
 			$("#str_clothing").html(this.translations.labels.str_clothing[this.language]);
 			$("#str_headgear").html(this.translations.labels.str_headgear[this.language]);
-			$("#head_gear").html(this.translations.labels.str_headgear[this.language]);
+			//$("#head_gear").html(this.translations.labels.str_headgear[this.language]);
+			
 			
 			
 		}
@@ -1461,7 +1518,7 @@ var app = {
 			$("#str_wbgt").html(this.translations.labels.str_wbgt[this.language]);
 			$("#str_wbgt_iso").html(this.translations.labels.str_wbgt_iso[this.language]);
 			$("#details_wbgt_desc_1").html(this.translations.sentences.details_wbgt_desc_1[this.language]);
-			$("#details_wbgt_desc_2").html(this.translations.sentences.details_wbgt_desc_1[this.language]);
+			$("#details_wbgt_desc_2").html(this.translations.sentences.details_wbgt_desc_2[this.language]);
 			
 			$("#str_phs_iso").html(this.translations.labels.str_phs_iso[this.language]);
 			$("#details_phs_desc_1").html(this.translations.sentences.details_phs_desc_1[this.language]);
@@ -1586,7 +1643,6 @@ var app = {
 					$("#detail_im").html(im);
 					
 					$("#moreinformation").html( tip_html );
-					console.log("updateInfo Details - E");
 					
 					if( this.knowledgeBase.user.guards.isIndoor ){
 						$("div[data-context='heat'],div[data-context='phs'],div[data-context='neutral'],div[data-context='cold']").hide();
@@ -1599,11 +1655,9 @@ var app = {
 	
 						let heat_index = WBGTrisk( wbgt, this.knowledgeBase );
 			
-						let draw_cold_gauge = this.isDrawColdGauge( icl_min, heat_index, index );
 						let draw_heat_gauge = this.isDrawHeatGauge( icl_min, heat_index, index );
-						let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 					
-						if( personalvalue <= -1 ){
+						if( personalvalue <= -1 || (personalvalue >=1 && thermal == "cold") ){
 							$("div[data-context='heat'],div[data-context='phs'],div[data-context='neutral']").hide();
 							$("div[data-context='cold']").show();
 				
@@ -1695,6 +1749,7 @@ var app = {
 			$("#str_other").html(this.translations.labels.str_other[this.language].toUpperCase());			
 			$("#str_about").html(this.translations.labels.str_about[this.language]);
 			$("#str_disclaimer_and_privacy").html(this.translations.labels.str_disclaimer_and_privacy[this.language]);
+			$("#str_research").html(this.translations.labels.str_research[this.language]);
 		}
 		else if (this.currentPageID == "feedback") {
 			$(".navigation").hide();
@@ -1891,27 +1946,49 @@ var app = {
 			$("#thermostat_level").html(this.knowledgeBase.user.settings.thermostat_level);
 			$("#open_windows").html(windowsOpen);
 		}
+		else if (this.currentPageID == "research" ){
+			this.initResearchListeners();
+			$(".navigation").hide();
+			$(".navigation_back_settings").show(); //BK: class used as id - consider using id - #navigation_back_settings instead of .
+			
+			$("#str_research_label").html(this.translations.labels.str_research_label[this.language]);
+			$("#str_research_consent").html(this.translations.labels.str_research_consent[this.language]);
+			$("#str_climapp_id").html(this.translations.labels.str_climapp_id[this.language]);
+			$("#climapp_id").html( deviceID() );
+			$("#str_submit_research_data_point").html(this.translations.labels.str_submit_research_data_point[this.language]);
+		}
 	},
 	updateMenuItems: function () {
 		let selected = this.knowledgeBase.user.settings.activity_selected;
+		$("#activityslider").val( this.knowledgeBase.activity.values[selected].i );  
+		
+		
 		$("#dashboard_activity").html(this.translations.wheels.activity.label[selected][this.language]);
-		let caption_ = this.translations.wheels.activity.description[selected][this.language];
-	
+		let caption_ = this.translations.wheels.activity.description[selected][this.language];	
 		$("#activityCaption").html(caption_);
 
 		selected = this.knowledgeBase.user.settings.clothing_selected;
+		
+		$("#clothingslider").val( this.knowledgeBase.clothing.values[selected].i );  
+		
 		$("#dashboard_clothing").html(this.translations.wheels.clothing.label[selected][this.language]);
 		caption_ = this.translations.wheels.clothing.description[selected][this.language];
 		$("#clothingCaption").html(caption_);
-
-		selected = this.knowledgeBase.user.settings.headgear_selected;
-		$("#dashboard_headgear").html(this.translations.wheels.headgear.label[selected][this.language]);
-		caption_ = this.translations.wheels.headgear.description[selected][this.language];
-		$("#headgearCaption").html(caption_);
+		
+		
+		$("#slider_insulation").val( this.knowledgeBase.user.settings.insulation_selected );  
+		$("#slider_insulation_value").html( this.knowledgeBase.user.settings.insulation_selected );
+		
+		$("#slider_windpermeability").val( this.knowledgeBase.user.settings.windpermeability_selected);  
+		$("#slider_windpermeability_value").html( this.knowledgeBase.user.settings.windpermeability_selected );
+		
+		$("#slider_vapourpermeability").val( this.knowledgeBase.user.settings.vapourpermeability_selected );  
+		$("#slider_vapourpermeability_value").html( this.knowledgeBase.user.settings.vapourpermeability_selected );
+		
 	},
 	calculateColdIndex: function( icl_neutral, icl_min, icl_worn, isPersonalised ){
 		var value = 0;
-		[0]
+		
 		var PAL = (this.knowledgeBase.user.adaptation["cold"].diff.length>0 && isPersonalised) ? this.knowledgeBase.user.adaptation["cold"].diff[0] : 0;
 		icl_worn = icl_worn + PAL;
 		if( icl_worn < icl_min ){
@@ -1921,6 +1998,9 @@ var app = {
 			var range = icl_neutral - icl_min;
 			var x = icl_worn - icl_min;
 			value = 1.0 - x;
+		}
+		else if( icl_worn >= icl_neutral ){
+			value = -Math.min(4, icl_worn - icl_neutral ); // negative cold index = positive heat balance
 		}
 		return value;
 	},
@@ -1947,16 +2027,14 @@ var app = {
 			personal_cold_index = pmv_index;
 			model_cold_index = pmv_index;
 		}
-		console.log("getDrawGaugeParamsFromIndex B");
-		
-		let draw_cold_gauge = this.isDrawColdGauge( model_cold_index, model_heat_index, index );
+		//console.log( "getDrawGaugeParamsFromIndex cold " + model_cold_index + " heat " + model_heat_index );
 		let draw_heat_gauge = this.isDrawHeatGauge( model_cold_index, model_heat_index, index );
 
-		let isNeutral = !draw_cold_gauge && !draw_heat_gauge;
 		let tip_html = "";
-		let thermal = model_cold_index >= model_heat_index? "cold" : "heat";
-		let level = leveloverride ? 2 : kb.user.settings.level;
+		let thermal = draw_heat_gauge ? "heat" : "cold";
+		//console.log( "getDrawGaugeParamsFromIndex thermal " + thermal );
 		
+		let level = leveloverride ? 2 : kb.user.settings.level;
 		
 		let personal_value = this.determineThermalIndexValue(personal_cold_index, personal_heat_index, index, isIndoor);
 		let model_value = this.determineThermalIndexValue(model_cold_index, model_heat_index, index, isIndoor);
@@ -1965,8 +2043,7 @@ var app = {
 			tip_html += indoorTips( kb, this.translations, this.language);
 		}
 		else{
-			
-			if (draw_cold_gauge || (isNeutral && personal_cold_index > personal_heat_index)) {
+			if ( !draw_heat_gauge ) {
 				tip_html += coldLevelTips(index, level, kb, personal_cold_index, this.currentPageID, this.translations, this.language);
 			}
 			else {
@@ -1984,25 +2061,23 @@ var app = {
 		getPAL(kb, thermal);
 	},
 	// ireq only valid with temperatures less than 10
+	/*
 	isDrawColdGauge: function (cold, heat, index) {
-		return cold >= heat
+		return Math.abs(cold) >= heat
 			   &&
 		this.knowledgeBase.thermalindices.ireq[ index].Tair <= 15; //ireq only from <10 however, 15 can already be cold with 0.5 clo
 	},
+	*/
 	isDrawHeatGauge: function (cold, heat, index) {
-		return heat > cold;
+		return heat > 1.0 || this.knowledgeBase.thermalindices.phs[index].Tair > 14.5; //based on wbgt effective we enter first risk category
 	},
 	determineThermalIndexValue: function (cold, heat, index, isIndoor) {
 		if( isIndoor ){
 			return cold; //return pmv value 
 		}
 		else{
-			var value = cold > heat ? -cold : heat;
-		
-			value = this.isDrawColdGauge(cold, heat, index) ? -cold : value;
-			value = this.isDrawHeatGauge(cold, heat, index) ? heat : value;
+			var value = this.isDrawHeatGauge(cold, heat, index) ? heat : -cold;
 		}
-		
 		return Math.max(-4, Math.min(4, value));//value between -4 and +4
 	},
 	updateInfo: function (index, isDrawChart ) {
@@ -2318,63 +2393,36 @@ var app = {
 	convertWeatherToChartData: function ( thermal ) {
 		var data;
 		if( this.knowledgeBase.user.settings.index === "Climapp" ){
-			if( thermal === "heat" ){
-				data = {
-					"labels": [],
-					"min": { "points": [] },
-					"max": { "points": [] },
-					"ral": { "points": [] },
-					"pal": { "points": [] },
-					"ymax": 0,
-					"ymin": 100,
-				};
-				for (var i = 0; i < this.maxForecast; i++) {
-					var wbgt_min = this.knowledgeBase.thermalindices.phs[i].wbgt;
-					var wbgt_effective_min = getWBGTeffective(wbgt_min, this.knowledgeBase);
-
-					var item = {
-						x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
-						y: 1.0 * wbgt_effective_min
-					};
-
-					data.labels.push(item.x);
-					data.min.points.push(item);
-
-					var wbgt_max = this.knowledgeBase.thermalindices.phs[i].wbgt_max;
-					var wbgt_effective_max = getWBGTeffective(wbgt_max, this.knowledgeBase);
-					item = {
-						x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
-						y: 1.0 * wbgt_effective_max
-					};
-					data.max.points.push(item);
-
-					data.ymax = Math.max( data.ymax, 1.0 * wbgt_effective_max );
-					data.ymin = Math.min( data.ymin, 1.0 * wbgt_effective_min );
-				}
-			}
-			else{
-				data = {
-					"labels": [],
-					"coldindex": { "points": [] },//
-					"ymin": 99999,
-				};
-				var icl_worn = getClo(this.knowledgeBase);
-			
-				for (var i = 0; i < this.maxForecast; i++) {
+			data = {
+				"labels": [],
+				"values": { "points": [] },//
+				"ymin": 99999,
+				"ymax": -9999,
+			};
+			var icl_worn = getClo(this.knowledgeBase);
+			for (var i = 0; i < this.maxForecast; i++) {				
+				//hot index
+				var wbgt_max = this.knowledgeBase.thermalindices.phs[i].wbgt_max;
+				var wbgt_risk_category = WBGTrisk(wbgt_max, this.knowledgeBase);
+				//cold index
+				var icl_min = this.knowledgeBase.thermalindices.ireq[i].ICLminimal;
+				var icl_neutral = this.knowledgeBase.thermalindices.ireq[i].ICLneutral;
+				var cold_index = this.calculateColdIndex(icl_neutral, icl_min, icl_worn, true); // minimal - worn, if negative you do not wear enough clothing
 				
-					var icl_min = this.knowledgeBase.thermalindices.ireq[i].ICLminimal;
-					var icl_neutral = this.knowledgeBase.thermalindices.ireq[i].ICLneutral;
-					var cold_index = -this.calculateColdIndex(icl_neutral, icl_min, icl_worn, true); // minimal - worn, if negative you do not wear enough clothing
-					var item = {
-						x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
-						y: 1.0 * Math.min(0, cold_index ) //lower limit of green
-					};
-					data.labels.push(item.x);
-					data.coldindex.points.push(item);	
-					data.ymin = Math.min(data.ymin, 1.0 * cold_index);
-							
-				}
+				var value = this.determineThermalIndexValue( cold_index, wbgt_risk_category, i, false );
+				
+				var item = {
+					x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
+					y: 1.0 * value//lower limit of green
+				};
+				
+				data.labels.push(item.x);
+				data.values.points.push(item);	
+				data.ymin = Math.min(data.ymin, 1.0 * value);
+				data.ymax = Math.max(data.ymax, 1.0 * value);
+				
 			}
+			
 		}
 		else{ //UTCI
 			data = {
@@ -2410,154 +2458,126 @@ var app = {
 			ctx.canvas.height = 0.75 * $(window).width();
 			ctx.canvas.width = 0.95 * $(window).width();
 		}
+		
 		var data = this.convertWeatherToChartData( thermal );
 
+		
 		var x_from = data.labels[0];
 		var x_to = data.labels[data.labels.length - 1];
 		
 		var levels = [];
-		var max_y = 0;//cold level
-		var min_y = 0;
+		var max_y = 4;//cold level
+		var min_y = -4;
+		
+		var green_y = 1;//0.8 * pal;
+		var yellow_y = 2;//1.0 * pal;
+		var orange_y = 3;//1.2 * pal;
+		var red_y = Math.max( data.ymax, 4);//Math.ceil(Math.max(1.5 * pal, data.ymax + 1));
 		 
 		if( this.knowledgeBase.user.settings.index === "Climapp" ){
-			if( thermal === "heat" ){
+			max_y = red_y;
+			min_y = Math.ceil( Math.min( -4, data.ymin - 1));	
+			levels = [	{
+								label: "climapp index",
+								backgroundColor: 'rgba(255,255,255,0.3)',
+								borderColor: 'rgba(255,255,255,1)',
+								borderWidth: 2,
+								fill: false,
+								data: data.values.points,
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 5,
+								pointHoverRadius: 20
+							},
+							{
+								label: "red",
+								backgroundColor: 'rgba(180,0,0,.5)',
+								borderColor: 'rgba(180,0,0,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: red_y }, { x: x_to, y: red_y }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0,
+								pointHoverRadius: 0
+							},
+							{
+								label: "orange",
+								backgroundColor: 'rgba(255,125,0,.5)',
+								borderColor: 'rgba(255,125,0,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: orange_y }, { x: x_to, y: orange_y }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0,
+								pointHoverRadius: 0
+							},
+							{
+								label: "yellow",
+								backgroundColor: 'rgba(255,255,0,.5)',
+								borderColor: 'rgba(255,255,0,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: yellow_y }, { x: x_to, y: yellow_y }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0,
+								pointHoverRadius: 0
+							},
+							{
+								label: "green",
+								backgroundColor: 'rgba(0,255,0,.5)',
+								borderColor: 'rgba(0,255,0,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: green_y }, { x: x_to, y: green_y }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0,
+								pointHoverRadius: 0
+							},
+							{
+								label: "cyan",
+								backgroundColor: 'rgba(0,180,180,.5)',
+								borderColor: 'rgba(0,180,180,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: -1 }, { x: x_to, y: -1 }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0,
+								pointHoverRadius: 0
+							},
+							{
+								label: "blue",
+								backgroundColor: 'rgba(0,100,255,.5)',
+								borderColor: 'rgba(0,100,255,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: -2 }, { x: x_to, y: -2 }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0,
+								pointHoverRadius: 0
+							},
+							{
+								label: "darkblue",
+								backgroundColor: 'rgba(0,0,180,.5)',
+								borderColor: 'rgba(0,0,180,1)',
+								borderWidth: 2,
+								fill: "+1",
+								data: [{ x: x_from, y: -3 }, { x: x_to, y: -3 }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0,
+								pointHoverRadius: 0
+							},
+							{
+								label: "darkblue_min",
+								backgroundColor: 'rgba(0,0,180,.5)',
+								borderColor: 'rgba(0,0,180,1)',
+								borderWidth: 2,
+								fill: false,
+								data: [{ x: x_from, y: min_y }, { x: x_to, y: min_y }],
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0,
+								pointHoverRadius: 0
+							}
+			];	
 			
-				var ral = RAL(this.knowledgeBase);
-				var pal = ral - getPAL(this.knowledgeBase, thermal);
-
-				var green_y = 0.8 * pal;
-				var yellow_y = 1.0 * pal;
-				var orange_y = 1.2 * pal;
-				var red_y = Math.ceil(Math.max(1.5 * pal, data.ymax + 1));
-				max_y = red_y;
-				min_y = data.ymin - 1;
-				levels = [{
-									label: "wbgt",
-									backgroundColor: 'rgba(255,255,255,0.3)',
-									borderColor: 'rgba(255,255,255,1)',
-									borderWidth: 2,
-									fill: false,
-									data: data.min.points,
-									cubicInterpolationMode: 'monotone',
-									pointRadius: 5,
-									pointHoverRadius: 20
-								},
-								{
-									label: "wbgt max",
-									backgroundColor: 'rgba(255,255,255,0.7)',
-									borderColor: 'rgba(255,255,255,1)',
-									borderWidth: 2,
-									fill: '-1',
-									data: data.max.points,
-									cubicInterpolationMode: 'monotone',
-									pointRadius: 5,
-									pointHoverRadius: 20
-								},
-								{
-									label: "red",
-									backgroundColor: 'rgba(180,0,0,.5)',
-									borderColor: 'rgba(180,0,0,1)',
-									borderWidth: 2,
-									fill: "+1",
-									data: [{ x: x_from, y: red_y }, { x: x_to, y: red_y }],
-									cubicInterpolationMode: 'monotone',
-									pointRadius: 0,
-									pointHoverRadius: 0
-								},
-								{
-									label: "orange",
-									backgroundColor: 'rgba(255,125,0,.5)',
-									borderColor: 'rgba(255,125,0,1)',
-									borderWidth: 2,
-									fill: "+1",
-									data: [{ x: x_from, y: orange_y }, { x: x_to, y: orange_y }],
-									cubicInterpolationMode: 'monotone',
-									pointRadius: 0,
-									pointHoverRadius: 0
-								},
-								{
-									label: "yellow",
-									backgroundColor: 'rgba(255,255,0,.5)',
-									borderColor: 'rgba(255,255,0,1)',
-									borderWidth: 2,
-									fill: "+1",
-									data: [{ x: x_from, y: yellow_y }, { x: x_to, y: yellow_y }],
-									cubicInterpolationMode: 'monotone',
-									pointRadius: 0,
-									pointHoverRadius: 0
-								},
-								{
-									label: "green",
-									backgroundColor: 'rgba(0,255,0,.5)',
-									borderColor: 'rgba(0,255,0,1)',
-									borderWidth: 2,
-									fill: "origin",
-									data: [{ x: x_from, y: green_y }, { x: x_to, y: green_y }],
-									cubicInterpolationMode: 'monotone',
-									pointRadius: 0,
-									pointHoverRadius: 0
-								} ];
-			}
-			else{		
-			
-				min_y = Math.ceil( Math.min( -4, data.ymin - 1));	
-				levels = [	{
-									label: "coldrisk",
-									backgroundColor: 'rgba(255,255,255,0.3)',
-									borderColor: 'rgba(255,255,255,1)',
-									borderWidth: 2,
-									fill: false,
-									data: data.coldindex.points,
-									cubicInterpolationMode: 'monotone',
-									pointRadius: 5,
-									pointHoverRadius: 20
-								},
-								{
-									label: "green",
-									backgroundColor: 'rgba(0,255,0,.5)',
-									borderColor: 'rgba(0,255,0,1)',
-									borderWidth: 2,
-									fill: "origin",
-									data: [{ x: x_from, y: -1 }, { x: x_to, y: -1 }],
-									cubicInterpolationMode: 'monotone',
-									pointRadius: 0,
-									pointHoverRadius: 0
-								}, 
-								{
-									label: "cyan",
-									backgroundColor: 'rgba(0,180,180,.5)',
-									borderColor: 'rgba(0,180,180,1)',
-									borderWidth: 2,
-									fill: "-1",
-									data: [{ x: x_from, y: -2 }, { x: x_to, y: -2 }],
-									cubicInterpolationMode: 'monotone',
-									pointRadius: 0,
-									pointHoverRadius: 0
-								},
-								{
-									label: "blue",
-									backgroundColor: 'rgba(0,100,255,.5)',
-									borderColor: 'rgba(0,100,255,1)',
-									borderWidth: 2,
-									fill: "-1",
-									data: [{ x: x_from, y: -3 }, { x: x_to, y: -3 }],
-									cubicInterpolationMode: 'monotone',
-									pointRadius: 0,
-									pointHoverRadius: 0
-								},
-								{
-									label: "darkblue",
-									backgroundColor: 'rgba(0,0,180,.5)',
-									borderColor: 'rgba(0,0,180,1)',
-									borderWidth: 2,
-									fill: "-1",
-									data: [{ x: x_from, y: min_y }, { x: x_to, y: min_y }],
-									cubicInterpolationMode: 'monotone',
-									pointRadius: 0,
-									pointHoverRadius: 0
-								}
-							];	
-			}
 		}
 		else{//UTCI
 						
@@ -2678,9 +2698,9 @@ var app = {
 						];
 		}
 		
-		
+		//console.log("drawChart fase 2");
 		var fontsize = isDashboard ? '12' : '16';
-		var tick_options = thermal === "heat" ? { fontSize: fontsize, fontColor: 'rgba(255, 255, 255, 1)', fontFamily: 'Lato', max: max_y, min: min_y } : { display:true, fontSize: fontsize, fontColor: 'rgba(255, 255, 255, 1)', fontFamily: 'Lato', callback: function(value, index, values) { return '' + value; },max: max_y, min: min_y } ;
+		var tick_options = { display:true, fontSize: fontsize, fontColor: 'rgba(255, 255, 255, 1)', fontFamily: 'Lato', callback: function(value, index, values) { return '' + value; },max: max_y, min: min_y } ;
 		var labelstr = thermal === "heat" ? this.translations.labels.str_heat_index[this.language]: this.translations.labels.str_cold_index[this.language];
 		
 		if( this.knowledgeBase.user.settings.index !== "Climapp" ){
@@ -2692,8 +2712,9 @@ var app = {
 			datasets: levels
 		};
 		var self = this;
-		
-		var myChart = new Chart(ctx, {
+		//console.log("drawChart fase 3 " + JSON.stringify(tick_options) );
+		var myChart = null;
+		myChart = new Chart(ctx, {
 			type: 'line',
 			data: chartData,
 			options: {
@@ -2795,18 +2816,26 @@ var app = {
 								ctx.fillText(icon, bar._model.x, bar._model.y - offset_y); //above
 	  							ctx.fillText(temperature, bar._model.x, bar._model.y + 2*offset_y); //below								
 	  			            });
-						})
+							//onCompleteSelf.options.animation.onComplete = null;
+							
+						});
 			        }
 				}
 			}
 		});
-		ctx.canvas.onclick = function(event){
-			var firstPoint = myChart.getElementAtEvent(event)[0];	
-			if( firstPoint ){
-				self.selectedWeatherID = firstPoint._index;
-				self.updateInfo( firstPoint._index, false );
+		/*
+		if( ctx.canvas.onclick == null ){
+			ctx.canvas.onclick = function(event){
+				var firstPoint = myChart.getElementAtEvent(event)[0];	
+				if( firstPoint ){
+					self.selectedWeatherID = firstPoint._index;
+					self.updateInfo( firstPoint._index, false );
+				}
 			}
 		}
+		*/
+		//console.log("drawChart finished");
+		
 	},
 	drawGauge: function (id, width, value, key) {
 		var c = $("#" + id),

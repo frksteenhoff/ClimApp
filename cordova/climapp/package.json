@@ -10,9 +10,8 @@
     "author": "Apache Cordova Team",
     "license": "Apache-2.0",
     "dependencies": {
-        "cordova-android": "^8.0.0",
+        "cordova-android": "^8.1.0",
         "cordova-ios": "^5.1.1",
-        "cordova-plugin-firebase-lib": "^5.1.1",
         "cordova-plugin-geolocation": "^4.0.1",
         "cordova-plugin-splashscreen": "^5.0.2",
         "cordova-plugin-statusbar": "^2.4.2",
@@ -30,12 +29,11 @@
             "cordova-plugin-whitelist": {},
             "cordova-plugin-geolocation": {},
             "cordova-plugin-statusbar": {},
-            "cordova-wheel-selector-plugin": {},
-            "cordova-plugin-firebase-lib": {}
+            "cordova-wheel-selector-plugin": {}
         },
         "platforms": [
-            "android",
-            "ios"
+            "ios",
+            "android"
         ]
     },
     "devDependencies": {

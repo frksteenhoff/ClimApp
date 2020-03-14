@@ -43,23 +43,65 @@
 			<div id="tabaclothing" data-listener="menu" data-level="1" data-target="selectclothing" data-targetgroup="contextgroup" class="even border"><p class="label center" id="str_clothing"></p></div>
 		</div>
 		<div id="selectactivity" class="panelthick hidden" data-menuitem="true" data-menugroup="contextgroup" >
-			<div class="flexbox-2" data-listener="wheel" data-target="activity">
+		<!--	<div class="flexbox-2" data-listener="wheel" data-target="activity">
 				<div class="even"><p id="str_activity_level"></p></div>
 				<div class="even">
-					<div class="button"><span class="score" id="dashboard_activity"></span></div>
+					<div class="button"></div>
 				</div>
 			</div>
-			<div><p id="activityCaption" class="caption"></p>
-			</div>
+		-->
+			<div><p class="label"><span id="str_activity_level"></span>: <span class="score" id="dashboard_activity"></span></p></div>
+			<div><input class="rangeslider" type="range" min="0" max="4" value="1" id="activityslider" data-listener="slider" data-target="activity"></div>
+			<div><p id="activityCaption" class="caption"></p></div>
 		</div>
 		<div id="selectclothing" class="hidden panelthick" data-menuitem="true" data-menugroup="contextgroup">
-			<div class="flexbox-2" data-listener="wheel" data-target="clothing">
+		<!--	<div class="flexbox-2" data-listener="wheel" data-target="clothing">
 				<div class="even"><p id="str_clothing_level"></p></div>
 				<div class="even">
 					<div class="button"><span class="score" id="dashboard_clothing"></span></div>
 				</div>
 			</div>
+		-->
+			<div><p class="label" ><span id="str_clothing_level"></span>: <span class="score" id="dashboard_clothing"></span></p></div>
+			<div><input class="rangeslider" type="range" min="0" max="4" value="1" id="clothingslider" data-listener="slider" data-target="clothing"></div>
 			<div><p id="clothingCaption" class="caption"></p></div>
+			<hr>
+			<div>	
+				<p class="label" id="str_clothing_level_finetune">Fine tuning</p>
+			
+				<p><span id="str_clothing_level_windpermeability">Insulation</span> <span id="slider_insulation_value"></span> Clo</p>
+				<div>
+					<input class="rangeslider" name="slider_clo" type="range" min="0.5" max="4.5" value="0.5" step="0.1" id="slider_insulation" data-listener="valueslider" data-target="insulation">
+					
+				</div>
+				<div><p id="windPermeabilityCaption" class="caption"></p></div>
+			
+				<p ><span id="str_clothing_level_windpermeability"> Air permeability</span> <span id="slider_windpermeability_value"></span> L/m<sup>2</sup>s</p>
+				<div>
+					<input class="rangeslider" name="slider_wind" type="range" min="1" max="101" value="51" step="5" id="slider_windpermeability"  data-listener="valueslider" data-target="windpermeability">
+				</div>
+				<div><p id="windPermeabilityCaption" class="caption"></p></div>
+			
+				<p ><span id="str_clothing_level_windpermeability">Vapour permeability</span> <span id="slider_vapourpermeability_value"></span> -</p>
+				<div>
+					<input class="rangeslider" name="slider_vapour" type="range" min="0.1" max="0.5" value="0.38" step="0.02" id="slider_vapourpermeability" data-listener="valueslider" data-target="vapourpermeability">					
+				</div>
+				<div><p id="windPermeabilityCaption" class="caption"></p></div>
+			</div>
+				
+				<!--
+				<p class="label" id="str_clothing_additional">Additional items</p>
+			    <div class="flexbox-2">
+					<div class="even">
+						<input type="checkbox" id="input_gloves" name="input_gloves">
+				   	 	<label id="str_input_gloves" for="input_gloves">Gloves</label>
+					</div>
+					<div class="even">
+				   		<input type="checkbox" id="input_helmet" name="input_helmet">
+				    	<label id="head_gear" for="input_helmet"></label>
+					</div>
+				</div>
+				-->			
 		</div>
 		<!--<div id="selectheadgear" class="hidden panelthick" data-menuitem="true" data-menugroup="contexgroup">
 			<div class="flexbox-2" data-listener="wheel" data-target="headgear">

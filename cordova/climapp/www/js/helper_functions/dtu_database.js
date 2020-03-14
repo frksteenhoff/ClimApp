@@ -18,7 +18,7 @@ function addFeedbackToDB(kb, feedback_questions, translations, language) {
         "txt": "_",
         "predicted": kb.user.adaptation[thermal_mode].predicted,
         "perceived": kb.user.adaptation[thermal_mode].perceived,
-        "diff": kb.user.adaptation[thermal_mode].predicted - kb.user.adaptation[thermal_mode].perceived,
+        "diff": kb.user.adaptation[thermal_mode].diff,
         "mode": thermal_mode
     }
     $.post(url, user_data).done(function (data, status, xhr) {
@@ -80,6 +80,89 @@ function addWeatherDataToDB(kb) {
     });
 }
 
+function addUseDataToDB(kb, context){
+	
+	let apicall= "insertDataUsage";
+	let url = "https://www.sensationmapps.com/climapp/api.php";
+	let station = kb.weather.station.indexOf( "<br>" ) > -1 ? kb.weather.station.substring(kb.weather.station.indexOf("<br>") + 4 ): kb.weather.station;
+    
+	var icl_min = kb.thermalindices.ireq[0].ICLminimal;
+	var icl_neutral = kb.thermalindices.ireq[0].ICLneutral;
+	var icl_worn = getClo(kb);
+	
+	var personal_cold_index = context.calculateColdIndex( icl_neutral, icl_min, icl_worn, true); 
+	var model_cold_index = context.calculateColdIndex( icl_neutral, icl_min, icl_worn, false); 
+	var personal_heat_index = WBGTrisk( kb.thermalindices.phs[0].wbgt, kb, true );
+	var model_heat_index = WBGTrisk( kb.thermalindices.phs[0].wbgt, kb, false );			
+	
+	var isIndoor = kb.user.guards.isIndoor ? 1 : 0;
+	
+	let draw_heat_gauge = context.isDrawHeatGauge( model_cold_index, model_heat_index, 0 );
+	var thermal = draw_heat_gauge ? "heat" : "cold";
+	
+	let PAL = getPAL(kb, thermal);
+	let CAV = getCAF(kb);
+	let RAL_ = RAL(kb);
+	
+	let user_data = {
+        "_id": deviceID(),
+        "lon": kb.weather.lat,
+        "lat": kb.weather.lng,
+        "station": station,
+		//main indices
+		"ireq_min": kb.thermalindices.ireq[0].ICLminimal,
+		"ireq_dlim_min": kb.thermalindices.ireq[0].DLEminimal,
+		"ireq_neutral": kb.thermalindices.ireq[0].ICLneutral,
+		"phs_dtre": kb.thermalindices.phs[0].D_Tre,
+		"phs_dwl50": kb.thermalindices.phs[0].Dwl50,
+		"phs_swtotg": kb.thermalindices.phs[0].SWtotg,
+		"pmv": kb.thermalindices.pmv[0].PMV,
+		"ppd": kb.thermalindices.pmv[0].PPD,
+		"utci": kb.thermalindices.utci[0].utci_temperature,
+		//inputs
+		"M": kb.thermalindices.ireq[0].M,
+		"Icl": kb.thermalindices.ireq[0].Icl,
+		"p": kb.thermalindices.ireq[0].p,
+		"im_st": kb.thermalindices.ireq[0].im_st,
+		"Tair": kb.thermalindices.ireq[0].Tair,
+		"Trad": kb.thermalindices.ireq[0].Trad,
+		"Tglobe": kb.thermalindices.ireq[0].Tglobe,
+		"v_air10": kb.thermalindices.ireq[0].v_air10, //@10m
+		"v_air": kb.thermalindices.ireq[0].v_air, //@2m
+		"rh": kb.thermalindices.ireq[0].rh,
+		"clouds": kb.thermalindices.ireq[0].clouds,
+		"rain": kb.thermalindices.ireq[0].rain,
+		"rad": kb.thermalindices.ireq[0].rad,
+		"wbgt": kb.thermalindices.ireq[0].wbgt,
+		"wbgt_max": kb.thermalindices.ireq[0].wbgt_max,
+		"windchill": kb.thermalindices.ireq[0].windchill,
+		"utc": kb.thermalindices.ireq[0].utc,
+		//climapp specials
+		"pal": PAL,
+		"cav": CAV,
+		"ral": RAL_,
+		"thermal": thermal,
+		"isIndoor": isIndoor,
+		"model_heat_score": model_heat_index,
+		"model_cold_score": model_cold_index,
+		"personal_heat_score": personal_heat_index,
+		"personal_cold_score": personal_cold_index
+	};
+	let json = JSON.stringify( user_data );
+    $.post(url, {"action": apicall, "json": json } ).done(function (data, status, xhr) {
+        console.log(" status: " + status );
+        console.log(" data: " + data );
+        console.log(" xhr: " + JSON.stringify(xhr) );
+		
+		showShortToast("Thank you");
+		
+    }).fail(function (data){
+		showShortToast("Submit Failed");
+    	console.log( data );
+    });
+	
+}
+
 /*
 * Synchronous functions
 */
@@ -122,7 +205,7 @@ function getAppIDFromDB(kb) {
             if (status === "success") {
                 let response = JSON.parse(data);
                 let appID = response.config[0].appid;
-                console.log("Fetched app ID: " + appID);
+                //console.log("Fetched app ID: " + appID);
                 resolve(appID);
             } else {
                 console.log("Could not fetch app ID from server.");

@@ -2,7 +2,8 @@
 
 function gaugeTitleCold(val, translations, language) {
 	var labels = translations.labels;
-    if ( val <= 1 ) return labels.str_no_stress[language];
+	if ( val <= -1 ) return labels.str_possible_heat_stress[language];
+    else if ( val <= 1 ) return labels.str_no_stress[language];
     else if ( val < 2 ) return labels.str_cold_minor[language];
     else if ( val < 3 ) return labels.str_cold_significant[language];
     else if ( val < 4 ) return labels.str_cold_high[language];
@@ -60,17 +61,18 @@ function BSA(kb) { //m2
 function M(kb) { //W/m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
         let ISO_selected = kb.user.settings.activity_selected;
-		return kb.activity.values[ ISO_selected ] / BSA(kb);
+		return kb.activity.values[ ISO_selected ].val / BSA(kb);
     }
 }
 
 function getClo(kb){
 	let clokey = kb.user.settings.clothing_selected;
 	let helmetkey = kb.user.settings.headgear_selected;
-	return kb.clothing.values[clokey] + kb.headgear.values[helmetkey];
+	return kb.user.settings.insulation_selected;
 }
 function getAirPermeability(kb){
 	let clokey = kb.user.settings.clothing_selected; //check vals with chuansi
+	/*
 	let values = { "Summer_attire": 100, 
 					"Business_suit": 50,
 					"Double_layer": 25,
@@ -78,11 +80,15 @@ function getAirPermeability(kb){
 					"Cloth_apron_long_sleeve": 5,
 					"Vapour_barrier_coverall": 1,
 					"Winter_attire": 5 };
+	
 	return values[clokey];
+	*/
+	return kb.user.settings.windpermeability_selected;
 }
 
 function getMoisturePermeability(kb){
 	let clokey = kb.user.settings.clothing_selected; //check vals with chuansi
+	/*
 	let values = { "Summer_attire": 0.45, 
 					"Business_suit": 0.38,
 					"Double_layer": 0.38,
@@ -91,6 +97,9 @@ function getMoisturePermeability(kb){
 					"Vapour_barrier_coverall": 0.09,
 					"Winter_attire": 0.19 };
 	return values[clokey];
+	*/
+	return kb.user.settings.vapourpermeability_selected;
+	
 }
 
 function RAL(kb) {
@@ -106,18 +115,36 @@ function RAL(kb) {
 }
 
 function getCAF(kb){
-	let clothingvalues = { "Summer_attire": 0, 
+	/*
+	let clothingvalues = { "Summer_attire": -3, 
 							"Business_suit": 0,
 							"Double_layer": 3,
 							"Cloth_coverall": 0,
 							"Cloth_apron_long_sleeve": 4,
 							"Vapour_barrier_coverall": 10,
 							"Winter_attire": 3 };
+	
 	let headvalues = { "none": 0, 
 					   "helmet": 1};
 	let clokey = kb.user.settings.clothing_selected;
 	let helmetkey = kb.user.settings.headgear_selected;
 	return ( clothingvalues[clokey] + headvalues[helmetkey] );
+	*/
+	let icl = getClo( kb );
+	let icl_norm = 1.0;
+	let icl_max = 2.0; //double layer
+	let d_icl = icl_max - icl_norm;
+	let dCav_icl = 3.0;//double layer icl
+	let CAV_icl = dCav_icl * ( icl - icl_norm ) / d_icl;
+	
+	
+	let im = getMoisturePermeability( kb );
+	let im_min = 0.1;
+	let im_norm = 0.38;
+	let d_im = im_norm - im_min;
+	let dCav_im = 10.0;
+	let CAV_im = dCav_im * (im_norm - im ) / d_im; 
+	return CAV_im + CAV_icl;
 }
 
 function isClothingCovering(kb){
@@ -256,7 +283,10 @@ function coldLevelTips( index, level, kb, cold_index, pageID, translations, lang
 	pageID === "dashboard" ? str += "<p class='label'><i id='circle_gauge_color' class='fas fa-dot-circle'></i>" + gaugeTitleCold(cold_index, translations, language) + "</p>" : str += "";
 		
 	if( level === 1 ){ //beginner, early user
-		if( cold_index <= 1 ){
+		if( cold_index <= -1 ){
+			str += "<p>" + translations.sentences.dash_tip_overdressed[language] + "</p>";
+		}
+		else if( cold_index <= 1 ){
 			str += "<p>" + translations.sentences.dash_tip_green[language] + "</p>";
 		}
 		else if( cold_index <= 2 ){
@@ -276,7 +306,10 @@ function coldLevelTips( index, level, kb, cold_index, pageID, translations, lang
 		}
 	}
 	else if( level === 2 ){ //experienced user // or more info requested
-		if( cold_index <= 1 ){
+		if( cold_index <= -1 ){
+			str += "<p>" + translations.sentences.dash_tip_overdressed[language] + "</p>";
+		}
+		else if( cold_index <= 1 ){
 			str += "<p>" + translations.sentences.dash_tip_general_1[language] + "</p>";
 			str += "<p>" + translations.sentences.dash_tip_general_2[language] + "</p>";
 			str += "<p>" + translations.sentences.dash_tip_general_3[language] + "</p>";

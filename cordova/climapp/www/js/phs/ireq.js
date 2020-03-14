@@ -82,7 +82,9 @@ heatindex.IREQ = ( function( options ){
 	message,IREQneutral,IREQminimal,DLEneutral,DLEminimal = 1;
 	
 	function calcIREQ(){
-	
+	    var MAXITERATIONS = 1000;
+		var iteration = 0;
+		
 		M = body.M; 
 		W = body.work;
 		Ta = air.Tair; 
@@ -137,14 +139,18 @@ heatindex.IREQ = ( function( options ){
 			Pa=(rh/100)*0.1333*Math.exp(18.6686-4030.183/(Ta+235));
 			// Calculation of IREQ (m2C/W),Rt (m2kPa/W),fcl (n.d.),hr W/m2C with stepwise iteration 
 			IREQ=0.5; hr=3; ArAdu=0.77; factor=0.5; // Initial values ! 
+			
+			iteration = 0;
+			
 			do {
+				iteration = iteration + 1;
+				
 				fcl=1+1.197*IREQ;        
 				Rt=(0.06/0.38)*(Ia+IREQ);
 				E=wetness*(Psks-Pa)/Rt;
 				Hres=1.73E-2*M*(Pex-Pa)+1.4E-3*M*(Tex-Ta);      
 				Tcl=Tsk-IREQ*(M-W-E-Hres);
-				hr=5.67E-8*0.95*ArAdu*(Math.exp(4*Math.log(273+Tcl))-
-				Math.exp(4*Math.log(273+Tr)))/(Tcl-Tr);
+				hr=5.67E-8*0.95*ArAdu*(Math.exp(4*Math.log(273+Tcl))-Math.exp(4*Math.log(273+Tr)))/(Tcl-Tr);
 				hc=1/Ia-hr;
 				R=fcl*hr*(Tcl-Tr);
 				C=fcl*hc*(Tcl-Ta);
@@ -157,7 +163,7 @@ heatindex.IREQ = ( function( options ){
 					IREQ=IREQ+factor;         
 				}
 
-			} while (Math.abs(Balance) > 0.01); 
+			} while (Math.abs(Balance) > 0.01 && iteration < MAXITERATIONS ); 
 			IREQ=(Tsk-Tcl)/(R+C);
 
 			// *** Calculation of Dlimneutral and Dlimminimal *** 

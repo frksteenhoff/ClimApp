@@ -792,13 +792,13 @@ div.feedbackgauge canvas {
     appearance: none;
     width: 25px; /* Handle width */
     height: 25px; /* Handle height */
-    background: #FFD700; /* Handle color */
+    background: #FFF; /* Handle color */
     border-radius: 30px;
   }
   
   .rangeslider::-moz-range-thumb {
     width: 25px; /* Handle width */
     height: 25px; /* Handle height */
-    background: #FFD700; /* Handle color */
+    background: #FFF; /* Handle color */
   }
   

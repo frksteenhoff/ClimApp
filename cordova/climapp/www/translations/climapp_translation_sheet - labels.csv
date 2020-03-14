@@ -14,7 +14,7 @@ str_set_location,Set location,Sæt placering,Stel locatie in,Set location,Sett p
 str_activity,Activity,Aktivitet,Activiteit,Activity,Aktivitet,Δραστηριότητα,Attività,Aktivität,Actividad,Activité
 str_clothing,Clothing,Beklædning,Kleding,Clothing,Antrekk,Ρουχισμός,Abbigliamento,Kleidung,Vestimenta,Vêtements
 str_headgear,Headgear,Hovedbeskyttelse,Hoofdbedekking,Headgear,Hodebeskyttelse,Εξοπλισμός κεφαλιού,Copricapo,Kopfbedeckung,Protector de cabeza,Chapeau
-str_img_cred,Image credits,Kilde,Erkenning,Image credits,Kilde,Εύσημα/Δικαιώματα φωτογραφίας,Fonte,Quelle,Creditos,Crédits images
+str_cred,Credits,Kilde,Erkenning,Credits,Kilde,Εύσημα/Δικαιώματα φωτογραφίας,Fonte,Quelle,Creditos,Crédits images
 str_app_info,App information,Information,Informatie,App information,Informasjon,Πληροφορίες εφαρμογής,Informazioni,App Information,Información de la App,Information de l'app
 str_welcome,Welcome,Velkommen,Welkom,Welcome,Velkommen,Καλωσήρθατε,Benvenuto,Willkommen,Bienvenido,Bienvenue
 str_personal_settings,Personal settings,Personlige indstillinger,Persoonlijke instellingen,Personal settings,Personlige innstillinger,Προσωπικές ρυθμίσεις,Impostazioni personali,Persönliche Einstellungen,Ajustes personales,Paramètres personnels
@@ -82,6 +82,16 @@ str_about,About,Om,Over,About,Om,Σχετικά με/ Περί,Ulteriori informa
 str_disclaimer_and_privacy,Disclaimer & privacy,Disclaimer og datahåndtering,Disclaimer & privacy,Disclaimer & privacy,Ansvarsfraskrivelse og personvern,Όροι χρήσης & προσωπικό απόρρητο,Dichiarazione di non responsabilità & privacy,Verantwortungsverzicht & Privatleben,Descargo de responsabilidad y privacidad,Averetissement & confidentialité
 str_new_location,New location,Ny placering,Nieuwe locatie,New location,Ny plassering,Νέα τοποθεσία,Nuova posizione,Neue Lokalität,Nueva ubicación,Nouvel emplacement
 str_era4cs,What is the ERA4CS project?,Hvad er ERA4CS-projektet?,Wat is het ERA4CS project,What is the ERA4CS project?,Hva er ERA4CS-prosjektet?,Ποιο είναι το πρόγραμμα ERA4CS,Cos'è il progetto ERA4CS?,Was ist das ERA4CS-Projekt?,¿Qué es el proyecto ERA4CS?,Qu'est-ce que le projet ERA4CS ?
+str_possible_heat_stress,"possible heat stress
+","possible heat stress
+",Mogelijk thermische stress,"possible heat stress
+","possible heat stress
+","possible heat stress
+","possible heat stress
+","possible heat stress
+","possible heat stress
+","possible heat stress
+"
 str_no_stress,no thermal stress,Intet termisk stress,Geen thermische stress,no thermal stress,Ingen termisk stress,χωρίς θερμική καταπόνηση,Nessuno stress termico,Keine thermishe Belastung,Sin estrés térmico,pas de stress thermique
 str_cold_minor,minor cold stress,Mindre kuldestress,Milde kou,minor cold stress,Mindre kuldestress,ασήμαντη ψυχρή καταπόνηση,Lieve stress termico da freddo,Minimale Kältebelastung,Leve estrés térmico por frio,stress hypothermique mineur
 str_cold_significant,significant cold stress,Væsentlig kuldestress,Koud,significant cold stress,Betydelig kuldestress,σημαντική ψυχρή καταπόνηση,significativo stress termico da freddo,Signifikante Kältebelastung,Significativo estrés térmico por frío,stress hypothermique significatif
@@ -127,3 +137,9 @@ str_indoor_temperature,Indoor temperature,"Temperature
 ",Temperature,Temperature,Temperature,Temperature,Temperature
 str_temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature
 str_utci,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index
+str_research_label,Research,Research,Onderzoek,Research,Research,Research,Research,Research,Research,Research
+str_research_consent,"In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","Om mee te doen met onderzoek kan een onderzoeker je ClimApp ID nodig hebben. Door het ClimApp ID aan de onderzoeker te geven stem je in met het gebruik van je data voor onderzoeksdoeleinden. Individuele data zullen nooit gepubliceerd worden.
+ Voor meer vragen kun je bij je contactpersoon terecht.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details."
+str_climapp_id,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID
+str_research,Research,Research,Onderzoek,Research,Research,Research,Research,Research,Research,Research
+str_submit_research_data_point,Submit current values,Submit current values,Datapunt uploaden,Submit current values,Submit current values,Submit current values,Submit current values,Submit current values,Submit current values,Submit current values
