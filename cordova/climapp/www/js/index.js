@@ -584,6 +584,7 @@ var app = {
 				
 				if( self.knowledgeBase.thermalindices.utci.length == self.maxForecast ){
 					$("#selectwork").hide();
+					$("#selectmeasuresandhydration").hide();
 					$("#personalisation_item").hide();
 					self.knowledgeBase.user.settings.index = "UTCI";
 				}
@@ -593,6 +594,7 @@ var app = {
 			}
 			else{
 				$("#selectwork").show();
+				$("#selectmeasuresandhydration").show();
 				$("#personalisation_item").show();
 				self.knowledgeBase.user.settings.index = "Climapp";
 			}
@@ -673,8 +675,8 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.057,
-			"app_version": "3.0.10", //cannot be beta - because it will be rejected by iOS then.
+			"version": 2.058,
+			"app_version": "3.2.0", //cannot be beta - because it will be rejected by iOS then.
 			"server": {
 				"dtu_ip": "http://climapp.byg.dtu.dk",
 				"dtu_api_base_url": "/ClimAppAPI/v2/ClimAppApi.php?apicall="
@@ -1027,7 +1029,7 @@ var app = {
 			getAppIDFromDB(self.knowledgeBase).then((appidFromServer) => {
 				//console.log(" update Weather - getting weather with appid : " + appidFromServer);
 				if (appidFromServer) {
-					let url = "https://www.sensationmapps.com/WBGT/api/worldweather.php";
+					let url = "http://www.sensationmapps.com/WBGT/api/worldweather.php";
 					var [lat, lon] = getLocation(this.knowledgeBase); // Custom or GPS
 					let data = {
 						"action": "helios",
@@ -1264,7 +1266,7 @@ var app = {
 			},
 			move: {
 				"walk_dir": NaN, 	//degree walk direction
-				"v_walk": 0,	//m/s walking speed
+				"v_walk": 0.833,	//m/s walking speed assuming slow moving
 			},
 			sim: {
 				"mod": 0
@@ -1443,14 +1445,20 @@ var app = {
 				$("#navbar-forecast").hide();
 				$("#navbar-location").hide();
 				
-				$("#dashboard_header").hide();
+				$("#dashboard_header").show();
 				$("#dashboard_forecast").hide();
+				$("#index-selector").hide();
+				
 				$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.user.settings._temperature, this.knowledgeBase.user.settings.unit) );
 				
 				$("#humidity_value").html(this.knowledgeBase.user.settings._humidity);
 				$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
 				$("#open_windows").html(this.knowledgeBase.user.settings.open_windows);
 				$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
+				
+				$("#climapp_thermal").html( this.translations.labels.str_indoor_environment[this.language] );
+				$("#utci_thermal").html( this.translations.labels.str_indoor_environment[this.language] );
+				
 
 				// Remove weather indication from dashboard // substitute with windows open/close
                 $("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
@@ -1459,6 +1467,8 @@ var app = {
 				
 			} else {
 				$("#navbar-forecast").show();
+				$("#index-selector").show();
+				
 				$("#navbar-location").show();
 				$("#dashboard_header").show();
 				$("#dashboard_forecast").show();
@@ -1480,9 +1490,10 @@ var app = {
 			$("#str_clothing").html(this.translations.labels.str_clothing[this.language]);
 			$("#str_headgear").html(this.translations.labels.str_headgear[this.language]);
 			//$("#head_gear").html(this.translations.labels.str_headgear[this.language]);
+				
 			
-			
-			
+			$("#str_menu_measures").html(this.translations.labels.str_menu_measures[this.language]);
+			$("#str_menu_hydration").html(this.translations.labels.str_menu_hydration[this.language]);	
 		}
 		else if (this.currentPageID == "details") {
 			$(".navigation").hide();
@@ -1686,6 +1697,15 @@ var app = {
 							$("#detail_max_clo").html("<img src='" + maxicon + "' class='small'/>");
 
 							$("#detail_dle_ireq").html(dle_min);
+							
+							if( dle_min <= 0 ){
+								$( "#details_dle_positive" ).hide();
+							}
+							else{
+								$( "#details_dle_positive" ).show();
+							}
+							
+							
 						}
 						else if (personalvalue >= 1) {
 							$("div[data-context='cold'],div[data-context='phs'],div[data-context='neutral']").hide();
@@ -1771,7 +1791,6 @@ var app = {
 			let index = 0; // 0 = current situation -- is this what we want? -BK tricky tbd
 			this.getDrawGaugeParamsFromIndex(index, this.knowledgeBase, false).then(
 				([width, personalvalue, modelvalue, thermal, tip_html]) => {//
-					console.log("feedback - A");
 					
 					$("#gauge_text_top_diff").hide();
 					$("#reset_icon").hide();
@@ -1779,7 +1798,6 @@ var app = {
 					this.drawGauge('feedback_gauge', width, personalvalue, thermal);
 					
 					this.knowledgeBase.user.adaptation.mode = thermal;
-					console.log("feedback - B");
 					
 					// Save current gauge value as original value
 					this.knowledgeBase.user.adaptation[thermal].predicted = modelvalue;
@@ -1858,7 +1876,8 @@ var app = {
 			// Setting page content
 			$("#str_era4cs").html(this.translations.labels.str_era4cs[this.language]);
 			$("#about_read_more").html(this.translations.sentences.about_read_more[this.language]);
-			$("#str_img_cred").html(this.translations.labels.str_img_cred[this.language]);
+			$("#about_acknowledge_infographics").html(this.translations.sentences.about_acknowledge_infographics[this.language]);
+			
 			$("#about_acknowledge_flaticon").html(this.translations.sentences.about_acknowledge_flaticon[this.language]);
 			$("#about_acknowledge_fontawesome").html(this.translations.sentences.about_acknowledge_fontawesome[this.language]);
 			
@@ -2155,6 +2174,7 @@ var app = {
 					var labelstr = thermal === "heat" ? self.translations.labels.str_heat_index[self.language]: self.translations.labels.str_cold_index[self.language];
 					
 					$("#climapp_thermal").html( labelstr );
+					$("#utci_thermal").html( self.translations.sentences.dash_utci_english_only[this.language] );
 					$("#tips").html(tip_html);
 					$("#circle_gauge_color").css("color", getCurrentGaugeColor(personalvalue));
 					$("#main_panel").fadeIn(500);
@@ -2163,12 +2183,22 @@ var app = {
 					$("div[data-listener='menu']div[data-targetgroup='modelgroup']").removeClass("menufocus");	
 					if( this.knowledgeBase.user.settings.index === "Climapp" ){
 						$("#tabclimapp").addClass("menufocus");
+						
+						
 						$("#selectwork").show();
+						if( thermal === "heat" ){
+							$("#selectmeasuresandhydration").show();
+						}
+						else{
+							$("#selectmeasuresandhydration").hide();
+						}
+						
 						$("#personalisation_item").show();
 					}
 					else{
 						$("#tabutci").addClass("menufocus");
 						$("#selectwork").hide();
+						$("#selectmeasuresandhydration").hide();
 						$("#personalisation_item").hide();
 					}
 					
@@ -2358,7 +2388,7 @@ var app = {
 			this.knowledgeBase.thermalindices.utci = [];
 		}
 		console.log( "updateUTCI #"+index);
-		var url="https://www.humanheat.exchange/api/get.php";
+		var url="http://www.humanheat.exchange/api/get.php";
 		var self = this;
 		var data = {"models":"UTCI",
 					"Tair": this.knowledgeBase.thermalindices.phs[index].Tair,

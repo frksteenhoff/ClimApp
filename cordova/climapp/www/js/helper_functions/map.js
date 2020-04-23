@@ -42,29 +42,4 @@ function initMap(lat, lon, kb) {
 		$( "#marker_lat" ).html( kb.user.settings.coordinates_lat.toFixed(2) );
 		$( "#marker_lon" ).html( kb.user.settings.coordinates_lon.toFixed(2) );
     }
-
-
-    /* request for geocoder is denied (will require billing)
-    var geocoder = new google.maps.Geocoder();
-
-    document.getElementById('submit').addEventListener('click', function() {
-      geocodeAddress(geocoder, map);
-    });
-
-    function geocodeAddress(geocoder, resultsMap) {
-        var address = document.getElementById('address').value;
-        geocoder.geocode({'address': address}, function(results, status) {
-          if (status === 'OK') {
-            resultsMap.setCenter(results[0].geometry.location);
-            var marker = new google.maps.Marker({
-              map: resultsMap,
-              position: results[0].geometry.location
-            });
-          } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-          }
-        });
-    }*/
-
-    //google.maps.event.addDomListener(window, 'load', initMap);
 }

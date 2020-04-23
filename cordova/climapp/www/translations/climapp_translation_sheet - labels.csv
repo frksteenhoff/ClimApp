@@ -1,145 +1,148 @@
-text_id,en,da,nl,sv,no,el,it,de,es,fr
-str_dashboard,Dashboard,Dashboard,Dashboard,Dashboard,Dashbord,Πίνακας (εργαλείων/ενδείξεων),Dashboard,Instrumentenbrett,Tablero,Tableau de bord
-str_settings,Settings,Indstillinger,Instellingen,Settings,Innstillinger,Ρυθμίσεις,Impostazioni,Einstellungen,Ajustes,Paramètres
-str_continue,Continue,Fortsæt,Verder,Continue,Fortsett,Συνέχεια,Continua,Weitermachen,Continuar,Continuer
-str_colder,colder,koldere,kouder,colder,kaldere,Ψυχρότερο,più freddo,Kälter,Más frío,plus froid
-str_warmer,warmer,varmere,warmer,warmer,varmere,Πιο ζεστό,più caldo,Wärmer,Más cálido,plus chaud
-str_ok,OK,OK,OK,OK,OK,ΟΚ,OK,O.K.,OK,OK
-str_choose_location,Choose location,Vælg placering,Kies locatie,Choose location,Velg plasering,Επιλογή τοποθεσίας,Scegli la posizione,Lokalität auswählen,Elige la ubicación,Choisir emplacement
-str_personalise,personalise,tilpas,Personaliseren,personalise,Tilpass,Προσωποιώ,Personalizza,Anpassen,Personalizar,personnaliser
-str_more_info,more info,mere information,Meer info,more info,Mer informasjon,Περισσότερες πληροφορίες,Ulteriori informazioni,Weitere Information,Más información,plus d'infos
-str_done,Done,Færdig,Klaar,Done,Ferdig,Έγινε/Ολοκληρώθηκε,Fatto,Fertig,Listo,Terminé
-str_cancel,Cancel,Afbryd,Annuleren,Cancel,Avbryt,Ακύρωση,Cancella,Abbrechen,Cancelar,Annuler
-str_set_location,Set location,Sæt placering,Stel locatie in,Set location,Sett plasering,Ορίσατε τοποθεσία,Fissa la posizione,Lokalität definieren,Definir la ubicación,Définir emplacement
-str_activity,Activity,Aktivitet,Activiteit,Activity,Aktivitet,Δραστηριότητα,Attività,Aktivität,Actividad,Activité
-str_clothing,Clothing,Beklædning,Kleding,Clothing,Antrekk,Ρουχισμός,Abbigliamento,Kleidung,Vestimenta,Vêtements
-str_headgear,Headgear,Hovedbeskyttelse,Hoofdbedekking,Headgear,Hodebeskyttelse,Εξοπλισμός κεφαλιού,Copricapo,Kopfbedeckung,Protector de cabeza,Chapeau
-str_cred,Credits,Kilde,Erkenning,Credits,Kilde,Εύσημα/Δικαιώματα φωτογραφίας,Fonte,Quelle,Creditos,Crédits images
-str_app_info,App information,Information,Informatie,App information,Informasjon,Πληροφορίες εφαρμογής,Informazioni,App Information,Información de la App,Information de l'app
-str_welcome,Welcome,Velkommen,Welkom,Welcome,Velkommen,Καλωσήρθατε,Benvenuto,Willkommen,Bienvenido,Bienvenue
-str_personal_settings,Personal settings,Personlige indstillinger,Persoonlijke instellingen,Personal settings,Personlige innstillinger,Προσωπικές ρυθμίσεις,Impostazioni personali,Persönliche Einstellungen,Ajustes personales,Paramètres personnels
-str_preferences,Preferences,Foretrukne,Voorkeuren,Preferences,Preferanser,Προτιμήσεις,Preferenze,Präferenzen,Preferencias,Préférences
-str_other,Other,Andet,Anders,Other,Annet,Άλλο,Altro,Sonstiges,Otro,Autre
-str_indoor_outdoor_mode,Indoor/outdoor mode,Indendørs/udendørs tilstand,Binnen/buiten modus,Indoor/outdoor mode,Innendørs/utendørs,Εσωτερική/εξωτερική λειτουργία,Modalità interno/esterno,Innen/außen mode,Modo interior/exterior,Mode intérieur/extérieur
-str_forecast,Forecast,Vejrudsigt,Voorspelling,Forecast,Værmelding,Δελτίο καιρού,Previsioni,Vorhersage,Pronóstico,Prévisions
-str_more_questions,More questions,Flere spørgsmål,Meer vragen,More questions,Flere spørgsmål,Περισσότερες ερωτήσεις,Altre domande,Weitere Fragen,Más preguntas,Plus de questions
-str_submit_data,Submit data,Send data,Verzenden,Submit data,Send data,Υποβολή δεδομένων,Invia dati,Daten übertragen,Presentar los datos,Soumettre les données
-str_custom_location,Custom location,Valgfri placering,Eigen locatie,Custom location,Valgfri plassering,Προσαρμοσμένη τοποθεσία,Posizionamento personalizzato,Wahlfreie Lokalität,Ubicación personalizada,Emplacement personnalisé
-str_location,Location,Placering,Locatie,Location,Plassering,Τοποθεσία,Posizione,Lokalität,Ubicación,Emplacement
-str_disclaimer,Disclaimer,Disclaimer,Disclaimer,Disclaimer,Ansvarsfraskrivelse,Αποποίηση ευθυνών,Dichiarazione di non responsabilità,Verantwortungsverzicht,Descargo de responsabilidad,Avertissement
-str_privacy,Privacy,Datasikkerhed,Privacy,Privacy,Personvern,Ιδιωτικό απόρρητο,Privacy,Privatleben,Privacidad,Confidentialité
-str_details,Details,Detaljer,Details,Details,Detaljer,Λεπτομέρειες,Dettagli,Detaillen,Detalles,Détails
-str_weather,Weather,Vejr,Weer,Weather,Vær,Καιρός,Tempo atmosferico,Wetter,Tiempo meteorológico,Météo
-str_user,User,Bruger,Gebruiker,User,Bruker,Χρήστης,Utente,Benutzer,Usuario,Utilisateur
-str_custom,Custom,Tilpasset,Aangepast,Custom,Tilpasset,Προσαρμοσμένος,Posizionamento personalizzato,Angepasst,Personalizado,Habitude
-str_thermostat,Thermostat,Termostat,Thermostaat,Thermostat,Termostat,Θερμοστάτης,Termostato,Thermostat,Termostato,Thermostat
-str_windows,Windows,Vinduer,Ramen,Windows,Vinduer,Παράθυρα,Finestre,Fenstern,Ventanas,Fenêtres
-str_wind_speed,Wind speed,Vindhastighed,Windsnelheid,Wind speed,Vindfart,Ταχύτητα ανέμου,Velocità del vento,Windgeschwindigkeit,Velocidad del viento,Vitesse du vent
-str_humidity,Humidity,Luftfugtighed,Luchtvochtigheid,Humidity,Luftfuktighet,Υγρασία,Umidità,Luftfeuchtigkeit,Humedad,Humidité
-str_input_custom_location,Input custom location?,Angiv placering,Locatie kiezen?,Input custom location?,Input plassering,Εισαγωγή προσαρμοσμένης τοποθεσίας;,Specifica il posizionamento personalizzato,Input Lokalität,Especificar la ubicación personalizada?,Entrer emplacement personnalisé ?
-str_current_location,Current location,Nuværende placering,Huidige locatie,Current location,Nåværende plassering,Τρέχουσα τοποθεσία,Posizione attuale,Jetzige Lokalität,Ubicación actual,Emplacement actuel
-str_time,Time,Klokkeslæt,Tijd,Time,Klokkeslett,Ώρα,Ora,Uhrzeit,Hora,Heure
-str_air_temperature,Air temperature,Lufttemperatur,Luchttemperatuur,Air temperature,Luftemperatur,Θερμοκρασία αέρα,Temperatura dell'aria,Lufttemperatur,Temperatura del aire,Température de l'air
-str_cloud_cover,Cloud cover,Skydække,Bewolking,Cloud cover,Skydekke,Κάλυχη από σύννεφα,Copertura nuvolosa,Wolkendecke,Cubierto de nubes,Couverture nuageuse
-str_solar_irradiation,Solar radiation,Solstråling,Zonnestraling,Solar radiation,Solbestråling,Ηλιακή ακτινοβολία,Radiazione solare,Sonnenstrahlung,Radiación solar,Rayonnement solaire
-str_wind10,Windspeed at 10m,Vindhastighed ved 10m,Windsnelheid op 10m,Windspeed at 10m,Vindfart ved 2m,Ταχύτητα ανέμου στα 10 μέτρα,Velocità del vento a 10m,Windgeschwindigkeit bei 2m,Velocidad del viento a 10m,Vitesse du vent à 10m
-str_wind2,Windspeed at 2m,Vindhastighed ved 2m,Windsnelheid op 2m,Windspeed at 2m,Vindfart ved 10m,ταχύτητα ανέμου στα 2 μέτρα,Velocità del vento a 2m,Windgeschwindigkeit bei 10m,Velocidad del viento a 2m,Vitesse du vent à 2m
-str_globe_temperature,Globe temperature,Globetemperatur,Bol temperatuur,Globe temperature,Klodetemperatur,Θερμοκρασία πλανήτη,Temperatura di globo,Temperatur der Erde,Temperatura de globo,Température au thermomètre-globe
-str_mrt,Mean radiant temperature,Gennemsnitlig strålingstemperatur,Gemiddelde stralingstemperatuur,Mean radiant temperature,Gjennomsnittlig strålingstemperatur,Μέση ακτινοβολούμενη θερμοκρασία,Temperatura media radiante,Durchschnittliche Strahlungstemperatur,Temperatura media radiante,Température radiante moyenne
-str_wbgt,WBGT,WBGT,WBGT,WBGT,WBGT,WBGT,WBGT,WBGT,WBGT (temperatura de globo y bulbo húmedo),WBGT (température au thermomètre-globe mouillé)
-str_wbgt_effective,WBGT effective,Effektiv WBGT,WBGT effectief,WBGT effective,Effektiv WBGT,WBGT αισθητή,WBGT effettiva,Effektive WBGT,WBGT effectiva,WBGT effective
-str_aal,Average alert limit,Gennemsnitlig alarmgrænse,Gemiddelde waarschuwingslimiet,Average alert limit,Gjennomsnittlig varslingsgrense,μέσο,Limite medio di allerta,Durchschnittliche Warnungsgrenze ,Límite promedio de alerta,Limite d'alerte moyenne
-str_pal,Personal alert limit,Personlig alarmgrænse,Persoonlijke waarschuwingslimiet,Personal alert limit,Personlig varslingsgrense,Προσωπικός,Limite di allerta personale,Persönliche Warnungsgrenze,Límite de alerta personal,Limite d'alerte personnelle
-str_windchill,Windchill,Windchill,Gevoelstemperatuur,Windchill,Windchill,Κρύος αέρας,Windchill,Windchill,Windchill,Refroidissement éolien
-str_mr,Metabolic rate,Stofskifte,Warmteproductie,Metabolic rate,Metabolsk nivå,Ρυθμός μεταβολισμού,Tasso metabolico,Metabolisches Niveau,Tasa metabólica,Métabolisme
-str_surface_area,Surface area,Overfladeareal,Lichaamsoppervlak,Surface area,Flateareal,Έκταση της επιφάνειας,Area superficiale,Oberflächeninhalt,Área superficial,Superficie
-str_clo,Clothing insulation,Beklædningsisolans,Kledingisolatie,Clothing insulation,Klesisolasjon,Επένδυση ρούχων,Isolamento dell'abbigliamento,Wärmedämmung der Kleider,Aislamiento de vestimenta,Isolation vestimentaire
-str_wind_permeability,Wind permeability,Beklædningens luftgennemtrængelighed,Winddoorlaatbaarheid,Wind permeability,Vindpermeabilitet,Διαπερατότητα αέρα,Permeabilità al vento,Windpermeabilität,Permeabilidad al viento,Perméabilité au vent
-str_evaporative_permeability,Evaporative permeability,Fordampningpermeabilitet,Dampdoorlaatbaarheid,Evaporative permeability,Fordampnings permeabilitet,Διαπερατότητα εξάτμισης,Permeabilità all'evaporazione,Verdampfungspermeabilität,Permeabilidad a la evaporación,Perméabilité à l'eau 
-str_wbgt_iso,Wet Bulb Globe Temperature (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO07243),Wet Bulb Globe Temperature (WBGT ISO07243),Wet Bulb Globe Temperature (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO07243),θερμοκρασία θερμομέτρου μαύρης σφαίρας,Wet Bulb Globe Temperature (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO 07243),Temperatura de globo y bulbo húmedo (WBGT ISO 07243),Température au thermomètre-globe mouillé (WBGT ISO 07243)
-str_phs_iso,Heat Strain (PHS ISO07933),Varmestress (PHS ISO07933),Heat Straing (PHS ISO07933),Heat Strain (PHS ISO07933),Varmestress,Θερμικές τάσεις (PHS ISO07933),Strain termico,Hitzeebelastung (PHS ISO07933),Tensión térmica (PHS ISO07933),Contrainte thermique (PHS ISO07933)
-str_windchill_jagti,Exposed skin - Windchill (JAG/TI),Udækket hud - Windchill (JAG/TI),Blootgestelde huid - Gevoelstemperatuur (JAG/TI),Exposed skin - Windchill (JAG/TI),Utsatt hud - windchill (JAG/TI),Εκτεθημένο δέρμα - Windchill (Ψυχρός αέρας) (JAG/TI),Pelle esposta - Windchill (JAG/TI),Exponierte Haut - Windchill (JAG/TI),Piel expuesta - Windchill (JAG/TI),Peau exposée - Température ressentie (JAG/TI)
-str_ireq_iso,Body temperature - Cold  stress (IREQ ISO11079),Kropstemperatur - kuldestress (IREQ ISO11079),Lichaamstemperatuur - Koude stress (IREQ ISO11079),Body temperature - Cold  stress (IREQ ISO11079),Kroppstemperatur,Θερμοκρασία σώματος - Ψυχρή καταπόνηση (IREQ ISO11079),Temperatura corporea - Stress termico da freddo,Körpertemperatur - Kältebelastung (IREQ ISO11079),Temperatura corporal - Estrés térmico al frío (IREQ ISO11079),Température corporelle - Hypothermie (IREQ IS011079)
-str_min_cloth_level,minimal clothing level,Minimal beklædningsisolans,Minimale kledingsniveau,minimal clothing level,Minimalt klesnivå,ελάχιστο επίπεδο ρουχισμού,Livello di abbigliamento minimo,Minimales Kleidungsniveau,Nivel mínimo de vestimenta,niveau de protection vestimentaire minimal
-str_max_cloth_level,maximum clothing level,Maksimal beklædningsisolans,Maximale kledingsniveau,maximum clothing level,Maksimalt klesnivå,μέγιστο επίπεδο ρουχισμού,Livello di abbigliamento massimo,Maximales Kleidungsniveau,Nivel máximo de vestimenta,niveau de protection vestimentaire maximal
-str_weather_report,weather report,Vejrudsigt,Weerbericht,weather report,Værmelding,Δελτίο καιρού,Relazione meteo,Wetterbericht,Reporte meteorológico,bulletin météo
-str_indoor,Indoor,Indendørs,Binnen,Indoor,Innendørs,Εσωτερικός,Interno,Innen,Interior,Intérieur
-str_outdoor,Outdoor,Udendørs,Buiten,Outdoor,Utendørs,Εξωτερικός,Esterno,Außen,Exterior,Extérieur
-str_wind,Wind,Vind,Wind,Wind,Vind,Άνεμος,Vento,Wind,Viento,Vent
-str_update_weather,update weather,opdatér vejrudsigt,Verversen,update weather,oppdater vær,Ανανέωση καιρού,aggiorna meteo,wetter aktualisieren,Actualizar el clima,mise à jour météo
-str_age,Age,Alder,Leeftijd,Age,Alder,Ηλικία,Età,Alter,Edad,Âge
-str_height,Height,Højde,Lengte,Height,Høyde,Ύψος,Altezza,Höhe,Altura,Taille
-str_weight,Weight,Vægt,Gewicht,Weight,Vekt,Βάρος,Peso,Gewicht,Peso,Poids
-str_gender,Gender,Køn,Geslacht,Gender,Kjønn,Φύλο,Genere,Geschlecht,Sexo,Sexe
-str_acclimatization,Acclimatisation,Akklimatisering,Acclimatisatie,Acclimatisation,Akklimatisering,Εγκλιματισμός,Acclimatamento,Akklimatisierung,Aclimatación,Acclimatation
-str_advanced_personalization,Advanced personalisation,Individualisering (avancerede indstillinger),Geavanceerde instellingen,Advanced personalisation,Avansert tillpasning,Προχωρημένη εξατομίκευση,Personalizzazione avanzata,Fortschrittliche anpassung,Personalización avanzada,Personnalisation avancée
-str_reset_preferences,Reset preferences,Nulstil foretrukne,Herstel instellingen,Reset preferences,Tilbakestill foretrukne,Επαναφορά προτιμήσεων,Resettare preferenze,Nullstellung der Präferenzen,Restaurar preferencias,Réinitialiser préférences
-str_unit_of_measurement,Unit of measurements,Måleenheder,Eenheden,Unit of measurements,Måleenheter,Μονάδα μέτρησεις,Unità di misura,Maßeinheit ,Unidad de medida,Unité de mesure
-str_unit,Unit,Enhed,Eenheid,Unit,Enhet,Μονάδα,Unità,Einheit,Unidad,Unité
-str_units,Units,Enheder,Eenheden,Units,Enheter,Μονάδες,Unità,Einheiten,Unidades,Unités
-str_notifications,Notifications,Notifikationer (virker ikke endnu),Notificaties,Notifications,Varslinger,Ειδοποιήσεις (δε λειτουργεί ακόμα),Notifiche,Benachrichtigung (Funktioniert noch nicht) ,Notificaciones,Notifications (pas encore fonctionnelles)
-str_about,About,Om,Over,About,Om,Σχετικά με/ Περί,Ulteriori informazioni,Um,Acerca,A propos
-str_disclaimer_and_privacy,Disclaimer & privacy,Disclaimer og datahåndtering,Disclaimer & privacy,Disclaimer & privacy,Ansvarsfraskrivelse og personvern,Όροι χρήσης & προσωπικό απόρρητο,Dichiarazione di non responsabilità & privacy,Verantwortungsverzicht & Privatleben,Descargo de responsabilidad y privacidad,Averetissement & confidentialité
-str_new_location,New location,Ny placering,Nieuwe locatie,New location,Ny plassering,Νέα τοποθεσία,Nuova posizione,Neue Lokalität,Nueva ubicación,Nouvel emplacement
-str_era4cs,What is the ERA4CS project?,Hvad er ERA4CS-projektet?,Wat is het ERA4CS project,What is the ERA4CS project?,Hva er ERA4CS-prosjektet?,Ποιο είναι το πρόγραμμα ERA4CS,Cos'è il progetto ERA4CS?,Was ist das ERA4CS-Projekt?,¿Qué es el proyecto ERA4CS?,Qu'est-ce que le projet ERA4CS ?
+text_id,en,da,nl,sv,no,el,it,de,es,fr,et,ja
+str_dashboard,Dashboard,Dashboard,Dashboard,Dashboard,Dashbord,Πίνακας (εργαλείων/ενδείξεων),Dashboard,Instrumentenbrett,Tablero,Tableau de bord,Dashboard,Dashboard
+str_settings,Settings,Indstillinger,Instellingen,Inställningar,Innstillinger,Ρυθμίσεις,Impostazioni,Einstellungen,Ajustes,Paramètres,Settings,Indstillinger
+str_continue,Continue,Fortsæt,Verder,Fortsätt,Fortsett,Συνέχεια,Continua,Weitermachen,Continuar,Continuer,Continue,Fortsæt
+str_colder,colder,koldere,kouder,kallare,kaldere,Ψυχρότερο,più freddo,Kälter,Más frío,plus froid,colder,koldere
+str_warmer,warmer,varmere,warmer,varmare,varmere,Πιο ζεστό,più caldo,Wärmer,Más cálido,plus chaud,warmer,varmere
+str_ok,OK,OK,OK,OK,OK,ΟΚ,OK,O.K.,OK,OK,OK,OK
+str_choose_location,Choose location,Vælg placering,Kies locatie,Välj plats,Velg plasering,Επιλογή τοποθεσίας,Scegli la posizione,Lokalität auswählen,Elige la ubicación,Choisir emplacement,Choose location,Vælg placering
+str_personalise,personalise,personlig tilpasning,Personaliseren,Personalisera,Tilpass,Προσωποιώ,Personalizza,Anpassen,Personalizar,personnaliser,personalise,personlig tilpasning
+str_more_info,more info,mere information,Meer info,mer information,Mer informasjon,Περισσότερες πληροφορίες,Ulteriori informazioni,Weitere Information,Más información,plus d'infos,more info,mere information
+str_done,Done,Færdig,Klaar,Färdig,Ferdig,Έγινε/Ολοκληρώθηκε,Fatto,Fertig,Listo,Terminé,Done,Færdig
+str_cancel,Cancel,Afbryd,Annuleren,Avbryt,Avbryt,Ακύρωση,Cancella,Abbrechen,Cancelar,Annuler,Cancel,Afbryd
+str_set_location,Set location,Sæt placering,Stel locatie in,Sätt plats,Sett plasering,Ορίσατε τοποθεσία,Fissa la posizione,Lokalität definieren,Definir la ubicación,Définir emplacement,Set location,Sæt placering
+str_activity,Activity,Aktivitet,Activiteit,Aktivitet,Aktivitet,Δραστηριότητα,Attività,Aktivität,Actividad,Activité,Activity,Aktivitet
+str_clothing,Clothing,Beklædning,Kleding,Kläder,Antrekk,Ρουχισμός,Abbigliamento,Kleidung,Vestimenta,Vêtements,Clothing,Beklædning
+str_headgear,Headgear,Hovedbeskyttelse,Hoofdbedekking,Huvudbonad,Hodebeskyttelse,Εξοπλισμός κεφαλιού,Copricapo,Kopfbedeckung,Protector de cabeza,Chapeau,Headgear,Hovedbeskyttelse
+str_cred,Credits,Kilde,Erkenning,Medverkande,Kilde,Εύσημα/Δικαιώματα φωτογραφίας,Fonte,Quelle,Creditos,Crédits images,Credits,Kilde
+str_app_info,App information,Information,Informatie,Information,Informasjon,Πληροφορίες εφαρμογής,Informazioni,App Information,Información de la App,Information de l'app,App information,Information
+str_welcome,Welcome,Velkommen,Welkom,Välkommen,Velkommen,Καλωσήρθατε,Benvenuto,Willkommen,Bienvenido,Bienvenue,Welcome,Velkommen
+str_personal_settings,Personal settings,Personlige indstillinger,Persoonlijke instellingen,Personliga inställningar,Personlige innstillinger,Προσωπικές ρυθμίσεις,Impostazioni personali,Persönliche Einstellungen,Ajustes personales,Paramètres personnels,Personal settings,Personlige indstillinger
+str_preferences,Preferences,Foretrukne,Voorkeuren,Preferenser,Preferanser,Προτιμήσεις,Preferenze,Präferenzen,Preferencias,Préférences,Preferences,Foretrukne
+str_other,Other,Andet,Anders,Annat,Annet,Άλλο,Altro,Sonstiges,Otro,Autre,Other,Andet
+str_indoor_outdoor_mode,Indoor/outdoor mode,Indendørs/udendørs tilstand,Binnen/buiten modus,Inomhus/utomhus,Innendørs/utendørs,Εσωτερική/εξωτερική λειτουργία,Modalità interno/esterno,Innen/außen mode,Modo interior/exterior,Mode intérieur/extérieur,Indoor/outdoor mode,Indendørs/udendørs tilstand
+str_forecast,Forecast,Vejrudsigt,Voorspelling,Prognos,Værmelding,Δελτίο καιρού,Previsioni,Vorhersage,Pronóstico,Prévisions,Forecast,Vejrudsigt
+str_more_questions,More questions,Flere spørgsmål,Meer vragen,Fler frågor,Flere spørgsmål,Περισσότερες ερωτήσεις,Altre domande,Weitere Fragen,Más preguntas,Plus de questions,More questions,Flere spørgsmål
+str_submit_data,Submit data,Send data,Verzenden,Skicka data,Send data,Υποβολή δεδομένων,Invia dati,Daten übertragen,Presentar los datos,Soumettre les données,Submit data,Send data
+str_custom_location,Custom location,Valgfri placering,Eigen locatie,Anpassad plats,Valgfri plassering,Προσαρμοσμένη τοποθεσία,Posizionamento personalizzato,Wahlfreie Lokalität,Ubicación personalizada,Emplacement personnalisé,Custom location,Valgfri placering
+str_location,Location,Placering,Locatie,Plats,Plassering,Τοποθεσία,Posizione,Lokalität,Ubicación,Emplacement,Location,Placering
+str_disclaimer,Disclaimer,Disclaimer,Disclaimer,Villkor,Ansvarsfraskrivelse,Αποποίηση ευθυνών,Dichiarazione di non responsabilità,Verantwortungsverzicht,Descargo de responsabilidad,Avertissement,Disclaimer,Disclaimer
+str_privacy,Privacy,Datasikkerhed,Privacy,Integritet,Personvern,Ιδιωτικό απόρρητο,Privacy,Privatleben,Privacidad,Confidentialité,Privacy,Datasikkerhed
+str_details,Details,Detaljer,Details,Detaljer,Detaljer,Λεπτομέρειες,Dettagli,Detaillen,Detalles,Détails,Details,Detaljer
+str_weather,Weather,Vejr,Weer,Väder,Vær,Καιρός,Tempo atmosferico,Wetter,Tiempo meteorológico,Météo,Weather,Vejr
+str_user,User,Bruger,Gebruiker,Användare,Bruker,Χρήστης,Utente,Benutzer,Usuario,Utilisateur,User,Bruger
+str_custom,Custom,Tilpasset,Aangepast,Anpassad,Tilpasset,Προσαρμοσμένος,Posizionamento personalizzato,Angepasst,Personalizado,Habitude,Custom,Tilpasset
+str_thermostat,Thermostat,Termostat,Thermostaat,Termostat,Termostat,Θερμοστάτης,Termostato,Thermostat,Termostato,Thermostat,Thermostat,Termostat
+str_windows,Windows,Vinduer,Ramen,Fönster,Vinduer,Παράθυρα,Finestre,Fenstern,Ventanas,Fenêtres,Windows,Vinduer
+str_wind_speed,Wind speed,Vindhastighed,Windsnelheid,Vindhastighet,Vindfart,Ταχύτητα ανέμου,Velocità del vento,Windgeschwindigkeit,Velocidad del viento,Vitesse du vent,Wind speed,Vindhastighed
+str_humidity,Humidity,Luftfugtighed,Luchtvochtigheid,Luftfuktighet,Luftfuktighet,Υγρασία,Umidità,Luftfeuchtigkeit,Humedad,Humidité,Humidity,Luftfugtighed
+str_input_custom_location,Input custom location?,Angiv placering,Locatie kiezen?,Ange plats,Input plassering,Εισαγωγή προσαρμοσμένης τοποθεσίας;,Specifica il posizionamento personalizzato,Input Lokalität,Especificar la ubicación personalizada?,Entrer emplacement personnalisé ?,Input custom location?,Angiv placering
+str_current_location,Current location,Nuværende placering,Huidige locatie,Nuvarande plats,Nåværende plassering,Τρέχουσα τοποθεσία,Posizione attuale,Jetzige Lokalität,Ubicación actual,Emplacement actuel,Current location,Nuværende placering
+str_time,Time,Tid,Tijd,Tid,Klokkeslett,Ώρα,Ora,Uhrzeit,Hora,Heure,Time,Tid
+str_air_temperature,Air temperature,Lufttemperatur,Luchttemperatuur,Lufttemperatur,Luftemperatur,Θερμοκρασία αέρα,Temperatura dell'aria,Lufttemperatur,Temperatura del aire,Température de l'air,Air temperature,Lufttemperatur
+str_cloud_cover,Cloud cover,Skydække,Bewolking,Molntäcke,Skydekke,Κάλυχη από σύννεφα,Copertura nuvolosa,Wolkendecke,Cubierto de nubes,Couverture nuageuse,Cloud cover,Skydække
+str_solar_irradiation,Solar radiation,Solstråling,Zonnestraling,Solstrålning,Solbestråling,Ηλιακή ακτινοβολία,Radiazione solare,Sonnenstrahlung,Radiación solar,Rayonnement solaire,Solar radiation,Solstråling
+str_wind10,Windspeed at 10m,Vindhastighed ved 10m,Windsnelheid op 10m,Vindhastighet vid 10m,Vindfart ved 2m,Ταχύτητα ανέμου στα 10 μέτρα,Velocità del vento a 10m,Windgeschwindigkeit bei 2m,Velocidad del viento a 10m,Vitesse du vent à 10m,Windspeed at 10m,Vindhastighed ved 10m
+str_wind2,Windspeed at 2m,Vindhastighed ved 2m,Windsnelheid op 2m,Vindhastighet vid 2m,Vindfart ved 10m,ταχύτητα ανέμου στα 2 μέτρα,Velocità del vento a 2m,Windgeschwindigkeit bei 10m,Velocidad del viento a 2m,Vitesse du vent à 2m,Windspeed at 2m,Vindhastighed ved 2m
+str_globe_temperature,Globe temperature,Globetemperatur,Zwarte boltemperatuur,Globtemperatur,Klodetemperatur,Θερμοκρασία πλανήτη,Temperatura di globo,Temperatur der Erde,Temperatura de globo,Température au thermomètre-globe,Globe temperature,Globetemperatur
+str_mrt,Mean radiant temperature,Gennemsnitlig strålingstemperatur,Gemiddelde stralingstemperatuur,Medelstrålningstemperatur,Gjennomsnittlig strålingstemperatur,Μέση ακτινοβολούμενη θερμοκρασία,Temperatura media radiante,Durchschnittliche Strahlungstemperatur,Temperatura media radiante,Température radiante moyenne,Mean radiant temperature,Gennemsnitlig strålingstemperatur
+str_wbgt,WBGT,WBGT,WBGT,WBGT,WBGT,WBGT,WBGT,WBGT,WBGT (temperatura de globo y bulbo húmedo),WBGT (température au thermomètre-globe mouillé),WBGT,WBGT
+str_wbgt_effective,WBGT effective,Effektiv WBGT,WBGT effectief,Effektiv WBGT,Effektiv WBGT,WBGT αισθητή,WBGT effettiva,Effektive WBGT,WBGT effectiva,WBGT effective,WBGT effective,Effektiv WBGT
+str_aal,Average alert limit,Gennemsnitlig alarmgrænse,Gemiddelde waarschuwingslimiet,Medelvarningsgräns,Gjennomsnittlig varslingsgrense,μέσο,Limite medio di allerta,Durchschnittliche Warnungsgrenze ,Límite promedio de alerta,Limite d'alerte moyenne,Average alert limit,Gennemsnitlig alarmgrænse
+str_pal,Personal alert limit,Personlig alarmgrænse,Persoonlijke waarschuwingslimiet,Personlig varningsgräns,Personlig varslingsgrense,Προσωπικός,Limite di allerta personale,Persönliche Warnungsgrenze,Límite de alerta personal,Limite d'alerte personnelle,Personal alert limit,Personlig alarmgrænse
+str_windchill,Windchill,Windchill,Gevoelstemperatuur,Vindkyla,Windchill,Κρύος αέρας,Windchill,Windchill,Windchill,Refroidissement éolien,Windchill,Windchill
+str_mr,Metabolic rate,Stofskifte,Warmteproductie,Metabolism,Metabolsk nivå,Ρυθμός μεταβολισμού,Tasso metabolico,Metabolisches Niveau,Tasa metabólica,Métabolisme,Metabolic rate,Stofskifte
+str_surface_area,Surface area,Overfladeareal,Lichaamsoppervlak,Kroppsyta,Flateareal,Έκταση της επιφάνειας,Area superficiale,Oberflächeninhalt,Área superficial,Superficie,Surface area,Overfladeareal
+str_clo,Clothing insulation,Beklædningsisolans,Kledingisolatie,Klädesisolering,Klesisolasjon,Επένδυση ρούχων,Isolamento dell'abbigliamento,Wärmedämmung der Kleider,Aislamiento de vestimenta,Isolation vestimentaire,Clothing insulation,Beklædningsisolans
+str_wind_permeability,Wind permeability,Beklædningens luftgennemtrængelighed,Winddoorlaatbaarheid,Vindpermeabilitet,Vindpermeabilitet,Διαπερατότητα αέρα,Permeabilità al vento,Windpermeabilität,Permeabilidad al viento,Perméabilité au vent,Wind permeability,Beklædningens luftgennemtrængelighed
+str_evaporative_permeability,Evaporative permeability,Fordampningpermeabilitet,Dampdoorlaatbaarheid,Fuktpermeabilitet,Fordampnings permeabilitet,Διαπερατότητα εξάτμισης,Permeabilità all'evaporazione,Verdampfungspermeabilität,Permeabilidad a la evaporación,Perméabilité à l'eau ,Evaporative permeability,Fordampningpermeabilitet
+str_wbgt_iso,Wet Bulb Globe Temperature (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO07243),Wet Bulb Globe Temperature (WBGT ISO07243),Wet Bulb Globe Temperature (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO07243),θερμοκρασία θερμομέτρου μαύρης σφαίρας,Temperatura globo bulbo umido (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO 07243),Temperatura de globo y bulbo húmedo (WBGT ISO 07243),Température au thermomètre-globe mouillé (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO 07243),Wet Bulb Globe Temperature (WBGT ISO07243)
+str_phs_iso,Heat Strain (PHS ISO07933),Varmestress (PHS ISO07933),Heat Straing (PHS ISO07933),Värmestresss (PHS ISO07933),Varmestress,Θερμικές τάσεις (PHS ISO07933),Tensione termica (PHS ISO07933),Hitzeebelastung (PHS ISO07933),Tensión térmica (PHS ISO07933),Contrainte thermique (PHS ISO07933),Heat Strain (PHS ISO07933),Varmestress (PHS ISO07933)
+str_windchill_jagti,Exposed skin - Windchill (JAG/TI),Udækket hud - Windchill (JAG/TI),Blootgestelde huid - Gevoelstemperatuur (JAG/TI),Utsatt hud - vindkyla (JAG/TI),Utsatt hud - windchill (JAG/TI),Εκτεθημένο δέρμα - Windchill (Ψυχρός αέρας) (JAG/TI),Pelle esposta - Windchill (JAG/TI),Exponierte Haut - Windchill (JAG/TI),Piel expuesta - Windchill (JAG/TI),Peau exposée - Température ressentie (JAG/TI),Exposed skin - Windchill (JAG/TI),Udækket hud - Windchill (JAG/TI)
+str_ireq_iso,Body temperature - Cold  stress (IREQ ISO11079),Kropstemperatur - kuldestress (IREQ ISO11079),Lichaamstemperatuur - Koude stress (IREQ ISO11079),Kroppstemperatur - kylstress (IREQ ISO11079),Kroppstemperatur,Θερμοκρασία σώματος - Ψυχρή καταπόνηση (IREQ ISO11079),Temperatura corporea - Stress termico da freddo (IREQ ISO11079),Körpertemperatur - Kältebelastung (IREQ ISO11079),Temperatura corporal - Estrés térmico al frío (IREQ ISO11079),Température corporelle - Hypothermie (IREQ IS011079),Body temperature - Cold  stress (IREQ ISO11079),Kropstemperatur - kuldestress (IREQ ISO11079)
+str_min_cloth_level,minimal clothing level,Minimal beklædningsisolans,Minimale kledingsniveau,Minimal klädesnivå,Minimalt klesnivå,ελάχιστο επίπεδο ρουχισμού,Livello di abbigliamento minimo,Minimales Kleidungsniveau,Nivel mínimo de vestimenta,niveau de protection vestimentaire minimal,minimal clothing level,Minimal beklædningsisolans
+str_max_cloth_level,maximum clothing level,Maksimal beklædningsisolans,Maximale kledingsniveau,Maximal klädesnivå,Maksimalt klesnivå,μέγιστο επίπεδο ρουχισμού,Livello di abbigliamento massimo,Maximales Kleidungsniveau,Nivel máximo de vestimenta,niveau de protection vestimentaire maximal,maximum clothing level,Maksimal beklædningsisolans
+str_weather_report,weather report,Vejrudsigt,Weerbericht,Väderrapport,Værmelding,Δελτίο καιρού,Relazione meteo,Wetterbericht,Reporte meteorológico,bulletin météo,weather report,Vejrudsigt
+str_indoor,Indoor,Indendørs,Binnen,Inomhus,Innendørs,Εσωτερικός,Interno,Innen,Interior,Intérieur,Indoor,Indendørs
+str_outdoor,Outdoor,Udendørs,Buiten,Utomhus,Utendørs,Εξωτερικός,Esterno,Außen,Exterior,Extérieur,Outdoor,Udendørs
+str_wind,Wind,Vind,Wind,Vind,Vind,Άνεμος,Vento,Wind,Viento,Vent,Wind,Vind
+str_update_weather,update weather,opdatér vejrudsigt,Verversen,Uppdatera väder,oppdater vær,Ανανέωση καιρού,aggiorna meteo,wetter aktualisieren,Actualizar el clima,mise à jour météo,update weather,opdatér vejrudsigt
+str_age,Age,Alder,Leeftijd,Ålder,Alder,Ηλικία,Età,Alter,Edad,Âge,Age,Alder
+str_height,Height,Højde,Lengte,Längd,Høyde,Ύψος,Altezza,Höhe,Altura,Taille,Height,Højde
+str_weight,Weight,Vægt,Gewicht,Vikt,Vekt,Βάρος,Peso,Gewicht,Peso,Poids,Weight,Vægt
+str_gender,Gender,Køn,Geslacht,Kön,Kjønn,Φύλο,Genere,Geschlecht,Sexo,Sexe,Gender,Køn
+str_acclimatization,Acclimatisation,Akklimatisering,Acclimatisatie,Acklimatisering,Akklimatisering,Εγκλιματισμός,Acclimatamento,Akklimatisierung,Aclimatación,Acclimatation,Acclimatisation,Akklimatisering
+str_advanced_personalization,Advanced personalisation,Individualisering (avancerede indstillinger),Geavanceerde instellingen,Avancerad personalisering,Avansert tillpasning,Προχωρημένη εξατομίκευση,Personalizzazione avanzata,Fortschrittliche anpassung,Personalización avanzada,Personnalisation avancée,Advanced personalisation,Individualisering (avancerede indstillinger)
+str_reset_preferences,Reset preferences,Nulstil foretrukne,Herstel instellingen,Återställ preferenser,Tilbakestill foretrukne,Επαναφορά προτιμήσεων,Resettare preferenze,Nullstellung der Präferenzen,Restaurar preferencias,Réinitialiser préférences,Reset preferences,Nulstil foretrukne
+str_unit_of_measurement,Unit of measurements,Måleenheder,Eenheden,Enheter,Måleenheter,Μονάδα μέτρησεις,Unità di misura,Maßeinheit ,Unidad de medida,Unité de mesure,Unit of measurements,Måleenheder
+str_unit,Unit,Enhed,Eenheid,Enhet,Enhet,Μονάδα,Unità,Einheit,Unidad,Unité,Unit,Enhed
+str_units,Units,Enheder,Eenheden,Enheter,Enheter,Μονάδες,Unità,Einheiten,Unidades,Unités,Units,Enheder
+str_notifications,Notifications,Notifikationer ,Notificaties,Notifikationer,Varslinger,Ειδοποιήσεις (δε λειτουργεί ακόμα),Notifiche,Benachrichtigung (Funktioniert noch nicht) ,Notificaciones,Notifications (pas encore fonctionnelles),Notifications,Notifikationer 
+str_about,About,Om,Over,Om,Om,Σχετικά με/ Περί,Ulteriori informazioni,Um,Acerca,A propos,About,Om
+str_disclaimer_and_privacy,Disclaimer & privacy,Disclaimer og datahåndtering,Disclaimer & privacy,Villkor & integritet,Ansvarsfraskrivelse og personvern,Όροι χρήσης & προσωπικό απόρρητο,Dichiarazione di non responsabilità & privacy,Verantwortungsverzicht & Privatleben,Descargo de responsabilidad y privacidad,Averetissement & confidentialité,Disclaimer & privacy,Disclaimer og datahåndtering
+str_new_location,New location,Ny placering,Nieuwe locatie,Ny plats,Ny plassering,Νέα τοποθεσία,Nuova posizione,Neue Lokalität,Nueva ubicación,Nouvel emplacement,New location,Ny placering
+str_era4cs,What is the ERA4CS project?,Hvad er ERA4CS-projektet?,Wat is het ERA4CS project,Vad är ERA4CS-projektet?,Hva er ERA4CS-prosjektet?,Ποιο είναι το πρόγραμμα ERA4CS,Cos'è il progetto ERA4CS?,Was ist das ERA4CS-Projekt?,¿Qué es el proyecto ERA4CS?,Qu'est-ce que le projet ERA4CS ?,What is the ERA4CS project?,Hvad er ERA4CS-projektet?
 str_possible_heat_stress,"possible heat stress
-","possible heat stress
-",Mogelijk thermische stress,"possible heat stress
-","possible heat stress
-","possible heat stress
+",muligt varmestress,Mogelijk thermische stress,Möjlig värmestress,Mulig varmestress,"possible heat stress
+",Possibile stress termico da caldo,"possible heat stress
 ","possible heat stress
 ","possible heat stress
 ","possible heat stress
-","possible heat stress
+",muligt varmestress
+str_no_stress,no thermal stress,Intet termisk stress,Geen thermische stress,Ingen termisk stress,Ingen termisk stress,χωρίς θερμική καταπόνηση,Nessuno stress termico,Keine thermishe Belastung,Sin estrés térmico,pas de stress thermique,no thermal stress,Intet termisk stress
+str_cold_minor,minor cold stress,Mindre kuldestress,Milde kou,Mindre kylstress,Mindre kuldestress,ασήμαντη ψυχρή καταπόνηση,Lieve stress termico da freddo,Minimale Kältebelastung,Leve estrés térmico por frio,stress hypothermique mineur,minor cold stress,Mindre kuldestress
+str_cold_significant,significant cold stress,Væsentlig kuldestress,Koud,Betydlig kylstress,Betydelig kuldestress,σημαντική ψυχρή καταπόνηση,significativo stress termico da freddo,Signifikante Kältebelastung,Significativo estrés térmico por frío,stress hypothermique significatif,significant cold stress,Væsentlig kuldestress
+str_cold_high,high cold stress,Højt kuldestress,Flink koud,Hög kylstress,Højt kuldestress,υψηλή ψυχρή καταπόνηση,elevato stress termico da freddo,Hohe Kältebelastung,Elevado estrés térmico por frío,stress hypothermique élevé,high cold stress,Højt kuldestress
+str_cold_severe,severe cold stress,Alvorlig kuldestress,Zeer koud,Allvarlig kylstress,Alvorlig kuldestress,σφοδρή ψυχρή καταπόνηση,grave stress termico da freddo,Ernsthafte Kältebelastung,Severo estrés térmico por frío,stress hypothermique sévère,severe cold stress,Alvorlig kuldestress
+str_cold_extreme,extreme cold stress,Ekstremt kuldestress,Extreem koud,Extrem kylstress,Ekstrem kuldestress,ακραία ψυχρή καταπόνηση,estremo stress termico da freddo,Extreme Kältebelastung,Extremo estrés térmico por frío,stress hypothermique extrême,extreme cold stress,Ekstremt kuldestress
+str_heat_minor,minor heat stress,Mindre/mildt varmestress,Mild warm,Mindre värmestress,Mindre varmestress,ασήμαντη θερμική καταπόνηση,Lieve stress termico da caldo,Minimale Hitzebelastung,Leve estrés térmico por calor,stress hyperthermique mineur,minor heat stress,Mindre/mildt varmestress
+str_heat_significant,significant heat stress,Moderat varmestress,Warm,Betydlig värmestress,Betydelig varmestress,σημαντική θερμική καταπόνηση,significativo stress termico da caldo,Signifikante Hitzebelastung,Significativo estrés térmico por calor,stress hyperthermique significatif,significant heat stress,Moderat varmestress
+str_heat_high,high heat stress,Højt varmestress,Heet,Hög värmestress,Høj varmestress,υψηλή θερμική καταπόνηση,elevato stress termico da caldo,Hohe Hitzebelastung,Elevado estrés térmico por calor,stress hyperthermique élevé,high heat stress,Højt varmestress
+str_heat_severe,severe heat stress,Alvorlig varmestress,Zeer heet,Allvarlig värmestress,Alvorlig varmestress,σφοδρή θερμική καταπόνηση,grave stress termico da caldo,Ernsthafte Hitzebelastung,Severo estrés térmico por calor,stress hyperthermique sévère,severe heat stress,Alvorlig varmestress
+str_heat_extreme,extreme heat stress,Ekstremt varmestress,Extreem heet,Extrem värmestress,Ekstrem varmestress,ακραία θερμική καταπόνηση,estremo stress termico da caldo,Extreme Hitzebelastung,Extremo estrés térmico por calor,stress hyperthermique extrême,extreme heat stress,Ekstremt varmestress
+str_tomorrow,tomorrow,I morgen,morgen,Imorgon,I morgen,αύριο,domani,Morgen,Mañana,demain,tomorrow,I morgen
+weather_sunny_clear,"Sunny, clear sky","Sol, klar himmel","Zonnig, heldere hemel","Soligt, klar himmel","Sol, klar himmel","ηλιόλουστος, καθαρός ουρανός","Sereno, cielo limpido","Sonne, wolkenlos","Soleado, cielo claro","Ensoleillé, ciel dégagé","Sunny, clear sky","Sol, klar himmel"
+weather_broken_clouds,Broken clouds,Delvis skyet,Licht bewolkt,Molnigt,Delvis skyet,αραιή συννεφιά,Parzialmente nuvoloso,Teilweis bewölkt,Nubes dispersas,Nuages clairsemés,Broken clouds,Delvis skyet
+weather_overcast_clouds,Overcast clouds,Overskyet,Bewolkt,Mulet,Overskyet,πυκνή συννεφιά,Cielo coperto,Bewölkt,Cielo cubierto con nubes,Ciel couvert,Overcast clouds,Overskyet
+weather_light_rain,Light rain,Let regn,Lichte regen,Duggregn,Lett regn,Ελαφριά βροχή,Pioggia leggera,Leichter Regen,Lluvia ligera,Pluie faible,Light rain,Let regn
+weather_light_rain_overcast,"Light rain, overcast","Let regn, overskyet","Lichte regen, bewolkt","Duggregn, mulet","Lett regn, overskyet","Ελαφριά βροχή, συννεφιά","Pioggia leggera, coperto","Leichter Regen, bewölkt","Lluvia ligera, nublado","Pluie faible, couvert","Light rain, overcast","Let regn, overskyet"
+weather_shower_rain,Shower rain,Tung regn,Regen,Skyfall,Tung regn,Ψιλόβροχο,Acquazzone,Starker Regen,Aguacero,Averses,Shower rain,Tung regn
+weather_clear,Clear sky,Klart,Heldere hemel,Klart,Klart,Καθαρός ουρανός,Cielo limpido,Klarer Himmel,Cielo claro,Ciel dégagé,Clear sky,Klart
+indoor_open_windows,Open windows,Åbne vinduer,Ramen open,Öppna fönster,Åpne vinduer,Ανοικτά παράθυρα,Finestre aperte,Offene Fenster,Ventanas abiertas,Fenêtres ouvertes,Open windows,Åbne vinduer
+indoor_no_open_windows,No open windows,Ingen åbne vinduer,Ramen dicht,Inga öppna fönster,Ingen åpne vinduer,Κλειστά παράθυρα,Nessuna finestra aperta,Keine offenen Fenstern,Ventanas cerradas,Pas de fenêtres ouvertes,No open windows,Ingen åbne vinduer
+str_yes,Yes,Ja,Ja,Ja,Ja,Ναι,Sì,Ja,Si,Oui,Yes,Ja
+str_no,No,Nej,Nee,Nej,Nei,Όχι,No,Nein,No,Non,No,Nej
+str_saved_location,Saved location,Gemt placering,Opgeslagen locatie,Sparad plats,Lagret plassering,Αποθηκευμένη τοποθεσία,Posizione salvata,Gelagerte Lokalitäten,Ubicación guardada,Emplacement enregistré,Saved location,Gemt placering
+str_years,years,år,jaar,År,år,χρόνια,Anni,Jahre,Años,années,years,år
+str_activity_level,Activity level,Aktivitetsniveau,Activiteitsniveau,Aktivitetsnivå,Aktivitetsnivå,Επίπεδο δραστηριότητας,Livello di attività,Aktivitätsebene,Nivel de actividad,Niveau d'activité,Activity level,Aktivitetsniveau
+str_clothing_level,Clothing level,Beklædningsniveau,Kledingsniveau,Klädesnivå,Klesmengde,Επίπεδο ρουχισμού,Livello di abbigliamento,Kleidungsniveau,Nivel de vestimenta,Niveau de protection vestimentaire,Clothing level,Beklædningsniveau
+str_try_again,Try again?,Prøv igen?,Opnieuw?,Försök igen?,Prøve igjen?,Προσπαθήστε ξανά;,Provare ancora?,Noch mal versuchen?,¿Volver a probar?,Réessayer ?,Try again?,Prøv igen?
+str_app_version,App version,App version,App versie,Appversion,Appversjon,Έκδοση εφαρμογής,Versione dell'app,Appversion,Versión de la App,Version de l'app,App version,App version
+str_kb_version,Knowledgebase version,Version af database,Kennisbasis versie,Version av kunskapsbas,Versjon av kunnskapsbase,Knowledgebase έκδοση,Database,Version der Wissensbase,Versión de la base del conocimiento,Version de la base de connaissances,Knowledgebase version,Version af database
+str_male,Male,Mand,Man,Man,Mann,Άντρας,Maschio,Mann,Masculino,Homme ,Male,Mand
+str_female,Female,Kvinde,Vrouw,Kvinna,Kvinne,Γυναίκα,Femmina,Frau,Femenino,Femme,Female,Kvinde
+str_your_predicted_score,Your predicted score,Din estimeredescore,Voorspelde score,Ditt förväntade värde,Din forutsagte verdi,Η προβλεπόμενη βαθμολογία σας,Il tuo punteggio previsto,Ihre vorausgesate Punktzahl,Su puntaje predicho,Votre score attendu,Your predicted score,Din estimeredescore
+str_personal,Personal,Personlig,Persoonlijk,Personlig,Personlig,Προσωπικός,Personale,Persönlich,Personal,Personnel,Personal,Personlig
+str_alert_level,alert limit,alarmgrænse,waarschuwingslimiet,Varningsgräns,Alarmgrense,όριο ασφάλειας,limite di allerta,Alarmgrenze,Límite de alerta,limite d'alerte,alert limit,alarmgrænse
+str_use_indoor_mode,Use indoor mode?,Slå indendørtilstand til?,Voor binnen gebruiken?,Använda inomhusläget?,Bruk innemodus?,Χρήση εσωτερικής λειτουργίας;,Utilizzare la modalità interna?,Innenmodus anwenden?,¿Usar modo interior?,Utiliser le mode intérieur ?,Use indoor mode?,Slå indendørtilstand til?
+str_cold_index,ClimApp Index,ClimApp temp Indeks,Koude index,Kylindex,ClimApp Index,Cold index,ClimApp Index,ClimApp Index,ClimApp Index,ClimApp Index,ClimApp Index,ClimApp temp Indeks
+str_heat_index,ClimApp Index,ClimApp temp Indeks,Hitte index,Värmeindex,ClimApp Index,Heat index,ClimApp Index,ClimApp Index,ClimApp Index,ClimApp Index,ClimApp Index,ClimApp temp Indeks
+str_indoor_temperature,Indoor temperature,"Indendørs Temperatur
+","Binnen temperatuur
+",Inomhustemperatur,"Temperature
+",Temperature,Temperatura interna,Temperature,Temperatura interior,Temperature,Indoor temperature,"Indendørs Temperatur
 "
-str_no_stress,no thermal stress,Intet termisk stress,Geen thermische stress,no thermal stress,Ingen termisk stress,χωρίς θερμική καταπόνηση,Nessuno stress termico,Keine thermishe Belastung,Sin estrés térmico,pas de stress thermique
-str_cold_minor,minor cold stress,Mindre kuldestress,Milde kou,minor cold stress,Mindre kuldestress,ασήμαντη ψυχρή καταπόνηση,Lieve stress termico da freddo,Minimale Kältebelastung,Leve estrés térmico por frio,stress hypothermique mineur
-str_cold_significant,significant cold stress,Væsentlig kuldestress,Koud,significant cold stress,Betydelig kuldestress,σημαντική ψυχρή καταπόνηση,significativo stress termico da freddo,Signifikante Kältebelastung,Significativo estrés térmico por frío,stress hypothermique significatif
-str_cold_high,high cold stress,Højt kuldestress,Flink koud,high cold stress,Højt kuldestress,υψηλή ψυχρή καταπόνηση,elevato stress termico da freddo,Hohe Kältebelastung,Elevado estrés térmico por frío,stress hypothermique élevé
-str_cold_severe,severe cold stress,Alvorlig kuldestress,Zeer koud,severe cold stress,Alvorlig kuldestress,σφοδρή ψυχρή καταπόνηση,grave stress termico da freddo,Ernsthafte Kältebelastung,Severo estrés térmico por frío,stress hypothermique sévère
-str_cold_extreme,extreme cold stress,Ekstrem kuldestress,Extreem koud,extreme cold stress,Ekstrem kuldestress,ακραία ψυχρή καταπόνηση,estremo stress termico da freddo,Extreme Kältebelastung,Extremo estrés térmico por frío,stress hypothermique extrême
-str_heat_minor,minor heat stress,Mindre varmestress,Mild warm,minor heat stress,Mindre varmestress,ασήμαντη θερμική καταπόνηση,Lieve stress termico da caldo,Minimale Hitzebelastung,Leve estrés térmico por calor,stress hyperthermique mineur
-str_heat_significant,significant heat stress,Moderatvarmestress,Warm,significant heat stress,Betydelig varmestress,σημαντική θερμική καταπόνηση,significativo stress termico da caldo,Signifikante Hitzebelastung,Significativo estrés térmico por calor,stress hyperthermique significatif
-str_heat_high,high heat stress,Højt varmestress,Heet,high heat stress,Høj varmestress,υψηλή θερμική καταπόνηση,elevato stress termico da caldo,Hohe Hitzebelastung,Elevado estrés térmico por calor,stress hyperthermique élevé
-str_heat_severe,severe heat stress,Alvorlig varmestress,Zeer heet,severe heat stress,Alvorlig varmestress,σφοδρή θερμική καταπόνηση,grave stress termico da caldo,Ernsthafte Hitzebelastung,Severo estrés térmico por calor,stress hyperthermique sévère
-str_heat_extreme,extreme heat stress,Ekstrem varmestress,Extreem heet,extreme heat stress,Ekstrem varmestress,ακραία θερμική καταπόνηση,estremo stress termico da caldo,Extreme Hitzebelastung,Extremo estrés térmico por calor,stress hyperthermique extrême
-str_tomorrow,tomorrow,I morgen,morgen,tomorrow,I morgen,αύριο,domani,Morgen,Mañana,demain
-weather_sunny_clear,"Sunny, clear sky","Sol, klar himmel","Zonnig, heldere hemel","Sunny, clear sky","Sol, klar himmel","ηλιόλουστος, καθαρός ουρανός","Sereno, cielo limpido","Sonne, wolkenlos","Soleado, cielo claro","Ensoleillé, ciel dégagé"
-weather_broken_clouds,Broken clouds,Delvis skyet,Licht bewolkt,Broken clouds,Delvis skyet,αραιή συννεφιά,Parzialmente nuvoloso,Teilweis bewölkt,Nubes dispersas,Nuages clairsemés
-weather_overcast_clouds,Overcast clouds,Overskyet,Bewolkt,Overcast clouds,Overskyet,πυκνή συννεφιά,Cielo coperto,Bewölkt,Cielo cubierto con nubes,Ciel couvert
-weather_light_rain,Light rain,Let regn,Lichte regen,Light rain,Lett regn,Ελαφριά βροχή,Pioggia leggera,Leichter Regen,Lluvia ligera,Pluie faible
-weather_light_rain_overcast,"Light rain, overcast","Let regn, overskyet","Lichte regen, bewolkt","Light rain, overcast","Lett regn, overskyet","Ελαφριά βροχή, συννεφιά","Pioggia leggera, coperto","Leichter Regen, bewölkt","Lluvia ligera, nublado","Pluie faible, couvert"
-weather_shower_rain,Shower rain,Tung regn,Regen,Shower rain,Tung regn,Ψιλόβροχο,Acquazzone,Starker Regen,Aguacero,Averses
-weather_clear,Clear sky,Klart,Heldere hemel,Clear sky,Klart,Καθαρός ουρανός,Cielo lipido,Klarer Himmel,Cielo claro,Ciel dégagé
-indoor_open_windows,Open windows,Åbne vinduer,Ramen open,Open windows,Åpne vinduer,Ανοικτά παράθυρα,Finestre aperte,Offene Fenster,Ventanas abiertas,Fenêtres ouvertes
-indoor_no_open_windows,No open windows,Ingen åbne vinduer,Ramen dicht,No open windows,Ingen åpne vinduer,Κλειστά παράθυρα,Nessuna finestra aperta,Keine offenen Fenstern,Ventanas cerradas,Pas de fenêtres ouvertes
-str_yes,Yes,Ja,Ja,Yes,Ja,Ναι,Sì,Ja,Si,Oui
-str_no,No,Nej,Nee,No,Nei,Όχι,No,Nein,No,Non
-str_saved_location,Saved location,Gemt placering,Opgeslagen locatie,Saved location,Lagret plassering,Αποθηκευμένη τοποθεσία,Posizione salvata,Gelagerte Lokalitäten,Ubicación guardada,Emplacement enregistré
-str_years,years,år,jaar,years,år,χρόνια,Anni,Jahre,Años,années
-str_activity_level,Activity level,Aktivitetsniveau,Activiteitsniveau,Activity level,Aktivitetsnivå,Επίπεδο δραστηριότητας,Livello di attività,Aktivitätsebene,Nivel de actividad,Niveau d'activité
-str_clothing_level,Clothing level,Beklædningsniveau,Kledingsniveau,Clothing level,Klesmengde,Επίπεδο ρουχισμού,Livello di abbigliamento,Kleidungsniveau,Nivel de vestimenta,Niveau de protection vestimentaire
-str_try_again,Try again?,Prøv igen?,Opnieuw?,Try again?,Prøve igjen?,Προσπαθήστε ξανά;,Provare ancora?,Noch mal versuchen?,¿Volver a probar?,Réessayer ?
-str_app_version,App version,App version,App versie,App version,Appversjon,Έκδοση εφαρμογής,Versione dell'app,Appversion,Versión de la App,Version de l'app
-str_kb_version,Knowledgebase version,Version af database,Kennisbasis versie,Knowledgebase version,Versjon av kunnskapsbase,Knowledgebase έκδοση,Database,Version der Wissensbase,Versión de la base del conocimiento,Version de la base de connaissances
-str_male,Male,Mand,Man,Male,Mann,Άντρας,Maschio,Mann,Masculino,Homme 
-str_female,Female,Kvinde,Vrouw,Female,Kvinne,Γυναίκα,Femmina,Frau,Femenino,Femme
-str_your_predicted_score,Your predicted score,Din estimeredescore,Voorspelde score,Your predicted score,Din forutsagte verdi,Η προβλεπόμενη βαθμολογία σας,Il tuo punteggio previsto,Ihre vorausgesate Punktzahl,Su puntaje predicho,Votre score attendu
-str_personal,Personal,Personlig,Persoonlijk,Personal,Personlig,Προσωπικός,Personale,Persönlich,Personal,Personnel
-str_alert_level,alert limit,alarmgrænse,waarschuwingslimiet,alert limit,Alarmgrense,όριο ασφάλειας,limite di allerta,Alarmgrenze,Límite de alerta,limite d'alerte
-str_use_indoor_mode,Use indoor mode?,Slå indendørtilstand til?,Voor binnen gebruiken?,Use indoor mode?,Bruk innemodus?,Χρήση εσωτερικής λειτουργίας;,Utilizzare la modalità interna?,Innenmodus anwenden?,¿Usar modo interior?,Utiliser le mode intérieur ?
-str_cold_index,Climapp Cold index,kulde indeks,Koude index,Climapp Cold index,Climapp Cold index,Cold index,Climapp Cold index,Climapp Cold index,Climapp Cold index,Climapp Cold index
-str_heat_index,Climapp Heat index,varme indeks,Hitte index,Climapp Heat index,Climapp Heat index,Heat index,Climapp Heat index,Climapp Heat index,Climapp Heat index,Climapp Heat index
-str_indoor_temperature,Indoor temperature,"Temperature
-","Temperatuur
-","Temperature
-","Temperature
-",Temperature,Temperature,Temperature,Temperature,Temperature
-str_temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature,Temperature
-str_utci,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index
-str_research_label,Research,Research,Onderzoek,Research,Research,Research,Research,Research,Research,Research
-str_research_consent,"In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","Om mee te doen met onderzoek kan een onderzoeker je ClimApp ID nodig hebben. Door het ClimApp ID aan de onderzoeker te geven stem je in met het gebruik van je data voor onderzoeksdoeleinden. Individuele data zullen nooit gepubliceerd worden.
- Voor meer vragen kun je bij je contactpersoon terecht.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details."
-str_climapp_id,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID
-str_research,Research,Research,Onderzoek,Research,Research,Research,Research,Research,Research,Research
-str_submit_research_data_point,Submit current values,Submit current values,Datapunt uploaden,Submit current values,Submit current values,Submit current values,Submit current values,Submit current values,Submit current values,Submit current values
+str_temperature,Temperature,Temperatur,Temperatuur,Temperatur,Temperature,Temperature,Temperatura,Temperature,Temperatura,Temperature,Temperature,Temperatur
+str_utci,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index,Indice Universale del Clima Termico (UTCI),Universal Thermal Climate Index,Índice Universal del Clima Térmico,Universal Thermal Climate Index,Universal Thermal Climate Index,Universal Thermal Climate Index
+str_research_label,Research,Research,Onderzoek,Forskning,Forskning,Research,Ricerca,Research,Investigación,Research,Research,Research
+str_research_consent,"In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.",for at forbedre (den forskningsmæssige) kvalitet beder vi om lov til at gemme din ClipApp id (bliver anonymiseret og kun brugt til forskningsmæssigt brug),"Om mee te doen met onderzoek kan een onderzoeker je ClimApp ID nodig hebben. Door het ClimApp ID aan de onderzoeker te geven stem je in met het gebruik van je data voor onderzoeksdoeleinden. Individuele data zullen nooit gepubliceerd worden.
+ Voor meer vragen kun je bij je contactpersoon terecht.",För att delta i forskning kan en forskare behöva ditt ClimApp ID. Ifall du ger ditt ClimApp ID till forskaren så godkänner du att din data kan användas för forskningsändamål. Vänligen konsultera din kontaktperson för fler detaljer.,"In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","Per poter partecipare alla ricerca, un ricercatore potrebbe aver bisogno del tuo ClimApp ID. Se fornisci il tuo ClimApp ID al ricercatore, acconsenti all’utilizzo dei tuoi dati per fini di ricerca. Per favore, consulta il tuo contatto per maggiori dettagli.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","Para participar en la investigación, un investigador puede necesitar tu ClimApp ID. Si le das tu ID de ClimApp al investigador, aceptas que tus datos se puedan utilizar para fines de investigación. Por favor, consulta a tu persona de contacto para más detalles.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.","In order to participate in research, a researcher may need your ClimApp ID. If you give your ClimApp ID to the researcher you consent that your data can be used for research purposes. Please consult your contact person for more details.",for at forbedre (den forskningsmæssige) kvalitet beder vi om lov til at gemme din ClipApp id (bliver anonymiseret og kun brugt til forskningsmæssigt brug)
+str_climapp_id,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID,ClimApp ID
+str_research,Research,Research,Onderzoek,Forskning,Research,Research,Ricerca,Research,Investigación,Research,Research,Research
+str_submit_research_data_point,Submit current values,indsend dine nuværende værdier ,Datapunt uploaden,Skicka nuvarande värden,Submit current values,Submit current values,Inviare i valori attuali,Submit current values,Enviar valores actuales,Submit current values,Submit current values,indsend dine nuværende værdier 
+str_work,Work,arbejde,Werk,Arbete,Work,Work,Lavoro,Work,Trabajo,Work,Work,arbejde
+str_elderly,Seniors,Ældre,Senioren,Seniorer,Elderly,Elderly,Anziani,Elderly,Ancianos,Elderly,Seniors,Ældre
+str_children,Children,Børn,Kinderen,Barn,Children,Children,Bambini,Children,Niños,Children,Children,Børn
+str_menu_hydration,Hydration,Hydrering/væskebalance,Drinken,Hydrering/vätskebalans,Hydration,Hydration,Idratazione,Hydration,Hidratación,Hydration,Hydration,Hydrering/væskebalance
+str_menu_measures,Measures,Målinger,Maatregelen,Åtgärder,Measures,Measures,Misure,Measures,Medidas,Measures,Measures,Målinger
+str_indoor_environment,Indoor environment,Indendørs,Binnenklimaat,Inomhusklimat,Indoor environment,Indoor environment,Ambiente interno,Indoor environment,Ambiente interior,Indoor environment,Indoor environment,Indendørs

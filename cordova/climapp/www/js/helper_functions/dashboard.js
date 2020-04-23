@@ -229,13 +229,8 @@ function heatLevelTips( index, level, kb, pageID, translations, language){
 			"lang": language, // locale
 		};
 		var url = "https://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
-		console.log("getting riskval : ");
-		
-		var riskval = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, true );
-		console.log("riskval : "+ riskval);
-		
+		var riskval = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, true );		
 		var risklabel = gaugeTitleHeat( riskval, translations, language);
-		console.log("risklabel : "+ risklabel);
 		
 		$.get( url, data).done( function(data, status, xhr){
 			if(status === "success") {
@@ -244,12 +239,10 @@ function heatLevelTips( index, level, kb, pageID, translations, language){
 				var str = header; // circle with gauge color
 				let tips = JSON.parse(data);
 				console.log(JSON.stringify(tips));
-				tips.tips.forEach(function(tip){
-					str += "<p>"+tip+"</p>";
+				tips.labels.forEach(function(key){
+					str += "<p>" + translations.sentences[key][language] +"</p>";
 				});
-				tips.personal.forEach(function(tip){
-					str += "<p>"+tip+"</p>";
-				});
+				
                 console.log("Fetched tips.");
 				resolve(str); 
 			} else {

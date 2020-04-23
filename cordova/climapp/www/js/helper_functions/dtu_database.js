@@ -83,7 +83,7 @@ function addWeatherDataToDB(kb) {
 function addUseDataToDB(kb, context){
 	
 	let apicall= "insertDataUsage";
-	let url = "https://www.sensationmapps.com/climapp/api.php";
+	let url = "http://www.sensationmapps.com/climapp/api.php";
 	let station = kb.weather.station.indexOf( "<br>" ) > -1 ? kb.weather.station.substring(kb.weather.station.indexOf("<br>") + 4 ): kb.weather.station;
     
 	var icl_min = kb.thermalindices.ireq[0].ICLminimal;
@@ -109,6 +109,13 @@ function addUseDataToDB(kb, context){
         "lon": kb.weather.lat,
         "lat": kb.weather.lng,
         "station": station,
+		//
+		"yearOfBirth" : kb.user.settings.yearOfBirth,
+		"age": kb.user.settings.age,
+		"height": kb.user.settings.height,
+		"weight": kb.user.settings.weight,
+		"gender": kb.user.settings.gender,
+		"acclimatization": kb.user.settings.acclimatization,
 		//main indices
 		"ireq_min": kb.thermalindices.ireq[0].ICLminimal,
 		"ireq_dlim_min": kb.thermalindices.ireq[0].DLEminimal,
@@ -212,30 +219,36 @@ function getAppIDFromDB(kb) {
                 reject(false);
             }
         }).fail(function (data) {
-            resolve("f22065144b2119439a589cbfb9d851d3");//fix for boris, whose id seems to be having issues at DTU server
+			$.get("http://www.sensationmapps.com/WBGT/api/thermaladvisor.php",
+				  {"mode": "emergencykey"}, 
+				 function( data){
+				 	resolve( data );
+			});
         });
     })
 }
 
 function getIndoorPrediction(kb) {
     return new Promise((resolve, reject) => {
-		console.log("getting indoor prediction A");
         let apicall = "getIndoorPrediction";
         let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
+		let sr = Math.round( kb.thermalindices.ireq[0].rad );
+		
         let user_data = {
-            "rho": kb.user.settings._humidity, // outdoor relative humidity %
-            "sr": kb.thermalindices.ireq[0].rad, // solar radiation W/m^2
+            "rho": kb.thermalindices.ireq[0].rh, // outdoor relative humidity %
+            "sr": sr, // solar radiation W/m^2
             "tao": kb.thermalindices.ireq[0].Tair, // outdoor temp (degrees celcius)
             "wo": kb.user.settings.open_windows, // window opening 0/1
             "trv": kb.user.settings.thermostat_level, // heating setpoint (radiator valve/thermostat)
             "cy": 1950, // building construction year [1920,1930 .. 2010]
             "fa": 40, // floor area 5-200m^2 
             "no": 3 // number of occupants in room (1-5)
-        }
+        };
         $.post(url, user_data).done(function (data, status, xhr) {
             if (status === "success") {
                 let response = JSON.parse(data);
                 let indoorTemperature = response.temp;
+				console.log( data );
                 console.log("Retrieved predicted temperature from server: " + indoorTemperature);
                 resolve(indoorTemperature);
             } else {
