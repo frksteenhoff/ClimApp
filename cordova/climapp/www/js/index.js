@@ -78,11 +78,11 @@ var app = {
 			}).fail(function (e) {
 				console.log("Failed to read translations " + JSON.stringify(e));
 				// Read in translations (synchronously)
-				self.loadTranslations("http://www.hittewijzer.nl/translations/translations.json");
+				self.loadTranslations("http://www.sensationmapps.com/climapp/translations.php?f=translations");
 			}).done(function (result){
 				self.feedback_questions = result;
 				// Read in translations (synchronously)
-				self.loadTranslations("http://www.hittewijzer.nl/translations/translations.json");
+				self.loadTranslations("http://www.sensationmapps.com/climapp/translations.php?f=translations");
 		});
 
 		
@@ -90,6 +90,7 @@ var app = {
 	},
 	loadTranslations: function( url ){
 		var self = this;
+		console.log("translations fetch attempt: " + url );
 		$.getJSON( url, function (json) {
 			try {
 				console.log("Translations read from : "+url+" - " + Object.keys(json));
@@ -97,11 +98,7 @@ var app = {
 				console.log("Error in reading translations: " + error);
 			}
 		}).fail(function (jqXHR, textStatus, errorThrown) {
-			console.log("Failed to read translations " + JSON.stringify(jqXHR));
-			console.log("Failed to read translations " + JSON.stringify(textStatus));
 			console.log("Failed to read translations " + JSON.stringify(errorThrown));
-			
-			
 			self.loadTranslations("./translations/translations.json");
 		// Load settings after translations have been read
 		}).done(function (result) {
@@ -1027,7 +1024,7 @@ var app = {
 
 		self.checkIfUserExistInDB().then((result) => {
 			getAppIDFromDB(self.knowledgeBase).then((appidFromServer) => {
-				//console.log(" update Weather - getting weather with appid : " + appidFromServer);
+				console.log(" update Weather - getting weather with appid : " + appidFromServer);
 				if (appidFromServer) {
 					let url = "http://www.sensationmapps.com/WBGT/api/worldweather.php";
 					var [lat, lon] = getLocation(this.knowledgeBase); // Custom or GPS
@@ -1107,19 +1104,9 @@ var app = {
 										var Tg = self.knowledgeBase.weather.globetemperature[key];
 										var Ta = self.knowledgeBase.weather.temperature[key];
 										var va = vair * Math.pow( 0.2, 0.25 ); //stability class D Liljgren 2008 Table 3
-										/*
-										//kruger et al 2014
-										var D = 0.05; //diameter black globe (liljegren - ) --default value = 0.15
-										var eps_g = 0.95; //standard emmisivity black bulb
-										var t0 = (Tg+273.0);
-										var t1 = Math.pow( t0, 4);
-										var t2 = 1.1 * Math.pow(10,8) * Math.pow( va, 0.6 ); 
-										var t3 = eps_g * Math.pow( D, 0.4);
-										var t4 = t1 + ( t2 / t3 ) * (Tg-Ta);
-										var Tmrt = Math.pow( t4, 0.25 ) - 273.0;
-										*/
+						
 										
-										var WF1 = 0.4 * Math.pow( Math.abs( Tg - Ta ), 0.25 );
+										var WF1 = 0.4 * Math.pow( Math.abs( Tg - Ta ), 0.25 ); //Bernard implementation according to Lemke
 										var WF2 = 2.5 * Math.pow( va, 0.6 );
 										var WF = WF1 > WF2 ? WF1 : WF2;
 										var Tmrt = 100.0 * Math.pow( Math.pow((Tg + 273.0) / 100.0, 4 ) + WF * (Tg - Ta), 0.25) - 273.0;
@@ -1160,7 +1147,7 @@ var app = {
 		});
 	},
 	updateIndoorPrediction: async function(){
-		showShortToast("Updating indoor temperature prediction - please wait");
+		showShortToast("Updating indoor temperature prediction");
 		$("#predicted_temperature").html('<i class="fas fa-spinner fa-spin"></i>');
 		getIndoorPrediction(self.knowledgeBase).then((temp) => {
 			self.knowledgeBase.user.settings.temp_indoor_predicted = Number(temp);
@@ -1229,6 +1216,8 @@ var app = {
 	checkIfUserExistInDB: async function () {
 		var self = this;
 		if (!self.knowledgeBase.user.guards.hasExternalDBRecord && typeof (self.knowledgeBase.user.guards.hasExternalDBRecord) !== 'undefined') {
+			console.log("creating new user.");
+			
 			createUserRecord(self.knowledgeBase).then((userCreatedInDB) => {
 				// Only update value on success
 				if (userCreatedInDB) {
@@ -2401,8 +2390,8 @@ var app = {
 							"utci_message":  "",
 							"utci_temperature": 0,
 							"utc": this.knowledgeBase.thermalindices.phs[index].utc};
-		$.get( url, data, function( result ){
-			var answer = JSON.parse( result );
+		$.getJSON( url, data, function( answer ){
+			
 			if( answer.status_code == 200 ){
 				utci_object = { "Tair": answer.input.environment.Tair,
 								"utci_head": answer.results.UTCI.utci_head,
@@ -2417,8 +2406,10 @@ var app = {
 			else{
 				self.updateUTCI(index+1);
 			}
+		}).fail(function (e) {
+			console.log("Failed humanheat.exchange: " + JSON.stringify(e));
+				
 		});
-		
 	},
 	convertWeatherToChartData: function ( thermal ) {
 		var data;

@@ -37,6 +37,9 @@
         <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
             <string>Need location to get local weather reports</string>
         </edit-config>
+        <edit-config file="*-Info.plist" mode="merge" target="NSLocationAlwaysUsageDescription">
+            <string>Need location to get local weather reports</string>
+        </edit-config>
         <icon height="57" src="res/icon/ios/icon-57.png" width="57" />
         <icon height="114" src="res/icon/ios/icon-57-2x.png" width="114" />
         <icon height="72" src="res/icon/ios/icon-72.png" width="72" />
@@ -47,6 +50,9 @@
         <preference name="StatusBarOverlaysWebView" value="false" />
         <preference name="StatusBarDefaultScrollToTop" value="false" />
         <preference name="StatusBarStyle" value="default" />
+		<preference name="WKWebViewOnly" value="true" />
+	    <feature name="CDVWKWebViewEngine"> <param name="ios-package" value="CDVWKWebViewEngine" />  </feature>
+	    <preference name="CordovaWebViewEngine" value="CDVWKWebViewEngine" />
     </platform>
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
     <plugin name="cordova-plugin-x-toast" spec="^2.7.2" />

@@ -195,7 +195,13 @@ async function createUserRecord(kb) {
                 console.log("The user might already exist.");
                 reject(false);
             }
-        });
+        }).fail(function (data){
+			showShortToast("Copenhagen University server issue - Create User");
+		
+    		console.log( data );
+            reject(false);
+			
+    	});
     })
 }
 
@@ -219,10 +225,12 @@ function getAppIDFromDB(kb) {
                 reject(false);
             }
         }).fail(function (data) {
+			console.log( "failed get app id from DB ");
+			
 			$.get("http://www.sensationmapps.com/WBGT/api/thermaladvisor.php",
 				  {"mode": "emergencykey"}, 
 				 function( data){
-				 	resolve( data );
+				 resolve( data );
 			});
         });
     })
