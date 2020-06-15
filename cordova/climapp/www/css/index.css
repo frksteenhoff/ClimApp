@@ -30,9 +30,13 @@ body {
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
     
+	/*
 	 background: url("../img/backgrounds/blue-sky.jpg");
      background-repeat: no-repeat;
      background-size: auto;
+	*/
+	background: #000;
+	color: #fff;
 	
     font-family: "Lato";
     height:100%;
@@ -104,6 +108,78 @@ video.cover{
 	
 }
 
+/*HOME*/
+
+div.padded{
+	width: 95%;
+	margin: auto;
+}
+
+input[type=range].climappslider {
+  -webkit-appearance: none;
+  margin: 2em 0;
+  width: 100%;
+  pointer-events: none;	
+}
+input[type=range].climappslider:focus, input[type=range].perceptionslider:focus{
+  outline: none;
+}
+input[type=range].climappslider::-webkit-slider-runnable-track{
+    width: 100%;
+    height: 2em;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #fff;
+	background: linear-gradient(to right, rgb(0,0,180),rgb(0,100,255),rgb(0,255,255), rgb(0,180,0), rgb(255, 255,0),rgb(255,165,0), rgb(180,0,0) );
+}
+input[type=range].climappslider::-webkit-slider-thumb {
+  border: 1px solid #000;
+  height: 1em;
+  width: 2.5em;
+  border-radius: 3px;
+  background: #ffffff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: 0.5em; 
+  margin-bottom: 0.5em; 
+}
+input[type=range].climappslider:focus::-webkit-slider-runnable-track {
+  background: #367ebd;
+}
+
+input[type=range].perceptionslider {
+  -webkit-appearance: none;
+  margin: 2em 0;
+  width: 100%;
+}
+input[type=range].perceptionslider::-webkit-slider-runnable-track{
+    width: 90%;
+    height: 2em;
+    cursor: pointer;
+    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+    border-radius: 5px;
+    border: 1px solid #fff;
+	margin:auto;
+	background: linear-gradient(to right, rgb(0,0,180),rgb(0,100,255),rgb(0,255,255), rgb(0,180,0), rgb(255, 255,0),rgb(255,165,0), rgb(180,0,0) );
+}
+input[type=range].perceptionslider::-webkit-slider-thumb {
+
+  border: 1px solid #000;
+  height: 4em;
+  width: 1em;
+
+  background: #ffffff;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -1em; 
+  margin-bottom: -1em; 
+}
+
+
+div.fullwidth{
+	width:100%;
+}
+
 a {
 	color: #fff;
 }
@@ -169,8 +245,6 @@ canvas{
 
 
 .flexbox,.flexbox-4, .flexbox-5, .flexbox-2, .flexbox-3{
-    display: -webkit-box;
-    display: -moz-box;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
@@ -244,6 +318,10 @@ canvas{
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+.flexbox-4 div.border{
+	border-left: 1px solid #fff;
 }
 
 .flexbox-5 div{
@@ -326,6 +404,12 @@ span.settings{
 span.score{
 	font-size: 0.9em;
 	font-weight: bold;
+}
+span.right{
+	float: right;
+}
+span.left{
+	float: left;
 }
 
 p.left{

@@ -30,9 +30,9 @@ function getTemperatureUnit(unit) {
 }
 function getTemperatureValueInPreferredUnit(temp, unit) {
 	if(unit === "US") {
-		return temp * 9/5 + 32;
+		return Math.round( 10*( temp * 9/5 + 32) )/10;
 	} else {
-		return temp;
+		return Math.round( 10*( temp ) )/10;
 	}
 }
 
@@ -66,40 +66,14 @@ function M(kb) { //W/m2
 }
 
 function getClo(kb){
-	let clokey = kb.user.settings.clothing_selected;
-	let helmetkey = kb.user.settings.headgear_selected;
 	return kb.user.settings.insulation_selected;
 }
 function getAirPermeability(kb){
-	let clokey = kb.user.settings.clothing_selected; //check vals with chuansi
-	/*
-	let values = { "Summer_attire": 100, 
-					"Business_suit": 50,
-					"Double_layer": 25,
-					"Cloth_coverall": 5,
-					"Cloth_apron_long_sleeve": 5,
-					"Vapour_barrier_coverall": 1,
-					"Winter_attire": 5 };
-	
-	return values[clokey];
-	*/
 	return kb.user.settings.windpermeability_selected;
 }
 
 function getMoisturePermeability(kb){
-	let clokey = kb.user.settings.clothing_selected; //check vals with chuansi
-	/*
-	let values = { "Summer_attire": 0.45, 
-					"Business_suit": 0.38,
-					"Double_layer": 0.38,
-					"Cloth_coverall": 0.38,
-					"Cloth_apron_long_sleeve": 0.09,
-					"Vapour_barrier_coverall": 0.09,
-					"Winter_attire": 0.19 };
-	return values[clokey];
-	*/
 	return kb.user.settings.vapourpermeability_selected;
-	
 }
 
 function RAL(kb) {
@@ -132,7 +106,7 @@ function getCAF(kb){
 	*/
 	let icl = getClo( kb );
 	let icl_norm = 1.0;
-	let icl_max = 2.0; //double layer
+	let icl_max = 2.0; //winter full
 	let d_icl = icl_max - icl_norm;
 	let dCav_icl = 3.0;//double layer icl
 	let CAV_icl = dCav_icl * ( icl - icl_norm ) / d_icl;
@@ -165,15 +139,14 @@ function getWBGTeffective(wbgt, kb){
 }
 
 function getPAL(kb, thermal){ //personal adjustment value 
-	return kb.user.adaptation[thermal].diff.length > 0 ? kb.user.adaptation[thermal].diff[0] : 0;
+	return 0;//kb.user.adaptation[thermal].diff.length > 0 ? kb.user.adaptation[thermal].diff[0] : 0;
 }
 
 		   
 function WBGTrisk(wbgt, kb, isPersonalised ) {
 	let RAL_ = RAL(kb);
-	let PAL = isPersonalised ? getPAL(kb, "heat") : 0;//personal adjustment value
 	let wbgt_effective = getWBGTeffective(wbgt, kb);
-	let RAL_effective = (RAL_ - PAL);
+	let RAL_effective = (RAL_);
 	let risk = wbgt_effective / RAL_effective;  
 	
 	if( risk <= 0.8 ){
@@ -211,14 +184,13 @@ function neutralTips() {
 function heatLevelTips( index, level, kb, pageID, translations, language){
     return new Promise((resolve, reject) => {
 		var mode = "heat";
-		var pav = getPAL( kb, mode);
 		var data = {
 			"mode": mode,
 			"level": level,
 			"wbgt": kb.thermalindices.phs[index].wbgt,
 			"tair": kb.thermalindices.phs[index].Tair,
 			"rh": kb.thermalindices.phs[index].rh,
-			"pal": getPAL( kb, mode),
+			"pal": 0,
 			"watt": M( kb ) * BSA( kb ), //Watts
 			"covered": isClothingCovering(kb),
 			"caf": getCAF(kb),
@@ -305,7 +277,7 @@ function coldLevelTips( index, level, kb, cold_index, pageID, translations, lang
 		else if( cold_index <= 1 ){
 			str += "<p>" + translations.sentences.dash_tip_general_1[language] + "</p>";
 			str += "<p>" + translations.sentences.dash_tip_general_2[language] + "</p>";
-			str += "<p>" + translations.sentences.dash_tip_general_3[language] + "</p>";
+			//str += "<p>" + translations.sentences.dash_tip_general_3[language] + "</p>";
 		}
 		else if( cold_index <= 2 && isWindstopperUseful ){
 			str += "<p>" + translations.sentences.dash_tip_normal[language] + "</p>";
@@ -329,7 +301,7 @@ function coldLevelTips( index, level, kb, cold_index, pageID, translations, lang
 
 // Returning rgba value of current gauge value as string
 function getCurrentGaugeColor(value) {
-	if(value > -4.0 && value <= -3.0) {
+	if(value >= -4.0 && value <= -3.0) {
 		return 'rgba(0,0,180,.9)';
 	} else if(value > -3.0 && value <= -2.0) {
 		return 'rgba(0,100,255,.9)';

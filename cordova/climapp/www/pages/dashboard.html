@@ -15,6 +15,7 @@
 	</div>
 	
 	<div class="center" id="gauge_div">
+		<div><p class="label center" id="str_forecast_disclaimer"></p></div>
 		<canvas id="main_gauge"></canvas>
 	</div>
 	
@@ -74,8 +75,8 @@
 	</div>
 </div>
 
-<div class="panel" id="tip_panel" data-listener="panel" data-target="settings">
-	<div id="tip_detailed">
+<div class="panel" id="tip_panel">
+	<div class="padded" id="tip_detailed">
 		<div class="" data-menuitem="true" data-menugroup="modelgroup" id="selectclimapp">
 			<p class="label" id="climapp_thermal">Downloading information...</p>
 			
@@ -87,13 +88,88 @@
 			<p id="utci_message"></p>
 		</div>
 		
+</div>
+			
+<div class="panel">
+	<p class="label" id="str_details"></p>
+	<p id="details_desc"></p>
+	<div class="panel">
+	    <p class="label" id="str_weather"></p>
 		<div class="flexbox-2">
-			<div class="even" data-target="feedback" data-listener="tab" id="personalisation_item"><p><i class="fas fa-user"></i> <span id="str_personalise"></span></p></div>
-			<div class="even" data-listener="navbar" data-target="details">
-				<p class="right"><i class="fas fa-info-circle"></i> <span id="str_more_info"></span></p>
-			</div>
+	 	   <div class="even" id="str_time"></div><div class="even"><span class="score" id="detail_time"></span></div>
+		   <div class="even" id="str_air_temperature"></div><div class="even"><span class="score" id="detail_airtemp"></span></div>
+		   <div class="even" id="str_humidity"></div><div class="even"><span class="score" id="detail_rh"></span></div>
+		   <div class="even" id="str_cloud_cover"></div><div class="even"><span class="score" id="detail_clouds"></span></div>
+		   <div class="even" id="str_solar_irradiation"></div><div class="even"><span class="score" id="detail_rad"></span></div>
+		   <div class="even" id="str_wind10"></div><div class="even"><span class="score" id="detail_wind10m"></span> </div>
+		   <div class="even" id="str_wind2"></div><div class="even"><span class="score" id="detail_wind2m"></span> </div>
+		   <div class="even" id="str_globe_temperature"> 5cm</div><div class="even"><span class="score" id="detail_tglobe"></span></div>
+		   <div class="even" id="str_mrt"></div><div class="even"><span class="score" id="detail_mrt"></span> </div>
+	   
+		   <div class="even" data-group="wbgt" id="str_wbgt"></div><div data-group="wbgt" class="even"><span class="score" id="detail_wbgt"></span></div>
+		   <div class="even" data-group="wbgt" id="str_wbgt_effective"></div><div data-group="wbgt" class="even"><span class="score" id="detail_wbgt_eff"></span></div>
+		   <div class="even" data-group="wbgt" id="str_aal"></div><div data-group="wbgt" class="even"><span class="score" id="detail_ral"></span></div>
+	   
+		   <div class="even" data-group="ireq" id="str_windchill"></div><div data-group="ireq" class="even"><span class="score" id="detail_windchill"></span></div>   
+	   </div>
+   </div>
+	<div class="panel">
+	   <p class="label" id="str_user"></p>
+	   <div class="flexbox-2">
+	 	   <div class="even" id="str_mr"></div><div class="even"><span class="score" id="detail_metabolic"></span></div>
+	 	   <div class="even" id="str_surface_area"></div><div class="even"><span class="score" id="detail_area"></span></div>
+	   
+		   <div class="even" id="str_clo"></div><div class="even"><span class="score" id="detail_icl"></span></div>
+	   
+		   <div class="even" id="str_wind_permeability"></div><div class="even"><span class="score" id="detail_p"></span></div>
+		   <div class="even last" id="str_evaporative_permeability"></div><div class="even"><span class="score" id="detail_im"></span></div>
+	   </div>
+	</div>
+</div>
+
+<div class="panel" data-context="heat">
+	<p class="label" id="str_wbgt_iso"></p>
+	<p><span id="details_wbgt_desc_1"></span> <span class="score" id="detail_wbgt_iso7243"></span>&#xb0;C <span id="details_wbgt_desc_2"></span> <span class="score" id="detail_ral_iso7243"></span>&#xb0;C.</p>
+</div>
+<div class="panel" data-context="phs">
+	<p class="label" id="str_phs_iso"></p>
+	<p><span id="details_phs_desc_1"></span> <span class="score" id="detail_dle_phs"></span> <span id="details_phs_desc_2"></span> <span  class="score" id="detail_sweat"></span> <span id="details_phs_desc_3"></span></p>
+</div>
+
+<div class="panel" data-context="cold">
+	<p class="label" id="str_windchill_jagti"></p>
+	<p><span id="details_windchill_desc_1"></span> <span class="score" id="detail_exposed_windchill"></span>, <span id="details_windchill_desc_2"></span> <span id="detail_exposed_windriskcat"> <span class="score" id="detail_exposed_windrisk"></span></p>
+
+</div>
+<div class="panel" data-context="cold">
+	<p class="label" id="str_ireq_iso"></p>
+	<p><span id="details_ireq_desc"></span>
+		<ul>
+			<li id="details_ireq_list1"></li>
+			<li id="details_ireq_list2"></li>
+			<li id="details_ireq_list3"></li> 
+		</ul>
+	</p>
+	<p><span id="details_ireq_clo_1"></span> <span class="detail_activity_ireq"></span> <span id="details_ireq_clo_2"></span> <span class="score" id="detail_icl_min"></span> <span id="details_ireq_clo_3"></span> <span class="score" id="detail_icl_max"></span> clo</p>
+	<div class="flexbox-2">
+		<div class="center even">
+			<p class="label" id="str_min_cloth_level"></p>
+			<div id="detail_min_clo"></div>
 		</div>
-		
+		<div class="center even">
+			<p class="label" id="str_max_cloth_level"></p>
+			<div id="detail_max_clo"></div>
+		</div>
+	</div>
+	<p id="details_dle_positive"><span id="details_ireq_clo_dle_1"></span> <span id="detail_dle_ireq"></span> <span id="details_ireq_clo_dle_2"></span></p>
+
+</div>
+
+<div class="panel" data-context="neutral">
+	<p id="details_neutral"></p>
+</div>
+
+<div class="panel">	
 		<div id="selectmeasuresandhydration">
 			<div id="work-hydrate-selector" class="flexbox-2">
 				<div id="tabmeasures" data-listener="menu" data-level="1" data-target="selectmeasures" data-targetgroup="measuresgroup" class="even"><p class="label center" id="str_menu_measures">Measures</p></div>

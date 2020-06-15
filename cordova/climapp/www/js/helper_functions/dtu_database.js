@@ -100,7 +100,6 @@ function addUseDataToDB(kb, context){
 	let draw_heat_gauge = context.isDrawHeatGauge( model_cold_index, model_heat_index, 0 );
 	var thermal = draw_heat_gauge ? "heat" : "cold";
 	
-	let PAL = getPAL(kb, thermal);
 	let CAV = getCAF(kb);
 	let RAL_ = RAL(kb);
 	
@@ -145,15 +144,15 @@ function addUseDataToDB(kb, context){
 		"windchill": kb.thermalindices.ireq[0].windchill,
 		"utc": kb.thermalindices.ireq[0].utc,
 		//climapp specials
-		"pal": PAL,
 		"cav": CAV,
 		"ral": RAL_,
 		"thermal": thermal,
 		"isIndoor": isIndoor,
 		"model_heat_score": model_heat_index,
 		"model_cold_score": model_cold_index,
-		"personal_heat_score": personal_heat_index,
-		"personal_cold_score": personal_cold_index
+		//perception
+		"perception_heat": kb.user.adaptation.heat.perceived,
+		"perception_cold": kb.user.adaptation.cold.perceived,
 	};
 	let json = JSON.stringify( user_data );
     $.post(url, {"action": apicall, "json": json } ).done(function (data, status, xhr) {
@@ -207,18 +206,20 @@ async function createUserRecord(kb) {
 
 // Retrieving app id from dtu database. Needs to be synchronous as the response is used in subsequent functions.
 function getAppIDFromDB(kb) {
+	console.log( "getAppIDFromDB => new Promise ");
+	
     return new Promise((resolve, reject) => {
         let apicall = "getAppID";
         let url = kb.server.dtu_ip + kb.server.dtu_api_base_url + apicall;
         let user_data = {
             "user_id": deviceID()
         }
+		
         //@Henriette, .done is not always reached
         $.get(url, user_data).done(function (data, status, xhr) {
             if (status === "success") {
                 let response = JSON.parse(data);
                 let appID = response.config[0].appid;
-                //console.log("Fetched app ID: " + appID);
                 resolve(appID);
             } else {
                 console.log("Could not fetch app ID from server.");
@@ -252,8 +253,13 @@ function getIndoorPrediction(kb) {
             "fa": 40, // floor area 5-200m^2 
             "no": 3 // number of occupants in room (1-5)
         };
+        console.log("getting indoor prediction");
+		
         $.post(url, user_data).done(function (data, status, xhr) {
             if (status === "success") {
+		        console.log("indoor prediction succes");
+		        console.log( data );
+				
                 let response = JSON.parse(data);
                 let indoorTemperature = response.temp;
 				console.log( data );
