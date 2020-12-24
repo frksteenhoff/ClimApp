@@ -50,7 +50,7 @@ function windchillRisk(windchill) {
 
 
 // kb shorthand for knowledgeBase
-function BSA(kb) { //m2
+function BSA(kb){ //m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
         let w = kb.user.settings.weight; //kg
         let h = kb.user.settings.height / 100; //m
@@ -61,7 +61,10 @@ function BSA(kb) { //m2
 function M(kb) { //W/m2
     if(typeof(kb) !== 'undefined'){ // Making sure only valid kb instances are being accessed.
         let ISO_selected = kb.user.settings.activity_selected;
-		return kb.activity.values[ ISO_selected ].val / BSA(kb);
+		var watt = kb.activity.values[ ISO_selected ].val;
+		var m2 = BSA(kb);
+		//console.log( "M:" + watt/m2);
+		return watt / m2;
     }
 }
 
@@ -108,7 +111,7 @@ function getCAF(kb){
 	let icl_norm = 1.0;
 	let icl_max = 2.0; //winter full
 	let d_icl = icl_max - icl_norm;
-	let dCav_icl = 3.0;//double layer icl
+	let dCav_icl = 3.0;//double layer cav
 	let CAV_icl = dCav_icl * ( icl - icl_norm ) / d_icl;
 	
 	
@@ -154,31 +157,17 @@ function WBGTrisk(wbgt, kb, isPersonalised ) {
 		return risk / 0.8; //scale to max 1
 	}
 	else if( risk <= 1.0 ){
-		//class = "orange";
+		//class = "yellow";
 		return 1 + (risk - 0.8)/0.2; //scale between 1 and 2
 	}
 	else if( risk <= 1.2 ){
-		//class = "red";
+		//class = "orange";
 		return 2 + (risk - 1.0)/0.2; //scale between 2 and 3
 	}
 	else{
-		//class = "darkred";
+		//class = "red";
 		return 3 + (risk - 1.2); //scale 3 and beyond		
 	}
-}
-
-// Are we still using these? (do they need translation)
-function neutralTips() {
-	let tips = [ "Enjoy your activity",
-				"Looks like it's all good",
-				"An apple a day keeps the doctor at bay",
-				"French minister names his cat 'Brexit' because: &quot;she meows loudly it wants to go out, but just stands there waiting when I open the door&quot;",
-				"Two atoms walk into a bar, one says: &quot;I just lost an electron&quot, the other replies: &quot;are you sure?&quot; ... &quot;yes, i'm positive!&quot",
-				"It doesn't matter what temperature the room is, it's always room temperature.",
-				"If you cannot measure it, you cannot improve it - Lord Kelvin",
-	];
-	let i = Math.floor( Math.random() * tips.length );
-	return tips[i];
 }
 
 function heatLevelTips( index, level, kb, pageID, translations, language){
@@ -203,7 +192,7 @@ function heatLevelTips( index, level, kb, pageID, translations, language){
 		var url = "https://www.sensationmapps.com/WBGT/api/thermaladvisor.php";
 		var riskval = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, true );		
 		var risklabel = gaugeTitleHeat( riskval, translations, language);
-		
+		//console.log( "retrieving heat level tips: " + JSON.stringify( data ) );
 		$.get( url, data).done( function(data, status, xhr){
 			if(status === "success") {
 				
@@ -227,10 +216,8 @@ function heatLevelTips( index, level, kb, pageID, translations, language){
 
 function indoorTips( kb, translations, language){
 	let str = "";
-
 	let pps = 100.0 - kb.thermalindices.pmv[ 0 ].PPD;
-	
-	str += "<p>"+pps.toFixed(0)+"% is satisfied with this indoor environment.</p>";
+	str += "<p>"+pps.toFixed(0) + translations.sentences.indoor_tips_ppd[language] +"</p>";
 	return str;
 }
 

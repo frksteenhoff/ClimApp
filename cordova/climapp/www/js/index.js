@@ -28,6 +28,7 @@ var app = {
 	selectedWeatherID: undefined,
 	maxForecast: undefined,
 	radialgauge: undefined,
+	showExpertLegend: undefined,
 
 	// Application Constructor
 	initialize: function () {
@@ -45,26 +46,6 @@ var app = {
 			showShortToast("Whoops... something went wrong at: " + lineNumber);
 		}
 		this.receivedEvent('deviceready');
-		/*
-		if( device.platform === "iOS"){
-			window.FirebasePlugin.hasPermission(function(data) { 
-				if( !data.isEnabled ){
-					window.FirebasePlugin.grantPermission();
-				}
-			});
-		}
-		window.FirebasePlugin.onNotificationOpen(function(notification) {
-			showShortToast( "Climapp has sent a notification: " + notification );
-			}, function(error) {
-		    console.error(error);
-		});
-		window.FirebasePlugin.onTokenRefresh(function(token) {
-		    // save this server-side and use it to push notifications to this device
-		    console.log(token);
-		}, function(error) {
-		    console.error(error);
-		});		
-		*/
 	},
 
 	// Update DOM on a Received Event
@@ -104,12 +85,16 @@ var app = {
 			self.translations = result;
 			self.loadSettings();
 			
+			/*
 			if (self.knowledgeBase.user.guards.isFirstLogin) {//onboarding
 				self.loadUI("onboarding");
 			}
 			else {
 				self.loadUI("home");
 			}
+			*/
+			
+			self.loadUI("home");
 			// Keeping track of how many time user has opened app, until count reaches 5
 			if (self.knowledgeBase.user.guards.appOpenedCount < 5) {
 				self.knowledgeBase.user.guards.appOpenedCount += 1;
@@ -119,7 +104,14 @@ var app = {
 				self.knowledgeBase.user.settings.level = 2;
 				showShortToast(self.translations.toasts.adv_user[self.language]); // Showing how to call translation text for toasts
 			}
-			self.updateLocation();
+			
+			if( !self.knowledgeBase.user.guards.customLocationEnabled ){
+				self.updateLocation();
+			}
+			else{
+				self.updateWeather();
+			}
+			
 		});
 	},
 	initNavbarListeners: function () {
@@ -133,16 +125,7 @@ var app = {
 			if ( self.firstTimeLoginWithoutPersonalization(target) ) {
 				showShortToast(self.translations.toasts.default_values[self.language]);
 			}
-			if( self.knowledgeBase.user.guards.isIndoor && target === "indoor"){
-				self.updateIndoorPrediction();
-			}
-			if( self.knowledgeBase.user.guards.isIndoor && target === "dashboard" ){
-				self.updateIndoorPrediction();
-			}
-			else{
-				self.loadUI(target);
-			}
-			
+			self.loadUI(target);
 		});
 	},
 	initErrorListeners: function() {
@@ -151,20 +134,8 @@ var app = {
 		$("div[data-listener='weather_error']").on("click", function () {
 			let target = $(this).attr("data-target");
 			self.updateLocation();
-
-			if (self.knowledgeBase.user.guards.isFirstLogin) {//onboarding
-				self.loadUI("onboarding");
-			}
-			else {
-				self.loadUI(target);
-			}
-		});
-	},
-	initToggleListeners: function () {
-		$("div[data-listener='toggle']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='toggle']").on("click", function () {
-			let target = $(this).attr("data-target");
-			$("#" + target).toggle();
+			self.loadUI(target);
+			
 		});
 	},
 	initPerceptionListeners: function(){
@@ -295,16 +266,16 @@ var app = {
 			window.SelectorCordovaPlugin.showSelector(config, function (result) {
 				if (["gender", "height", "weight", "unit"].includes(target)) {
 					self.knowledgeBase.user.settings[target] = items_[result[0].index].value;
-					self.saveSettings();
 					updateDBParam(self.knowledgeBase, target);
 
 				} else if(target === "age") {
 					// Set age based on year of birth
 					self.knowledgeBase.user.settings[target] = getAgeFromYearOfBirth(items_[result[0].index].value);
 					self.knowledgeBase.user.settings.yearOfBirth = items_[result[0].index].value;
-					self.saveSettings();
 					updateDBParam(self.knowledgeBase, target);
 				}
+				self.calcThermalIndices();
+				self.saveSettings();
 				console.log(target + ": " + items_[result[0].index].value);
 				self.updateUI();
 			}, function () {
@@ -350,7 +321,7 @@ var app = {
 				var accText = isChecked ? self.translations.toasts.acclimatized[self.language] : self.translations.toasts.not_acclimatized[self.language];
 				updateDBParam(self.knowledgeBase, "acclimatization");
 				showShortToast(accText);
-
+				self.updateUI();
 			} else if (target === "notification_switch") {
 				var isChecked = $(this).is(":checked");
 				self.knowledgeBase.user.guards.receivesNotifications = isChecked;
@@ -371,14 +342,20 @@ var app = {
 			var customText = "";
 			var isChecked = $(this).is(":checked");
 			if (target === "custom_location_switch") {
-				self.knowledgeBase.user.guards.customLocationEnabled = isChecked;
 				if (isChecked) {
 					self.knowledgeBase.user.guards.isIndoor = false;
 					customText = self.translations.toasts.location_enabled[self.language];
+					var [lat, lon] = getLocation(self.knowledgeBase);
+					$("#google_maps_elem").fadeIn(100, function(){
+						initMap(lat,lon, self.knowledgeBase);
+					});
 				} else {
 					customText = self.translations.toasts.location_disabled[self.language];
+					$("#google_maps_elem").fadeOut(100, function(){});
 					self.updateLocation();
 				}
+				self.knowledgeBase.user.guards.customLocationEnabled = isChecked;
+				
 			}
 			showShortToast(customText);
 			self.saveSettings();
@@ -396,8 +373,8 @@ var app = {
 	},
 	initIndoorListeners: function () {
 		var self = this;
-		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='wheel']").on("click", async function () {
+		$("div[data-listener='wheel'],div[data-context='indoor']").off(); //prevent multiple instances of listeners on same object
+		$("div[data-listener='wheel'],div[data-context='indoor']").on("click", async function () {
 			var target = $(this).attr("data-target");
 			let title_ = self.translations.wheels.settings[target].title[self.language];
 			var items_ = self.getSelectables(target);
@@ -414,11 +391,16 @@ var app = {
 			window.SelectorCordovaPlugin.showSelector(config, function (result) {
 				self.knowledgeBase.user.settings[target] = items_[result[0].index].value;
 				
-				if( target==="_temperature" ){ //update on callback - so user has feedback on action - also if DTU server is down.
-					$("#_temperature").html( self.knowledgeBase.user.settings[target] );
+				if( target==="_temperature" || target==="_humidity" ){ //update on callback - so user has feedback on action - also if DTU server is down.
+					$("#"+target).html( self.knowledgeBase.user.settings[target] );
+					self.calcThermalIndices();
+					self.updateUI();
+				}
+				else{
+					self.calcThermalIndices();
+					self.updateIndoorPrediction();
 				}
 				
-				self.updateIndoorPrediction();
 			}, function () {
 				console.log('Canceled');
 			});
@@ -462,56 +444,6 @@ var app = {
 			self.loadUI(target);
 		});
 	},
-	initDashboardSwipeListeners: function () {
-		var self = this;
-		$("div[data-listener='panel']").off(); //prevent multiple instances of listeners on same object
-		$("div[data-listener='panel']").on({
-			"swiperight": function () {
-				var target = $(this).attr("data-target");
-				//self.dashBoardSwipeHelper("right", target);
-			},
-			"swipeleft": function () {
-				var target = $(this).attr("data-target");
-				//self.dashBoardSwipeHelper("left", target);
-			}
-		});
-		$("#forecast_right").off().on("click", function () {
-			self.dashBoardSwipeHelper("left", "forecast");//right button is swipe left
-		});
-		$("#forecast_left").off().on("click", function () {
-			self.dashBoardSwipeHelper("right", "forecast");//left button is swipe right
-		});
-
-	},
-	dashBoardSwipeHelper: function (direction, target) {
-		var self = this;
-		console.log("selected weather id: " + this.selectedWeatherID);
-		if (direction === "right") {
-			if (target === "forecast") {
-				if (this.selectedWeatherID === 0) {
-					this.updateLocation();
-					$("#main_panel").fadeOut(2000, function () { });
-				}
-				else {
-					this.selectedWeatherID = Math.max(0, this.selectedWeatherID - 1);
-					$("#main_panel").fadeOut(500, function () {
-						self.updateInfo(self.selectedWeatherID, true );
-					});
-				}
-			} else {
-				this.loadUI(target);
-			}
-		}
-		else {
-			if (target === "forecast") {
-				this.selectedWeatherID = Math.min(this.maxForecast, this.selectedWeatherID + 1);
-				$("#main_panel").fadeOut(500, function () {
-					self.updateInfo( self.selectedWeatherID, true);
-				});
-			}
-		}
-
-	},
 	initActivityListeners: function () {
 		var self = this;
 		$("div[data-listener='wheel']").off(); //prevent multiple instances of listeners on same object
@@ -554,12 +486,15 @@ var app = {
 		$("div[data-listener='menu']").on("click", function () {
 			var target = $(this).attr("data-target");
 			var targetgroup = $(this).attr("data-targetgroup");
+			
+			//remove hide all targetgroup
 			$("div[data-menuitem='true']div[data-menugroup='"+targetgroup+"']").removeClass("hidden").addClass("hidden");
 			
-			if( $(this).hasClass("menufocus") ){
+
+			if( $(this).hasClass("menufocus") ){ //remove focus on which has focus
 				$("div[data-listener='menu']div[data-targetgroup='"+targetgroup+"']").removeClass("menufocus");	
 			}
-			else{
+			else{ //remove hidden on targetgroup (show - and give target focus)
 				$("div[data-listener='menu']div[data-targetgroup='"+targetgroup+"']").removeClass("menufocus");
 				$(this).addClass("menufocus");
 				$("#" + target).removeClass("hidden");
@@ -567,9 +502,6 @@ var app = {
 			
 			if( target === "selectutci" ){
 				if( self.knowledgeBase.thermalindices.utci.length == self.maxForecast ){
-					$("#selectwork").hide();
-					$("#selectmeasuresandhydration").hide();
-					$("#personalisation_item").hide();
 					self.knowledgeBase.user.settings.index = "UTCI";
 				}
 				else{
@@ -585,6 +517,16 @@ var app = {
 			else if( target === "selectchildren"){
 				self.currentProfile = "children";
 			}
+			else if( target === "selectindoor" ){
+				self.knowledgeBase.user.guards.isIndoor = true;
+			}
+			else if( target === "selectoutdoor"){
+				$("div[data-listener='wheel'],div[data-context='indoor']").off(); //stop listening for indoor events
+				self.knowledgeBase.user.guards.isIndoor = false;
+			}
+			else if( target === "ruleslegend" ){
+				self.showExpertLegend = !self.showExpertLegend;
+			}
 			else{
 				$("#selectwork").show();
 				$("#selectmeasuresandhydration").show();
@@ -594,6 +536,8 @@ var app = {
 			
 			if( targetgroup === "modelgroup" ||
 				targetgroup === "profilegroup" ||
+				targetgroup === "modegroup" ||
+				targetgroup === "rulesgroup" ||
 				targetgroup === "targetgroupgroup" ){
 				self.updateUI();
 			}
@@ -641,12 +585,12 @@ var app = {
 					/* Indoor mode */
 					"thermostat_level": 3,
 					"open_windows": 0,
-					"_temperature": 20, // indoor temperature
+					"_temperature": 21, // indoor temperature
 					"windspeed": 1, // 1 no_wind, 2 some_wind, 3 strong_wind
-					"_humidity": 0,
+					"_humidity": 50,
 
-					"temp_indoor_predicted": 0, // predicted indoor temp, false on error, otherwise double
-
+					"temp_indoor_predicted": 21, // predicted indoor temp, false on error, otherwise double
+					"humidity_indoor_predicted": 50, //humidity predicted
 					/* Custom location */
 					"coordinates_lon": 0,
 					"coordinates_lat": 0,
@@ -670,8 +614,8 @@ var app = {
 				}
 			},
 			/* --------------------------------------------------- */
-			"version": 2.07,
-			"app_version": "4.0.0", //cannot be beta - because it will be rejected by iOS then.
+			"version": 2.10,
+			"app_version": "5.0.2", //cannot be beta - because it will be rejected by iOS then.
 			"server": {
 				"dtu_ip": "http://climapp.byg.dtu.dk",
 				"dtu_api_base_url": "/ClimAppAPI/v2/ClimAppApi.php?apicall="
@@ -784,26 +728,11 @@ var app = {
 			"error": "./pages/error.html"
 		};
 		
+		this.showExpertLegend = false;
 		this.currentProfile = "personal";
-		//this.translations = getTranslations(); //check if it works from here	
 		this.selectedWeatherID = 0;
-		this.maxForecast = 8; //8x3h = 24h
+		this.maxForecast = 10; //8x3h = 24h
 		
-		//load clothing images
-		/*
-		var clos = [0.5, 0.8, 1.2, 1.6, 2.5];
-		this.clothingImages = [];
-		var self = this;
-		$.each( clos, function( index, value ){
-		 	// Create an image object. This is not attached to the DOM and is not part of the page.
-		    var image = new Image();
-		    // Now set the source of the image that we want to load
-		    image.src = clothingIcon( value );
-		    image.onload = function (e){
-				self.clothingImages.push( image );
-		    }
-		});
-		*/
 		var shadowKB = this.initKnowledgeBase();
 
 		this.language = this.getLanguage(navigator.language);
@@ -879,7 +808,7 @@ var app = {
 			shortenedLanguageIndicator = "no";
 		}
 
-		var availableLanguages = ['en', 'da', 'nl', 'sv', 'no', 'el', 'it', 'de', 'es', 'fr']; // list of all available languages, need to be updated manually
+		var availableLanguages = ['en', 'da', 'nl', 'sv', 'no', 'el', 'it', 'de', 'es', 'fr', 'et', 'ja']; // list of all available languages, need to be updated manually
 
 		if (availableLanguages.includes(shortenedLanguageIndicator)) {
 			return shortenedLanguageIndicator;
@@ -929,21 +858,14 @@ var app = {
 			obj_array.push({ description: this.translations.labels.str_male[this.language], value: 1 });
 		}
 		else if (key === "unit") {
-			obj_array.push({ description: "SI: kg, cm, m/s, &#8451;", value: "SI" });
-			obj_array.push({ description: "US: lbs, inch, m/s, &#x2109;", value: "US" });
-			obj_array.push({ description: "UK: stone, inch, m/s, &#8451;", value: "UK" });
+			obj_array.push({ description: "SI: kg, cm, m/s, Celsius", value: "SI" });
+			obj_array.push({ description: "US: lbs, inch, m/s, Fahrenheit;", value: "US" });
+			obj_array.push({ description: "UK: stone, inch, m/s, Celsius", value: "UK" });
 		}
 		else if (key === "windspeed") {
 			obj_array.push({ description: this.translations.wheels.windspeed.description.no_wind[this.language], value: 1 });
 			obj_array.push({ description: this.translations.wheels.windspeed.description.some_wind[this.language], value: 2 });
 			obj_array.push({ description: this.translations.wheels.windspeed.description.strong_wind[this.language], value: 3 });
-		}
-		// Is this being used anywhere?
-		else if (key === "radiation") {
-			obj_array.push({ description: "Shadow", value: "Shadow" });
-			obj_array.push({ description: "Halfshadow", value: "Halfshadow" });
-			obj_array.push({ description: "Direct sunlight", value: "Direct sunlight" });
-			obj_array.push({ description: "Extreme radiation", value: "Extreme radiation" });
 		}
 		else if (["activity", "clothing", "headgear"].includes(key)) {
 			var numElements = Object.keys(this.translations.wheels[key].label).length;
@@ -979,7 +901,7 @@ var app = {
 			}
 		}
 		else if (key === "_humidity") {
-			for (var i = 0; i <= 100; i += 10) {
+			for (var i = 0; i <= 100; i += 1) {
 				obj_array.push({ description: i + " %", value: i });
 			}
 		}
@@ -987,8 +909,10 @@ var app = {
 
 		/* INDOOR MODE */
 		else if (key === "thermostat_level") {
+			
+			var descriptions = ["--", "-","+/-","+","++"];
 			for (var i = 1; i <= 5; i++) {
-				obj_array.push({ description: ""+i, value: i });
+				obj_array.push({ description: i + ". (" + descriptions[i-1] +")", value: i });
 			}
 		}
 		// logic for windows in custom output section
@@ -1006,6 +930,11 @@ var app = {
 			function (position) { //on success
 				self.knowledgeBase.position.lat = position.coords.latitude;
 				self.knowledgeBase.position.lng = position.coords.longitude;
+				
+				//reset user position
+				self.knowledgeBase.user.settings.coordinates_lat = position.coords.latitude; 
+				self.knowledgeBase.user.settings.coordinates_lon = position.coords.longitude;
+	
 				self.knowledgeBase.position.timestamp = new Date(position.timestamp).toJSON();
 				console.log("loc found: " + position.coords.latitude + "," + position.coords.longitude);
 				self.saveSettings(); // ned to save before using coords in updateWeather
@@ -1134,7 +1063,6 @@ var app = {
 							}
 							catch (error) {
 								alert(error);
-								
 								console.log( error);
 							}
 						}).fail(function (e) {
@@ -1146,17 +1074,27 @@ var app = {
 			}); // Making code execution wait for app id retrieval
 		});
 	},
-	updateIndoorPrediction: async function(){
-		showShortToast("Updating indoor temperature prediction");
+	updateIndoorPrediction: async function(){		
 		$("#predicted_temperature").html('<i class="fas fa-spinner fa-spin"></i>');
+		$("#predicted_humidity").html('<i class="fas fa-spinner fa-spin"></i>');
+		var self = this;
+		var rh_indoor = this.getPredictedIndoorHumidity();
+		this.knowledgeBase.user.settings.humidity_indoor_predicted = rh_indoor;
+		
 		getIndoorPrediction(self.knowledgeBase).then((temp) => {
 			self.knowledgeBase.user.settings.temp_indoor_predicted = Number(temp);
-			$("#predicted_temperature").html( Math.floor( self.knowledgeBase.user.settings.temp_indoor_predicted ) );
-			self.calcThermalIndices();
+			rh_indoor = self.getPredictedIndoorHumidity();
+			self.knowledgeBase.user.settings.humidity_indoor_predicted = rh_indoor;
 			self.saveSettings();
 			self.updateUI();
 			//$("#indoorSection").show();
 		});
+	},
+	getPredictedIndoorHumidity: function(){
+		var vp_outdoor = this.knowledgeBase.weather.watervapourpressure[0];
+		var T_indoor = Number(self.knowledgeBase.user.settings.temp_indoor_predicted);
+		var vp_indoor = 0.1 * Math.exp(18.965 - 4030 / (T_indoor + 235));
+		return rh_indoor = Math.round( vp_outdoor / ( 0.01 * vp_indoor ) );
 	},
 	getWindspeedTextFromValue: function (val) {
 		self = this;
@@ -1261,6 +1199,7 @@ var app = {
 			}
 		};
 		
+		
 		var self = this;
 		$.each(this.knowledgeBase.weather.temperature, function (index, val) {
 			options.air = {
@@ -1278,9 +1217,9 @@ var app = {
 			var ireq = heatindex.IREQ.current_result();
 			
 			var ireq_object = {
-				"ICLminimal": Math.max( 0.1, ireq.ICLminimal ),//always wear something due to social constraint
+				"ICLminimal": Math.max( 0.05, ireq.ICLminimal ),//always wear something due to social constraint
 				"DLEminimal": ireq.DLEminimal,
-				"ICLneutral": Math.max( 0.2, ireq.ICLneutral ),//always wear something due to social constraint - little more than minimal for math reasons.
+				"ICLneutral": Math.max( 0.1, ireq.ICLneutral ),//always wear something due to social constraint - little more than minimal for math reasons.
 				"DLEneutral": ireq.DLEneutral,
 				"M": options.body.M,
 				"Icl": options.cloth.Icl,
@@ -1314,7 +1253,7 @@ var app = {
 			var phs = heatindex.PHS.current_result();
 			
 			var phs_object = {
-				"D_Tre": phs.D_Tre,
+				"D_Tre": Math.min(self.knowledgeBase.sim.duration, isNaN(phs.D_Tre) ? Infinity : phs.D_Tre ),
 				"Dwl50": phs.Dwl50,
 				"SWtotg": phs.SWtotg,
 				"M": options.body.M,
@@ -1343,8 +1282,9 @@ var app = {
 			//let wvp = 0.1 * (val * 0.01) * Math.exp(18.965 - 4030 / (T + 235));
 			var vp_outdoor = self.knowledgeBase.weather.watervapourpressure[index];
 			var T_indoor = Number(self.knowledgeBase.user.settings._temperature);
-			var vp_indoor = 0.1 * Math.exp(18.965 - 4030 / (T_indoor + 235));
-			var rh_indoor = Math.round( vp_outdoor / ( 0.01 * vp_indoor ) );
+			var rh_indoor = Number(self.knowledgeBase.user.settings._humidity);
+			
+			
 		
 			var v_indoor = self.knowledgeBase.user.settings.open_windows ? 0.25 * self.knowledgeBase.weather.windspeed[index] : 0.1;
 			options.air = {
@@ -1391,18 +1331,29 @@ var app = {
 		$(".navigation_back_settings").hide();
 		$(".navigation_back_dashboard").hide();
 		$(".navigation_back_custom").hide();
-		$("#google_maps_elem").hide();
+		
 		var self = this;
+		
+		if( this.currentPageID !== "location"){
+			$("#google_maps_elem").hide();	
+		}
+		else if( this.knowledgeBase.user.guards.customLocationEnabled ){ //location screen and enabled
+			var [lat, lon] = getLocation(self.knowledgeBase);
+			$("#google_maps_elem").fadeIn(100, function(){
+				initMap(lat,lon, self.knowledgeBase);
+			});
+		}
+
 
 		if (this.currentPageID == "onboarding") {
+			/*
 			$(".navigation").hide();
 
 			// Setting page content
 			$("#str_welcome").html(this.translations.labels.str_welcome[this.language]);
-			$("#onboarding_to_settings").html(this.translations.sentences.onboarding_to_settings[this.language]);			
-			$("#str_settings").html(this.translations.labels.str_settings[this.language]);
 			$("#onboarding_to_dashboard").html(this.translations.sentences.onboarding_to_dashboard[this.language]);			
 			$("#str_dashboard").html(this.translations.labels.str_dashboard[this.language]);
+			*/
 		}
 		else if( this.currentPageID == "home" ){
 			$(".navigation").show();
@@ -1416,20 +1367,20 @@ var app = {
 			
 			
 			//set the climapp icon
-			var icon = "<i class='fas fa-male fa-5x'></i>";
+			var icon = "<i class='fas fa-male fa-3x'></i>";
 			var icon_small = "<i class='fas fa-male fa-2x'></i>";
 			if( this.currentProfile === "personal" ){
 				if( this.knowledgeBase.user.settings.gender === 0 ){
-					icon = "<i class='fas fa-female fa-5x'></i>";
+					icon = "<i class='fas fa-female fa-3x'></i>";
 					icon_small = "<i class='fas fa-female fa-2x'></i>";
 				}
 			}
 			else if ( this.currentProfile === "seniors" ){
-				icon = "<i class='fas fa-blind fa-5x'></i>";
+				icon = "<i class='fas fa-blind fa-3x'></i>";
 				icon_small = "<i class='fas fa-blind fa-2x'></i>";
 			}
 			else if ( this.currentProfile === "children" ){
-				icon = "<i class='fas fa-child fa-5x'></i>";
+				icon = "<i class='fas fa-child fa-3x'></i>";
 				icon_small = "<i class='fas fa-child fa-2x'></i>";
 			}
 			$("#climapp_icon").html( icon );
@@ -1450,12 +1401,17 @@ var app = {
 				$("#dashboard_header").show();
 				$("#navbar-location").hide();
 				$("#home_forecastcontainer").hide();
+				$("#windspeedcontainer").hide();
+				
+				this.initIndoorListeners();
+				
 				this.updateIndoor();
 			}
 			else{
 				$("#navbar-location").show();
 				$("#dashboard_header").show();
 				$("#home_forecastcontainer").show();
+				$("#windspeedcontainer").show();
 				
 				this.updateInfo( this.selectedWeatherID, false );
 				
@@ -1484,6 +1440,47 @@ var app = {
 			$("#str_personal").html( this.translations.labels.str_personal[this.language] );
 			$("#str_group").html( this.translations.labels.str_group[this.language] );
 			
+			$("#str_menu_measures").html(this.translations.labels.str_menu_measures[this.language]);
+			$("#str_menu_hydration").html(this.translations.labels.str_menu_hydration[this.language]);	
+			
+			
+			/*select mode*/
+			$("#str_mode").html(this.translations.labels.str_indoor_outdoor_mode[this.language]);
+			$("#str_outdoor").html(this.translations.labels.str_outdoor[this.language]);
+			$("#str_indoor").html(this.translations.labels.str_indoor[this.language]);
+			
+			
+			$("#str_select_outdoor").html(this.translations.sentences.str_select_outdoor[this.language]);
+			$("#str_select_indoor").html(this.translations.sentences.str_select_indoor[this.language]);
+			
+			$("#str_user_values").html(this.translations.sentences.str_user_values[this.language]);
+			$("#str_predicted_values").html(this.translations.sentences.str_predicted_values[this.language]);
+			
+			
+
+			var windowsOpen = this.knowledgeBase.user.settings.open_windows ? this.translations.labels.str_yes[this.language] : this.translations.labels.str_no[this.language];
+			// Setting page content
+			$("#str_temperature").html(this.translations.labels.str_indoor_temperature[this.language]);
+			$("#str_humidity").html(this.translations.labels.str_humidity[this.language]);
+			$("#indoor_open_windows").html(this.translations.labels.indoor_open_windows[this.language]);
+			
+			$("#str_thermostat").html(this.translations.labels.str_thermostat[this.language]);
+			$("#str_temperature_predicted").html(this.translations.labels.str_temperature[this.language]);
+			$("#str_humidity_predicted").html(this.translations.labels.str_humidity[this.language]);
+	
+
+			// Values
+			$("#thermostat_level").html(this.knowledgeBase.user.settings.thermostat_level);
+			
+			var tempUnit = this.knowledgeBase.user.settings.unit === "US" ? "&#176;F" : "&#176;C";
+			$("#_temperature").html( this.knowledgeBase.user.settings._temperature  + tempUnit);
+			$("#_humidity").html(this.knowledgeBase.user.settings._humidity + " %");
+			$("#open_windows").html(windowsOpen);
+			
+			$("#predicted_temperature").html( Math.floor( self.knowledgeBase.user.settings.temp_indoor_predicted )  + tempUnit);
+			$("#predicted_humidity").html( Math.floor( self.knowledgeBase.user.settings.humidity_indoor_predicted )  + " %");
+			
+			/*select profile */
 			$("#str_select_myself").html( this.translations.sentences.str_select_myself[this.language] );
 			
 			$("#str_elderly").html( this.translations.labels.str_elderly[this.language] );
@@ -1493,6 +1490,7 @@ var app = {
 			$("#str_select_seniors").html( this.translations.sentences.str_select_seniors[this.language] );
 			$("#str_select_children").html( this.translations.sentences.str_select_children[this.language] );
 			
+			/*customisation*/
 			$("#str_customisation").html( this.translations.labels.str_customisation[this.language] );
 			
 			$("#str_activity").html(this.translations.labels.str_activity[this.language]);
@@ -1504,6 +1502,10 @@ var app = {
 			$("#str_perception_general_1").html(this.translations.sentences.str_perception_general_1[this.language]);
 			$("#str_perception_general_2").html(this.translations.sentences.str_perception_general_2[this.language]);
 			
+			$("#perception_colder").html( this.translations.labels.str_colder[this.language] );
+			$("#perception_justright").html( this.translations.labels.str_just_right[this.language] );
+			$("#perception_warmer").html( this.translations.labels.str_warmer[this.language] );
+
 			
 			$("#str_activity_level").html(this.translations.labels.str_activity_level[this.language]);
 			$("#str_clothing_level").html(this.translations.labels.str_clothing_level[this.language]);
@@ -1528,9 +1530,7 @@ var app = {
 			this.initActivityListeners();
 			
 			this.initMenuListeners();
-			
-			this.initToggleListeners();
-			
+						
 			this.updateMenuItems();
 			
 			if (this.knowledgeBase.user.guards.isIndoor) {
@@ -1552,8 +1552,6 @@ var app = {
 				console.log( "updateUI => dashboard updateInfo");
 				this.updateInfo(this.selectedWeatherID, true );
 				console.log( "updateUI => dashboard updateInfo done");
-				
-				
 			}
 			
 			console.log( "updateUI => dashboard indoorOutdoorMode");
@@ -1563,6 +1561,31 @@ var app = {
 			// Set dashboard content using translations sheet
 			$("#str_weather_report").html(this.translations.labels.str_weather_report[this.language]);
 			$("#str_forecast_disclaimer").html(this.translations.sentences.str_forecast_disclaimer[this.language]);
+			
+			if( this.knowledgeBase.user.settings.index === "Climapp" ){
+				$("#plot_legend").show();
+				$("#str_climapp_legend").html(this.translations.sentences.str_climapp_legend[this.language]);
+				
+				if( this.showExpertLegend ){
+					$("#str_hide_helper_lines").html(this.translations.sentences.str_hide_helper_lines[this.language]);
+					$("#str_show_helper_lines").hide();
+					$("#str_hide_helper_lines").show();
+										
+					$("#str_ireq_legend").html(this.translations.sentences.str_ireq_legend[this.language]);
+					$("#str_wbgt_legend").html(this.translations.sentences.str_wbgt_legend[this.language]);
+				}
+				else{
+					$("#str_show_helper_lines").html(this.translations.sentences.str_show_helper_lines[this.language]);
+					$("#str_show_helper_lines").show();
+					$("#str_hide_helper_lines").hide();
+				}
+				
+			}
+			else{
+				$("#plot_legend").hide();
+			}
+			
+			
 			$("#indoor_outdoor").html(indoorOutdoorMode);
 			
 			$("#str_activity_level").html(this.translations.labels.str_activity_level[this.language]);
@@ -1571,11 +1594,7 @@ var app = {
 			$("#str_clothing").html(this.translations.labels.str_clothing[this.language]);
 			$("#str_headgear").html(this.translations.labels.str_headgear[this.language]);
 			//$("#head_gear").html(this.translations.labels.str_headgear[this.language]);
-				
-			
-			$("#str_menu_measures").html(this.translations.labels.str_menu_measures[this.language]);
-			$("#str_menu_hydration").html(this.translations.labels.str_menu_hydration[this.language]);	
-			
+
 			var index = this.selectedWeatherID;
 			console.log( "updateUI => dashboard updateDetails");
 			
@@ -1603,7 +1622,6 @@ var app = {
 		else if (this.currentPageID == "feedback") {
 			$(".navigation").hide();
 			$(".navigation_back_settings").show();
-			this.initToggleListeners();
 			this.initFeedbackListeners();
 			this.knowledgeBase.user.guards.feedbackSliderChanged = 0;
 
@@ -1670,19 +1688,19 @@ var app = {
 			// Setting page content
 			$("#str_era4cs").html(this.translations.labels.str_era4cs[this.language]);
 			$("#about_read_more").html(this.translations.sentences.about_read_more[this.language]);
-			$("#about_acknowledge_infographics").html(this.translations.sentences.about_acknowledge_infographics[this.language]);
-			$("#about_acknowledge_liljegren").html(this.translations.sentences.about_acknowledge_liljegren[this.language]);
-		
-			$("#about_acknowledge_flaticon").html(this.translations.sentences.about_acknowledge_flaticon[this.language]);
-			$("#about_acknowledge_fontawesome").html(this.translations.sentences.about_acknowledge_fontawesome[this.language]);
-			
-			$("#about_acknowledge_human_heat_exchange").html(this.translations.sentences.about_acknowledge_human_heat_exchange[this.language]);
-			$("#about_acknowledge_openweathermap").html(this.translations.sentences.about_acknowledge_openweathermap[this.language]);
-			$("#acknowledgement_utci").html(this.translations.sentences.acknowledgement_utci[this.language]);
-			$("#about_josh_foster").html(this.translations.sentences.about_josh_foster[this.language]);
-			$("#about_nick_ravanelli").html(this.translations.sentences.about_nick_ravanelli[this.language]);
 			$("#about_climapp_team").html(this.translations.sentences.about_climapp_team[this.language]);	
 			
+			$("#str_cred").html(this.translations.labels.str_cred[this.language]);
+			$("#about_acknowledge_human_heat_exchange").html(this.translations.sentences.about_acknowledge_human_heat_exchange[this.language]);
+			$("#acknowledgement_utci").html(this.translations.sentences.acknowledgement_utci[this.language]);
+			$("#about_acknowledge_liljegren").html(this.translations.sentences.about_acknowledge_liljegren[this.language]);
+			
+			$("#about_acknowledge_openweathermap").html(this.translations.sentences.about_acknowledge_openweathermap[this.language]);
+			$("#about_josh_foster").html(this.translations.sentences.about_josh_foster[this.language]);
+			$("#about_nick_ravanelli").html(this.translations.sentences.about_nick_ravanelli[this.language]);
+			$("#about_acknowledge_infographics").html(this.translations.sentences.about_acknowledge_infographics[this.language]);
+			$("#about_acknowledge_fontawesome").html(this.translations.sentences.about_acknowledge_fontawesome[this.language]);
+
 			$("#str_app_info").html(this.translations.labels.str_app_info[this.language]);
 			
 			$("#app_version").html(this.translations.labels.str_app_version[this.language] + ": " + this.knowledgeBase.app_version);
@@ -1700,15 +1718,7 @@ var app = {
 			$("#disclaimer_privacy_policy").html(this.translations.sentences.disclaimer_privacy_policy[this.language]);
 		}
 		else if (this.currentPageID == "location") {
-			//$("#custom_location_switch").show();
-			$("#google_maps_elem").fadeIn(100, function(){
-				var [lat, lon] = getLocation(self.knowledgeBase);
-				initMap(lat,lon, self.knowledgeBase);
-			});
-			//$("#customLocationSection").show();
-			//$(".navigation_back_custom").hide();
-			//$("#coordinates").html("lat: " + this.knowledgeBase.user.settings.coordinates_lat.toFixed(2) + ", lon: " + this.knowledgeBase.user.settings.coordinates_lon.toFixed(2));
-			//$("#choose_location").html(this.translations.labels.str_choose_location[this.language]);
+
 			$("#str_custom_location").html(this.translations.labels.str_custom_location[this.language]);
 			$("#str_input_custom_location").html(this.translations.labels.str_input_custom_location[this.language]);
 			//$("#str_location").html(this.translations.labels.str_location[this.language]);
@@ -1768,6 +1778,25 @@ var app = {
 			$("#str_climapp_id").html(this.translations.labels.str_climapp_id[this.language]);
 			$("#climapp_id").html( deviceID() );
 			$("#str_submit_research_data_point").html(this.translations.labels.str_submit_research_data_point[this.language]);
+			
+			
+			var feedbacklinks = {'en': "https://docs.google.com/forms/d/e/1FAIpQLScDAzUO-5J8foAquRDSBiRc5vNPt7hMKcLg-NXXcx_68lWOwQ/viewform", 
+								'da': "https://docs.google.com/forms/d/e/1FAIpQLSdA1CpZFsZyXJRovENqCM1ioavephEtrssOeR70gxVY0krexA/viewform", 
+								'nl': "https://docs.google.com/forms/d/e/1FAIpQLSfBVqKBDmOEJJy_Yl9dQbjmswaz4fDNhAcow-q_yRuhhNaUPg/viewform", 
+								'sv': "https://docs.google.com/forms/d/e/1FAIpQLSepcKUb65uTmXTQ4I_98ks8CjE9wFONLunKjZgi7Tvj_v-VHA/viewform", 
+								'no': "https://docs.google.com/forms/d/e/1FAIpQLScDAzUO-5J8foAquRDSBiRc5vNPt7hMKcLg-NXXcx_68lWOwQ/viewform", 
+								'el': "https://docs.google.com/forms/d/e/1FAIpQLScDAzUO-5J8foAquRDSBiRc5vNPt7hMKcLg-NXXcx_68lWOwQ/viewform", 
+								'it': "https://docs.google.com/forms/d/e/1FAIpQLScDAzUO-5J8foAquRDSBiRc5vNPt7hMKcLg-NXXcx_68lWOwQ/viewform", 
+								'de': "https://docs.google.com/forms/d/e/1FAIpQLScDAzUO-5J8foAquRDSBiRc5vNPt7hMKcLg-NXXcx_68lWOwQ/viewform", 
+								'es': "https://docs.google.com/forms/d/e/1FAIpQLScDAzUO-5J8foAquRDSBiRc5vNPt7hMKcLg-NXXcx_68lWOwQ/viewform", 
+								'fr': "https://docs.google.com/forms/d/e/1FAIpQLScDAzUO-5J8foAquRDSBiRc5vNPt7hMKcLg-NXXcx_68lWOwQ/viewform", 
+								'et': "https://docs.google.com/forms/d/e/1FAIpQLScDAzUO-5J8foAquRDSBiRc5vNPt7hMKcLg-NXXcx_68lWOwQ/viewform", 
+								'ja': "https://docs.google.com/forms/d/e/1FAIpQLScDAzUO-5J8foAquRDSBiRc5vNPt7hMKcLg-NXXcx_68lWOwQ/viewform" };
+			var str = this.translations.sentences.str_feedback_app_link[this.language];
+			var url = feedbacklinks[this.language];
+			str += "<br> <a href='"+url+"' target='_blank'>"+this.translations.labels.str_questionnaire[this.language]+"</a>";
+			$("#str_feedback_app_link").html( str );
+			
 		}
 	},
 	updateMenuItems: function () {
@@ -1914,8 +1943,9 @@ var app = {
 
 				var windchill = this.knowledgeBase.thermalindices.phs[index].windchill.toFixed(1);
 		
-				let M = this.knowledgeBase.thermalindices.phs[index].M.toFixed(0);
-				let A = BSA(this.knowledgeBase).toFixed(1);
+				var M = this.knowledgeBase.thermalindices.phs[index].M.toFixed(0);				
+				
+				var A = BSA(this.knowledgeBase).toFixed(1);
 
 				let Icl = (0.155 * this.knowledgeBase.thermalindices.phs[index].Icl);
 				Icl = Icl.toFixed(3);
@@ -2056,12 +2086,12 @@ var app = {
 	calculateColdIndex: function( icl_neutral, icl_min, icl_worn, isPersonalised ){
 		var value = 0;
 		if( icl_worn < icl_min ){
-			value = 1 +  icl_min - icl_worn;
+			value = 1 +  icl_min - icl_worn; //values are switched sign in representation (i.e. +1, becomes -1 in the graph)
 		}
 		else if( icl_worn <= icl_neutral ){
 			var range = icl_neutral - icl_min;
-			var x = icl_worn - icl_min;
-			value = -1 + x/range;
+			var x = icl_worn - icl_min; //reference from icl_min
+			value = 1 - x/range;
 		}
 		else if( icl_worn > icl_neutral ){
 			value = -Math.min( 4, icl_worn - icl_neutral ); // negative cold index = positive heat balance
@@ -2165,18 +2195,17 @@ var app = {
 	updateIndoor: function(){
 		$("#peak_container").hide();
 		$("#nadir_container").hide();
-		
 		$("#station").html( this.knowledgeBase.weather.station );
 		$("#temperature").html(getTemperatureValueInPreferredUnit(this.knowledgeBase.user.settings._temperature, this.knowledgeBase.user.settings.unit) );
 		$("#temp_unit").html(getTemperatureUnit(this.knowledgeBase.user.settings.unit));
 		
 		$("#humidity_value").html(this.knowledgeBase.user.settings._humidity);
 		$("#windspeed").html(this.getWindspeedTextFromValue(this.knowledgeBase.user.settings.windspeed));
-		$("#open_windows").html(this.knowledgeBase.user.settings.open_windows);
+		//$("#open_windows").html(this.knowledgeBase.user.settings.open_windows);
 		
 		// Remove weather indication from dashboard // substitute with windows open/close
-        $("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
-		$("#weather_desc").html(this.knowledgeBase.user.settings.open_windows ? this.translations.labels.indoor_open_windows[this.language] : this.translations.labels.indoor_no_open_windows[this.language]);
+        //$("#icon-weather").removeClass().addClass("fab").addClass("fa-windows");
+		//$("#weather_desc").html(this.knowledgeBase.user.settings.open_windows ? this.translations.labels.indoor_open_windows[this.language] : this.translations.labels.indoor_no_open_windows[this.language]);
 	
 	
 		//time and location
@@ -2195,6 +2224,7 @@ var app = {
 		var currentlabel = pmv <= 0 ? gaugeTitleCold(-pmv, this.translations, this.language) : gaugeTitleHeat( pmv, this.translations, this.language );
 		$("#current_label").html( currentlabel );
 		
+		
 		var tiphtml = indoorTips( this.knowledgeBase, this.translations, this.language );
 		
 		$("#climapp_icon").css('color', getCurrentGaugeColor( pmv ) );
@@ -2207,6 +2237,24 @@ var app = {
 		}
 		
 		$("#advise_current").html( tiphtml );
+		
+		var infocards = "";
+		var self = this;
+		if( pmv > 1 && this.currentProfile === "personal" ){
+			info_indices = [1,2];
+			$.each( info_indices, function(key, ind){
+				infocards += "<div class='even'><img src='./img/infographics/"+self.language+"/Workers/Workers_Box"+ind+".png'/></div>";
+			} );
+			
+			//higher than moderate activity level
+			var ISO_selected = this.knowledgeBase.user.settings.activity_selected;
+			
+			if( this.knowledgeBase.activity.values[ ISO_selected ].val > 300 ){ 
+				infocards += "<div class='even'><img src='./img/infographics/"+self.language+"/Experts/HSExperts_Box4.png'/></div>";
+			}
+		}
+		console.log( infocards );
+		$("#measure_info_cards").html( infocards );
 		
 		var thermal = pmv >= 0 ? "heat" : "cold";
 				
@@ -2224,8 +2272,8 @@ var app = {
 		
 	
 		var personal_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, true );
-		var model_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, false );			
-		
+		var model_heat_index = WBGTrisk( kb.thermalindices.phs[index].wbgt, kb, false );	
+			
 		var pmv_index = kb.thermalindices.pmv[index].PMV;
 		
 		var isIndoor = this.knowledgeBase.user.guards.isIndoor;
@@ -2273,14 +2321,14 @@ var app = {
 	},
 	*/
 	isDrawHeatGauge: function (cold, heat, index) {
-		return heat > 1.0 || this.knowledgeBase.thermalindices.phs[index].Tair > 14.5; //based on wbgt effective we enter first risk category
+		return heat > 0.8; //based on wbgt effective we enter first risk category
 	},
 	determineThermalIndexValue: function (cold, heat, index, isIndoor) {
 		if( isIndoor ){
 			return cold; //return pmv value 
 		}
 		else{
-			var value = this.isDrawHeatGauge(cold, heat, index) ? heat : -cold;
+			var value = this.isDrawHeatGauge(cold, heat, index) ? heat : -cold; //mirror cold over x-axis such that y=1 projects to y=-1
 		}
 		return Math.max(-4, Math.min(4, value));//value between -4 and +4
 	},
@@ -2343,36 +2391,47 @@ var app = {
 					$("#circle_gauge_color").css("color", getCurrentGaugeColor(modelvalue));
 					$("#main_panel").fadeIn(500);
 					
+					var infocards = "";
+					var info_indices = [];
+					
+					
+					if( this.currentProfile === "personal" && thermal === "heat" && modelvalue > 1 ){
+						
+						//hot weather - plan ahead
+						if( modelvalue >= 2 ){ 
+							infocards += "<div class='even'><img src='./img/infographics/"+this.language+"/Experts/HSExperts_Box1.png'/></div>";
+						}
+						
+						//sweat - g/min
+						var sweatrate = this.knowledgeBase.thermalindices.phs[index].SWtotg / this.knowledgeBase.sim.duration;
+						if( sweatrate > 4 ){ 
+							infocards += "<div class='even'><img src='./img/infographics/"+this.language+"/Experts/HSExperts_Box3.png'/></div>";
+						}
+						
+						//higher than moderate activity level
+						var ISO_selected = this.knowledgeBase.user.settings.activity_selected;
+						if( this.knowledgeBase.activity.values[ ISO_selected ].val > 300 ){ 
+							infocards += "<div class='even'><img src='./img/infographics/"+self.language+"/Experts/HSExperts_Box4.png'/></div>";
+						}
+
+						//CAF > 0
+						if( getCAF(this.knowledgeBase ) > 0 ){
+							infocards += "<div class='even'><img src='./img/infographics/"+this.language+"/Experts/HSExperts_Box5.png'/></div>";
+						}
+					}
+					
+					$("#measure_info_cards").html( infocards );
+					
 					
 					$("div[data-listener='menu']div[data-targetgroup='modelgroup']").removeClass("menufocus");	
 					if( this.knowledgeBase.user.settings.index === "Climapp" ){
 						$("#tabclimapp").addClass("menufocus");
-				
 						$("#selectwork").show();
-						if( thermal === "heat" ){
-							$("#selectmeasuresandhydration").show();
-						}
-						else{
-							$("#selectmeasuresandhydration").hide();
-						}
-						
-						$("#personalisation_item").show();
 					}
 					else{
 						$("#tabutci").addClass("menufocus");
 						$("#selectwork").hide();
-						$("#selectmeasuresandhydration").hide();
-						$("#personalisation_item").hide();
 					}
-					
-					// Giving the user an introduction of the dashbord on first login
-					/*
-					if (!this.knowledgeBase.user.guards.introductionCompleted) {
-						startIntro(this.translations, this.language);
-						this.knowledgeBase.user.guards.introductionCompleted = 1;
-						this.saveSettings();
-					}
-					*/
 
 				});
 			
@@ -2618,8 +2677,7 @@ var app = {
 				self.updateUTCI(index+1);
 			}
 		}).fail(function (e) {
-			console.log("Failed humanheat.exchange: " + JSON.stringify(e));
-				
+			console.log("Failed humanheat.exchange: " + JSON.stringify(e));	
 		});
 	},
 	convertWeatherToChartData: function ( thermal ) {
@@ -2627,15 +2685,18 @@ var app = {
 		if( this.knowledgeBase.user.settings.index === "Climapp" ){
 			data = {
 				"labels": [],
-				"values": { "points": [] },//
+				"values": { "points": [],
+				 			"cold": [],
+							"heat": [],
+							"phs": []},//
 				"ymin": 99999,
 				"ymax": -9999,
 			};
 			var icl_worn = getClo(this.knowledgeBase);
 			for (var i = 0; i < this.maxForecast; i++) {				
 				//hot index
-				var wbgt_max = this.knowledgeBase.thermalindices.phs[i].wbgt_max;
-				var wbgt_risk_category = WBGTrisk(wbgt_max, this.knowledgeBase);
+				var wbgt = this.knowledgeBase.thermalindices.phs[i].wbgt;
+				var wbgt_risk_category = WBGTrisk(wbgt, this.knowledgeBase);
 				//cold index
 				var icl_min = this.knowledgeBase.thermalindices.ireq[i].ICLminimal;
 				var icl_neutral = this.knowledgeBase.thermalindices.ireq[i].ICLneutral;
@@ -2643,13 +2704,32 @@ var app = {
 				
 				var value = this.determineThermalIndexValue( cold_index, wbgt_risk_category, i, false );
 				
+				var phs_index = 120 / this.knowledgeBase.thermalindices.phs[i].D_Tre;
+				
 				var item = {
 					x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
 					y: 1.0 * value//lower limit of green
 				};
 				
+				var item_cold = {
+					x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
+					y: 1.0 * -cold_index//mirror on x-axis cold index such that y=1 projects on y=-1
+				};
+				
+				var item_heat = {
+					x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
+					y: 1.0 * wbgt_risk_category//lower limit of green
+				};
+				var item_phs = {
+					x: new Date(this.knowledgeBase.thermalindices.phs[i].utc).toJSON(),
+					y: 1.0 * phs_index//lower limit of green
+				};
+				
 				data.labels.push(item.x);
 				data.values.points.push(item);	
+				data.values.cold.push(item_cold);	
+				data.values.heat.push(item_heat);	
+				data.values.phs.push(item_phs);	
 				data.ymin = Math.min(data.ymin, 1.0 * value);
 				data.ymax = Math.max(data.ymax, 1.0 * value);
 				
@@ -2692,7 +2772,7 @@ var app = {
 		}
 		
 		var data = this.convertWeatherToChartData( thermal );
-
+		//console.log( "drawChart - data: " + JSON.stringify(data) );
 		
 		var x_from = data.labels[0];
 		var x_to = data.labels[data.labels.length - 1];
@@ -2708,8 +2788,9 @@ var app = {
 		 
 		if( this.knowledgeBase.user.settings.index === "Climapp" ){
 			max_y = red_y;
-			min_y = Math.ceil( Math.min( -4, data.ymin - 1));	
-			levels = [	{
+			min_y = Math.ceil( Math.min( -4, data.ymin - 1));
+			
+			levels.push( {
 								label: "climapp index",
 								backgroundColor: 'rgba(255,255,255,0.3)',
 								borderColor: 'rgba(255,255,255,1)',
@@ -2717,10 +2798,35 @@ var app = {
 								fill: false,
 								data: data.values.points,
 								cubicInterpolationMode: 'monotone',
-								pointRadius: 5,
-								pointHoverRadius: 20
-							},
-							{
+								pointRadius: 0,
+								pointHoverRadius: 0
+							} );
+			if( this.showExpertLegend ){
+				levels.push( {
+								label: "cold",
+								backgroundColor: 'rgba(0,0,255,0.3)',
+								borderColor: 'rgba(0,0,255,1)',
+								borderWidth: 4,
+								fill: false,
+								data: data.values.cold,
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0,
+								pointHoverRadius: 0
+							});
+				levels.push( {
+								label: "heat",
+								backgroundColor: 'rgba(255,0,0,0.3)',
+								borderColor: 'rgba(255,0,0,1)',
+								borderWidth: 4,
+								fill: false,
+								data: data.values.heat,
+								cubicInterpolationMode: 'monotone',
+								pointRadius: 0,
+								pointHoverRadius: 0
+							} );
+			}
+			
+			levels.push( {
 								label: "red",
 								backgroundColor: 'rgba(180,0,0,.5)',
 								borderColor: 'rgba(180,0,0,1)',
@@ -2730,8 +2836,9 @@ var app = {
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
-							},
-							{
+						} );
+						
+			levels.push( {
 								label: "orange",
 								backgroundColor: 'rgba(255,125,0,.5)',
 								borderColor: 'rgba(255,125,0,1)',
@@ -2741,8 +2848,8 @@ var app = {
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
-							},
-							{
+						} );
+			levels.push( {
 								label: "yellow",
 								backgroundColor: 'rgba(255,255,0,.5)',
 								borderColor: 'rgba(255,255,0,1)',
@@ -2752,8 +2859,8 @@ var app = {
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
-							},
-							{
+						} );
+			levels.push( {
 								label: "green",
 								backgroundColor: 'rgba(0,255,0,.5)',
 								borderColor: 'rgba(0,255,0,1)',
@@ -2763,8 +2870,8 @@ var app = {
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
-							},
-							{
+						} );
+			levels.push( {
 								label: "cyan",
 								backgroundColor: 'rgba(0,180,180,.5)',
 								borderColor: 'rgba(0,180,180,1)',
@@ -2774,8 +2881,8 @@ var app = {
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
-							},
-							{
+						} );
+			levels.push( {
 								label: "blue",
 								backgroundColor: 'rgba(0,100,255,.5)',
 								borderColor: 'rgba(0,100,255,1)',
@@ -2785,8 +2892,8 @@ var app = {
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
-							},
-							{
+						} );
+			levels.push( {
 								label: "darkblue",
 								backgroundColor: 'rgba(0,0,180,.5)',
 								borderColor: 'rgba(0,0,180,1)',
@@ -2796,8 +2903,8 @@ var app = {
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
-							},
-							{
+						} );
+			levels.push( {
 								label: "darkblue_min",
 								backgroundColor: 'rgba(0,0,180,.5)',
 								borderColor: 'rgba(0,0,180,1)',
@@ -2807,9 +2914,7 @@ var app = {
 								cubicInterpolationMode: 'monotone',
 								pointRadius: 0,
 								pointHoverRadius: 0
-							}
-			];	
-			
+						} );
 		}
 		else{//UTCI
 						
@@ -2824,8 +2929,8 @@ var app = {
 								fill: false,
 								data: data.utci.points,
 								cubicInterpolationMode: 'monotone',
-								pointRadius: 5,
-								pointHoverRadius: 20
+								pointRadius: 0,
+								pointHoverRadius: 0
 							},
 							{
 								label: "darkred",

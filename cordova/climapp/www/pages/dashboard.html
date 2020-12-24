@@ -17,6 +17,19 @@
 	<div class="center" id="gauge_div">
 		<div><p class="label center" id="str_forecast_disclaimer"></p></div>
 		<canvas id="main_gauge"></canvas>
+		<div id="plot_legend">
+			<p class="label small"><span><i class="fas fa-circle white"></i></span> <span id="str_climapp_legend"></span></p>
+			<div id="showruleslegend" data-listener="menu" data-level="1" data-target="ruleslegend" data-targetgroup="rulesgroup" class="">
+				<p class="label small right"><span id="str_show_helper_lines"></span><span id="str_hide_helper_lines"></span></p>
+				
+				<div id="ruleslegend" class="hidden" data-menuitem="true" data-menugroup="rulesgroup" id="selectclimapp">
+					<p class="label small"><span><i class="fas fa-circle blue"></i></span> <span id="str_ireq_legend"></span></p>
+					<p class="label small"><span><i class="fas fa-circle red"></i></span> <span id="str_wbgt_legend"></span></p>
+				</div>
+			</div>
+			
+		</div>
+		
 	</div>
 	
 	<div class="flexbox-4" id="dashboard_numbers">
@@ -31,46 +44,6 @@
 		</div>
 		<div class="">
 			<p class="label"><i id="icon-weather" class="fas fa-cloud-sun-rain"></i><br><span class="label" id="weather_desc"></span></p>
-		</div>
-	</div>
-	
-	<div id="selectwork">
-		<div class="flexbox-2">
-			<div id="tabactivity" data-listener="menu" data-level="1" data-target="selectactivity" data-targetgroup="contextgroup" class="even"><p class="label center" id="str_activity"></p></div>
-			<div id="tabaclothing" data-listener="menu" data-level="1" data-target="selectclothing" data-targetgroup="contextgroup" class="even border"><p class="label center" id="str_clothing"></p></div>
-		</div>
-		<div id="selectactivity" class="panelthick hidden" data-menuitem="true" data-menugroup="contextgroup" >
-			<div><p class="label"><span id="str_activity_level"></span>: <span class="score" id="dashboard_activity"></span></p></div>
-			<div><input class="rangeslider" type="range" min="0" max="4" value="1" id="activityslider" data-listener="slider" data-target="activity"></div>
-			<div><p id="activityCaption" class="caption"></p></div>
-		</div>
-		<div id="selectclothing" class="hidden panelthick" data-menuitem="true" data-menugroup="contextgroup">
-			<div><p class="label" ><span id="str_clothing_level"></span>: <span class="score" id="dashboard_clothing"></span></p></div>
-			<div><input class="rangeslider" type="range" min="0" max="4" value="1" id="clothingslider" data-listener="slider" data-target="clothing"></div>
-			<div><p id="clothingCaption" class="caption"></p></div>
-			<hr>
-			<div>	
-				<p class="label" id="str_clothing_level_finetune">Fine tuning</p>
-			
-				<p><span id="str_clothing_level_windpermeability">Insulation</span> <span id="slider_insulation_value"></span> Clo</p>
-				<div>
-					<input class="rangeslider" name="slider_clo" type="range" min="0.5" max="4.5" value="0.5" step="0.1" id="slider_insulation" data-listener="valueslider" data-target="insulation">
-					
-				</div>
-				<div><p id="windPermeabilityCaption" class="caption"></p></div>
-			
-				<p ><span id="str_clothing_level_windpermeability"> Air permeability</span> <span id="slider_windpermeability_value"></span> L/m<sup>2</sup>s</p>
-				<div>
-					<input class="rangeslider" name="slider_wind" type="range" min="1" max="101" value="51" step="5" id="slider_windpermeability"  data-listener="valueslider" data-target="windpermeability">
-				</div>
-				<div><p id="windPermeabilityCaption" class="caption"></p></div>
-			
-				<p ><span id="str_clothing_level_windpermeability">Vapour permeability</span> <span id="slider_vapourpermeability_value"></span> -</p>
-				<div>
-					<input class="rangeslider" name="slider_vapour" type="range" min="0.1" max="0.5" value="0.38" step="0.02" id="slider_vapourpermeability" data-listener="valueslider" data-target="vapourpermeability">					
-				</div>
-				<div><p id="windPermeabilityCaption" class="caption"></p></div>
-			</div>	
 		</div>
 	</div>
 </div>
@@ -121,7 +94,7 @@
 	   
 		   <div class="even" id="str_clo"></div><div class="even"><span class="score" id="detail_icl"></span></div>
 	   
-		   <div class="even" id="str_wind_permeability"></div><div class="even"><span class="score" id="detail_p"></span></div>
+		   <div class="even" id="str_wind_permeability"></div><div class="even"><span class="score" id="detail_p"></span> L/s/m<sup>2</sup></div>
 		   <div class="even last" id="str_evaporative_permeability"></div><div class="even"><span class="score" id="detail_im"></span></div>
 	   </div>
 	</div>
@@ -129,7 +102,7 @@
 
 <div class="panel" data-context="heat">
 	<p class="label" id="str_wbgt_iso"></p>
-	<p><span id="details_wbgt_desc_1"></span> <span class="score" id="detail_wbgt_iso7243"></span>&#xb0;C <span id="details_wbgt_desc_2"></span> <span class="score" id="detail_ral_iso7243"></span>&#xb0;C.</p>
+	<p><span id="details_wbgt_desc_1"></span> <span class="score" id="detail_wbgt_iso7243"></span> <span id="details_wbgt_desc_2"></span> <span class="score" id="detail_ral_iso7243"></span>.</p>
 </div>
 <div class="panel" data-context="phs">
 	<p class="label" id="str_phs_iso"></p>
@@ -169,35 +142,7 @@
 	<p id="details_neutral"></p>
 </div>
 
-<div class="panel">	
-		<div id="selectmeasuresandhydration">
-			<div id="work-hydrate-selector" class="flexbox-2">
-				<div id="tabmeasures" data-listener="menu" data-level="1" data-target="selectmeasures" data-targetgroup="measuresgroup" class="even"><p class="label center" id="str_menu_measures">Measures</p></div>
-				<div id="tabhydration" data-listener="menu" data-level="1" data-target="selecthydration" data-targetgroup="measuresgroup" class="even border"><p class="label center" id="str_menu_hydration">Hydration</p></div>
-			</div>
-			<div id="selectmeasures" class="panelthick hidden" data-menuitem="true" data-menugroup="measuresgroup" >
-				<div class="flexbox-2">
-					<div class="even"><img src='./img/infographics/en/work/plan_heat_defense.png'/></div>
-					<div class="even"><img src='./img/infographics/en/work/take_breaks.png'/></div>
-					<div class="even"><img src='./img/infographics/en/work/hydrate.png'/></div>
-					<div class="even"><img src='./img/infographics/en/work/re_arrange_work.png'/></div>
-					<div class="even"><img src='./img/infographics/en/work/optimize_clothing.png'/></div>
-				</div>
-			</div>
-			<div id="selecthydration" class="panelthick hidden" data-menuitem="true" data-menugroup="measuresgroup" >
-				<div class="flexbox-2">
-					<div><img src='./img/infographics/en/hydration/water.png'/></div>
-					<div><img src='./img/infographics/en/hydration/hydration_balance.png'/></div>
-					<div><img src='./img/infographics/en/hydration/sweat_loss.png'/></div>
-					<div><img src='./img/infographics/en/hydration/electrolytes.png'/></div>
-					<div><img src='./img/infographics/en/hydration/thirst.png'/></div>
-				</div>
-			</div>
-		</div>
-		
-		
-	</div>
-</div>
+
 
 
 

@@ -52,6 +52,19 @@ body {
 	/*end required for IOS*/
 }
 
+i.red{
+	color: #FF0000;
+}
+i.blue{
+	color: #0000FF;
+}
+i.yellow{
+	color: #FFFF00;
+}
+i.white{
+	color: #FFFFFF;
+}
+
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 9/16) {
 	body {
@@ -356,6 +369,10 @@ canvas{
     background: #7EBFE5; /* Old browsers */
 }
 
+div.infographic{
+	background: #6EB7D3;
+}
+
 div.tooltip{
     background: rgba(120, 120, 120,0.8);
 	color: rgba(255,255,255,1);
@@ -381,6 +398,10 @@ p.morelinespacing {
 
 button p {
     margin: 0;
+}
+
+li.about{
+	font-size: 0.7em;
 }
 
 p.label{
@@ -420,6 +441,10 @@ p.center{
 }
 p.right{
 	text-align:right;
+}
+
+p.small{
+	font-size:0.7em;
 }
 
 img{

@@ -152,7 +152,7 @@ function addUseDataToDB(kb, context){
 		"model_cold_score": model_cold_index,
 		//perception
 		"perception_heat": kb.user.adaptation.heat.perceived,
-		"perception_cold": kb.user.adaptation.cold.perceived,
+		"perception_cold": kb.user.adaptation.cold.perceived
 	};
 	let json = JSON.stringify( user_data );
     $.post(url, {"action": apicall, "json": json } ).done(function (data, status, xhr) {
@@ -253,7 +253,7 @@ function getIndoorPrediction(kb) {
             "fa": 40, // floor area 5-200m^2 
             "no": 3 // number of occupants in room (1-5)
         };
-        console.log("getting indoor prediction");
+        console.log("getting indoor prediction:" + JSON.stringify( user_data ) );
 		
         $.post(url, user_data).done(function (data, status, xhr) {
             if (status === "success") {

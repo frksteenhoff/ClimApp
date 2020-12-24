@@ -1,16 +1,14 @@
 function initMap(lat, lon, kb) {
    
-    var currentCoordinates = { lat: lat, lng: lon };
-
     // Each marker is labeled with a single alphabetical character.
     var labels = 'BCDEFGHIJKLMNOPQRSTUVWXYZ';
     var labelIndex = 0;
 	
 	//window.map so map is available global scope
     window.map = new google.maps.Map(document.getElementById('map'), { 
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
+        mapTypeId: google.maps.MapTypeId.TERRAIN,
       	center: new google.maps.LatLng(lat, lon),
-        zoom: 8
+        zoom: 6
     });
 	
 	var point = new google.maps.LatLng(lat, lon);
