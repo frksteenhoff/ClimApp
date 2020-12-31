@@ -1,3 +1,40 @@
+<div class="panel">
+	<p class="label"><span id="str_profile"><i class="fas fa-spinner fa-pulse"></i></p>
+	<div id="selectwork">
+		
+		<div class="flexbox-2">
+			<div id="tabmyself" data-listener="menu" data-level="1" data-target="selectmyself" data-targetgroup="profilegroup" class="even">
+				<p class="label center"><span id="str_personal"><i class="fas fa-spinner fa-pulse"></i></span> <i class="fas fa-user"></i></p>
+			</div>
+			<div id="tabgroup" data-listener="menu" data-level="1" data-target="selectgroup" data-targetgroup="profilegroup" class="even border">
+				<p class="label center"><span id="str_group"><i class="fas fa-spinner fa-pulse"></i></span> <i class="fas fa-users"></i></p>
+			</div>
+		</div>
+		
+		<div id="selectmyself" class="panelthick hidden" data-menuitem="true" data-menugroup="profilegroup" >
+			<p id="str_select_myself"><i class="fas fa-spinner fa-pulse"></i></p>
+		</div>
+		<div id="selectgroup" class="hidden panelthick" data-menuitem="true" data-menugroup="profilegroup">
+			<div class="flexbox-2">
+				<div id="tabseniors" data-listener="menu" data-level="2" data-target="selectseniors" data-targetgroup="targetgroupgroup" class="even">
+					<p class="label center"><span id="str_elderly"><i class="fas fa-spinner fa-pulse"></i></span> </p>
+				</div>
+				<div id="tabchildren" data-listener="menu" data-level="2" data-target="selectchildren" data-targetgroup="targetgroupgroup" class="even border">
+					<p class="label center"><span id="str_children"><i class="fas fa-spinner fa-pulse"></i></span> </p>
+				</div>
+			</div>	
+			
+			
+			<div id="selectseniors" class="panelthick hidden" data-menuitem="true" data-menugroup="targetgroupgroup" >
+				<p id="str_select_seniors"><i class="fas fa-spinner fa-pulse"></i></p>
+			</div>
+			<div id="selectchildren" class="panelthick hidden" data-menuitem="true" data-menugroup="targetgroupgroup" >
+				<p id="str_select_children"><i class="fas fa-spinner fa-pulse"></i></p>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="panel settings">
 	<p class="label" id="str_preferences"></p>
 	
@@ -5,6 +42,7 @@
 		<p><span id="str_unit"></span><br><span class="settings" id="unit"></span></p>
 	</div>
 </div>
+
 <div class="panel settings_other">
 	<p class="label" id="str_other"></p>
 	<div data-target="about" data-listener="tab"> 

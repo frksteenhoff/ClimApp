@@ -9,58 +9,6 @@
 			</p>
 		</div>
 	</div>
-	<div id="index-selector" class="flexbox-2">
-		<div id="tabclimapp" data-listener="menu" data-level="-1" data-target="selectclimapp" data-targetgroup="modelgroup" class="even menufocus"><p class="label center" id="str_menu_climapp">ClimApp</p></div>
-		<div id="tabutci" data-listener="menu" data-level="-1" data-target="selectutci" data-targetgroup="modelgroup" class="even border"><p class="label center" id="str_menu_utci">UTCI</p></div>
-	</div>
-	
-	<div class="center" id="gauge_div">
-		<div><p class="label center" id="str_forecast_disclaimer"></p></div>
-		<canvas id="main_gauge"></canvas>
-		<div id="plot_legend">
-			<p class="label small"><span><i class="fas fa-circle white"></i></span> <span id="str_climapp_legend"></span></p>
-			<div id="showruleslegend" data-listener="menu" data-level="1" data-target="ruleslegend" data-targetgroup="rulesgroup" class="">
-				<p class="label small right"><span id="str_show_helper_lines"></span><span id="str_hide_helper_lines"></span></p>
-				
-				<div id="ruleslegend" class="hidden" data-menuitem="true" data-menugroup="rulesgroup" id="selectclimapp">
-					<p class="label small"><span><i class="fas fa-circle blue"></i></span> <span id="str_ireq_legend"></span></p>
-					<p class="label small"><span><i class="fas fa-circle red"></i></span> <span id="str_wbgt_legend"></span></p>
-				</div>
-			</div>
-			
-		</div>
-		
-	</div>
-	
-	<div class="flexbox-4" id="dashboard_numbers">
-		<div class=""><p class="label"><i class="fas fa-temperature-low"></i><br><span id="temperature_desc"></span><br><span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span> <span id="temp_unit"></span></p></div>
-		<div class="">
-			<p class="label">
-				<i class="fas fa-wind"></i><br><span id="windspeed_desc"></span><br><span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span> <span id="windspeed_unit">m/s</span>
-			</p>
-		</div>
-		<div class="">
-			<p class="label"><i class="fas fa-tint"></i><br><span id="humidity"></span><br><span id="humidity_value"><i class="fas fa-spinner fa-pulse"></i></span >%</p>
-		</div>
-		<div class="">
-			<p class="label"><i id="icon-weather" class="fas fa-cloud-sun-rain"></i><br><span class="label" id="weather_desc"></span></p>
-		</div>
-	</div>
-</div>
-
-<div class="panel" id="tip_panel">
-	<div class="padded" id="tip_detailed">
-		<div class="" data-menuitem="true" data-menugroup="modelgroup" id="selectclimapp">
-			<p class="label" id="climapp_thermal">Downloading information...</p>
-			
-			<p id="tips"></p>
-		</div>
-		<div class="hidden" data-menuitem="true" data-menugroup="modelgroup" id="selectutci">
-			<p class="label" id="utci_thermal">UTCI available in English only.</p>
-			<p id="utci_head"></p>
-			<p id="utci_message"></p>
-		</div>
-		
 </div>
 			
 <div class="panel">

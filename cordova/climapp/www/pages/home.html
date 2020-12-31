@@ -9,22 +9,12 @@
 			</p>
 		</div>
 	</div>
-	<div><p class="label"><span id="str_mode"><i class="fas fa-spinner fa-pulse"></i></p></div>
-	<div id="selectmode">
-		<div class="flexbox-2">
-			<div id="taboutdoor" data-listener="menu" data-level="1" data-target="selectoutdoor" data-targetgroup="modegroup" class="even">
-				<p class="label center"><span id="str_outdoor"></span></p>
-			</div>
-			<div id="tabindoor" data-listener="menu" data-level="1" data-target="selectindoor" data-targetgroup="modegroup" class="even border">
-				<p class="label center"><span id="str_indoor"></span></p>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="panel">
+		
+	<!--brief weather report -->
 	<div class="flexbox-4" id="dashboard_numbers">
 		<div class="" data-target="_temperature" data-listener="wheel" data-context="indoor">
-			<p class="label"><span id="temperature_desc"></span><br><i class="fas fa-temperature-low"></i> <span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span> <span id="temp_unit"></span></p></div>
+			<p class="label"><span id="temperature_desc"></span><br><i class="fas fa-temperature-low"></i> <span id="temperature"><i class="fas fa-spinner fa-pulse"></i></span> <span id="temp_unit"></span></p>
+		</div>
 		<div class="">
 			<p id="windspeedcontainer" class="label">
 				<span id="windspeed_desc"></span><br><i class="fas fa-wind"></i> <span id="windspeed"><i class="fas fa-spinner fa-pulse"></i></span> <span id="windspeed_unit">m/s</span>
@@ -38,7 +28,10 @@
 		</div>
 	</div>
 	
-	<div class="fullwidth" data-listener="menu" data-level="1" data-target="selectcurrent" data-targetgroup="advisegroup">
+	
+	<!--climapp report -->
+	
+	<div class="fullwidth">
 		<div class="flexbox-2">
 			<div class="small">
 				<p class="center"><span id="climapp_icon"><i class="fas fa-male fa-3x"></i></span></p>
@@ -49,141 +42,19 @@
 					<span id="current_time"></span>
 				</p>
 				<p class="label"><span class="score" id="current_label"><i class="fas fa-spinner fa-pulse"></i></span></p>
-				
-				<div data-target="dashboard" data-listener="navbar">
-					<p class="label" id="perception_label"></p>
-					<p class="right label" id="home_forecastcontainer"><i class="fas fa-chart-line"></i> <span id="str_current_advanced"></span></p>
-				</div>
+				<p class="label" id="perception_label"></p>
 			</div>
 		</div>
 		<input id="currentslider" min="-4" max="4" val="1.5" step="0.1" type="range" id="climappslider_now" class="climappslider">
-		<div class="fullwidth"><p class="right"><span><i class="fas fa-info"></i></span></p></div>
-	</div>
-	<div id="selectcurrent" class="hidden" data-menuitem="true" data-menugroup="advisegroup" >
-		<div class="panel" id="advise_current"><i class="fas fa-spinner fa-pulse"></i></div>
-		<div class="panel" id="selectmeasuresandhydration">	
-			<div class="flexbox-2 infographic" id="measure_info_cards">
-			</div>
+		<div id="selectcurrent" class="" data-menuitem="true" data-menugroup="advisegroup" >
+			<div class="flexbox-2 infographic" id="measure_info_cards"></div>
+			<div id="advise_current"><i class="fas fa-spinner fa-pulse"></i></div>
 		</div>
 	</div>
 </div>
-
-<div id="selectoutdoor" class="panelthick hidden" data-menuitem="true" data-menugroup="modegroup" >
-	<p id="str_select_outdoor"><i class="fas fa-spinner fa-pulse"></i></p>
-</div>
-<div id="selectindoor" class="panelthick hidden" data-menuitem="true" data-menugroup="modegroup" >
-	<p id="str_select_indoor"><i class="fas fa-spinner fa-pulse"></i></p>
-	
-	<div class="panel">
-		<p class="label"><span id="str_user_values"></span></p>
-		
-        <div class="input_section" data-target="_temperature" data-listener="wheel" data-context="indoor">
-            <p><span id="str_temperature"></span><br><span class="settings" id="_temperature"></span></p>
-        </div>
-        <div class="input_section" data-target="_humidity" data-listener="wheel" data-context="indoor">
-            <p><span id="str_humidity"></span><br><span class="settings" id="_humidity"></span></p>
-        </div>
-    	<div class="input_section" data-target="open_windows" data-listener="wheel" data-context="indoor">
-	        <p><span id="indoor_open_windows">?</span><br><span class="settings" id="open_windows"></span></p>
-	    </div>
-		<div class="input_section" data-target="thermostat_level" data-listener="wheel" data-context="indoor">
-       	 	<p> <span id="str_thermostat"></span><br><span class="settings" id="thermostat_level"></span></p>
-    	</div>
-	</div>
-	<div class="panel">
-		<p class="label"><span id="str_predicted_values"></span></p>
-        <div class="input_section">
-            <p><span id="str_temperature_predicted"></span><br><span class="settings" id="predicted_temperature"></span></p>
-        </div>
-        <div class="input_section">
-            <p><span id="str_humidity_predicted"></span><br><span class="settings" id="predicted_humidity"></span></p>
-        </div>
-	</div>
-</div>
-
-
-<div class="panel" id="peak_container">
-	<div data-listener="menu" data-level="1" data-target="selectpeak" data-targetgroup="advisegroup">	
-		<div class="flexbox-2" >
-			<div class="small">
-				<p class="center"><span id="climapp_icon_peak"><i class="fas fa-male fa-2x"></i></p>
-			</div>
-			<div class="wide">
-				<p class="label">
-					<span id="str_peak"><i class="fas fa-spinner fa-pulse"></i></span>:
-					<span id="peak_time"><i class="fas fa-spinner fa-pulse"></i></span>
-				</p>
-				<p class="label">
-					<span class="score" id="peak_label"><i class="fas fa-spinner fa-pulse"></i></span>
-					<span class="right"><i class="fas fa-info"></i></span>
-				</p>
-			</div>
-		</div>
-		<div id="selectpeak" class="hidden" data-menuitem="true" data-menugroup="advisegroup" >
-			<div class="padded" id="advise_peak"><i class="fas fa-spinner fa-pulse"></i></div>
-		</div>
-	</div>
-</div>
-<div class="panel" id="nadir_container">	
-	<div data-listener="menu" data-level="1" data-target="selectnadir" data-targetgroup="advisegroup">
-		<div class="flexbox-2" >
-			<div class="small">
-				<p class="center"><span id="climapp_icon_nadir"><i class="fas fa-male fa-2x"></i></p>
-			</div>
-			<div class="wide">
-				<p class="label">
-					<span id="str_nadir"><i class="fas fa-spinner fa-pulse"></i></span>:
-					<span id="nadir_time"><i class="fas fa-spinner fa-pulse"></i></span>
-				</p>
-				<p class="label">
-					<span class="score" id="nadir_label"><i class="fas fa-spinner fa-pulse"></i></span>
-					<span class="right"><i class="fas fa-info"></i></span>
-				</p>
-			</div>
-		</div>	
-		<div id="selectnadir" class="hidden" data-menuitem="true" data-menugroup="advisegroup" >
-			<div class="padded" id="advise_nadir"><i class="fas fa-spinner fa-pulse"></i></div>
-		</div>
-	</div>
-</div>
-
 
 
 <div class="panel">
-	<div><p class="label"><span id="str_profile"><i class="fas fa-spinner fa-pulse"></i></p></div>
-	<div id="selectwork">
-		<div class="flexbox-2">
-			<div id="tabmyself" data-listener="menu" data-level="1" data-target="selectmyself" data-targetgroup="profilegroup" class="even">
-				<p class="label center"><span id="str_personal"><i class="fas fa-spinner fa-pulse"></i></span> <i class="fas fa-user"></i></p>
-			</div>
-			<div id="tabgroup" data-listener="menu" data-level="1" data-target="selectgroup" data-targetgroup="profilegroup" class="even border">
-				<p class="label center"><span id="str_group"><i class="fas fa-spinner fa-pulse"></i></span> <i class="fas fa-users"></i></p>
-			</div>
-		</div>
-		
-		<div id="selectmyself" class="panelthick hidden" data-menuitem="true" data-menugroup="profilegroup" >
-			<p id="str_select_myself"><i class="fas fa-spinner fa-pulse"></i></p>
-		</div>
-		<div id="selectgroup" class="hidden panelthick" data-menuitem="true" data-menugroup="profilegroup">
-			<div class="flexbox-2">
-				<div id="tabseniors" data-listener="menu" data-level="2" data-target="selectseniors" data-targetgroup="targetgroupgroup" class="even">
-					<p class="label center"><span id="str_elderly"><i class="fas fa-spinner fa-pulse"></i></span> </p>
-				</div>
-				<div id="tabchildren" data-listener="menu" data-level="2" data-target="selectchildren" data-targetgroup="targetgroupgroup" class="even border">
-					<p class="label center"><span id="str_children"><i class="fas fa-spinner fa-pulse"></i></span> </p>
-				</div>
-			</div>	
-			
-			
-			<div id="selectseniors" class="panelthick hidden" data-menuitem="true" data-menugroup="targetgroupgroup" >
-				<p id="str_select_seniors"><i class="fas fa-spinner fa-pulse"></i></p>
-			</div>
-			<div id="selectchildren" class="panelthick hidden" data-menuitem="true" data-menugroup="targetgroupgroup" >
-				<p id="str_select_children"><i class="fas fa-spinner fa-pulse"></i></p>
-			</div>
-		</div>
-	</div>
-
 	<div><p class="label" id="str_customisation"><i class="fas fa-spinner fa-pulse"></i></p></div>
 	<div class="flexbox-4">
 		<div id="tabactivity" data-listener="menu" data-level="1" data-target="selectactivity" data-targetgroup="contextgroup" class="even">
@@ -256,6 +127,10 @@
 			  </label>
 			</p>
 		</div>
+		<div>
+			<p><span class="settings" id="str_heatacclimatised_iso7243"></span></p>
+		</div>
+		
 	</div>
 	<div  id="selectperception" class="hidden panelthick fullwidth" data-menuitem="true" data-menugroup="contextgroup">
 		<div><p class="label" ><span id="str_perception_settings"><i class="fas fa-spinner fa-pulse"></i></span></p></div>
@@ -280,6 +155,167 @@
 		</div>
 	</div>
 </div>
+	
+	
+	
+<!--forecast -->
+<div class="panel" id="forecast_panel">
+	<div class="center" id="gauge_div">
+		<p class="label" id="str_forecast"></p>
+		<div><p class="caption center" id="str_forecast_disclaimer"></p></div>
+		<canvas id="main_gauge"></canvas>
+		<div id="plot_legend">
+			<p class="caption"><span><i class="fas fa-circle white"></i></span> <span id="str_climapp_legend"></span></p>
+			<div id="showruleslegend" data-listener="menu" data-level="1" data-target="ruleslegend" data-targetgroup="rulesgroup" class="">
+				<p class="label small right"><span id="str_show_helper_lines"></span><span id="str_hide_helper_lines"></span></p>
+				
+				<div id="ruleslegend" class="hidden" data-menuitem="true" data-menugroup="rulesgroup" id="selectclimapp">
+					<p class="caption"><span><i class="fas fa-circle blue"></i></span> <span id="str_ireq_legend"></span></p>
+					<p class="caption"><span><i class="fas fa-circle red"></i></span> <span id="str_wbgt_legend"></span></p>
+				</div>
+			</div>
+		</div>
+		
+		
+		<div data-menuitem="true" data-menugroup="modelgroup" id="selectclimapp">
+			<div id="peak_container">
+				<div data-listener="menu" data-level="1" data-target="selectpeak" data-targetgroup="advisegroup">	
+					<div class="flexbox-2" >
+						<div class="small">
+							<p class="center"><span id="climapp_icon_peak"><i class="fas fa-male fa-2x"></i></p>
+						</div>
+						<div class="wide">
+							<p class="label">
+								<span id="str_peak"><i class="fas fa-spinner fa-pulse"></i></span>:
+								<span id="peak_time"><i class="fas fa-spinner fa-pulse"></i></span>
+							</p>
+							<p class="label">
+								<span class="score" id="peak_label"><i class="fas fa-spinner fa-pulse"></i></span>
+								<span class="right"><i class="fas fa-info"></i></span>
+							</p>
+						</div>
+					</div>
+					<div id="selectpeak" class="hidden" data-menuitem="true" data-menugroup="advisegroup" >
+						<div class="padded" id="advise_peak"><i class="fas fa-spinner fa-pulse"></i></div>
+					</div>
+				</div>
+			</div>
+			<div id="nadir_container">	
+				<div data-listener="menu" data-level="1" data-target="selectnadir" data-targetgroup="advisegroup">
+					<div class="flexbox-2" >
+						<div class="small">
+							<p class="center"><span id="climapp_icon_nadir"><i class="fas fa-male fa-2x"></i></p>
+						</div>
+						<div class="wide">
+							<p class="label">
+								<span id="str_nadir"><i class="fas fa-spinner fa-pulse"></i></span>:
+								<span id="nadir_time"><i class="fas fa-spinner fa-pulse"></i></span>
+							</p>
+							<p class="label">
+								<span class="score" id="nadir_label"><i class="fas fa-spinner fa-pulse"></i></span>
+								<span class="right"><i class="fas fa-info"></i></span>
+							</p>
+						</div>
+					</div>	
+					<div id="selectnadir" class="hidden" data-menuitem="true" data-menugroup="advisegroup" >
+						<div class="padded" id="advise_nadir"><i class="fas fa-spinner fa-pulse"></i></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="hidden" data-menuitem="true" data-menugroup="modelgroup" id="selectutci">
+			<p class="caption" id="utci_thermal">UTCI available in English only.</p>
+			<p class="caption" id="utci_head"></p>
+			<p class="caption" id="utci_message"></p>
+		</div>
+	</div>
+	<div id="index-selector" class="flexbox-2">
+		<div id="tabclimapp" data-listener="menu" data-level="-1" data-target="selectclimapp" data-targetgroup="modelgroup" class="even menufocus"><p class="label center" id="str_menu_climapp">ClimApp</p></div>
+		<div id="tabutci" data-listener="menu" data-level="-1" data-target="selectutci" data-targetgroup="modelgroup" class="even border"><p class="label center" id="str_menu_utci">UTCI</p></div>
+	</div>
+</div>
+
+
+
+<div class="panel" id="wbgt_panel" data-context="heat">
+	<p class="label" id="str_detail_wbgt_iso"></p>
+	<p><span id="details_wbgt_desc_1"></span> <span class="score" id="detail_wbgt_iso7243"></span> <span id="details_wbgt_desc_2"></span> <span class="score" id="detail_ral_iso7243"></span>.</p>
+</div>
+<div class="panel" id="phs_panel" data-context="phs">
+	<p class="label" id="str_detail_phs_iso"></p>
+	<p><span id="details_phs_desc_1"></span> <span class="score" id="detail_dle_phs"></span> <span id="details_phs_desc_2"></span> <span  class="score" id="detail_sweat"></span> <span id="details_phs_desc_3"></span></p>
+</div>
+
+<div class="panel" id="windchill_panel" data-context="cold">
+	<p class="label" id="str_detail_windchill_jagti"></p>
+	<p><span id="details_windchill_desc_1"></span> <span class="score" id="detail_exposed_windchill"></span> <span id="details_windchill_desc_2"></span> <span id="detail_exposed_windriskcat"> <span class="score" id="detail_exposed_windrisk"></span></p>
+
+</div>
+<div class="panel" id="ireq_panel" data-context="cold">
+	<p class="label" id="str_detail_ireq_iso"></p>
+	<p><span id="details_ireq_desc"></span>
+		<ul>
+			<li id="details_ireq_list1"></li>
+			<li id="details_ireq_list2"></li>
+			<li id="details_ireq_list3"></li> 
+		</ul>
+	</p>
+	<p><span id="details_ireq_clo_1"></span> <span class="detail_activity_ireq"></span> <span id="details_ireq_clo_2"></span> <span class="score" id="detail_icl_min"></span> <span id="details_ireq_clo_3"></span> <span class="score" id="detail_icl_max"></span> clo</p>
+	<div class="flexbox-2">
+		<div class="center even">
+			<p class="label" id="str_min_cloth_level"></p>
+			<div id="detail_min_clo"></div>
+		</div>
+		<div class="center even">
+			<p class="label" id="str_max_cloth_level"></p>
+			<div id="detail_max_clo"></div>
+		</div>
+	</div>
+	<p id="details_dle_positive"><span id="details_ireq_clo_dle_1"></span> <span id="detail_dle_ireq"></span> <span id="details_ireq_clo_dle_2"></span></p>
+</div>
+
+<div class="panel" id="neutral_panel" data-context="neutral">
+	<p id="details_neutral"></p>
+</div>
+
+<div class="panel" id="details_panel">
+	<p class="label" id="str_details"></p>
+	<p id="details_desc"></p>
+	<div class="panel">
+	    <p class="label" id="str_weather"></p>
+		<div class="flexbox-2">
+	 	   <div class="even" id="str_detail_time"></div><div class="even"><span class="score" id="detail_time"></span></div>
+		   <div class="even" id="str_detail_air_temperature"></div><div class="even"><span class="score" id="detail_airtemp"></span></div>
+		   <div class="even" id="str_detail_humidity"></div><div class="even"><span class="score" id="detail_rh"></span></div>
+		   <div class="even" id="str_detail_cloud_cover"></div><div class="even"><span class="score" id="detail_clouds"></span></div>
+		   <div class="even" id="str_detail_solar_irradiation"></div><div class="even"><span class="score" id="detail_rad"></span></div>
+		   <div class="even" id="str_detail_wind10"></div><div class="even"><span class="score" id="detail_wind10m"></span> </div>
+		   <div class="even" id="str_detail_wind2"></div><div class="even"><span class="score" id="detail_wind2m"></span> </div>
+		   <div class="even" id="str_detail_globe_temperature"> 5cm</div><div class="even"><span class="score" id="detail_tglobe"></span></div>
+		   <div class="even" id="str_detail_mrt"></div><div class="even"><span class="score" id="detail_mrt"></span> </div>
+	   
+		   <div class="even" data-group="wbgt" id="str_detail_wbgt"></div><div data-group="wbgt" class="even"><span class="score" id="detail_wbgt"></span></div>
+		   <div class="even" data-group="wbgt" id="str_detail_wbgt_effective"></div><div data-group="wbgt" class="even"><span class="score" id="detail_wbgt_eff"></span></div>
+		   <div class="even" data-group="wbgt" id="str_detail_aal"></div><div data-group="wbgt" class="even"><span class="score" id="detail_ral"></span></div>
+	   
+		   <div class="even" data-group="ireq" id="str_detail_windchill"></div><div data-group="ireq" class="even"><span class="score" id="detail_windchill"></span></div>   
+	   </div>
+   </div>
+	<div class="panel">
+	   <p class="label" id="str_detail_user"></p>
+	   <div class="flexbox-2">
+	 	   <div class="even" id="str_detail_mr"></div><div class="even"><span class="score" id="detail_metabolic"></span></div>
+	 	   <div class="even" id="str_detail_surface_area"></div><div class="even"><span class="score" id="detail_area"></span></div>
+	   
+		   <div class="even" id="str_detail_clo"></div><div class="even"><span class="score" id="detail_icl"></span></div>
+	   
+		   <div class="even" id="str_detail_wind_permeability"></div><div class="even"><span class="score" id="detail_p"></span></div>
+		   <div class="even last" id="str_detail_evaporative_permeability"></div><div class="even"><span class="score" id="detail_im"></span></div>
+	   </div>
+	</div>
+</div>
+
+
 
 
 

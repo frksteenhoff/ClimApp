@@ -1,15 +1,68 @@
-<div class="panel settings" id="custom_location_switch">
-    <p class="label" id="str_custom_location"></p>
-
-    <div class="inlineitems line last"> 
-        <p id="customLocationEnabled"><span id="str_input_custom_location"></span></p>
-        <p class="totheright"><label class="switch">
-        <input type="checkbox" id="custom_location_checkbox" data-target="custom_location_switch" data-listener="toggle_switch">
-        <span class="slider round"></span>
-        </label>
-        </p>
-    </div>
+<!--indoor outdoor selection -->
+<div id="selectmode">
+	<div class="flexbox-2">
+		<div id="taboutdoor" data-listener="menu" data-level="1" data-target="selectoutdoor" data-targetgroup="modegroup" class="even">
+			<p class="label center"><span id="str_outdoor"></span></p>
+		</div>
+		<div id="tabindoor" data-listener="menu" data-level="1" data-target="selectindoor" data-targetgroup="modegroup" class="even border">
+			<p class="label center"><span id="str_indoor"></span></p>
+		</div>
+	</div>
 </div>
+<div id="selectoutdoor" class="panelthick" data-menuitem="true" data-menugroup="modegroup" >
+	<p id="str_select_outdoor"><i class="fas fa-spinner fa-pulse"></i></p>
+	
+	<div id="custom_location_switch">
+	    <p class="label" id="str_custom_location"></p>
+
+	    <div class="inlineitems line last"> 
+	        <p id="customLocationEnabled"><span id="str_input_custom_location"></span></p>
+	        <p class="totheright"><label class="switch">
+	        <input type="checkbox" id="custom_location_checkbox" data-target="custom_location_switch" data-listener="toggle_switch">
+	        <span class="slider round"></span>
+	        </label>
+	        </p>
+	    </div>
+	</div>
+	
+</div>
+<div id="selectindoor" class="panelthick hidden" data-menuitem="true" data-menugroup="modegroup" >
+	<p id="str_select_indoor"><i class="fas fa-spinner fa-pulse"></i></p>
+	
+	<div class="panel">
+		<p class="label"><span id="str_user_values"></span></p>
+        <div class="input_section" data-target="_temperature" data-listener="wheel" data-context="indoor">
+            <p><span id="str_temperature"></span><br><span class="settings" id="_temperature"></span></p>
+        </div>
+		
+        <div class="input_section" data-target="_humidity" data-listener="wheel" data-context="indoor">
+            <p><span id="str_humidity"></span><br><span class="settings" id="_humidity"></span></p>
+        </div>
+    	<div class="input_section" data-target="open_windows" data-listener="wheel" data-context="indoor">
+	        <p><span id="indoor_open_windows">?</span><br><span class="settings" id="open_windows"></span></p>
+	    </div>
+		<div class="input_section" data-target="thermostat_level" data-listener="wheel" data-context="indoor">
+       	 	<p> <span id="str_thermostat"></span><br><span class="settings" id="thermostat_level"></span></p>
+    	</div>
+		<div>
+			<p><span class="settings" id="str_thermostat_explanation"></span></p>
+		</div>
+	</div>
+	<div class="panel">
+		<p class="label"><span id="str_predicted_values"></span></p>
+		<div>
+			<p><span class="settings" id="str_predictedexplanation"></span></p>
+		</div>
+        <div class="input_section">
+            <p><span id="str_temperature_predicted"></span><br><span class="settings" id="predicted_temperature"></span></p>
+        </div>
+        <div class="input_section">
+            <p><span id="str_humidity_predicted"></span><br><span class="settings" id="predicted_humidity"></span></p>
+        </div>
+	</div>
+</div>
+
+
 <!--
 <div class="panel settings" id="customLocationSection">
     <div class="input_section last">

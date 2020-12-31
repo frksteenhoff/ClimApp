@@ -274,7 +274,7 @@ canvas{
 }
 
 .flexbox-2 div.even.last{
-	margin-bottom: 0.5em;
+	margin-bottom: 0.25em;
 }
 .flexbox-2 div.even{
 	margin: auto;
@@ -414,10 +414,11 @@ p.header{
     font-weight: bold;
 }
 
-p.caption{
-	font-size: 1em;
+p.caption, p.thermaltip{
+	font-size: 0.8em;
 	font-style: italic;
 }
+
 span.settings{
 	font-size: 0.8em;
 	font-style: italic;
