@@ -85,16 +85,14 @@ var app = {
 			self.translations = result;
 			self.loadSettings();
 			
-			/*
+			
 			if (self.knowledgeBase.user.guards.isFirstLogin) {//onboarding
-				self.loadUI("onboarding");
+				self.loadUI("onboarding", "startintro");
 			}
 			else {
-				self.loadUI("home");
+				self.loadUI("home", "none");
 			}
-			*/
 			
-			self.loadUI("home");
 			// Keeping track of how many time user has opened app, until count reaches 5
 			//functionality removed dec 2020 by BK - argument: user can go to details for more details - otherwise all info on same level
 			
@@ -119,12 +117,14 @@ var app = {
 		$("div[data-listener='navbar']").off();
 		$("div[data-listener='navbar']").on("click", function () {
 			let target = $(this).attr("data-target");
-			self.knowledgeBase.user.guards.isFirstLogin = 0;
+			
+			self.knowledgeBase.user.guards.isFirstLogin = 0; //find better location for this logic - it is now obsolete because we do not have an onboarding screen anymore
 			self.saveSettings();
-			if ( self.firstTimeLoginWithoutPersonalization(target) ) {
-				showShortToast(self.translations.toasts.default_values[self.language]);
-			}
-			self.loadUI(target);
+			
+			var action = $(this).attr("data-action");
+			var afteraction = typeof action !== 'undefined' ? action : "none";
+			
+			self.loadUI(target, afteraction );
 		});
 	},
 	initErrorListeners: function() {
@@ -133,8 +133,7 @@ var app = {
 		$("div[data-listener='weather_error']").on("click", function () {
 			let target = $(this).attr("data-target");
 			self.updateLocation();
-			self.loadUI(target);
-			
+			self.loadUI(target, "none");			
 		});
 	},
 	initPerceptionListeners: function(){
@@ -207,7 +206,7 @@ var app = {
 			addFeedbackToDB(self.knowledgeBase, self.feedback_questions, self.translations, self.language);
 
 			// Load settings page
-			self.loadUI('settings');
+			self.loadUI('settings', "none");
 		});
 	},
 	initSettingsListeners: function () {
@@ -286,6 +285,10 @@ var app = {
 		$("div[data-listener='tab']").on("click", function () {
 
 			var target = $(this).attr("data-target");
+			var action = $(this).attr("data-action");
+			
+			var afteraction = typeof action !== 'undefined' ? action : "none";
+			
 			console.log(target);
 			if (target === "reset") {
 				// Resetting values to default
@@ -305,7 +308,7 @@ var app = {
 				showShortToast(self.translations.toasts.preferences_reset[self.language]);
 			}
 			else {
-				self.loadUI(target);
+				self.loadUI(target, afteraction);
 			}
 		});
 
@@ -370,7 +373,7 @@ var app = {
 			self.updateWeather();
 			var	customText = self.translations.toasts.custom_location[self.language] + ": ";
 			customText +=  self.knowledgeBase.user.settings.coordinates_lat.toFixed(4) + ", " + self.knowledgeBase.user.settings.coordinates_lon.toFixed(4);
-			self.loadUI("home");
+			self.loadUI("home", "none");
 			showShortToast(customText);
 		});
 	},
@@ -423,7 +426,7 @@ var app = {
 		$("div[data-listener='tab']").on("click", function () {
 			var target = $(this).attr("data-target");
 			// Load feedback page when pressing gauge in dashboard
-			self.loadUI(target);
+			self.loadUI(target, "none");
 		});
 	},
 	initActivityListeners: function () {
@@ -459,7 +462,7 @@ var app = {
 		$("div[data-listener='submit']").off(); //prevent multiple instances of listeners on same object
 		$("div[data-listener='submit']").on("click", function () {
 			addUseDataToDB( self.knowledgeBase, self );
-			self.loadUI("dashboard");
+			self.loadUI("home","none");
 		});
 	},
 	initMenuListeners: function () {
@@ -800,7 +803,7 @@ var app = {
 	},
 	firstTimeLoginWithoutPersonalization: function (target) {
 		var self = this;
-		return self.knowledgeBase.user.guards.isFirstLogin && target === 'dashboard';
+		return self.knowledgeBase.user.guards.isFirstLogin && target === 'home';
 	},
 	getSelectables: function (key) {
 		var self = this;
@@ -1118,19 +1121,18 @@ var app = {
 		}
 		return windspeed;
 	},
-	loadUI: function (pageid) {
+	loadUI: function (pageid, afteraction ) {
 		var self = this;
-		if( this.knowledgeBase.user.guards.isIndoor && pageid === "feedback" ){
-			showShortToast("No personalisation possible for indoor mode.");
-		}
-		else{
-			$.get(this.pageMap[pageid], function (content) {
-				console.log("loaded: " + pageid);
-				self.currentPageID = pageid;
-				$("#content").html(content);
-				self.updateUI();
-			});
-		}
+		
+		$.get(this.pageMap[pageid], function (content) {
+			console.log("loaded: " + pageid);
+			self.currentPageID = pageid;
+			$("#content").html(content);
+			self.updateUI();
+			if( afteraction === "startintro" ){
+				startIntro( self.translations, self.language );
+			}
+		});
 	},
 	checkIfUserExistInDB: async function () {
 		var self = this;
@@ -1548,6 +1550,8 @@ var app = {
 			$("#str_other").html(this.translations.labels.str_other[this.language].toUpperCase());			
 			$("#str_about").html(this.translations.labels.str_about[this.language]);
 			$("#str_disclaimer_and_privacy").html(this.translations.labels.str_disclaimer_and_privacy[this.language]);
+			$("#str_how_to_use").html(this.translations.sentences.str_how_to_use[this.language]);
+			
 			$("#str_research").html(this.translations.labels.str_research[this.language]);
 		}
 		else if (this.currentPageID == "feedback") {

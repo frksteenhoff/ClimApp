@@ -363,35 +363,31 @@ function startIntro(translations, language) {
 	var intro = introJs();
           intro.setOptions({
             steps: [
-              {
-                element: '#nav',
-				intro: "<p><b>" + translations.sentences.intro_nav_1[language]  + "</b></p>" +
-				"<p>" + translations.sentences.intro_nav_2[language] + ".</p>" + 
-				"<p>" + translations.sentences.intro_nav_3[language] + ".</p>",
-				position: "left"
+			  {
+				  element: '#main_panel',
+				  intro: "<p>" + translations.sentences.intro_nav_1[language]  + "</p>", //to familiarize
 			  },
 			  {
-                element: '#gauge_div',
-				intro: "<p>" + translations.sentences.intro_gauge[language] + ".</p>",
-			    position: 'bottom' /*+ 
-						"<p>The positive values indicate the level of heat stress and the negative values the level of cold stress.</p>"*/
+	              element: '#dashboard_numbers',
+				  intro: "<p>" + translations.sentences.intro_range[language] + "</p>",
 			  },
+	          {
+	              element: '#climapp_report',
+				  intro: "<p>" + translations.sentences.intro_climapp_index[language] + "</p>",
+			  },
+	          {
+	              element: '#customisationpanel',
+				  intro: "<p>" + translations.sentences.intro_wheels_1[language] + "</p>" +
+				         "<p>" + translations.sentences.intro_wheels_2[language] + "</p>",
+	          },
 			  {
-                element: '#dashboard_numbers',
-				intro: translations.sentences.intro_range[language] + ".",
-				position: 'bottom'
-              },
-              {
-                element: '#tip_detailed',
-				intro: "<p>" + translations.sentences.intro_details_1[language] + ".</p>",
-                position: 'bottom'
-              },
-              {
-                element: '#selectwork',
-				intro: "<p>" + translations.sentences.intro_wheels_1[language] + ".</p>" +
-				"<p>" + translations.sentences.intro_wheels_2[language] + ".</p>",
-                position: 'bottom'
-              }
+	            element: '#forecast_panel',
+				intro: "<p>" + translations.sentences.intro_gauge[language] + "</p>",
+			  },
+	          {
+	            element: '#details_panel',
+				intro: "<p>" + translations.sentences.intro_details_1[language] + "</p>",
+	          },
             ]
           });
           intro.start();
